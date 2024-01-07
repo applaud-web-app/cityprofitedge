@@ -71,7 +71,7 @@
                                         </td>
                                         <td>{{ $metalsPortfolio->profit_loss }}</td>
                                         <td>{{ $metalsPortfolio->sector }}</td>
-                                        <td></td>
+                                        <td>{{ $metalsPortfolio->poolingAccountPortfolio->broker_name }}</td>
                                     </tr>
                                 @empty
                                     <tr>
