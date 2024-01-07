@@ -52,7 +52,7 @@
                                     </td>
                                     <td>{{ $globalStockPortfolio->profit_loss }}</td>
                                     <td>{{ $globalStockPortfolio->sector }}</td>
-                                    <td></td>
+                                    <td>{{ $globalStockPortfolio->poolingAccountPortfolio->broker_name }}</td>
                                     <td>
                                         <div class="d-flex justify-content-end flex-wrap gap-2">
                                             <a href="{{ route('admin.signal.edit', $globalStockPortfolio->id) }}"

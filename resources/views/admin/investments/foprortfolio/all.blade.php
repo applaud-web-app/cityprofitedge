@@ -52,7 +52,7 @@
                                     </td>
                                     <td>{{ $foPortFolioHedging->profit_loss }}</td>
                                     <td>{{ $foPortFolioHedging->sector }}</td>
-                                    <td></td>
+                                    <td>{{ $foPortFolioHedging->poolingAccountPortfolio->broker_name }}</td>
                                     <td>
                                         <div class="d-flex justify-content-end flex-wrap gap-2">
                                             <a href="{{ route('admin.signal.edit', $foPortFolioHedging->id) }}"

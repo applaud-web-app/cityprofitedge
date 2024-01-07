@@ -47,37 +47,37 @@
                                 </thead>
                                 <tbody>
                                     @forelse($foPortFolioHedgings as $foPortFolioHedging)
-                                    <tr>
-                                        <td>
-                                            {{ $foPortFolioHedging->broker_name }}
-                                        </td>
-                                        <td>
-                                            {{ $foPortFolioHedging->stock_name }}
-                                        </td>
-                                        <td>
-                                            {{ $foPortFolioHedging->quantity }}
-                                        </td>
-                                        <td>
-                                            {{ showDateTime($foPortFolioHedging->buy_date) }}<br>{{ diffForHumans($foPortFolioHedging->buy_date) }}
-                                        </td>
-                                        <td>
-                                            {{ showAmount($foPortFolioHedging->buy_price) }}
-                                        </td>
-                                        <td>
-                                            {{ $foPortFolioHedging->cmp }}
-                                        </td>
-                                        <td>
-                                            {{ showAmount($foPortFolioHedging->current_value) }}
-                                        </td>
-                                        <td>{{ $foPortFolioHedging->profit_loss }}</td>
-                                        <td>{{ $foPortFolioHedging->sector }}</td>
-                                        <td></td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td class="text-muted text-center" colspan="100%">{{ __($emptyMessage) }}</td>
-                                    </tr>
-                                @endforelse
+                                        <tr>
+                                            <td>
+                                                {{ $foPortFolioHedging->broker_name }}
+                                            </td>
+                                            <td>
+                                                {{ $foPortFolioHedging->stock_name }}
+                                            </td>
+                                            <td>
+                                                {{ $foPortFolioHedging->quantity }}
+                                            </td>
+                                            <td>
+                                                {{ showDateTime($foPortFolioHedging->buy_date) }}<br>{{ diffForHumans($foPortFolioHedging->buy_date) }}
+                                            </td>
+                                            <td>
+                                                {{ showAmount($foPortFolioHedging->buy_price) }}
+                                            </td>
+                                            <td>
+                                                {{ $foPortFolioHedging->cmp }}
+                                            </td>
+                                            <td>
+                                                {{ showAmount($foPortFolioHedging->current_value) }}
+                                            </td>
+                                            <td>{{ $foPortFolioHedging->profit_loss }}</td>
+                                            <td>{{ $foPortFolioHedging->sector }}</td>
+                                            <td>{{ $foPortFolioHedging->poolingAccountPortfolio->broker_name }}</td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td class="text-muted text-center" colspan="100%">{{ __($emptyMessage) }}</td>
+                                        </tr>
+                                    @endforelse
                                 </tbody>
                             </table>
                         </div>
