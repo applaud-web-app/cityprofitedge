@@ -39,7 +39,7 @@ class PortfolioTopGainerDataImport implements ToCollection, WithHeadingRow
                 $portfolioTopGainer->stock_name = $row['stock_name'];
                 $portfolioTopGainer->avg_buy_price = $row['avg_price'];
                 $portfolioTopGainer->cmp = $row['cmp'];
-                $portfolioTopGainer->change_percentage = $row['change%'];
+                $portfolioTopGainer->change_percentage = $row['change'];
                 $portfolioTopGainer->save();
                 DB::commit();
             }

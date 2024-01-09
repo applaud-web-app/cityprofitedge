@@ -45,6 +45,10 @@ class GlobalStockPortfolioDataImport implements ToCollection, WithHeadingRow
 
                 $user = User::select('id', 'user_code')->where('user_code', $row['client_code'])->first();
 
+                if (empty($user)) {
+                    continue;
+                }
+
                 if (empty($row['pooling_broker_name']) && empty($row['pooling_broker_code'])) {
                     DB::commit();
                     continue;
@@ -59,6 +63,11 @@ class GlobalStockPortfolioDataImport implements ToCollection, WithHeadingRow
                     $poolingBrokerPortfolio->user_id = $user->id;
                     $poolingBrokerPortfolio->save();
                 }
+
+                if (empty($poolingBrokerPortfolio)) {
+                    continue;
+                }
+
                 // Create and save the Stock model instance with the data
                 $globalStockPortfolio = new GlobalStockPortfolio();
                 $globalStockPortfolio->broker_name = $row['broker_name'];

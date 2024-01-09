@@ -43,6 +43,10 @@ class LedgerDataImport implements ToCollection, WithHeadingRow
 
                 $user = User::select('id', 'user_code')->where('user_code', $row['client_code'])->first();
 
+                if (empty($user)) {
+                    continue;
+                }
+
                 if (empty($row['pooling_broker_name']) && empty($row['pooling_broker_code'])) {
                     continue;
                 }
@@ -55,6 +59,10 @@ class LedgerDataImport implements ToCollection, WithHeadingRow
                     $poolingBrokerPortfolio->broker_code = $this->uniquePoolingBrokerCode();
                     $poolingBrokerPortfolio->user_id = $user->id;
                     $poolingBrokerPortfolio->save();
+                }
+
+                if (empty($poolingBrokerPortfolio)) {
+                    continue;
                 }
 
                 $ledger = new Ledger();
