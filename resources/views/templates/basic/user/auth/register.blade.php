@@ -29,11 +29,19 @@
                     </div>
                 @endif
                 <div class="col-lg-6 form-group">
-                    <label for="username">@lang('Username') <sup class="text--danger">*</sup></label>
+                    <label for="firstname">@lang('First Name') <sup class="text--danger">*</sup></label>
                     <div class="custom-icon-field">
                         <i class="las la-user"></i>
-                        <input id="username" type="text" class="form--control checkUser" name="username" required placeholder="@lang('Username')" value="{{ old('username') }}">
-                        <small class="text-danger usernameExist"></small>
+                        <input id="firstname" type="text" class="form--control" name="firstname" required placeholder="@lang('First Name')" value="{{ old('firstname') }}">
+                        <small class="text-danger"></small>
+                    </div>
+                </div>
+                <div class="col-lg-6 form-group">
+                    <label for="lastname">@lang('Username') <sup class="text--danger">*</sup></label>
+                    <div class="custom-icon-field">
+                        <i class="las la-user"></i>
+                        <input id="lastname" type="text" class="form--control" name="lastname" required placeholder="@lang('Last Name')" value="{{ old('lastname') }}">
+                        <small class="text-danger"></small>
                     </div>
                 </div>
                 <div class="col-lg-6 form-group">

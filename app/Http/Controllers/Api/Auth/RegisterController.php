@@ -68,7 +68,8 @@ class RegisterController extends Controller
             'email' => 'required|string|email|unique:users',
             'mobile' => 'required|integer',
             'password' => ['required','confirmed',$passwordValidation],
-            'username' => 'required|alpha_num|unique:users|min:6',
+            'firstname' => 'required|string|max:50',
+            'lastname' => 'required|string|max:50',
             'captcha' => 'sometimes|required',
             'mobile_code' => 'required|in:'.$mobileCodes,
             'country_code' => 'required|in:'.$countryCodes,
@@ -119,7 +120,7 @@ class RegisterController extends Controller
             'remark'=>'registration_success',
             'status'=>'success',
             'message'=>['success'=>$notify],
-            'data'=>$response
+            'data' => $response
         ]);
 
     }
@@ -145,9 +146,13 @@ class RegisterController extends Controller
         $user = new User();
         $user->email = strtolower($data['email']);
         $user->password = Hash::make($data['password']);
-        $user->username = $data['username'];
+        $userCode = 'CPE' . mt_rand(1000, 9999);
+        $user->username = $userCode;
+        $user->user_code = $userCode;
         $user->ref_by = $referUser ? $referUser->id : 0;
         $user->country_code = $data['country_code'];
+        $user->firstname = $data['firstname'];
+        $user->lastname = $data['lastname'];
         $user->mobile = $data['mobile_code'].$data['mobile'];
         $user->address = [
             'address' => '',
