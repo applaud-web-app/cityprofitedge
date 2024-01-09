@@ -53,6 +53,14 @@ class TransactionDataImport implements ToCollection, WithHeadingRow
 
                 if (!empty($row['pooling_broker_code'])) {
                     $poolingBrokerPortfolio = PoolingAccountPortfolio::where('broker_code', $row['pooling_broker_code'])->first();
+
+                    if (empty($poolingBrokerPortfolio) && !empty($row['pooling_broker_name']) && !empty($row['pooling_broker_code'])) {
+                        $poolingBrokerPortfolio = new PoolingAccountPortfolio();
+                        $poolingBrokerPortfolio->broker_name = $row['pooling_broker_name'];
+                        $poolingBrokerPortfolio->broker_code = $row['pooling_broker_code'];
+                        $poolingBrokerPortfolio->user_id = $user->id;
+                        $poolingBrokerPortfolio->save();
+                    }
                 } else {
                     $poolingBrokerPortfolio = new PoolingAccountPortfolio();
                     $poolingBrokerPortfolio->broker_name = $row['pooling_broker_name'];

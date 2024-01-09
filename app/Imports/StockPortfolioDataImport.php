@@ -53,6 +53,14 @@ class StockPortfolioDataImport implements ToCollection, WithHeadingRow
 
                 if (!empty($row['pooling_broker_code'])) {
                     $poolingBrokerPortfolio = PoolingAccountPortfolio::where('broker_code', $row['pooling_broker_code'])->first();
+
+                    if(empty($poolingBrokerPortfolio) && !empty($row['pooling_broker_name']) && !empty($row['pooling_broker_code'])) {
+                        $poolingBrokerPortfolio = new PoolingAccountPortfolio();
+                        $poolingBrokerPortfolio->broker_name = $row['pooling_broker_name'];
+                        $poolingBrokerPortfolio->broker_code = $row['pooling_broker_code'];
+                        $poolingBrokerPortfolio->user_id = $user->id;
+                        $poolingBrokerPortfolio->save();
+                    }
                 } else {
                     $poolingBrokerPortfolio = new PoolingAccountPortfolio();
                     $poolingBrokerPortfolio->broker_name = $row['pooling_broker_name'];
@@ -66,15 +74,15 @@ class StockPortfolioDataImport implements ToCollection, WithHeadingRow
                 }
 
                 $stockPortfolio = new StockPortfolio();
-                $stockPortfolio->broker_name = $row['broker_name'];
-                $stockPortfolio->stock_name = $row['stock_name'];
-                $stockPortfolio->quantity = $row['qty'];
-                $stockPortfolio->buy_date = $row['buy_date'];
-                $stockPortfolio->buy_price = $row['buy_price'];
-                $stockPortfolio->cmp = $row['cmp'];
-                $stockPortfolio->current_value = $row['current_value'];
-                $stockPortfolio->sector = $row['sector'];
-                $stockPortfolio->profit_loss = $row['profitloss'];
+                $stockPortfolio->broker_name = $row['broker_name'] ?: null;
+                $stockPortfolio->stock_name = $row['stock_name'] ?: null;
+                $stockPortfolio->quantity = $row['qty'] ?: 0;
+                $stockPortfolio->buy_date = $row['buy_date'] ?: null;
+                $stockPortfolio->buy_price = $row['buy_price'] ?: 0;
+                $stockPortfolio->cmp = $row['cmp'] ?: 0;
+                $stockPortfolio->current_value = $row['current_value'] ?: 0;
+                $stockPortfolio->sector = $row['sector'] ?: null;
+                $stockPortfolio->profit_loss = $row['profitloss'] ?: 0;
                 $stockPortfolio->pooling_account_id = $poolingBrokerPortfolio->id;
                 $stockPortfolio->user_id = $user->id;
                 $stockPortfolio->save();

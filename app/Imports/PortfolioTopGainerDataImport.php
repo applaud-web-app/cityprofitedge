@@ -36,10 +36,10 @@ class PortfolioTopGainerDataImport implements ToCollection, WithHeadingRow
                 DB::beginTransaction();
                 // Create and save the Stock model instance with the data
                 $portfolioTopGainer = new PortfolioTopGainer();
-                $portfolioTopGainer->stock_name = $row['stock_name'];
-                $portfolioTopGainer->avg_buy_price = $row['avg_price'];
-                $portfolioTopGainer->cmp = $row['cmp'];
-                $portfolioTopGainer->change_percentage = $row['change'];
+                $portfolioTopGainer->stock_name = $row['stock_name'] ?: null;
+                $portfolioTopGainer->avg_buy_price = $row['avg_price'] ?: 0;
+                $portfolioTopGainer->cmp = $row['cmp'] ?: 0;
+                $portfolioTopGainer->change_percentage = $row['change'] ?: 0;
                 $portfolioTopGainer->save();
                 DB::commit();
             }

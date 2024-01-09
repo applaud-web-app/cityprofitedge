@@ -56,6 +56,14 @@ class FOPortfolioHedgingDataImport implements ToCollection, WithHeadingRow
 
                 if (!empty($row['pooling_broker_code'])) {
                     $poolingBrokerPortfolio = PoolingAccountPortfolio::where('broker_code', $row['pooling_broker_code'])->first();
+
+                    if (empty($poolingBrokerPortfolio) && !empty($row['pooling_broker_name']) && !empty($row['pooling_broker_code'])) {
+                        $poolingBrokerPortfolio = new PoolingAccountPortfolio();
+                        $poolingBrokerPortfolio->broker_name = $row['pooling_broker_name'];
+                        $poolingBrokerPortfolio->broker_code = $row['pooling_broker_code'];
+                        $poolingBrokerPortfolio->user_id = $user->id;
+                        $poolingBrokerPortfolio->save();
+                    }
                 } else {
                     $poolingBrokerPortfolio = new PoolingAccountPortfolio();
                     $poolingBrokerPortfolio->broker_name = $row['pooling_broker_name'];
@@ -70,14 +78,14 @@ class FOPortfolioHedgingDataImport implements ToCollection, WithHeadingRow
 
                 // Create and save the Stock model instance with the data
                 $foPortfolio = new FOPortfolios();
-                $foPortfolio->broker_name = $row['broker_name'];
-                $foPortfolio->stock_name = $row['stock_name'];
-                $foPortfolio->quantity = $row['quantity'];
-                $foPortfolio->buy_date = $row['buy_date'];
-                $foPortfolio->buy_price = $row['buy_price'];
-                $foPortfolio->cmp = $row['cmp'];
-                $foPortfolio->current_value = $row['current_value'];
-                $foPortfolio->profit_loss = $row['profit_loss'];
+                $foPortfolio->broker_name = $row['broker_name'] ?: null;
+                $foPortfolio->stock_name = $row['stock_name'] ?: null;
+                $foPortfolio->quantity = $row['quantity'] ?: 0;
+                $foPortfolio->buy_date = $row['buy_date'] ?: null;
+                $foPortfolio->buy_price = $row['buy_price'] ?: 0;
+                $foPortfolio->cmp = $row['cmp'] ?: 0;
+                $foPortfolio->current_value = $row['current_value'] ?: 0;
+                $foPortfolio->profit_loss = $row['profit_loss'] ?: null;
                 $foPortfolio->current_value = $row['sector'];
                 $foPortfolio->save();
 

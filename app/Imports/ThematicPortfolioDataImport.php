@@ -36,12 +36,12 @@ class ThematicPortfolioDataImport implements ToCollection, WithHeadingRow
                 DB::beginTransaction();
                 // Create and save the Stock model instance with the data
                 $thematicPortfolio = new ThematicPortfolio();
-                $thematicPortfolio->stock_name = $row['stock_name'];
-                $thematicPortfolio->reco_date = $row['reco_date'];
-                $thematicPortfolio->buy_price = $row['buy_price'];
-                $thematicPortfolio->cmp = $row['cmp'];
-                $thematicPortfolio->pnl = $row['pnl'];
-                $thematicPortfolio->sector = $row['sector'];
+                $thematicPortfolio->stock_name = $row['stock_name'] ?: null;
+                $thematicPortfolio->reco_date = $row['reco_date'] ?: null;
+                $thematicPortfolio->buy_price = $row['buy_price'] ?: 0;
+                $thematicPortfolio->cmp = $row['cmp'] ?: 0;
+                $thematicPortfolio->pnl = $row['pnl'] ?: 0;
+                $thematicPortfolio->sector = $row['sector'] ?: null;
                 $thematicPortfolio->save();
                 DB::commit();
             }

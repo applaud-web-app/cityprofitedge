@@ -56,6 +56,14 @@ class GlobalStockPortfolioDataImport implements ToCollection, WithHeadingRow
 
                 if (!empty($row['pooling_broker_code'])) {
                     $poolingBrokerPortfolio = PoolingAccountPortfolio::where('broker_code', $row['pooling_broker_code'])->first();
+
+                    if (empty($poolingBrokerPortfolio) && !empty($row['pooling_broker_name']) && !empty($row['pooling_broker_code'])) {
+                        $poolingBrokerPortfolio = new PoolingAccountPortfolio();
+                        $poolingBrokerPortfolio->broker_name = $row['pooling_broker_name'];
+                        $poolingBrokerPortfolio->broker_code = $row['pooling_broker_code'];
+                        $poolingBrokerPortfolio->user_id = $user->id;
+                        $poolingBrokerPortfolio->save();
+                    }
                 } else {
                     $poolingBrokerPortfolio = new PoolingAccountPortfolio();
                     $poolingBrokerPortfolio->broker_name = $row['pooling_broker_name'];
@@ -70,14 +78,14 @@ class GlobalStockPortfolioDataImport implements ToCollection, WithHeadingRow
 
                 // Create and save the Stock model instance with the data
                 $globalStockPortfolio = new GlobalStockPortfolio();
-                $globalStockPortfolio->broker_name = $row['broker_name'];
-                $globalStockPortfolio->stock_name = $row['stock_name'];
-                $globalStockPortfolio->quantity = $row['quantity'];
-                $globalStockPortfolio->buy_date = $row['buy_date'];
-                $globalStockPortfolio->buy_price = $row['buy_price'];
-                $globalStockPortfolio->cmp = $row['cmp'];
-                $globalStockPortfolio->current_value = $row['current_value'];
-                $globalStockPortfolio->profit_loss = $row['profit_loss'];
+                $globalStockPortfolio->broker_name = $row['broker_name'] ?: null;
+                $globalStockPortfolio->stock_name = $row['stock_name'] ?: null;
+                $globalStockPortfolio->quantity = $row['quantity'] ?: 0;
+                $globalStockPortfolio->buy_date = $row['buy_date'] ?: null;
+                $globalStockPortfolio->buy_price = $row['buy_price'] ?: 0;
+                $globalStockPortfolio->cmp = $row['cmp'] ?: 0;
+                $globalStockPortfolio->current_value = $row['current_value'] ?: 0;
+                $globalStockPortfolio->profit_loss = $row['profit_loss'] ?: null;
                 $globalStockPortfolio->current_value = $row['sector'];
                 $globalStockPortfolio->save();
 

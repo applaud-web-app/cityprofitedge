@@ -53,6 +53,14 @@ class LedgerDataImport implements ToCollection, WithHeadingRow
 
                 if (!empty($row['pooling_broker_code'])) {
                     $poolingBrokerPortfolio = PoolingAccountPortfolio::where('broker_code', $row['pooling_broker_code'])->first();
+
+                    if (empty($poolingBrokerPortfolio) && !empty($row['pooling_broker_name']) && !empty($row['pooling_broker_code'])) {
+                        $poolingBrokerPortfolio = new PoolingAccountPortfolio();
+                        $poolingBrokerPortfolio->broker_name = $row['pooling_broker_name'];
+                        $poolingBrokerPortfolio->broker_code = $row['pooling_broker_code'];
+                        $poolingBrokerPortfolio->user_id = $user->id;
+                        $poolingBrokerPortfolio->save();
+                    }
                 } else {
                     $poolingBrokerPortfolio = new PoolingAccountPortfolio();
                     $poolingBrokerPortfolio->broker_name = $row['pooling_broker_name'];
@@ -66,13 +74,13 @@ class LedgerDataImport implements ToCollection, WithHeadingRow
                 }
 
                 $ledger = new Ledger();
-                $ledger->stock_name = $row['stock_name'];
-                $ledger->bought_date = $row['bought_date'];
-                $ledger->buy_price = $row['buy_price'];
-                $ledger->quantity = $row['qty'];
-                $ledger->sold_date = $row['sold_date'];
-                $ledger->sell_price = $row['sell_price'];
-                $ledger->profit_loss = $row['profitloss'];
+                $ledger->stock_name = $row['stock_name'] ?: null;
+                $ledger->bought_date = $row['bought_date'] ?: null;
+                $ledger->buy_price = $row['buy_price'] ?: 0;
+                $ledger->quantity = $row['qty'] ?: 0;
+                $ledger->sold_date = $row['sold_date'] ?: null;
+                $ledger->sell_price = $row['sell_price'] ?: 0;
+                $ledger->profit_loss = $row['profitloss'] ?: 0;
                 $ledger->pooling_account_id = $poolingBrokerPortfolio->id;
                 $ledger->user_id = $user->id;
                 $ledger->save();
