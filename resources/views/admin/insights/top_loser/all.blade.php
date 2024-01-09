@@ -76,7 +76,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="{{ route('admin.portfolio-insights.top-gainers.upload') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('admin.portfolio-insights.top-losers.upload') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="form-group">
                         <label for="xlsFile">@lang('Select XLS File')</label>
@@ -91,10 +91,10 @@
 
 @endsection
 
-@if(!request()->routeIs('admin.portfolio-insights.top-gainers'))
+@if(!request()->routeIs('admin.portfolio-insights.top-losers'))
     @push('breadcrumb-plugins')
-        <a href="{{ route('admin.portfolio-insights.top-gainers.add.page') }}" class="btn btn-sm btn-outline--primary"><i class="las la-plus"></i>@lang('Add New')</a>
-        <a href="{{ route('admin.portfolio-insights.top-gainers.download.template') }}" class="btn btn-sm btn-outline--primary"><i class="las la-download"></i>@lang('Download Excel Template')</a>
+        <a href="{{ route('admin.portfolio-insights.top-losers.add.page') }}" class="btn btn-sm btn-outline--primary"><i class="las la-plus"></i>@lang('Add New')</a>
+        <a href="{{ route('admin.portfolio-insights.top-losers.download.template') }}" class="btn btn-sm btn-outline--primary"><i class="las la-download"></i>@lang('Download Excel Template')</a>
         <button class="btn btn-sm btn-outline--primary" data-bs-toggle="modal" data-bs-target="#uploadXlsModal"><i class="las la-upload"></i>@lang('Upload via XLS')</button>
     @endpush
 @endif

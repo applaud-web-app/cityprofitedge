@@ -75,20 +75,22 @@ class MetalsPortfolioDataImport implements ToCollection, WithHeadingRow
                     continue;
                 }
 
-                // Process each row of data
-                DB::beginTransaction();
                 // Create and save the Stock model instance with the data
                 $metalsPortfolio = new MetalsPortfolio();
-                $metalsPortfolio->broker_name = $row['broker_name'];
-                $metalsPortfolio->stock_name = $row['stock_name'];
-                $metalsPortfolio->quantity = $row['quantity'];
-                $metalsPortfolio->buy_date = $row['buy_date'];
-                $metalsPortfolio->buy_price = $row['buy_price'];
-                $metalsPortfolio->cmp = $row['cmp'];
-                $metalsPortfolio->current_value = $row['current_value'];
-                $metalsPortfolio->profit_loss = $row['profit_loss'];
-                $metalsPortfolio->current_value = $row['sector'];
+                $metalsPortfolio->broker_name = $row['broker_name'] ?: null;
+                $metalsPortfolio->stock_name = $row['stock_name'] ?: null;
+                $metalsPortfolio->quantity = $row['qty'] ?: 0;
+                $metalsPortfolio->buy_date = $row['buy_date'] ?: null;
+                $metalsPortfolio->buy_price = $row['buy_price'] ?: 0;
+                $metalsPortfolio->cmp = $row['cmp'] ?: 0;
+                $metalsPortfolio->current_value = $row['current_value'] ?: 0;
+                $metalsPortfolio->profit_loss = $row['profitloss'] ?: 0;
+                $metalsPortfolio->current_value = $row['sector'] ?: null;
+                $metalsPortfolio->pooling_account_id = $poolingBrokerPortfolio->id;
+                $metalsPortfolio->user_id = $user->id;
                 $metalsPortfolio->save();
+
+                DB::commit();
             }
         } catch (\Throwable $th) {
             if (DB::transactionLevel() > 0) {

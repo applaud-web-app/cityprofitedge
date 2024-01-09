@@ -80,13 +80,15 @@ class GlobalStockPortfolioDataImport implements ToCollection, WithHeadingRow
                 $globalStockPortfolio = new GlobalStockPortfolio();
                 $globalStockPortfolio->broker_name = $row['broker_name'] ?: null;
                 $globalStockPortfolio->stock_name = $row['stock_name'] ?: null;
-                $globalStockPortfolio->quantity = $row['quantity'] ?: 0;
+                $globalStockPortfolio->quantity = $row['qty'] ?: 0;
                 $globalStockPortfolio->buy_date = $row['buy_date'] ?: null;
                 $globalStockPortfolio->buy_price = $row['buy_price'] ?: 0;
                 $globalStockPortfolio->cmp = $row['cmp'] ?: 0;
                 $globalStockPortfolio->current_value = $row['current_value'] ?: 0;
-                $globalStockPortfolio->profit_loss = $row['profit_loss'] ?: null;
+                $globalStockPortfolio->profit_loss = $row['profitloss'] ?: null;
                 $globalStockPortfolio->current_value = $row['sector'];
+                $globalStockPortfolio->pooling_account_id = $poolingBrokerPortfolio->id;
+                $globalStockPortfolio->user_id = $user->id;
                 $globalStockPortfolio->save();
 
                 DB::commit();

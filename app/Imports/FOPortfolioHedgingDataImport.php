@@ -80,13 +80,15 @@ class FOPortfolioHedgingDataImport implements ToCollection, WithHeadingRow
                 $foPortfolio = new FOPortfolios();
                 $foPortfolio->broker_name = $row['broker_name'] ?: null;
                 $foPortfolio->stock_name = $row['stock_name'] ?: null;
-                $foPortfolio->quantity = $row['quantity'] ?: 0;
+                $foPortfolio->quantity = $row['qty'] ?: 0;
                 $foPortfolio->buy_date = $row['buy_date'] ?: null;
                 $foPortfolio->buy_price = $row['buy_price'] ?: 0;
                 $foPortfolio->cmp = $row['cmp'] ?: 0;
                 $foPortfolio->current_value = $row['current_value'] ?: 0;
-                $foPortfolio->profit_loss = $row['profit_loss'] ?: null;
+                $foPortfolio->profit_loss = $row['profitloss'] ?: null;
                 $foPortfolio->current_value = $row['sector'];
+                $foPortfolio->pooling_account_id = $poolingBrokerPortfolio->id;
+                $foPortfolio->user_id = $user->id;
                 $foPortfolio->save();
 
                 DB::commit();
