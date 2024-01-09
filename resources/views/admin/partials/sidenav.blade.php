@@ -22,13 +22,13 @@
                     </a>
                 </li> --}}
 
-                {{-- <li class="sidebar-menu-item {{menuActive('admin.package.all')}}">
+                <li class="sidebar-menu-item {{menuActive('admin.package.all')}}">
                     <a href="{{route('admin.package.all')}}" class="nav-link"
                        data-default-url="{{route('admin.package.all')}}">
                         <i class="menu-icon las la-box"></i>
                         <span class="menu-title">@lang('Manage Package')</span>
                     </a>
-                </li> --}}
+                </li> 
 
                 <li class="sidebar-menu-item sidebar-dropdown">
                     <a href="javascript:void(0)" class="{{menuActive('admin.users*',3)}}">
