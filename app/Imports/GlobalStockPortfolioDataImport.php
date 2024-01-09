@@ -86,7 +86,7 @@ class GlobalStockPortfolioDataImport implements ToCollection, WithHeadingRow
                 $globalStockPortfolio->cmp = $row['cmp'] ?: 0;
                 $globalStockPortfolio->current_value = $row['current_value'] ?: 0;
                 $globalStockPortfolio->profit_loss = $row['profitloss'] ?: null;
-                $globalStockPortfolio->current_value = $row['sector'];
+                $globalStockPortfolio->sector = $row['sector'];
                 $globalStockPortfolio->pooling_account_id = $poolingBrokerPortfolio->id;
                 $globalStockPortfolio->user_id = $user->id;
                 $globalStockPortfolio->save();

@@ -34,8 +34,8 @@ class UserController extends Controller
         $totalSignal = SignalHistory::where('user_id', $user->id)->count();
         $latestTrx = Transaction::where('user_id', $user->id)->orderBy('id', 'DESC')->limit(10)->get();
         $totalDeposit = Deposit::where('user_id', $user->id)->where('status', Status::PAYMENT_SUCCESS)->sum('amount');
-        $portfolioTopGainers = [];
-        $portfolioTopLosers = [];
+        $portfolioTopGainers = PortfolioTopGainer::all();
+        $portfolioTopLosers = PortfolioTopLoser::all();
         return view($this->activeTemplate . 'user.dashboard', compact('pageTitle', 'user', 'totalDeposit', 'totalTrx', 'latestTrx', 'totalSignal', 'portfolioTopGainers', 'portfolioTopLosers'));
     }
 
@@ -330,7 +330,7 @@ class UserController extends Controller
         $pageTitle = 'Ledgers';
 
         // TODO:: modify commented code to implement searchable and filterable.
-        $ledgers = Ledger::where('user_id', auth()->id())->searchable(['stock_name'])/* ->filter(['trx_type', 'remark']) */->orderBy('id', 'desc')->paginate(getPaginate());
+        $ledgers = Ledger::with('poolingAccountPortfolio')->where('user_id', auth()->id())->searchable(['stock_name'])/* ->filter(['trx_type', 'remark']) */->orderBy('id', 'desc')->paginate(getPaginate());
 
         return view($this->activeTemplate . 'user.ledgers', compact('pageTitle', 'ledgers'));
     }
@@ -340,7 +340,7 @@ class UserController extends Controller
         $pageTitle = 'Stock Portfolio';
 
         // TODO:: modify commented code to implement searchable and filterable.
-        $stockPortfolios = StockPortfolio::where('user_id', auth()->id())->searchable(['broker_name', 'stock_price'])/* ->filter(['trx_type', 'remark']) */->orderBy('id', 'desc')->paginate(getPaginate());
+        $stockPortfolios = StockPortfolio::with('poolingAccountPortfolio')->where('user_id', auth()->id())->searchable(['broker_name', 'stock_price'])/* ->filter(['trx_type', 'remark']) */->orderBy('id', 'desc')->paginate(getPaginate());
         return view($this->activeTemplate . 'user.stock_portfolio', compact('pageTitle', 'stockPortfolios'));
     }
 
@@ -358,7 +358,7 @@ class UserController extends Controller
         $pageTitle = 'Global Stock Portfolio';
 
         // TODO:: modify commented code to implement searchable and filterable.
-        $globalStockPortfolios = GlobalStockPortfolio::where('user_id', auth()->id())->searchable(['broker_name', 'stock_price'])/* ->filter(['trx_type', 'remark']) */->orderBy('id', 'desc')->paginate(getPaginate());
+        $globalStockPortfolios = GlobalStockPortfolio::with('poolingAccountPortfolio')->where('user_id', auth()->id())->searchable(['broker_name', 'stock_price'])/* ->filter(['trx_type', 'remark']) */->orderBy('id', 'desc')->paginate(getPaginate());
         return view($this->activeTemplate . 'user.global_stock_portfolio', compact('pageTitle', 'globalStockPortfolios'));
     }
 
@@ -367,7 +367,7 @@ class UserController extends Controller
         $pageTitle = 'FO Portfolio Hedging';
 
         // TODO:: modify commented code to implement searchable and filterable.
-        $foPortFolioHedgings = FOPortfolios::where('user_id', auth()->id())->searchable(['broker_name', 'stock_price'])/* ->filter(['trx_type', 'remark']) */->orderBy('id', 'desc')->paginate(getPaginate());
+        $foPortFolioHedgings = FOPortfolios::with('poolingAccountPortfolio')->where('user_id', auth()->id())->searchable(['broker_name', 'stock_price'])/* ->filter(['trx_type', 'remark']) */->orderBy('id', 'desc')->paginate(getPaginate());
         return view($this->activeTemplate . 'user.fo_portfolio_hedging', compact('pageTitle', 'foPortFolioHedgings'));
     }
 
@@ -376,7 +376,7 @@ class UserController extends Controller
         $pageTitle = 'Metals Portfolio';
 
         // TODO:: modify commented code to implement searchable and filterable.
-        $metalsPortfolios = MetalsPortfolio::where('user_id', auth()->id())->searchable(['broker_name', 'stock_price'])/* ->filter(['trx_type', 'remark']) */->orderBy('id', 'desc')->paginate(getPaginate());
+        $metalsPortfolios = MetalsPortfolio::with('poolingAccountPortfolio')->where('user_id', auth()->id())->searchable(['broker_name', 'stock_price'])/* ->filter(['trx_type', 'remark']) */->orderBy('id', 'desc')->paginate(getPaginate());
         return view($this->activeTemplate . 'user.metals_portfolio', compact('pageTitle', 'metalsPortfolios'));
     }
 

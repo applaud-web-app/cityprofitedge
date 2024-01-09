@@ -47,7 +47,7 @@
                                         <td>
                                             {{ $portfolioTopGainer->cmp }}
                                         </td>
-                                        <td>{{ $portfolioTopGainer->change }}</td>
+                                        <td>{{ $portfolioTopGainer->change_percentage }}</td>
                                     </tr>
                                 @empty
                                     <tr>

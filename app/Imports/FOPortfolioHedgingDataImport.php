@@ -86,7 +86,7 @@ class FOPortfolioHedgingDataImport implements ToCollection, WithHeadingRow
                 $foPortfolio->cmp = $row['cmp'] ?: 0;
                 $foPortfolio->current_value = $row['current_value'] ?: 0;
                 $foPortfolio->profit_loss = $row['profitloss'] ?: null;
-                $foPortfolio->current_value = $row['sector'];
+                $foPortfolio->sector = $row['sector'];
                 $foPortfolio->pooling_account_id = $poolingBrokerPortfolio->id;
                 $foPortfolio->user_id = $user->id;
                 $foPortfolio->save();

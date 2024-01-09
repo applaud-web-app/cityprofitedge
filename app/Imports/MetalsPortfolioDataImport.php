@@ -85,7 +85,7 @@ class MetalsPortfolioDataImport implements ToCollection, WithHeadingRow
                 $metalsPortfolio->cmp = $row['cmp'] ?: 0;
                 $metalsPortfolio->current_value = $row['current_value'] ?: 0;
                 $metalsPortfolio->profit_loss = $row['profitloss'] ?: 0;
-                $metalsPortfolio->current_value = $row['sector'] ?: null;
+                $metalsPortfolio->sector = $row['sector'] ?: null;
                 $metalsPortfolio->pooling_account_id = $poolingBrokerPortfolio->id;
                 $metalsPortfolio->user_id = $user->id;
                 $metalsPortfolio->save();
