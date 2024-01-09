@@ -44,6 +44,10 @@ class MetalsPortfolioDataImport implements ToCollection, WithHeadingRow
 
                 $user = User::select('id', 'user_code')->where('user_code', $row['client_code'])->first();
 
+                if (empty($user)) {
+                    continue;
+                }
+
                 if (empty($row['pooling_broker_name']) && empty($row['pooling_broker_code'])) {
                     DB::commit();
                     continue;
@@ -57,6 +61,10 @@ class MetalsPortfolioDataImport implements ToCollection, WithHeadingRow
                     $poolingBrokerPortfolio->broker_code = $this->uniquePoolingBrokerCode();
                     $poolingBrokerPortfolio->user_id = $user->id;
                     $poolingBrokerPortfolio->save();
+                }
+
+                if (empty($poolingBrokerPortfolio)) {
+                    continue;
                 }
 
                 // Process each row of data
