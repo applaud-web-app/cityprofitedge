@@ -58,7 +58,7 @@
                                                 {{ $globalStockPortfolio->quantity }}
                                             </td>
                                             <td>
-                                                {{ showDateTime($globalStockPortfolio->buy_date) }}<br>{{ diffForHumans($globalStockPortfolio->buy_date) }}
+                                                {{ showDate($globalStockPortfolio->buy_date) }}
                                             </td>
                                             <td>
                                                 {{ showAmount($globalStockPortfolio->buy_price) }}

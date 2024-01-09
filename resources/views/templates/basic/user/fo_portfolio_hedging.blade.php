@@ -58,7 +58,7 @@
                                                 {{ $foPortFolioHedging->quantity }}
                                             </td>
                                             <td>
-                                                {{ showDateTime($foPortFolioHedging->buy_date) }}<br>{{ diffForHumans($foPortFolioHedging->buy_date) }}
+                                                {{ showDate($foPortFolioHedging->buy_date) }}
                                             </td>
                                             <td>
                                                 {{ showAmount($foPortFolioHedging->buy_price) }}

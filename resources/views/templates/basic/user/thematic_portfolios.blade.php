@@ -44,7 +44,7 @@
                                             {{ $thematicPortfolio->stock_name }}
                                         </td>
                                         <td>
-                                            {{ showDateTime($thematicPortfolio->reco_date) }}<br>{{ diffForHumans($thematicPortfolio->reco_date) }}
+                                            {{ showDate($thematicPortfolio->reco_date) }}
                                         </td>
                                         <td>
                                             {{ showAmount($thematicPortfolio->buy_price) }}

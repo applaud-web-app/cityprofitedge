@@ -308,6 +308,13 @@ function showDateTime($date, $format = 'Y-m-d h:i A')
     return Carbon::parse($date)->translatedFormat($format);
 }
 
+function showDate($date, $format = 'Y-m-d')
+{
+    $lang = session()->get('lang');
+    Carbon::setlocale($lang);
+    return Carbon::parse($date)->translatedFormat($format);
+}
+
 
 function getContent($dataKeys, $singleQuery = false, $limit = null, $orderById = false)
 {

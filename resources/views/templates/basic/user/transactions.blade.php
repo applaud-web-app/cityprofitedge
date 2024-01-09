@@ -58,7 +58,7 @@
                                             <strong>{{ $trx->stock_name }}</strong>
                                         </td>
                                         <td>
-                                            {{ showDateTime($trx->trx_date) }}<br>{{ diffForHumans($trx->trx_date) }}
+                                            {{ showDate($trx->trx_date) }}
                                         </td>
                                         <td class="budget">
                                             <span class="fw-bold @if($trx->trx_type == '+')text--success @else text--danger @endif">

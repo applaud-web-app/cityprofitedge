@@ -58,7 +58,7 @@
                                             {{ $metalsPortfolio->quantity }}
                                         </td>
                                         <td>
-                                            {{ showDateTime($metalsPortfolio->buy_date) }}<br>{{ diffForHumans($metalsPortfolio->buy_date) }}
+                                            {{ showDate($metalsPortfolio->buy_date) }}
                                         </td>
                                         <td>
                                             {{ showAmount($metalsPortfolio->buy_price) }}

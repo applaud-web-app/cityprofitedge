@@ -45,10 +45,10 @@
                                         <td>
                                             <strong>{{ $ledger->stock_name }}</strong>
                                         </td>
-                                        <td>{{ $ledger->baught_date }}</td>
+                                        <td>{{ showDate($ledger->baught_date) }}</td>
                                         <td>{{ $ledger->buy_price }}</td>
                                         <td>{{ $ledger->quantity }}</td>
-                                        <td>{{ $ledger->sold_date }}</td>
+                                        <td>{{ showDate($ledger->sold_date) }}</td>
                                         <td>{{ $ledger->sell_price }}</td>
                                         <td>{{ $ledger->profit_loss }}</td>
                                         <td>{{ $ledger->poolingAccountPortfolio->broker_name }}</td>
