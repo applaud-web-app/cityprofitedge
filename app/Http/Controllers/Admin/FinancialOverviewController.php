@@ -115,4 +115,41 @@ class FinancialOverviewController extends Controller
             return back()->withNotify($notify);
         }
     }
+
+    /**
+     * Delete a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+
+    public function deleteLedger(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|integer',
+        ]);
+
+        $ledger = Ledger::findOrFail($request->id);
+        $ledger->delete();
+
+        $notify[] = ['success', 'Ledger deleted successfully'];
+        return back()->withNotify($notify);
+    }
+
+    /**
+     * Delete a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function deleteStockPortfolio(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|integer',
+        ]);
+
+        $stockPortfolio = StockPortfolio::findOrFail($request->id);
+        $stockPortfolio->delete();
+
+        $notify[] = ['success', 'Stock Portfolio deleted successfully'];
+        return back()->withNotify($notify);
+    }
 }

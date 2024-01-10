@@ -189,4 +189,40 @@ class PortfolioInsightsController extends Controller
             return back()->withNotify($notify);
         }
     }
+
+    /**
+     * Delete a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function deleteTopGainer(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|integer',
+        ]);
+
+        $portfolioTopGainer = PortfolioTopGainer::findOrFail($request->id);
+        $portfolioTopGainer->delete();
+
+        $notify[] = ['success', 'Portfolio Top Gainer deleted successfully'];
+        return back()->withNotify($notify);
+    }
+
+    /**
+     * Delete a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function deleteTopLoser(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|integer',
+        ]);
+
+        $portfolioTopLoser = PortfolioTopLoser::findOrFail($request->id);
+        $portfolioTopLoser->delete();
+
+        $notify[] = ['success', 'Portfolio Top Loser deleted successfully'];
+        return back()->withNotify($notify);
+    }
 }

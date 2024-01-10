@@ -32,13 +32,13 @@
 
                                     <td>
                                         <div class="d-flex justify-content-end flex-wrap gap-2">
-                                            <a href="{{ route('admin.signal.edit', $portfolioTopLoser->id) }}"
+                                            {{-- <a href="{{ route('admin.signal.edit', $portfolioTopLoser->id) }}"
                                                 class="btn btn-sm btn-outline--primary">
                                                 <i class="la la-pencil"></i> @lang('Edit')
-                                            </a>
+                                            </a> --}}
                                             <button class="btn btn-sm btn-outline--danger confirmationBtn"
-                                                data-question="@lang('Are you sure to delete this signal')?"
-                                                data-action="{{ route('admin.signal.delete') }}"
+                                                data-question="@lang('Are you sure to delete this record')?"
+                                                data-action="{{ route('admin.portfolio-insights.top-losers.delete') }}"
                                                 data-hidden_id="{{ $portfolioTopLoser->id }}">
                                                 <i class="la la-trash"></i> @lang('Delete')
                                             </button>

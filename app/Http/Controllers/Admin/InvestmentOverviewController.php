@@ -389,4 +389,56 @@ class InvestmentOverviewController extends Controller
             return back()->withNotify($notify);
         }
     }
+
+    public function deleteThematicPortfolio(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|required',
+        ]);
+
+        $thematicPortfolio = ThematicPortfolio::findOrFail($request->id);
+        $thematicPortfolio->delete();
+
+        $notify[] = ['success', 'Record deleted Successfully'];
+        return back()->withNotify($notify);
+    }
+
+    public function deleteFoPortfolioHedging(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|required',
+        ]);
+
+        $foPortfolioHedging = FOPortfolios::findOrFail($request->id);
+        $foPortfolioHedging->delete();
+
+        $notify[] = ['success', 'Record deleted Successfully'];
+        return back()->withNotify($notify);
+    }
+
+    public function deleteMetalsPortfolio(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|required',
+        ]);
+
+        $metalsPortfolio = MetalsPortfolio::findOrFail($request->id);
+        $metalsPortfolio->delete();
+
+        $notify[] = ['success', 'Record deleted Successfully'];
+        return back()->withNotify($notify);
+    }
+
+    public function deleteGlobalStockPortfolio(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|required',
+        ]);
+
+        $globalStockPortfolio = GlobalStockPortfolio::findOrFail($request->id);
+        $globalStockPortfolio->delete();
+
+        $notify[] = ['success', 'Record deleted Successfully'];
+        return back()->withNotify($notify);
+    }
 }

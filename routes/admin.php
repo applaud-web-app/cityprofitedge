@@ -81,6 +81,8 @@ Route::middleware('admin')->group(function () {
 
             Route::get('download', 'templateThematicPortfolioDownload')->name('download.template');
             Route::post('upload', 'uploadThematicPortfolios')->name('upload');
+
+            Route::post('delete', 'deleteThematicPortfolio')->name('delete');
         });
 
         // global-stock portfolio
@@ -91,6 +93,8 @@ Route::middleware('admin')->group(function () {
 
             Route::get('download', 'templateGlobalStockPortfolioDownload')->name('download.template');
             Route::post('upload', 'uploadGlobalStockPortfolios')->name('upload');
+
+            Route::post('delete', 'deleteGlobalStockPortfolio')->name('delete');
         });
 
         // F&O portfolio hedging
@@ -101,6 +105,8 @@ Route::middleware('admin')->group(function () {
 
             Route::get('download', 'templateFoPortfolioHedgingDownload')->name('download.template');
             Route::post('upload', 'uploadFoPortfolioHedging')->name('upload');
+
+            Route::post('delete', 'deleteFoPortfolioHedging')->name('delete');
         });
 
         // Metals portfolio
@@ -111,6 +117,8 @@ Route::middleware('admin')->group(function () {
 
             Route::get('download', 'templateMetalsPortfolioDownload')->name('download.template');
             Route::post('upload', 'uploadMetalsPortfolios')->name('upload');
+
+            Route::post('delete', 'deleteMetalsPortfolio')->name('delete');
         });
     });
 
@@ -124,6 +132,8 @@ Route::middleware('admin')->group(function () {
 
             Route::get('download', 'templateTopGainersDownload')->name('download.template');
             Route::post('upload', 'uploadTopGainers')->name('upload');
+
+            Route::post('delete', 'deleteTopGainer')->name('delete');
         });
 
         // Portfolio Top Losers
@@ -134,6 +144,8 @@ Route::middleware('admin')->group(function () {
 
             Route::get('download', 'templateTopLosersDownload')->name('download.template');
             Route::post('upload', 'uploadTopLosers')->name('upload');
+
+            Route::post('delete', 'deleteTopLoser')->name('delete');
         });
     });
 
@@ -145,6 +157,8 @@ Route::middleware('admin')->group(function () {
 
             Route::get('download', 'templateLedgerDownload')->name('download.template');
             Route::post('upload', 'uploadLedger')->name('upload');
+
+            Route::post('delete', 'deleteLedger')->name('delete');
         });
 
         // Stock Portfolio
@@ -153,6 +167,8 @@ Route::middleware('admin')->group(function () {
 
             Route::get('download', 'templateStockPortfolioDownload')->name('download.template');
             Route::post('upload', 'uploadStockPortfolio')->name('upload');
+
+            Route::post('delete', 'deleteStockPortfolio')->name('delete');
         });
     });
 
@@ -163,6 +179,8 @@ Route::middleware('admin')->group(function () {
         Route::get('download', 'templateTransactionDownload')->name('download.template');
         // upload transaction template
         Route::post('upload', 'uploadTransaction')->name('upload');
+
+        Route::post('delete', 'deleteTransaction')->name('delete');
     });
 
     // Subscriber

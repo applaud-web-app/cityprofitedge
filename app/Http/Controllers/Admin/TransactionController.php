@@ -60,4 +60,22 @@ class TransactionController extends Controller
             return back()->withNotify($notify);
         }
     }
+
+    /**
+     * Delete a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function deleteTransaction(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|required',
+        ]);
+
+        $transaction = Transaction::findOrFail($request->id);
+        $transaction->delete();
+
+        $notify[] = ['success', 'Transaction deleted Successfully'];
+        return back()->withNotify($notify);
+    }
 }
