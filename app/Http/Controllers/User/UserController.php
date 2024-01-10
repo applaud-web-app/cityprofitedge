@@ -191,7 +191,7 @@ class UserController extends Controller
         $user->save();
 
         $notify[] = ['success','Registration process completed successfully'];
-        return to_route('user.home')->withNotify($notify);
+        return to_route('user.info')->withNotify($notify);
     }
 
     public function purchasePackage(Request $request){

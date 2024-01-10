@@ -76,6 +76,7 @@ Route::middleware('auth')->name('user.')->group(function () {
 
             //Profile setting
             Route::controller('ProfileController')->group(function(){
+                Route::get('info', 'userInfo')->name('info');
                 Route::get('profile-setting', 'profile')->name('profile.setting');
                 Route::post('profile-setting', 'submitProfile');
                 Route::get('change-password', 'changePassword')->name('change.password');

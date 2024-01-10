@@ -84,4 +84,11 @@ class ProfileController extends Controller
             return back()->withNotify($notify);
         }
     }
+
+    public function userInfo()
+    {
+        $pageTitle = "User Info";
+        $user = auth()->user();
+        return view($this->activeTemplate . 'user.info', compact('pageTitle', 'user'));
+    }
 }
