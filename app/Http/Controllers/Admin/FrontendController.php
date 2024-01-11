@@ -59,8 +59,10 @@ class FrontendController extends Controller
         if (!$section) {
             return abort(404);
         }
-        $content = Frontend::where('data_keys', $key . '.content')->orderBy('id','desc')->first();
-        $elements = Frontend::where('data_keys', $key . '.element')->orderBy('id')->orderBy('id','desc')->get();
+        // $content = Frontend::where('data_keys', $key . '.content')->orderBy('id','desc')->first();
+        // $elements = Frontend::where('data_keys', $key . '.element')->orderBy('id')->orderBy('id','desc')->get();
+        $content = Frontend::where('data_keys', $key . '.content')->where('template_name',activeTemplateName())->first();
+        $elements = Frontend::where('data_keys', $key . '.element')->orderBy('id')->where('template_name',activeTemplateName())->get();
         $pageTitle = $section->name ;
         return view('admin.frontend.index', compact('section', 'content', 'elements', 'key', 'pageTitle'));
     }
@@ -104,7 +106,7 @@ class FrontendController extends Controller
         if ($request->id) {
             $content = Frontend::findOrFail($request->id);
         } else {
-            $content = Frontend::where('data_keys', $key . '.' . $request->type)->first();
+            $content = Frontend::where('data_keys', $key . '.' . $request->type)->where('template_name',activeTemplateName())->first();
             if (!$content || $request->type == 'element') {
                 $content = new Frontend();
                 $content->data_keys = $key . '.' . $request->type;
