@@ -1,5 +1,6 @@
 @extends('admin.layouts.app')
 
+
 @section('panel')
 <div class="row">
     <div class="col-lg-12">

@@ -315,31 +315,31 @@
                 </li> --}}
 
                 <li class="sidebar__menu-header">@lang('Trading')</li>
-                <li class="sidebar-menu-item {{menuActive('admin.trade.trade-desk-signal')}}">
+                <li class="sidebar-menu-item {{menuActive('admin.trade.trade-desk-signal.all')}}">
                     <a href="{{route('admin.trade.trade-desk-signal.all')}}" class="nav-link">
                         <i class="menu-icon las la-life-ring"></i>
                         <span class="menu-title">@lang('Trade Desk Signal')</span>
                     </a>
                 </li>
-                <li class="sidebar-menu-item {{menuActive('admin.trade.trade-position')}}">
+                <li class="sidebar-menu-item {{menuActive('admin.trade.trade-position.all')}}">
                     <a href="{{route('admin.trade.trade-position.all')}}" class="nav-link">
                         <i class="menu-icon las la-life-ring"></i>
                         <span class="menu-title">@lang('Trade Position')</span>
                     </a>
                 </li>
-                <li class="sidebar-menu-item {{menuActive('admin.trade.order-book')}}">
+                <li class="sidebar-menu-item {{menuActive('admin.trade.order-book.all')}}">
                     <a href="{{route('admin.trade.order-book.all')}}" class="nav-link">
                         <i class="menu-icon las la-life-ring"></i>
                         <span class="menu-title">@lang('Order Book')</span>
                     </a>
                 </li>
-                <li class="sidebar-menu-item {{menuActive('admin.trade.broker-details')}}">
+                <li class="sidebar-menu-item {{menuActive('admin.trade.broker-details.all')}}">
                     <a href="{{route('admin.trade.broker-details.all')}}" class="nav-link">
                         <i class="menu-icon las la-life-ring"></i>
                         <span class="menu-title">@lang('Broker Details')</span>
                     </a>
                 </li>
-                <li class="sidebar-menu-item {{menuActive('admin.trade.oms-config')}}">
+                <li class="sidebar-menu-item {{menuActive('admin.trade.oms-config.all')}}">
                     <a href="{{route('admin.trade.oms-config.all')}}" class="nav-link">
                         <i class="menu-icon las la-life-ring"></i>
                         <span class="menu-title">@lang('OMS Config')</span>
