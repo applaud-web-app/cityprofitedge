@@ -357,7 +357,7 @@
 
         <div class="row mt-4">
             <div class="col-lg-6">
-                <h5 class="m-4 text-center">@lang('Portfolio Top Gainers')</h5>
+                <h5 class="m-4 text-center">@lang('Top Gainers')</h5>
                 <div class="custom--card">
                     <div class="card-body p-0">
                         <div class="table-responsive--md">
@@ -396,7 +396,7 @@
                 </div>
             </div>
             <div class="col-lg-6">
-                <h5 class="m-4 text-center">@lang('Portfolio Top Losers')</h5>
+                <h5 class="m-4 text-center">@lang('Top Losers')</h5>
                 <div class="custom--card">
                     <div class="card-body p-0">
                         <div class="table-responsive--md">
