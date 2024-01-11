@@ -44,8 +44,12 @@
                         <li class="menu_has_children">
                             <a href="#0">@lang('Trading')</a>
                             <ul class="sub-menu">
-                                <li><a href="{{ route('user.portfolio.top.gainers') }}">@lang('Top Gainers')</a></li>
-                                <li><a href="{{ route('user.portfolio.top.losers') }}">@lang('Top Losers')</a></li>
+                                <li><a href="{{ route('user.portfolio.top.gainers') }}">@lang('Trade Desk Signal')</a></li>
+                                
+                                <li><a href="{{ route('user.portfolio.top.gainers') }}">@lang('Trade Position')</a></li>
+                                <li><a href="{{ route('user.portfolio.top.losers') }}">@lang('Order Book')</a></li>
+                                <li><a href="{{ route('user.portfolio.top.gainers') }}">@lang('Broker Details')</a></li>
+                                <li><a href="{{ route('user.portfolio.top.losers') }}">@lang('OMS Config')</a></li>
                             </ul>
                         </li>
 
