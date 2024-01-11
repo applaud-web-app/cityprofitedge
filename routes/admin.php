@@ -73,6 +73,39 @@ Route::middleware('admin')->group(function () {
         Route::get('referrals/{id}', 'referrals')->name('referrals');
     });
 
+    // Route::controller('TradeController')->group(function(){
+    
+    //     Route::get('trade-desk-signal', 'index')->name('tradeDeskSignal');
+    //     Route::get('trade-position', 'tradePosition')->name('trade.tradePosition');
+    //     Route::get('broker-details', 'brokerDetails')->name('trade.brokerDetails');
+    //     Route::get('order-book', 'orderBook')->name('trade.orderBook');
+    //     Route::get('oms-config', 'omsConfig')->name('trade.omsConfig');
+       
+    // });
+
+
+    Route::controller('TradeController')->name('trade.')->prefix('trade')->group(function(){
+        Route::group(['as' => 'trade-desk-signal.', 'prefix' => 'trade-desk-signal'], function() {
+            Route::get('/', 'tradeDeskSignal')->name('all');
+        });
+
+        Route::group(['as' => 'trade-position.', 'prefix' => 'trade-position'], function() {
+            Route::get('/', 'tradePosition')->name('all');
+        });
+
+        Route::group(['as' => 'broker-details.', 'prefix' => 'broker-details'], function() {
+            Route::get('/', 'brokerDetails')->name('all');
+        });
+
+        Route::group(['as' => 'order-book.', 'prefix' => 'order-book'], function() {
+            Route::get('/', 'orderBook')->name('all');
+        });
+
+        Route::group(['as' => 'oms-config.', 'prefix' => 'oms-config'], function() {
+            Route::get('/', 'omsConfig')->name('all');
+        });
+    });
+
     Route::controller('InvestmentOverviewController')->name('investment.')->prefix('investment')->group(function(){
         Route::group(['as' => 'thematic-portfolios.', 'prefix' => 'thematic-portfolios'], function() {
             Route::get('/', 'allThematicPortfolios')->name('all');

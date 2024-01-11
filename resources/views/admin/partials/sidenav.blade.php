@@ -314,6 +314,39 @@
                     </a>
                 </li> --}}
 
+                <li class="sidebar__menu-header">@lang('Trading')</li>
+                <li class="sidebar-menu-item {{menuActive('admin.trade.trade-desk-signal')}}">
+                    <a href="{{route('admin.trade.trade-desk-signal.all')}}" class="nav-link">
+                        <i class="menu-icon las la-life-ring"></i>
+                        <span class="menu-title">@lang('Trade Desk Signal')</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item {{menuActive('admin.trade.trade-position')}}">
+                    <a href="{{route('admin.trade.trade-position.all')}}" class="nav-link">
+                        <i class="menu-icon las la-life-ring"></i>
+                        <span class="menu-title">@lang('Trade Position')</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item {{menuActive('admin.trade.order-book')}}">
+                    <a href="{{route('admin.trade.order-book.all')}}" class="nav-link">
+                        <i class="menu-icon las la-life-ring"></i>
+                        <span class="menu-title">@lang('Order Book')</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item {{menuActive('admin.trade.broker-details')}}">
+                    <a href="{{route('admin.trade.broker-details.all')}}" class="nav-link">
+                        <i class="menu-icon las la-life-ring"></i>
+                        <span class="menu-title">@lang('Broker Details')</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item {{menuActive('admin.trade.oms-config')}}">
+                    <a href="{{route('admin.trade.oms-config.all')}}" class="nav-link">
+                        <i class="menu-icon las la-life-ring"></i>
+                        <span class="menu-title">@lang('OMS Config')</span>
+                    </a>
+                </li>
+
+
                 <li class="sidebar__menu-header">@lang('UI Portfolio Data')</li>
 
                 <li class="sidebar-menu-item {{menuActive('admin.investment.thematic-portfolios')}}">
