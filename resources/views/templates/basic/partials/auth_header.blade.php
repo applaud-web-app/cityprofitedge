@@ -44,8 +44,8 @@
                         <li class="menu_has_children">
                             <a href="#0">@lang('Trading')</a>
                             <ul class="sub-menu">
-                                <li><a href="{{ route('user.portfolio.top.gainers') }}">@lang('Portfolio Top Gainers')</a></li>
-                                <li><a href="{{ route('user.portfolio.top.losers') }}">@lang('Portfolio Top Losers')</a></li>
+                                <li><a href="{{ route('user.portfolio.top.gainers') }}">@lang('Top Gainers')</a></li>
+                                <li><a href="{{ route('user.portfolio.top.losers') }}">@lang('Top Losers')</a></li>
                             </ul>
                         </li>
 
