@@ -518,14 +518,14 @@
         series: [
             {
                 name: '',
-                data: [1000, 1500, 2000, 2300, 2700, 3000, 4000, 2700, 3045, 6000, 7000, 7500]
+                data: [{{implode(",",$buyArr)}}]
             }, {
                 name: '',
-                data: [300, 1200, 1500, 2000, 3000, 3500, 3700, 4000, 5000, 6000, 6200, 6900]
+                data: [{{implode(",",$currArr)}}]
             }
         ],
         chart: {
-            width: 775,
+            // width: 400,
             height: 350,
             type: 'area'
         },
@@ -536,20 +536,9 @@
             curve: 'smooth'
         },
         xaxis: {
-            type: 'datetime',
+            type: 'date',
             categories: [
-                "2023-01",
-                "2023-02",
-                "2023-03",
-                "2023-04",
-                "2023-05",
-                "2023-06",
-                "2023-07",
-                "2023-08",
-                "2023-09",
-                "2023-10",
-                "2023-11",
-                "2023-12",
+                {!!"'".implode("','", $datesArr)."'"!!}
             ],
             labels: {
                 style: {
@@ -579,7 +568,7 @@
 
 
     var options = {
-        series: [14, 23, 21, 17, 15, 10, 12, 17, 21],
+        series: [{{implode(',',$chrtArr)}}],
         chart: {
             width: 775,
             height: 360,
@@ -591,7 +580,7 @@
         fill: {
             opacity: 0.8
         },
-        labels: ['Label1', 'Label2', 'Label3', 'Label4', 'Label5', 'Label6', 'Label7', 'Label8', 'Label9'], // Add your labels here
+        labels: ['Stock Portfolio', 'Metals Portfolio', 'Global stock', 'F&O Portfolio'], // Add your labels here
         responsive: [{
             breakpoint: 480,
             options: {
