@@ -37,34 +37,124 @@ class UserController extends Controller
         $portfolioTopGainers = PortfolioTopGainer::all();
         $portfolioTopLosers = PortfolioTopLoser::all();
 
+        $date1 = date("Y-m-01");
+        $date2 = date("Y-m-t");
+        $stockPortFolioBuyVal = 0;
+        $stockPortFolioCurrVal = 0;
 
-        $stockPortFolio =  StockPortfolio::select(\DB::raw('SUM(quantity*buy_price) as buy_value'),\DB::raw('SUM(quantity*cmp) as current_value'))->where('user_id',$user->id)->first();
+        $investGraphArr = [];
 
-        $stockPortFolio->buy_value = $stockPortFolio->buy_value!=null ? $stockPortFolio->buy_value : 0;
-        $stockPortFolio->current_value = $stockPortFolio->current_value!=null ? $stockPortFolio->current_value : 0;
+        $stockPortFolio =  StockPortfolio::select(\DB::raw('SUM(quantity*buy_price) as buy_value'),\DB::raw('SUM(quantity*cmp) as current_value'),'buy_date')->whereBetween('buy_date',[$date1,$date2])->where('user_id',$user->id)->groupBy('buy_date')->get();
+
+        foreach($stockPortFolio as $v){
+            $investGraphArr[$v->buy_date] = [
+                'buy_value'=>$v->buy_value,
+                'current_value'=>$v->current_value
+            ];
+            $stockPortFolioBuyVal += $v->buy_value;
+            $stockPortFolioCurrVal += $v->current_value;
+        }
+        $stockPortFolio->buy_value = $stockPortFolioBuyVal;
+        $stockPortFolio->current_value = $stockPortFolioCurrVal;
+
+        $globalstockPortFolioBuyVal = 0;
+        $globalstockPortFolioCurrVal = 0;
 
 
-        $globalStockPortFolio =  GlobalStockPortFolio::select(\DB::raw('SUM(quantity*buy_price) as buy_value'),\DB::raw('SUM(quantity*cmp) as current_value'))->where('user_id',$user->id)->first();
+        $globalStockPortFolio =  GlobalStockPortFolio::select(\DB::raw('SUM(quantity*buy_price) as buy_value'),\DB::raw('SUM(quantity*cmp) as current_value'),'buy_date')->whereBetween('buy_date',[$date1,$date2])->where('user_id',$user->id)->groupBy('buy_date')->get();
+        foreach($globalStockPortFolio as $v){
+            if(isset($investGraphArr[$v->buy_date])){
+                $investGraphArr[$v->buy_date] = [
+                    'buy_value'=>$v->buy_value + $investGraphArr[$v->buy_date]['buy_value'],
+                    'current_value'=>$v->current_value + $investGraphArr[$v->buy_date]['current_value']
+                ];
+            }else{
+                $investGraphArr[$v->buy_date] = [
+                    'buy_value'=>$v->buy_value,
+                    'current_value'=>$v->current_value
+                ];
+            }            
+            $globalstockPortFolioBuyVal += $v->buy_value;
+            $globalstockPortFolioCurrVal += $v->current_value;
+        }
+        $globalStockPortFolio->buy_value = $globalstockPortFolioBuyVal;
+        $globalStockPortFolio->current_value = $globalstockPortFolioCurrVal;
 
-        $globalStockPortFolio->buy_value = $globalStockPortFolio->buy_value!=null ? $globalStockPortFolio->buy_value : 0;
-        $globalStockPortFolio->current_value = $globalStockPortFolio->current_value!=null ? $globalStockPortFolio->current_value : 0;
+
+        $foglobalstockPortFolioBuyVal = 0;
+        $foglobalstockPortFolioCurrVal = 0;
 
 
-        $foglobalStockPortFolio =  FOPortfolios::select(\DB::raw('SUM(quantity*buy_price) as buy_value'),\DB::raw('SUM(quantity*cmp) as current_value'))->where('user_id',$user->id)->first();
+        $foglobalStockPortFolio =  FOPortfolios::select(\DB::raw('SUM(quantity*buy_price) as buy_value'),\DB::raw('SUM(quantity*cmp) as current_value'),'buy_date')->whereBetween('buy_date',[$date1,$date2])->where('user_id',$user->id)->groupBy('buy_date')->get();
+        foreach($foglobalStockPortFolio as $v){
+            if(isset($investGraphArr[$v->buy_date])){
+                $investGraphArr[$v->buy_date] = [
+                    'buy_value'=>$v->buy_value + $investGraphArr[$v->buy_date]['buy_value'],
+                    'current_value'=>$v->current_value + $investGraphArr[$v->buy_date]['current_value']
+                ];
+            }else{
+                $investGraphArr[$v->buy_date] = [
+                    'buy_value'=>$v->buy_value,
+                    'current_value'=>$v->current_value
+                ];
+            }            
+            $foglobalstockPortFolioBuyVal += $v->buy_value;
+            $foglobalstockPortFolioCurrVal += $v->current_value;
+        }
 
-        $foglobalStockPortFolio->buy_value = $foglobalStockPortFolio->buy_value!=null ? $foglobalStockPortFolio->buy_value : 0;
-        $foglobalStockPortFolio->current_value = $foglobalStockPortFolio->current_value!=null ? $foglobalStockPortFolio->current_value : 0;
 
-        $metalsPortFolio =  MetalsPortfolio::select(\DB::raw('SUM(quantity*buy_price) as buy_value'),\DB::raw('SUM(quantity*cmp) as current_value'))->where('user_id',$user->id)->first();
+        $foglobalStockPortFolio->buy_value = $foglobalstockPortFolioBuyVal;
+        $foglobalStockPortFolio->current_value = $foglobalstockPortFolioCurrVal;
 
-        $metalsPortFolio->buy_value = $metalsPortFolio->buy_value!=null ? $metalsPortFolio->buy_value : 0;
-        $metalsPortFolio->current_value = $metalsPortFolio->current_value!=null ? $metalsPortFolio->current_value : 0;
+
+        $metalsPortFolioBuyVal = 0;
+        $metalsPortFolioCurrVal = 0;
+
+
+        $metalsPortFolio =  MetalsPortfolio::select(\DB::raw('SUM(quantity*buy_price) as buy_value'),\DB::raw('SUM(quantity*cmp) as current_value'),'buy_date')->whereBetween('buy_date',[$date1,$date2])->where('user_id',$user->id)->groupBy('buy_date')->get();
+
+        foreach($metalsPortFolio as $v){
+            if(isset($investGraphArr[$v->buy_date])){
+                $investGraphArr[$v->buy_date] = [
+                    'buy_value'=>$v->buy_value + $investGraphArr[$v->buy_date]['buy_value'],
+                    'current_value'=>$v->current_value + $investGraphArr[$v->buy_date]['current_value']
+                ];
+            }else{
+                $investGraphArr[$v->buy_date] = [
+                    'buy_value'=>$v->buy_value,
+                    'current_value'=>$v->current_value
+                ];
+            }            
+            $metalsPortFolioBuyVal += $v->buy_value;
+            $metalsPortFolioCurrVal += $v->current_value;
+        }
+
+        $metalsPortFolio->buy_value = $metalsPortFolioBuyVal;
+        $metalsPortFolio->current_value = $metalsPortFolioCurrVal;
 
 
         $totalInvestedAmount = $stockPortFolio->buy_value + $globalStockPortFolio->buy_value + $foglobalStockPortFolio->buy_value + $metalsPortFolio->buy_value;
         $totalCurrentAmount = $stockPortFolio->current_value + $globalStockPortFolio->current_value + $foglobalStockPortFolio->current_value + $metalsPortFolio->current_value;
 
-        return view($this->activeTemplate . 'user.dashboard', compact('pageTitle', 'user', 'totalDeposit', 'totalTrx', 'latestTrx', 'totalSignal', 'portfolioTopGainers', 'portfolioTopLosers','stockPortFolio','globalStockPortFolio','foglobalStockPortFolio','metalsPortFolio','totalInvestedAmount','totalCurrentAmount'));
+        $buyArr = [];
+        $currArr = [];
+        $datesArr = [];
+
+        if(!empty($investGraphArr)){
+           
+            $datesArr = array_keys($investGraphArr);
+            $datesArr = array_map(function($kk){
+                return date("d-M-Y",strtotime($kk));
+            },$datesArr);
+            $buyArr = array_column($investGraphArr,'buy_value');
+            $currArr = array_column($investGraphArr,'current_value');
+        }
+
+        $chrtArr = [
+            $stockPortFolio->buy_value,$metalsPortFolio->buy_value,$globalStockPortFolio->buy_value,$foglobalStockPortFolio->buy_value
+        ];
+
+        return view($this->activeTemplate . 'user.dashboard', compact('pageTitle', 'user', 'totalDeposit', 'totalTrx', 'latestTrx', 'totalSignal', 'portfolioTopGainers', 'portfolioTopLosers','stockPortFolio','globalStockPortFolio','foglobalStockPortFolio','metalsPortFolio','totalInvestedAmount','totalCurrentAmount','datesArr','buyArr','currArr','chrtArr'));
     }
 
     public function depositHistory(Request $request)
