@@ -35,13 +35,13 @@
                             <div class="col-xl-6 col-lg-6 col-md-6">
                                 <p class="d-widget__caption fs--12px">@lang('Invested Value')</p>
                                 <h3 class="d-widget__amount mt-1">
-                                    {{ $general->cur_sym }} {{ showAmount($user->balance, 2) }}
+                                    {{ $general->cur_sym }} {{ showAmount($totalInvestedAmount, 2) }}
                                 </h3>
                             </div>
                             <div class="col-xl-6 col-lg-6 col-md-6">
                                 <p class="d-widget__caption fs--12px">@lang('Current Value')</p>
                                 <h3 class="d-widget__amount mt-1">
-                                    {{ $general->cur_sym }} {{ showAmount($user->balance, 2) }}
+                                    {{ $general->cur_sym }} {{ showAmount($totalCurrentAmount, 2) }}
                                 </h3>
                             </div>
                         </div>
@@ -61,13 +61,13 @@
                             <div class="col-xl-6 col-lg-6 col-md-6">
                                 <p class="d-widget__caption fs--12px">@lang('Invested Value')</p>
                                 <h3 class="d-widget__amount mt-1">
-                                    {{ $general->cur_sym }} {{ showAmount($user->balance, 2) }}
+                                    {{ $general->cur_sym }} {{ showAmount($stockPortFolio->buy_value,2) }}
                                 </h3>
                             </div>
                             <div class="col-xl-6 col-lg-6 col-md-6">
                                 <p class="d-widget__caption fs--12px">@lang('Current Value')</p>
                                 <h3 class="d-widget__amount mt-1">
-                                    {{ $general->cur_sym }} {{ showAmount($user->balance, 2) }}
+                                    {{ $general->cur_sym }} {{ showAmount($stockPortFolio->current_value,2) }}
                                 </h3>
                             </div>
                         </div>
@@ -113,13 +113,13 @@
                             <div class="col-xl-6 col-lg-6 col-md-6">
                                 <p class="d-widget__caption fs--12px">@lang('Invested Value')</p>
                                 <h3 class="d-widget__amount mt-1">
-                                    {{ $general->cur_sym }} {{ showAmount($user->balance, 2) }}
+                                    {{ $general->cur_sym }} {{ showAmount($globalStockPortFolio->buy_value,2) }}
                                 </h3>
                             </div>
                             <div class="col-xl-6 col-lg-6 col-md-6">
                                 <p class="d-widget__caption fs--12px">@lang('Current Value')</p>
                                 <h3 class="d-widget__amount mt-1">
-                                    {{ $general->cur_sym }} {{ showAmount($user->balance, 2) }}
+                                    {{ $general->cur_sym }} {{ showAmount($globalStockPortFolio->current_value,2) }}
                                 </h3>
                             </div>
                         </div>
@@ -139,13 +139,13 @@
                             <div class="col-xl-6 col-lg-6 col-md-6">
                                 <p class="d-widget__caption fs--12px">@lang('Invested Value')</p>
                                 <h3 class="d-widget__amount mt-1">
-                                    {{ $general->cur_sym }} {{ showAmount($user->balance, 2) }}
+                                    {{ $general->cur_sym }} {{ showAmount($foglobalStockPortFolio->buy_value,2) }}
                                 </h3>
                             </div>
                             <div class="col-xl-6 col-lg-6 col-md-6">
                                 <p class="d-widget__caption fs--12px">@lang('Current Value')</p>
                                 <h3 class="d-widget__amount mt-1">
-                                    {{ $general->cur_sym }} {{ showAmount($user->balance, 2) }}
+                                    {{ $general->cur_sym }} {{ showAmount($foglobalStockPortFolio->current_value,2) }}
                                 </h3>
                             </div>
                         </div>
@@ -165,13 +165,13 @@
                             <div class="col-xl-6 col-lg-6 col-md-6">
                                 <p class="d-widget__caption fs--12px">@lang('Invested Value')</p>
                                 <h3 class="d-widget__amount mt-1">
-                                    {{ $general->cur_sym }} {{ showAmount($user->balance, 2) }}
+                                    {{ $general->cur_sym }} {{ showAmount($metalsPortFolio->buy_value,2) }}
                                 </h3>
                             </div>
                             <div class="col-xl-6 col-lg-6 col-md-6">
                                 <p class="d-widget__caption fs--12px">@lang('Current Value')</p>
                                 <h3 class="d-widget__amount mt-1">
-                                    {{ $general->cur_sym }} {{ showAmount($user->balance, 2) }}
+                                    {{ $general->cur_sym }} {{ showAmount($metalsPortFolio->current_value,2) }}
                                 </h3>
                             </div>
                         </div>

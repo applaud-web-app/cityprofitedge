@@ -36,7 +36,35 @@ class UserController extends Controller
         $totalDeposit = Deposit::where('user_id', $user->id)->where('status', Status::PAYMENT_SUCCESS)->sum('amount');
         $portfolioTopGainers = PortfolioTopGainer::all();
         $portfolioTopLosers = PortfolioTopLoser::all();
-        return view($this->activeTemplate . 'user.dashboard', compact('pageTitle', 'user', 'totalDeposit', 'totalTrx', 'latestTrx', 'totalSignal', 'portfolioTopGainers', 'portfolioTopLosers'));
+
+
+        $stockPortFolio =  StockPortfolio::select(\DB::raw('SUM(quantity*buy_price) as buy_value'),\DB::raw('SUM(quantity*cmp) as current_value'))->where('user_id',$user->id)->first();
+
+        $stockPortFolio->buy_value = $stockPortFolio->buy_value!=null ? $stockPortFolio->buy_value : 0;
+        $stockPortFolio->current_value = $stockPortFolio->current_value!=null ? $stockPortFolio->current_value : 0;
+
+
+        $globalStockPortFolio =  GlobalStockPortFolio::select(\DB::raw('SUM(quantity*buy_price) as buy_value'),\DB::raw('SUM(quantity*cmp) as current_value'))->where('user_id',$user->id)->first();
+
+        $globalStockPortFolio->buy_value = $globalStockPortFolio->buy_value!=null ? $globalStockPortFolio->buy_value : 0;
+        $globalStockPortFolio->current_value = $globalStockPortFolio->current_value!=null ? $globalStockPortFolio->current_value : 0;
+
+
+        $foglobalStockPortFolio =  FOPortfolios::select(\DB::raw('SUM(quantity*buy_price) as buy_value'),\DB::raw('SUM(quantity*cmp) as current_value'))->where('user_id',$user->id)->first();
+
+        $foglobalStockPortFolio->buy_value = $foglobalStockPortFolio->buy_value!=null ? $foglobalStockPortFolio->buy_value : 0;
+        $foglobalStockPortFolio->current_value = $foglobalStockPortFolio->current_value!=null ? $foglobalStockPortFolio->current_value : 0;
+
+        $metalsPortFolio =  MetalsPortfolio::select(\DB::raw('SUM(quantity*buy_price) as buy_value'),\DB::raw('SUM(quantity*cmp) as current_value'))->where('user_id',$user->id)->first();
+
+        $metalsPortFolio->buy_value = $metalsPortFolio->buy_value!=null ? $metalsPortFolio->buy_value : 0;
+        $metalsPortFolio->current_value = $metalsPortFolio->current_value!=null ? $metalsPortFolio->current_value : 0;
+
+
+        $totalInvestedAmount = $stockPortFolio->buy_value + $globalStockPortFolio->buy_value + $foglobalStockPortFolio->buy_value + $metalsPortFolio->buy_value;
+        $totalCurrentAmount = $stockPortFolio->current_value + $globalStockPortFolio->current_value + $foglobalStockPortFolio->current_value + $metalsPortFolio->current_value;
+
+        return view($this->activeTemplate . 'user.dashboard', compact('pageTitle', 'user', 'totalDeposit', 'totalTrx', 'latestTrx', 'totalSignal', 'portfolioTopGainers', 'portfolioTopLosers','stockPortFolio','globalStockPortFolio','foglobalStockPortFolio','metalsPortFolio','totalInvestedAmount','totalCurrentAmount'));
     }
 
     public function depositHistory(Request $request)
