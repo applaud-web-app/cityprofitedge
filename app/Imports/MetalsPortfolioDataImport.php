@@ -75,12 +75,13 @@ class MetalsPortfolioDataImport implements ToCollection, WithHeadingRow
                     continue;
                 }
 
+                $ddtTime = \Carbon\Carbon::instance(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['buy_date']));
                 // Create and save the Stock model instance with the data
                 $metalsPortfolio = new MetalsPortfolio();
                 $metalsPortfolio->broker_name = $row['broker_name'] ?: null;
                 $metalsPortfolio->stock_name = $row['stock_name'] ?: null;
                 $metalsPortfolio->quantity = $row['qty'] ?: 0;
-                $metalsPortfolio->buy_date = $row['buy_date'] ? date("Y-m-d",strtotime($row['buy_date'])) : null;
+                $metalsPortfolio->buy_date = $row['buy_date'] ? date("Y-m-d",strtotime($ddtTime)) : null;
                 $metalsPortfolio->buy_price = $row['buy_price'] ?: 0;
                 $metalsPortfolio->cmp = $row['cmp'] ?: 0;
                 $metalsPortfolio->current_value = $row['current_value'] ?: 0;

@@ -76,12 +76,13 @@ class FOPortfolioHedgingDataImport implements ToCollection, WithHeadingRow
                     continue;
                 }
 
+                $ddtTime = \Carbon\Carbon::instance(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['buy_date']));
                 // Create and save the Stock model instance with the data
                 $foPortfolio = new FOPortfolios();
                 $foPortfolio->broker_name = $row['broker_name'] ?: null;
                 $foPortfolio->stock_name = $row['stock_name'] ?: null;
                 $foPortfolio->quantity = $row['qty'] ?: 0;
-                $foPortfolio->buy_date = $row['buy_date'] ? date("Y-m-d",strtotime($row['buy_date'])) : null;
+                $foPortfolio->buy_date = $row['buy_date'] ? date("Y-m-d",strtotime($ddtTime)) : null;
                 $foPortfolio->buy_price = $row['buy_price'] ?: 0;
                 $foPortfolio->cmp = $row['cmp'] ?: 0;
                 $foPortfolio->current_value = $row['current_value'] ?: 0;
