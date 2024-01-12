@@ -1,4 +1,16 @@
 /* Copy Animation */
+.dash-card{
+  background-color: #0d222b;
+}
+
+/* charts style */
+.apexcharts-legend-text {
+  position: relative;
+  font-size: 14px;
+  color: #e4e4e4!important;
+}
+
+
 
 .base-color{
   color: hsl(var(--main)) !important;
@@ -191,8 +203,6 @@
         content: "\f058";
         color: #28c76f;
     }
-
-
 
  .show-filter{
   display: none;

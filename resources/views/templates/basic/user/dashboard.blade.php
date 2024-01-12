@@ -7,7 +7,7 @@
 
         {{-- <div class="row notice"></div> --}}
 
-        <div class="row justify-content-center gy-4">
+        <div class="row justify-content-center g-3">
             {{-- <div class="col-md-12 mb-3">
                 <form action="#" class="transparent-form">
                     <label>@lang('Referral Link')</label>
@@ -333,23 +333,23 @@
                         </h3>
                     </div>
                 </div><!-- d-widget end -->
-            </div>
-        </div> --}}
+            </div>--}}
+        </div> 
 
         <div class="row mt-4">
             <div class="col-xl-6">
-                <div class="card">
+                <div class="card dash-card">
                     <div class="card-body">
                         <h5 class="card-title">@lang('Networth Graph')</h5>
-                        <div id="apex-spline-chart"> </div>
+                        <div id="apex-spline-chart" style="width: 100%;"> </div>
                     </div>
                 </div>
             </div>
             <div class="col-xl-6">
-                <div class="card">
+                <div class="card dash-card">
                     <div class="card-body">
                         <h5 class="card-title">@lang('Sectory Wise Protfolio')</h5>
-                        <div id="apex-polar-area-basic-chart"></div>
+                        <div id="apex-polar-area-basic-chart" style="width: 100%;"></div>
                     </div>
                 </div>
             </div>
@@ -528,6 +528,7 @@
             // width: 400,
             height: 350,
             type: 'area'
+            
         },
         dataLabels: {
             enabled: false
@@ -535,6 +536,7 @@
         stroke: {
             curve: 'smooth'
         },
+        
         xaxis: {
             type: 'date',
             categories: [
@@ -570,15 +572,16 @@
     var options = {
         series: [{{implode(',',$chrtArr)}}],
         chart: {
-            width: 775,
+            width: '100%',
             height: 360,
             type: 'polarArea',
+            foreColor: '#e4e4e4',
         },
         stroke: {
-            colors: ['#fff']
+          colors: ['#fff']
         },
         fill: {
-            opacity: 0.8
+          opacity: 0.8
         },
         labels: ['Stock Portfolio', 'Metals Portfolio', 'Global stock', 'F&O Portfolio'], // Add your labels here
         responsive: [{
@@ -596,6 +599,9 @@
 
     var chart = new ApexCharts(document.querySelector("#apex-polar-area-basic-chart"), options);
     chart.render();
+
+
 </script>
+
 @endpush
 
