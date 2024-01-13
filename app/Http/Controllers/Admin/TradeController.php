@@ -7,9 +7,18 @@ use Illuminate\Http\Request;
 
 class TradeController extends Controller
 {
-    public function tradeDeskSignal(){
+    public function tradeDeskSignal(Request $request){
         $pageTitle = 'Trade Desk Signal';
-        return view('admin.trade.trade-desk-signal', compact('pageTitle'));
+        $symbolArr = allTradeSymbols();
+        $timeFrame = $request->time_frame ?: 5;
+        $symbol = $request->symbol ?: 'CRUDEOIL';
+        $todayDate = date("Y-m-d");
+        try{
+            $data = \DB::connection('mysql_rm')->table($symbol)->select('*')->where(['date'=>$todayDate,'timeframe'=>$timeFrame])->get();
+        }catch(\Exception $e){
+            $data = [];
+        }
+        return view('admin.trade.trade-desk-signal', compact('pageTitle','symbolArr','data','timeFrame','symbol'));
      
     }
     public function tradePosition(){

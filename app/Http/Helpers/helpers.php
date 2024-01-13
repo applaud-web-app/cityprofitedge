@@ -472,3 +472,16 @@ function sendVia($implode = false){
     }
     return $via;
 }
+
+function allTradeSymbols(){
+    $data = \DB::connection('mysql_rm')->select('SHOW TABLES');
+    $arr = [];
+    foreach($data as $vl){
+        $arr[] = $vl->Tables_in_PMS_Datastore;
+    }
+    return $arr;
+}
+
+function allTradeTimeFrames(){
+    return [1,3,5];
+}

@@ -498,13 +498,17 @@ class UserController extends Controller
         return view($this->activeTemplate . 'user.metals_portfolio', compact('pageTitle', 'metalsPortfolios'));
     }
 
-    public function portfolioTopGainers()
+    public function portfolioTopGainers(Request $request)
     {
         $pageTitle = 'Portfolio Top Gainers';
 
         // TODO:: modify commented code to implement searchable and filterable.
-        $portfolioTopGainers = PortfolioTopGainer::searchable(['stock_name'])/* ->filter(['trx_type', 'remark']) */->orderBy('id', 'desc')->paginate(getPaginate());
-        return view($this->activeTemplate . 'user.portfolio_top_gainers', compact('pageTitle', 'portfolioTopGainers'));
+        // $portfolioTopGainers = PortfolioTopGainer::searchable(['stock_name'])/* ->filter(['trx_type', 'remark']) */->orderBy('id', 'desc')->paginate(getPaginate());
+        $portfolioTopGainers = [];
+        $symbolArr = allTradeSymbols();
+        $todayDate = date("Y-m-d");
+        $timeFrame = $request->time_frame ?: 5;
+        return view($this->activeTemplate . 'user.portfolio_top_gainers', compact('pageTitle', 'portfolioTopGainers','symbolArr','todayDate','timeFrame'));
     }
 
     public function portfolioTopLosers()

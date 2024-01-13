@@ -10,31 +10,31 @@
         </div>
         <div class="card responsive-filter-card mb-4">
             <div class="card-body">
-                <form action="#">
+                {{-- <form action="#"> --}}
                     <div class="d-flex flex-wrap gap-3">
                        
                         <div class="flex-grow-1">
                             <label>Symbol Name</label>
-                            <select name="trx_type" class="form-control" id="trx_type">
-                                <option value="">Option 1</option>
-                                <option value="">Option 2</option>
-                                <option value="">Option 3</option>
+                            <select class="form-control" id="symbol_type">
+                               @foreach ($symbolArr as $item)
+                                   <option value="{{$item}}" {{$item==$symbol ? 'selected':''}}>{{$item}}</option>
+                               @endforeach
                             </select>
                         </div>
                         <div class="flex-grow-1">
                             <label>Time Frame</label>
-                            <select class="form-control" name="remark" id="remark">
-                                <option value="">Option 1</option>
-                                <option value="">Option 2</option>
-                                <option value="">Option 3</option>
+                            <select class="form-control" id="time_frame">
+                              @foreach (allTradeTimeFrames() as $item)
+                                  <option value="{{$item}}" {{$item==$timeFrame ? 'selected':''}}>{{$item}}</option>
+                              @endforeach
                             </select>
                         </div>
                        
                         <div class="flex-grow-1 align-self-end">
-                            <button class="btn btn--primary w-100 h-45"><i class="fas fa-filter"></i> Filter</button>
+                            <button class="btn btn--primary w-100 h-45" type="button" id="filter_btn"><i class="fas fa-filter"></i> Filter</button>
                         </div>
                     </div>
-                </form>
+                {{-- </form> --}}
             </div>
         </div>
         <div class="card b-radius--10 ">
@@ -47,10 +47,9 @@
                                 <th>Date</th>
                                 <th>Time</th>
                                 <th>CE</th>
-                                <th>PC</th>
+                                <th>PE</th>
                                 <th>VMAP CE Signal</th>
                                 <th>VMAP PE Signal</th>
-                                <th>CE_Con Signal</th>
                                 <th>CE_Con Signal</th>
                                 <th>BUY_Action</th>
                                 <th>SELL_Action</th>
@@ -58,75 +57,65 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @for ($i = 1; $i < 15; $i++)
-                            <tr>
-                                <td>{{$i}}</td>
-                                <td>2023-02-10</td>
-                                <td>12:24 PM</td>
-                                <td>ADMINUYTR4568</td>
-                                <td>ADMINUYTR4568</td>
-                                <td>Bearish</td>
-                                <td>Bearish</td>
-                                <td>Bearish</td>
-                                <td>Bearish</td>
-                                <td>Hold</td>
-                                <td>Hold</td>
-                                <td>Reoccuring</td>
-                            </tr>
-                            @endfor
-                           
+                            @php
+                                $atmData = [];
+                                foreach($data as $vvl){
+                                    if(isset($vvl->atm) && $vvl->atm=="ATM"){
+                                        $atmData[] = $vvl;
+                                    }
+                                }
+                            @endphp
 
+                            @php
+                                $i=1;
+                            @endphp
+                            @forelse($atmData as $val)
+                                    
+
+                                    @php
+                                        $arrData = json_decode($val->data,true);    
+                                        // dd($arrData);
+                                        $CE = array_slice($arrData['CE'],-5);
+                                        $PE = array_slice($arrData['PE'],-5);
+                                        $Date = array_slice($arrData['Date'],-5);
+                                        $time = array_slice($arrData['time'],-5);
+                                        $BUY_Action = array_slice($arrData['BUY_Action'],-5);
+                                        $SELL_Action = array_slice($arrData['SELL_Action'],-5);
+                                        $Strategy_name = array_slice($arrData['Strategy_name'],-5);
+                                        $vwap_CE_signal = array_slice($arrData['vwap_CE_signal'],-5);
+                                        $vwap_PE_signal = array_slice($arrData['vwap_PE_signal'],-5);
+                                        $CE_consolidated = array_slice($arrData['CE_consolidated'],-5);
+                                        $PE_consolidated = array_slice($arrData['PE_consolidated'],-5);
+                                    @endphp
+
+                                    @foreach ($CE as $k=>$item)
+                                        <tr>
+                                            <td>{{$i++}}</td>
+                                            <td>{{date("d-M-Y",($Date[$k]/1000))}}</td>
+                                            <td>{{$time[$k]}}</td>
+                                            <td>{{$item}}</td>
+                                            <td>{{$PE[$k]}}</td>
+                                            <td>{{$vwap_CE_signal[$k]}}</td>
+                                            <td>{{$CE_consolidated[$k]}}</td>
+                                            <td>{{$PE_consolidated[$k]}}</td>
+                                            <td>{{$BUY_Action[$k]}}</td>
+                                            <td>{{$SELL_Action[$k]}}</td>
+                                            <td>{{$Strategy_name[$k]}}</td>
+                                        </tr>
+                                    @endforeach
+
+
+                            @empty
+                                <tr>
+                                    <td colspan="11"><h5 class="text-danger text-center">NO DATA</h5></td>
+                                </tr>
+                            @endforelse
                         </tbody>
                     </table><!-- table end -->
                 </div>
             </div>
             <div class="card-footer py-4">
-                <nav class="d-flex justify-content-end">
-                    <ul class="pagination">
-
-                        <li class="page-item disabled" aria-disabled="true" aria-label="« Previous">
-                            <span class="page-link" aria-hidden="true"><</span>
-                        </li>
-
-
-
-
-
-                        <li class="page-item active" aria-current="page"><span class="page-link">1</span></li>
-                        <li class="page-item"><a class="page-link"
-                                href="">2</a>
-                        </li>
-                        <li class="page-item"><a class="page-link"
-                                href="">3</a>
-                        </li>
-                        <li class="page-item"><a class="page-link"
-                                href="">4</a>
-                        </li>
-                        <li class="page-item"><a class="page-link"
-                                href="">5</a>
-                        </li>
-                        <li class="page-item"><a class="page-link"
-                                href="">6</a>
-                        </li>
-                  
-
-                        <li class="page-item disabled" aria-disabled="true"><span class="page-link">...</span></li>
-
-                        <li class="page-item"><a class="page-link"
-                                href="8">18</a>
-                        </li>
-                        <li class="page-item"><a class="page-link"
-                                href="9">19</a>
-                        </li>
-
-
-                        <li class="page-item">
-                            <a class="page-link"
-                                href=""
-                                rel="next" aria-label="Next »">></a>
-                        </li>
-                    </ul>
-                </nav>
+                
 
             </div>
         </div><!-- card end -->
@@ -136,4 +125,15 @@
 
 @push('breadcrumb-plugins')
 
+@endpush
+
+@push('script')
+    <script>
+        $("#filter_btn").on('click',function(){
+            $(this).text('Processing...').attr('disabled','disabled');
+            var symbol_type = $("#symbol_type").val();
+            var time_frame = $("#time_frame").val();
+            window.location.href = '{{url("admin/trade/trade-desk-signal")}}?time_frame='+time_frame+'&symbol='+symbol_type
+        });
+    </script>
 @endpush
