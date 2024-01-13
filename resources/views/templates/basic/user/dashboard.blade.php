@@ -339,16 +339,22 @@
         <div class="row mt-4">
             <div class="col-xl-6">
                 <div class="card dash-card">
-                    <div class="card-body">
+                    <div class="card-header">
                         <h5 class="card-title">@lang('Networth Graph')</h5>
+                    </div>
+                    <div class="card-body">
+                       
                         <div id="apex-spline-chart" style="width: 100%;"> </div>
                     </div>
                 </div>
             </div>
             <div class="col-xl-6">
                 <div class="card dash-card">
+                     <div class="card-header">
+                         <h5 class="card-title">@lang('Sectory Wise Protfolio')</h5>
+                    </div>
                     <div class="card-body">
-                        <h5 class="card-title">@lang('Sectory Wise Protfolio')</h5>
+                      
                         <div id="apex-polar-area-basic-chart" style="width: 100%;"></div>
                     </div>
                 </div>
@@ -525,8 +531,8 @@
             }
         ],
         chart: {
-            // width: 400,
-            height: 350,
+             width: '100%',
+            height: 360,
             type: 'area'
             
         },
