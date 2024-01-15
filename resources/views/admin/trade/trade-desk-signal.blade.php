@@ -51,6 +51,7 @@
                                 <th>VMAP CE Signal</th>
                                 <th>VMAP PE Signal</th>
                                 <th>CE_Con Signal</th>
+                                <th>PE_Con Signal</th>
                                 <th>BUY_Action</th>
                                 <th>SELL_Action</th>
                                 <th>Strategy Name</th>
@@ -96,6 +97,7 @@
                                             <td>{{$item}}</td>
                                             <td>{{$PE[$k]}}</td>
                                             <td>{{$vwap_CE_signal[$k]}}</td>
+                                            <td>{{$vwap_PE_signal[$k]}}</td>
                                             <td>{{$CE_consolidated[$k]}}</td>
                                             <td>{{$PE_consolidated[$k]}}</td>
                                             <td>{{$BUY_Action[$k]}}</td>
