@@ -22,7 +22,7 @@
 </section>
 <!-- inner hero section end -->
 
-<section class="nifty--section">
+{{-- <section class="nifty--section">
     <div class="container-fluid">
         <div class="row g-1">
             <div class="col-lg-4 col-md-4 col-4"><p>@lang('Nifty') <span class="text--base">1254789</span></p></div>
@@ -30,4 +30,4 @@
             <div class="col-lg-4 col-md-4 col-4"><p>@lang('Nasdaq') <span class="text--base">1254789</span></p></div>
         </div>
     </div>
-</section>
+</section> --}}
