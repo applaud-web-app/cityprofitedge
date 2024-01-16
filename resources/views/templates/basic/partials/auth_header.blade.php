@@ -48,7 +48,7 @@
                                 
                                 <li><a href="{{ route('user.portfolio.top.gainers') }}">@lang('Trade Position')</a></li>
                                 <li><a href="{{ route('user.portfolio.top.losers') }}">@lang('Order Book')</a></li>
-                                <li><a href="{{ route('user.portfolio.top.gainers') }}">@lang('Broker Details')</a></li>
+                                <li><a href="{{ route('user.portfolio.broker-details') }}">@lang('Broker Details')</a></li>
                                 <li><a href="{{ route('user.portfolio.top.losers') }}">@lang('OMS Config')</a></li>
                             </ul>
                         </li>

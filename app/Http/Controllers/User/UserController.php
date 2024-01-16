@@ -500,7 +500,7 @@ class UserController extends Controller
 
     public function portfolioTopGainers(Request $request)
     {
-        $pageTitle = 'Portfolio Top Gainers';
+        $pageTitle = 'Trade Desk Signal';
 
         // TODO:: modify commented code to implement searchable and filterable.
         // $portfolioTopGainers = PortfolioTopGainer::searchable(['stock_name'])/* ->filter(['trx_type', 'remark']) */->orderBy('id', 'desc')->paginate(getPaginate());
@@ -509,6 +509,11 @@ class UserController extends Controller
         $todayDate = date("Y-m-d");
         $timeFrame = $request->time_frame ?: 5;
         return view($this->activeTemplate . 'user.portfolio_top_gainers', compact('pageTitle', 'portfolioTopGainers','symbolArr','todayDate','timeFrame'));
+    }
+
+    public function brokerDetails(){
+        $data['pageTitle'] = 'Broker Details';
+        return view($this->activeTemplate . 'user.broker_details',$data);
     }
 
     public function portfolioTopLosers()
