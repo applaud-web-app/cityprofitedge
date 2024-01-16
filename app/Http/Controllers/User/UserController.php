@@ -20,6 +20,7 @@ use App\Models\Referral;
 use App\Models\SignalHistory;
 use App\Models\StockPortfolio;
 use App\Models\ThematicPortfolio;
+use App\Models\BrokerApi;
 use App\Models\Transaction;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -513,8 +514,16 @@ class UserController extends Controller
 
     public function brokerDetails(){
         $data['pageTitle'] = 'Broker Details';
+        $data['broker_data'] = BrokerApi::where('user_id',auth()->user()->id)->get();
         return view($this->activeTemplate . 'user.broker_details',$data);
     }
+
+    public function getBrokerDetails(Request $request,$id){
+        $data['broker_data'] = BrokerApi::where(['user_id'=>auth()->user()->id,'id'=>$id])->first();
+        return view($this->activeTemplate.'user.get_broker_details',$data);
+    }
+
+
 
     public function portfolioTopLosers()
     {
@@ -523,5 +532,46 @@ class UserController extends Controller
         // TODO:: modify commented code to implement searchable and filterable.
         $portfolioTopLosers = PortfolioTopLoser::searchable(['stock_name'])/* filter(['trx_type', 'remark']) ->*/->orderBy('id', 'desc')->paginate(getPaginate());
         return view($this->activeTemplate . 'user.portfolio_top_losers', compact('pageTitle', 'portfolioTopLosers'));
+    }
+
+    public function storeBrokerDetails(Request $request){
+        $brokerApi = new BrokerApi();
+        $brokerApi->client_name = $request->client_name;
+        $brokerApi->broker_name = $request->broker_name;
+        $brokerApi->account_user_name = $request->account_user_name;
+        $brokerApi->account_password = $request->account_password;
+        $brokerApi->api_key = $request->api_key;
+        $brokerApi->api_secret_key = $request->api_secret_key;
+        $brokerApi->security_pin = $request->security_pin;
+        $brokerApi->totp = $request->totp;
+        $brokerApi->user_id = auth()->user()->id;
+        $brokerApi->save();
+        $notify[] = ['success', 'Broker Details Added Successfully...'];
+        return to_route('user.portfolio.broker-details')->withNotify($notify);
+    }
+
+    public function updateBrokerDetails(Request $request,$id){
+        $brokerApi = BrokerApi::find($id);
+        if($brokerApi->user_id!=auth()->user()->id){
+            return to_route('user.portfolio.broker-details');
+        }
+        $brokerApi->client_name = $request->client_name;
+        $brokerApi->broker_name = $request->broker_name;
+        $brokerApi->account_user_name = $request->account_user_name;
+        $brokerApi->account_password = $request->account_password;
+        $brokerApi->api_key = $request->api_key;
+        $brokerApi->api_secret_key = $request->api_secret_key;
+        $brokerApi->security_pin = $request->security_pin;
+        $brokerApi->totp = $request->totp;
+        $brokerApi->user_id = auth()->user()->id;
+        $brokerApi->save();
+        $notify[] = ['success', 'Broker Details Updated Successfully...'];
+        return to_route('user.portfolio.broker-details')->withNotify($notify);
+    }
+
+    public function removeBrokerDetails(Request $request,$id){
+        BrokerApi::where(['id'=>$id,'user_id'=>auth()->user()->id])->delete();
+        $notify[] = ['success', 'Broker Details Deleted Successfully...'];
+        return to_route('user.portfolio.broker-details')->withNotify($notify);
     }
 }
