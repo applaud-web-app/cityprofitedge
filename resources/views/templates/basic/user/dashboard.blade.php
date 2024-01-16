@@ -152,6 +152,7 @@
                     </div>
                 </div><!-- d-widget end -->
             </div>
+
             <div class="col-xl-4 col-lg-4 col-md-6">
                 <div class="d-widget has--link">
                     <a href="{{ route('user.metals.portfolio') }}" class="item--link"></a>
@@ -178,6 +179,7 @@
                     </div>
                 </div><!-- d-widget end -->
             </div>
+            
             <div class="col-xl-4 col-lg-4 col-md-6">
                 <div class="d-widget has--link">
                     <a href="{{ route('user.transactions') }}" class="item--link"></a>
