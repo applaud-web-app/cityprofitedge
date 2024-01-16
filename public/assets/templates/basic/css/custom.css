@@ -215,4 +215,12 @@
   .show-filter{
       display: block;
   }
+  .nifty--section {
+    padding: 5px;
+    font-size: 12px;
+   
+}
+.nifty--section p span{
+  display: block;
+}
 }

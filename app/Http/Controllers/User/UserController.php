@@ -574,4 +574,16 @@ class UserController extends Controller
         $notify[] = ['success', 'Broker Details Deleted Successfully...'];
         return to_route('user.portfolio.broker-details')->withNotify($notify);
     }
+
+    public function tradeBook(){
+        $pageTitle = 'Trade Book';
+        $data['pageTitle'] = $pageTitle;
+        return view($this->activeTemplate . 'user.trade-book');
+    }
+
+    public function plReports(){
+        $pageTitle = 'PL Reports';
+        $data['pageTitle'] = $pageTitle;
+        return view($this->activeTemplate . 'user.pl-reports');
+    }
 }

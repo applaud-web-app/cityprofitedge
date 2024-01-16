@@ -5306,3 +5306,9 @@ body:not(.lightmode) .maintenance-page-color p {
     cursor: no-drop;
 }
 
+.nifty--section{
+    background-color: #0d222b;
+    padding: 10px;
+    font-size: 14px;
+    text-align: center;
+}

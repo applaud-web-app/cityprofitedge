@@ -74,6 +74,8 @@
                                 {{-- <li><a href="{{ route('user.twofactor') }}">@lang('Two Factor')</a></li> --}}
                                 <li><a href="{{ route('user.change.password') }}">@lang('Change Password')</a></li>
                                 <li><a href="{{ route('user.transactions') }}">@lang('Stock Transactions')</a></li>
+                                <li><a href="{{ route('user.trade-book') }}">@lang('Trade Book')</a></li>
+                                <li><a href="{{ route('user.pl-reports') }}">@lang('PL Reports')</a></li>
                                 <li><a href="{{ route('user.logout') }}">@lang('Logout')</a></li>
                             </ul>
                         </li>
