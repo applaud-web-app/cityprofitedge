@@ -45,7 +45,7 @@ class UserController extends Controller
 
         $investGraphArr = [];
 
-        $stockPortFolio =  StockPortfolio::select(\DB::raw('SUM(quantity*buy_price) as buy_value'),\DB::raw('SUM(quantity*cmp) as current_value'),'buy_date')->whereBetween('buy_date',[$date1,$date2])->where('user_id',$user->id)->groupBy('buy_date')->get();
+        $stockPortFolio =  StockPortfolio::select(\DB::raw('SUM(quantity*buy_price) as buy_value'),\DB::raw('SUM(quantity*cmp) as current_value'),\DB::raw('DATE_FORMAT(buy_date,"%M-%Y") as buy_date'))->where('user_id',$user->id)->groupBy('buy_date')->get();
 
         foreach($stockPortFolio as $v){
             $investGraphArr[$v->buy_date] = [
@@ -55,6 +55,7 @@ class UserController extends Controller
             $stockPortFolioBuyVal += $v->buy_value;
             $stockPortFolioCurrVal += $v->current_value;
         }
+
         $stockPortFolio->buy_value = $stockPortFolioBuyVal;
         $stockPortFolio->current_value = $stockPortFolioCurrVal;
 
@@ -62,7 +63,7 @@ class UserController extends Controller
         $globalstockPortFolioCurrVal = 0;
 
 
-        $globalStockPortFolio =  GlobalStockPortFolio::select(\DB::raw('SUM(quantity*buy_price) as buy_value'),\DB::raw('SUM(quantity*cmp) as current_value'),'buy_date')->whereBetween('buy_date',[$date1,$date2])->where('user_id',$user->id)->groupBy('buy_date')->get();
+        $globalStockPortFolio =  GlobalStockPortFolio::select(\DB::raw('SUM(quantity*buy_price) as buy_value'),\DB::raw('SUM(quantity*cmp) as current_value'),\DB::raw('DATE_FORMAT(buy_date,"%M-%Y") as buy_date'))->where('user_id',$user->id)->groupBy('buy_date')->get();
         foreach($globalStockPortFolio as $v){
             if(isset($investGraphArr[$v->buy_date])){
                 $investGraphArr[$v->buy_date] = [
@@ -86,7 +87,7 @@ class UserController extends Controller
         $foglobalstockPortFolioCurrVal = 0;
 
 
-        $foglobalStockPortFolio =  FOPortfolios::select(\DB::raw('SUM(quantity*buy_price) as buy_value'),\DB::raw('SUM(quantity*cmp) as current_value'),'buy_date')->whereBetween('buy_date',[$date1,$date2])->where('user_id',$user->id)->groupBy('buy_date')->get();
+        $foglobalStockPortFolio =  FOPortfolios::select(\DB::raw('SUM(quantity*buy_price) as buy_value'),\DB::raw('SUM(quantity*cmp) as current_value'),\DB::raw('DATE_FORMAT(buy_date,"%M-%Y") as buy_date'))->where('user_id',$user->id)->groupBy('buy_date')->get();
         foreach($foglobalStockPortFolio as $v){
             if(isset($investGraphArr[$v->buy_date])){
                 $investGraphArr[$v->buy_date] = [
@@ -112,7 +113,7 @@ class UserController extends Controller
         $metalsPortFolioCurrVal = 0;
 
 
-        $metalsPortFolio =  MetalsPortfolio::select(\DB::raw('SUM(quantity*buy_price) as buy_value'),\DB::raw('SUM(quantity*cmp) as current_value'),'buy_date')->whereBetween('buy_date',[$date1,$date2])->where('user_id',$user->id)->groupBy('buy_date')->get();
+        $metalsPortFolio =  MetalsPortfolio::select(\DB::raw('SUM(quantity*buy_price) as buy_value'),\DB::raw('SUM(quantity*cmp) as current_value'),\DB::raw('DATE_FORMAT(buy_date,"%M-%Y") as buy_date'))->where('user_id',$user->id)->groupBy('buy_date')->get();
 
         foreach($metalsPortFolio as $v){
             if(isset($investGraphArr[$v->buy_date])){
@@ -145,7 +146,7 @@ class UserController extends Controller
            
             $datesArr = array_keys($investGraphArr);
             $datesArr = array_map(function($kk){
-                return date("d-M-Y",strtotime($kk));
+                return date("M-Y",strtotime($kk));
             },$datesArr);
             $buyArr = array_column($investGraphArr,'buy_value');
             $currArr = array_column($investGraphArr,'current_value');
