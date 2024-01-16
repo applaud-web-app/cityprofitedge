@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Ledger;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\StockPortfolio;
 use App\Imports\LedgerDataImport;
@@ -71,12 +72,52 @@ class FinancialOverviewController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function allStockPortfolio()
+    public function allStockPortfolio(Request $request)
     {
         $pageTitle = 'All Stock Portfolio';
-        $stockPortfolios = StockPortfolio::with(['user', 'poolingAccountPortfolio'])->paginate(getPaginate());
-        return view('admin.financial.stock_portfolio.all', compact('pageTitle', 'stockPortfolios'));
+        $stockPortfolios = StockPortfolio::with(['user', 'poolingAccountPortfolio']);
+
+        $clientId = 'all';
+        $stockName = 'all';
+        $buyDate = 'all';
+
+        if(!empty($request->client_id) && $request->client_id!='all'){
+            $stockPortfolios->whereHas('user',function($q) use($request){
+                $q->where('user_code',$request->client_id);
+            });
+            $clientId = $request->client_id;
+        }
+        if(!empty($request->stock_name) && $request->stock_name!='all'){
+            $stockPortfolios->where('stock_name',$request->stock_name);
+            $stockName = $request->stock_name;
+        }
+        if(!empty($request->buy_date) && $request->buy_date!='all'){
+            $stockPortfolios->where('buy_date',$request->buy_date);
+            $buyDate = $request->buy_date;
+        }
+        $stockPortfolios =  $stockPortfolios->paginate(getPaginate());
+        return view('admin.financial.stock_portfolio.all', compact('pageTitle', 'stockPortfolios','clientId','stockName','buyDate'));
     }
+
+    public function getSearchClientId(Request $request){
+        $term = $request->term;
+        $data = [];
+        if(!empty($term)){
+            $data = User::select('id','user_code')->where('user_code','like','%'.$term.'%')->limit(10)->get();
+        }
+        return response()->json($data);
+    }
+
+    public function getStockName(Request $request){
+        $term = $request->term;
+        $data = [];
+        if(!empty($term)){
+            $data = StockPortfolio::select('id','stock_name')->where('stock_name','like','%'.$term.'%')->limit(10)->groupBy('stock_name')->get();
+        }
+        return response()->json($data);
+    }
+
+
 
     /**
      * Download the template for the specified resource.

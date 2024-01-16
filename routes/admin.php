@@ -202,6 +202,8 @@ Route::middleware('admin')->group(function () {
             Route::post('upload', 'uploadStockPortfolio')->name('upload');
 
             Route::post('delete', 'deleteStockPortfolio')->name('delete');
+            Route::get('get-search-client-id', 'getSearchClientId')->name('get-search-client-id');
+            Route::get('get-stock-name', 'getStockName')->name('get-stock-name');
         });
     });
 
