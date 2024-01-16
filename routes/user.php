@@ -70,6 +70,10 @@ Route::middleware('auth')->name('user.')->group(function () {
                 Route::get('portfolio-top-gainers', 'portfolioTopGainers')->name('portfolio.top.gainers');
                 Route::get('portfolio-top-losers', 'portfolioTopLosers')->name('portfolio.top.losers');
                 Route::get('broker-details', 'brokerDetails')->name('portfolio.broker-details');
+                Route::post('store-broker-details', 'storeBrokerDetails')->name('portfolio.store-broker-details');
+                Route::post('update-broker-details/{id}', 'updateBrokerDetails')->name('portfolio.update-broker-details');
+                Route::get('get-broker-details/{id}', 'getBrokerDetails')->name('portfolio.get-broker-details');
+                Route::get('remove-broker-details/{id}', 'removeBrokerDetails')->name('portfolio.remove-broker-details');
 
                 Route::get('attachment-download/{fil_hash}','attachmentDownload')->name('attachment.download');
 
