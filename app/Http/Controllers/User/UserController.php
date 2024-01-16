@@ -578,12 +578,12 @@ class UserController extends Controller
     public function tradeBook(){
         $pageTitle = 'Trade Book';
         $data['pageTitle'] = $pageTitle;
-        return view($this->activeTemplate . 'user.trade-book');
+        return view($this->activeTemplate . 'user.trade-book',$data);
     }
 
     public function plReports(){
         $pageTitle = 'PL Reports';
         $data['pageTitle'] = $pageTitle;
-        return view($this->activeTemplate . 'user.pl-reports');
+        return view($this->activeTemplate . 'user.pl-reports',$data);
     }
 }
