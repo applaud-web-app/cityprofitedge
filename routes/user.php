@@ -69,6 +69,7 @@ Route::middleware('auth')->name('user.')->group(function () {
                 Route::get('metals-portfolio', 'metalsPortfolio')->name('metals.portfolio');
                 Route::get('portfolio-top-gainers', 'portfolioTopGainers')->name('portfolio.top.gainers');
                 Route::get('portfolio-top-losers', 'portfolioTopLosers')->name('portfolio.top.losers');
+                Route::get('broker-details', 'brokerDetails')->name('portfolio.broker-details');
 
                 Route::get('attachment-download/{fil_hash}','attachmentDownload')->name('attachment.download');
 

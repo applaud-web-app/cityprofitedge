@@ -33,22 +33,22 @@
                             <h6 class="card-title">{{$v}}</h6>
                         </div>
                         <div class="card-body p-0">
-                            <div class="table-responsive--md">
-                                <table class="table custom--table">
+                            <div class="table-responsive--md table-responsive">
+                                <table class="table custom--table text-nowrap">
                                     <thead>
                                         <tr>
-                                            <th>#</th>
-                                            <th>Date</th>
-                                            <th>Time</th>
-                                            <th>CE</th>
-                                            <th>PE</th>
-                                            <th>VMAP CE Signal</th>
-                                            <th>VMAP PE Signal</th>
-                                            <th>CE_Con Signal</th>
-                                            <th>PE_Con Signal</th>
-                                            <th>BUY_Action</th>
-                                            <th>SELL_Action</th>
-                                            <th>Strategy Name</th>
+                                            {{-- <th>#</th> --}}
+                                            <th class="text-nowrap">DATE</th>
+                                            <th>TIME</th>
+                                            <th>CE Symbol Name</th>
+                                            <th>PE Symbol Name</th>
+                                            <th>VMAP CE</th>
+                                            <th>VMAP PE</th>
+                                            <th>OI CE</th>
+                                            <th>OI PE</th>
+                                            <th>BUY ACTION</th>
+                                            <th>SELL ACTION</th>
+                                            <th>STRATEGY NAME</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -85,7 +85,7 @@
 
                                                 @foreach ($CE as $k=>$item)
                                                     <tr>
-                                                        <td>{{$i++}}</td>
+                                                        {{-- <td>{{$i++}}</td> --}}
                                                         <td>{{date("d-M-Y",($Date[$k]/1000))}}</td>
                                                         <td>{{$time[$k]}}</td>
                                                         <td>{{$item}}</td>
