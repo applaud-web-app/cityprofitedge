@@ -6,7 +6,6 @@
     <div class="container content-container">
 
         {{-- <div class="row notice"></div> --}}
-
         <div class="row justify-content-center g-3">
             {{-- <div class="col-md-12 mb-3">
                 <form action="#" class="transparent-form">
@@ -179,7 +178,7 @@
                     </div>
                 </div><!-- d-widget end -->
             </div>
-            
+
             <div class="col-xl-4 col-lg-4 col-md-6">
                 <div class="d-widget has--link">
                     <a href="{{ route('user.transactions') }}" class="item--link"></a>
