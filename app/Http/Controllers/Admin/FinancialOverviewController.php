@@ -193,4 +193,13 @@ class FinancialOverviewController extends Controller
         $notify[] = ['success', 'Stock Portfolio deleted successfully'];
         return back()->withNotify($notify);
     }
+
+    public function removeStockPortfolio(Request $request){
+        $data = $request->data;
+        if(!empty($data)){
+            StockPortfolio::whereIn('id',$data)->delete();
+        }        
+        $notify[] = ['success', 'Stock Portfolio deleted successfully'];
+        return back()->withNotify($notify);
+    }
 }

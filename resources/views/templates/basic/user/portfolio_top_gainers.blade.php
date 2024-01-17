@@ -46,6 +46,8 @@
                                             <th>VMAP PE</th>
                                             <th>OI CE</th>
                                             <th>OI PE</th>
+                                            <th>CE CLOSE PRICE</th>
+                                            <th>PE CLOSE PRICE</th>
                                             <th>BUY ACTION</th>
                                             <th>SELL ACTION</th>
                                             <th>STRATEGY NAME</th>
@@ -57,6 +59,7 @@
                                             foreach($data as $vvl){
                                                 if(isset($vvl->atm) && $vvl->atm=="ATM"){
                                                     $atmData[] = $vvl;
+
                                                 }
                                             }
                                         @endphp
@@ -69,6 +72,7 @@
 
                                                 @php
                                                     $arrData = json_decode($val->data,true);    
+
                                                     // dd($arrData);
                                                     $CE = array_slice($arrData['CE'],-5);
                                                     $PE = array_slice($arrData['PE'],-5);
@@ -81,6 +85,8 @@
                                                     $vwap_PE_signal = array_slice($arrData['vwap_PE_signal'],-5);
                                                     $CE_consolidated = array_slice($arrData['CE_consolidated'],-5);
                                                     $PE_consolidated = array_slice($arrData['PE_consolidated'],-5);
+                                                    $close_CE = array_slice($arrData['close_CE'],-5);
+                                                    $close_PE = array_slice($arrData['close_PE'],-5);
                                                 @endphp
 
                                                 @foreach ($CE as $k=>$item)
@@ -94,6 +100,8 @@
                                                         <td>{{$vwap_PE_signal[$k]}}</td>
                                                         <td>{{$CE_consolidated[$k]}}</td>
                                                         <td>{{$PE_consolidated[$k]}}</td>
+                                                        <td>{{$close_CE[$k]}}</td>
+                                                        <td>{{$close_PE[$k]}}</td>
                                                         <td>{{$BUY_Action[$k]}}</td>
                                                         <td>{{$SELL_Action[$k]}}</td>
                                                         <td>{{$Strategy_name[$k]}}</td>

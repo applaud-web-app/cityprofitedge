@@ -37,131 +37,139 @@
 @endpush
 <div class="row">
     <div class="col-lg-12">
-        <div class="card responsive-filter-card mb-4">
-            <div class="card-body">
-                
-                    <div class="d-flex flex-wrap gap-3">
-                       
-                        <div class="flex-grow-1">
-                            <label>Client ID</label>
-                            <select  id="client_id">
-                                <option value="all">All</option>
-                                @if($clientId!='all')
-                                    <option value="{{$clientId}}" selected>{{$clientId}}</option>
-                                @endif
-                            </select>
-                        </div>
-                        <div class="flex-grow-1">
-                            <label>Stock Name</label>
-                            <select class="form-control" id="stock_name">
-                                <option value="all">All</option>
-                                @if($stockName!='all')
-                                    <option value="{{$stockName}}" selected>{{$stockName}}</option>
-                                @endif
-                            </select>
-                        </div>
-                       
-                        <div class="flex-grow-1">
-                            <label>Buy Date</label>
-                            <input type="date" id="buy_date" class="form-control" {{$buyDate!='all' ? $buyDate : ''}}>
-                        </div>
-                       
-                        <div class="flex-grow-1 align-self-end">
-                            <button class="btn btn--primary w-100 h-45" type="button" id="filter_btn"><i class="fas fa-filter"></i> Filter</button>
-                        </div>
+        <form action="{{route('admin.financial-overview.stock-portfolio.remove-stock-portfolio')}}" name="record_frm" id="record_frm" method="post">
+            @csrf
+            <div class="card responsive-filter-card mb-4">
+                <div class="card-body">
+                    
+                        <div class="d-flex flex-wrap gap-3">
                         
-                        <div class="flex-grow-1 align-self-end">
-                            <a class="btn btn--primary w-100 h-45" href="{{url('admin/financial-overview/stock-portfolio')}}"><i class="las la-sync-alt"></i> Refresh</a>
+                            <div class="flex-grow-1">
+                                <label>Client ID</label>
+                                <select  id="client_id">
+                                    <option value="all">All</option>
+                                    @if($clientId!='all')
+                                        <option value="{{$clientId}}" selected>{{$clientId}}</option>
+                                    @endif
+                                </select>
+                            </div>
+                            <div class="flex-grow-1">
+                                <label>Stock Name</label>
+                                <select class="form-control" id="stock_name">
+                                    <option value="all">All</option>
+                                    @if($stockName!='all')
+                                        <option value="{{$stockName}}" selected>{{$stockName}}</option>
+                                    @endif
+                                </select>
+                            </div>
+                        
+                            <div class="flex-grow-1">
+                                <label>Buy Date</label>
+                                <input type="date" id="buy_date" class="form-control" {{$buyDate!='all' ? $buyDate : ''}}>
+                            </div>
+                        
+                            <div class="flex-grow-1 align-self-end">
+                                <button class="btn btn--primary w-100 h-45" type="button" id="filter_btn"><i class="fas fa-filter"></i> Filter</button>
+                            </div>
+                            
+                            <div class="flex-grow-1 align-self-end">
+                                <a class="btn btn--primary w-100 h-45" href="{{url('admin/financial-overview/stock-portfolio')}}"><i class="las la-sync-alt"></i> Refresh</a>
+                            </div>
                         </div>
-                    </div>
-                
+                    
+                </div>
             </div>
-        </div>
-        <div class="card b-radius--10 ">
-            <div class="card-body p-0">
-                <div class="table-responsive--lg table-responsive">
-                    <table class="table table--light style--two">
-                        <thead>
-                        <tr>
-                            <th>
-                                <input type="checkbox"  id="checkAll">
-                            </th>
-                            <th>@lang('Clinet')</th>
-                            <th>@lang('Broker Name')</th>
-                            <th>@lang('Stock Name')</th>
-                            <th>@lang('Qty')</th>
-                            <th>@lang('Buy Date')</th>
-                            <th>@lang('Buy Price')</th>
-                            <th>@lang('CMP')</th>
-                            <th>@lang('Current Value')</th>
-                            <th>@lang('Profit/Loss')</th>
-                            <th>@lang('Sector')</th>
-                            <th>@lang('Pooling Broker Name')</th>
-                            <th>@lang('Action')</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                            @forelse($stockPortfolios as $stockPortfolio)
-                                <tr>
-                                    <td><input type="checkbox" class="checkAll"></td>
-                                    <td>
-                                        {{ $stockPortfolio->user->fullname }}
-                                    </td>
-                                    <td>
-                                        {{ $stockPortfolio->broker_name }}
-                                    </td>
-                                    <td>
-                                        {{ $stockPortfolio->stock_name }}
-                                    </td>
-                                    <td>
-                                        {{ $stockPortfolio->quantity }}
-                                    </td>
-                                    <td>
-                                        {{ showDate($stockPortfolio->buy_date) }}
-                                    </td>
-                                    <td>
-                                        {{ showAmount($stockPortfolio->buy_price) }}
-                                    </td>
-                                    <td>
-                                        {{ $stockPortfolio->cmp }}
-                                    </td>
-                                    <td>
-                                        {{ showAmount($stockPortfolio->current_value) }}
-                                    </td>
-                                    <td>{{ $stockPortfolio->profit_loss }}</td>
-                                    <td>{{ $stockPortfolio->sector }}</td>
-                                    <td>{{ $stockPortfolio->poolingAccountPortfolio->broker_name }}</td>
 
-                                    <td>
-                                        <div class="d-flex justify-content-end flex-wrap gap-2">
-                                            {{-- <a href="{{ route('admin.signal.edit', $stockPortfolio->id) }}"
-                                                class="btn btn-sm btn-outline--primary">
-                                                <i class="la la-pencil"></i> @lang('Edit')
-                                            </a> --}}
-                                            <button class="btn btn-sm btn-outline--danger confirmationBtn"
-                                                data-question="@lang('Are you sure to delete this record')?"
-                                                data-action="{{ route('admin.financial-overview.stock-portfolio.delete') }}"
-                                                data-hidden_id="{{ $stockPortfolio->id }}">
-                                                <i class="la la-trash"></i> @lang('Delete')
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td class="text-muted text-center" colspan="100%">{{ __($emptyMessage) }}</td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table><!-- table end -->
-                </div>
+            <div class="w-100 mb-3">
+                <button type="submit" class="btn btn-danger" id="delete_records"><i class="las la-trash-alt"></i> Delete Records</button>
             </div>
-            @if ($stockPortfolios->hasPages())
-                <div class="card-footer py-4">
-                    {{ paginateLinks($stockPortfolios) }}
+            <div class="card b-radius--10 ">
+                <div class="card-body p-0">
+                    <div class="table-responsive--lg table-responsive">
+                        <table class="table table--light style--two">
+                            <thead>
+                            <tr>
+                                <th>
+                                    <input type="checkbox"  id="checkAll">
+                                </th>
+                                <th>@lang('Clinet')</th>
+                                <th>@lang('Broker Name')</th>
+                                <th>@lang('Stock Name')</th>
+                                <th>@lang('Qty')</th>
+                                <th>@lang('Buy Date')</th>
+                                <th>@lang('Buy Price')</th>
+                                <th>@lang('CMP')</th>
+                                <th>@lang('Current Value')</th>
+                                <th>@lang('Profit/Loss')</th>
+                                <th>@lang('Sector')</th>
+                                <th>@lang('Pooling Broker Name')</th>
+                                <th>@lang('Action')</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($stockPortfolios as $stockPortfolio)
+                                    <tr>
+                                        <td><input type="checkbox" name="data[]" value="{{$stockPortfolio->id}}" class="checkAll"></td>
+                                        <td>
+                                            {{ $stockPortfolio->user->fullname }}
+                                        </td>
+                                        <td>
+                                            {{ $stockPortfolio->broker_name }}
+                                        </td>
+                                        <td>
+                                            {{ $stockPortfolio->stock_name }}
+                                        </td>
+                                        <td>
+                                            {{ $stockPortfolio->quantity }}
+                                        </td>
+                                        <td>
+                                            {{ showDate($stockPortfolio->buy_date) }}
+                                        </td>
+                                        <td>
+                                            {{ showAmount($stockPortfolio->buy_price) }}
+                                        </td>
+                                        <td>
+                                            {{ $stockPortfolio->cmp }}
+                                        </td>
+                                        <td>
+                                            {{ showAmount($stockPortfolio->current_value) }}
+                                        </td>
+                                        <td>{{ $stockPortfolio->profit_loss }}</td>
+                                        <td>{{ $stockPortfolio->sector }}</td>
+                                        <td>{{ $stockPortfolio->poolingAccountPortfolio->broker_name }}</td>
+
+                                        <td>
+                                            <div class="d-flex justify-content-end flex-wrap gap-2">
+                                                {{-- <a href="{{ route('admin.signal.edit', $stockPortfolio->id) }}"
+                                                    class="btn btn-sm btn-outline--primary">
+                                                    <i class="la la-pencil"></i> @lang('Edit')
+                                                </a> --}}
+                                                <button class="btn btn-sm btn-outline--danger confirmationBtn"
+                                                    data-question="@lang('Are you sure to delete this record')?"
+                                                    data-action="{{ route('admin.financial-overview.stock-portfolio.delete') }}"
+                                                    data-hidden_id="{{ $stockPortfolio->id }}">
+                                                    <i class="la la-trash"></i> @lang('Delete')
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td class="text-muted text-center" colspan="100%">{{ __($emptyMessage) }}</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table><!-- table end -->
+                    </div>
                 </div>
-            @endif
-        </div>
+                @if ($stockPortfolios->hasPages())
+                    <div class="card-footer py-4">
+                        {{ paginateLinks($stockPortfolios) }}
+                    </div>
+                @endif
+            </div>
+        </form>
+
     </div>
 </div>
 
@@ -283,5 +291,18 @@
             }
         })
     </script>
+
+    <script>
+        $("#record_frm").on("submit",function(e){
+            e.preventDefault();
+            if($(".checkAll:checked").length>0){
+                $("#record_frm")[0].submit();
+            }else{
+                alert("Select one or more records to delete");
+            }
+        })
+    </script>
+
+    
 
 @endpush
