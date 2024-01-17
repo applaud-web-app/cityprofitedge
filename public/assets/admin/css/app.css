@@ -8502,7 +8502,7 @@ left: -20px;
     background-color: #F1F1F1;
 }
 .select2-container {
-    z-index: 99999999999 !important;
+    z-index: 1 !important;
 }
 
 .breadcrumb-plugins:has(form) .btn {

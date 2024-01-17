@@ -126,7 +126,9 @@ Route::middleware('admin')->group(function () {
 
             Route::get('download', 'templateGlobalStockPortfolioDownload')->name('download.template');
             Route::post('upload', 'uploadGlobalStockPortfolios')->name('upload');
-
+            Route::get('get-search-client-id', 'getSearchClientId')->name('get-search-client-id');
+            Route::get('get-stock-name', 'getStockName')->name('get-stock-name');
+            Route::post('remove-stock-portfolio', 'removeStockPortfolio')->name('remove-stock-portfolio');
             Route::post('delete', 'deleteGlobalStockPortfolio')->name('delete');
         });
 
@@ -135,6 +137,10 @@ Route::middleware('admin')->group(function () {
             Route::get('/', 'allFoPortfolioHedging')->name('all');
             Route::get('add', 'addFoPortfolioHedging')->name('add.page');
             Route::post('add', 'addSubmitFoPortfolioHedging')->name('add.submit');
+
+            Route::get('get-faport-search-client-id', 'getFoPortSearchClientId')->name('get-faport-search-client-id');
+            Route::get('get-foport-name', 'getFoPortfolioHedging')->name('get-foport-name');
+            Route::post('remove-foPortfolio', 'removefoPortfolio')->name('remove-foPortfolio');
 
             Route::get('download', 'templateFoPortfolioHedgingDownload')->name('download.template');
             Route::post('upload', 'uploadFoPortfolioHedging')->name('upload');
@@ -148,6 +154,11 @@ Route::middleware('admin')->group(function () {
             Route::get('add', 'addMetalsPortfolios')->name('add.page');
             Route::post('add', 'addSubmitMetalsPortfolios')->name('add.submit');
 
+
+            Route::get('get-metals-search-client-id', 'getMetalsPortfoliosSearchClientId')->name('get-metals-search-client-id');
+            Route::get('get-metals-name', 'getMetalsPortfoliosfolio')->name('get-metals-name');
+            Route::post('remove-MetalsPortfolios', 'removeMetalsPortfolios')->name('remove-MetalsPortfolios');
+            
             Route::get('download', 'templateMetalsPortfolioDownload')->name('download.template');
             Route::post('upload', 'uploadMetalsPortfolios')->name('upload');
 

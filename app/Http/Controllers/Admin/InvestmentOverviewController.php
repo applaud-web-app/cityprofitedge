@@ -119,12 +119,60 @@ class InvestmentOverviewController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function allFoPortfolioHedging()
+    public function allFoPortfolioHedging(Request $request)
     {
         $pageTitle = 'All F&O Portfolio Hedging';
-        $foPortFolioHedgings = FOPortfolios::with(['user', 'poolingAccountPortfolio'])->paginate(getPaginate());
-        return view('admin.investments.foprortfolio.all', compact('pageTitle', 'foPortFolioHedgings'));
+
+        $foPortFolioHedgings = FOPortfolios::with(['user', 'poolingAccountPortfolio']);
+        $clientId = 'all';
+        $stockName = 'all';
+        $buyDate = 'all';
+
+        if(!empty($request->client_id) && $request->client_id!='all'){
+            $foPortFolioHedgings->whereHas('user',function($q) use($request){
+                $q->where('user_code',$request->client_id);
+            });
+            $clientId = $request->client_id;
+        }
+        if(!empty($request->stock_name) && $request->stock_name!='all'){
+            $foPortFolioHedgings->where('stock_name',$request->stock_name);
+            $stockName = $request->stock_name;
+        }
+        if(!empty($request->buy_date) && $request->buy_date!='all'){
+            $foPortFolioHedgings->where('buy_date',$request->buy_date);
+            $buyDate = $request->buy_date;
+        }
+        $foPortFolioHedgings = $foPortFolioHedgings->paginate(getPaginate());
+        return view('admin.investments.foprortfolio.all', compact('pageTitle', 'foPortFolioHedgings','clientId','stockName','buyDate'));
     }
+
+    public function getFoPortfolioHedging(Request $request){
+        $term = $request->term;
+        $data = [];
+        if(!empty($term)){
+            $data = FOPortfolios::select('id','stock_name')->where('stock_name','like','%'.$term.'%')->limit(10)->groupBy('stock_name')->get();
+        }
+        return response()->json($data);
+    }
+
+    public function getFoPortSearchClientId(Request $request){
+        $term = $request->term;
+        $data = [];
+        if(!empty($term)){
+            $data = User::select('id','user_code')->where('user_code','like','%'.$term.'%')->limit(10)->get();
+        }
+        return response()->json($data);
+    }
+
+    public function removefoPortfolio(Request $request){
+        $data = $request->data;
+        if(!empty($data)){
+            FOPortfolios::whereIn('id',$data)->delete();
+        }        
+        $notify[] = ['success', 'F&O Portfolio Hedging deleted successfully'];
+        return back()->withNotify($notify);
+    }
+
 
     /**
      * Show the form for creating a new resource.
@@ -211,12 +259,61 @@ class InvestmentOverviewController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function allMetalsPortfolios()
+    public function allMetalsPortfolios(Request $request)
     {
         $pageTitle = 'All Metals Portfolios (Gold & Silver)';
-        $metalsPortfolios = MetalsPortfolio::with(['user', 'poolingAccountPortfolio'])->paginate(getPaginate());
-        return view('admin.investments.metals.all', compact('pageTitle', 'metalsPortfolios'));
+
+
+        $metalsPortfolios = MetalsPortfolio::with(['user', 'poolingAccountPortfolio']);
+        $clientId = 'all';
+        $stockName = 'all';
+        $buyDate = 'all';
+
+        if(!empty($request->client_id) && $request->client_id!='all'){
+            $metalsPortfolios->whereHas('user',function($q) use($request){
+                $q->where('user_code',$request->client_id);
+            });
+            $clientId = $request->client_id;
+        }
+        if(!empty($request->stock_name) && $request->stock_name!='all'){
+            $metalsPortfolios->where('stock_name',$request->stock_name);
+            $stockName = $request->stock_name;
+        }
+        if(!empty($request->buy_date) && $request->buy_date!='all'){
+            $metalsPortfolios->where('buy_date',$request->buy_date);
+            $buyDate = $request->buy_date;
+        }
+        $metalsPortfolios = $metalsPortfolios->paginate(getPaginate());
+        return view('admin.investments.metals.all', compact('pageTitle', 'metalsPortfolios','clientId','stockName','buyDate'));
     }
+
+    public function getMetalsPortfoliosfolio(Request $request){
+        $term = $request->term;
+        $data = [];
+        if(!empty($term)){
+            $data = MetalsPortfolio::select('id','stock_name')->where('stock_name','like','%'.$term.'%')->limit(10)->groupBy('stock_name')->get();
+        }
+        return response()->json($data);
+    }
+
+    public function getMetalsPortfoliosSearchClientId(Request $request){
+        $term = $request->term;
+        $data = [];
+        if(!empty($term)){
+            $data = User::select('id','user_code')->where('user_code','like','%'.$term.'%')->limit(10)->get();
+        }
+        return response()->json($data);
+    }
+
+    public function removeMetalsPortfolios(Request $request){
+        $data = $request->data;
+        if(!empty($data)){
+            MetalsPortfolio::whereIn('id',$data)->delete();
+        }        
+        $notify[] = ['success', 'Metals Portfolios deleted successfully'];
+        return back()->withNotify($notify);
+    }
+
 
     /**
      * Show the form for creating a new resource.
@@ -303,11 +400,58 @@ class InvestmentOverviewController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function allGlobalStockPortfolios()
+    public function allGlobalStockPortfolios(Request $request)
     {
         $pageTitle = 'All Global Stock Portfolios';
-        $globalStockPortfolios = GlobalStockPortfolio::with(['user', 'poolingAccountPortfolio'])->paginate(getPaginate());
-        return view('admin.investments.global.all', compact('pageTitle', 'globalStockPortfolios'));
+        
+        $globalStockPortfolios = GlobalStockPortfolio::with(['user', 'poolingAccountPortfolio']);
+        $clientId = 'all';
+        $stockName = 'all';
+        $buyDate = 'all';
+
+        if(!empty($request->client_id) && $request->client_id!='all'){
+            $globalStockPortfolios->whereHas('user',function($q) use($request){
+                $q->where('user_code',$request->client_id);
+            });
+            $clientId = $request->client_id;
+        }
+        if(!empty($request->stock_name) && $request->stock_name!='all'){
+            $globalStockPortfolios->where('stock_name',$request->stock_name);
+            $stockName = $request->stock_name;
+        }
+        if(!empty($request->buy_date) && $request->buy_date!='all'){
+            $globalStockPortfolios->where('buy_date',$request->buy_date);
+            $buyDate = $request->buy_date;
+        }
+        $globalStockPortfolios = $globalStockPortfolios->paginate(getPaginate());
+        return view('admin.investments.global.all', compact('pageTitle', 'globalStockPortfolios','stockName','clientId','buyDate'));
+    }
+
+    public function getStockName(Request $request){
+        $term = $request->term;
+        $data = [];
+        if(!empty($term)){
+            $data = GlobalStockPortfolio::select('id','stock_name')->where('stock_name','like','%'.$term.'%')->limit(10)->groupBy('stock_name')->get();
+        }
+        return response()->json($data);
+    }
+
+    public function getSearchClientId(Request $request){
+        $term = $request->term;
+        $data = [];
+        if(!empty($term)){
+            $data = User::select('id','user_code')->where('user_code','like','%'.$term.'%')->limit(10)->get();
+        }
+        return response()->json($data);
+    }
+
+    public function removeStockPortfolio(Request $request){
+        $data = $request->data;
+        if(!empty($data)){
+            GlobalStockPortfolio::whereIn('id',$data)->delete();
+        }        
+        $notify[] = ['success', 'Global Stock Portfolio deleted successfully'];
+        return back()->withNotify($notify);
     }
 
     /**

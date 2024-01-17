@@ -5,7 +5,6 @@
 @push('style')
     <link rel="stylesheet" href="{{asset('assets/admin/css/vendor/select2.min.css')}}">
     <style>
-        
         .select2-container .select2-selection--single {
                 width: 100% !important;
                 height: 45px;
@@ -181,9 +180,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="uploadXlsModalLabel">@lang('Upload XLS File')</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form action="{{ route('admin.financial-overview.stock-portfolio.upload') }}" method="POST" enctype="multipart/form-data">

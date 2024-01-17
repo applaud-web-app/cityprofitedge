@@ -27,7 +27,6 @@
                                     <a href="{{ route('admin.users.detail', $user->id) }}"><span>@</span>{{ $user->username }}</a>
                                     </span>
                                 </td>
-
                                 <td>
                                     {{ $user->email }}<br>{{ $user->mobile }}
                                 </td>
@@ -38,25 +37,19 @@
                                 <td>
                                     <span class="fw-bold" title="{{ @$user->address->country }}">{{ $user->country_code }}</>
                                 </td>
-
                                 <td>
                                     {{ showDateTime($user->created_at) }} <br> {{ diffForHumans($user->created_at) }}
                                 </td>
-
-
                                 <td>
                                     <span class="fw-bold">
-
                                     {{ $general->cur_sym }}{{ showAmount($user->balance) }}
                                     </span>
                                 </td>
-
                                 <td>
                                     <a href="{{ route('admin.users.detail', $user->id) }}" class="btn btn-sm btn-outline--primary">
                                         <i class="las la-desktop text--shadow"></i> @lang('Details')
                                     </a>
                                 </td>
-
                             </tr>
                             @empty
                                 <tr>

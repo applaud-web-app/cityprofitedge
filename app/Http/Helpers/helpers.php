@@ -302,14 +302,14 @@ function diffForHumans($date)
 }
 
 
-function showDateTime($date, $format = 'Y-m-d h:i A')
+function showDateTime($date, $format = 'd-m-Y h:i A')
 {
     $lang = session()->get('lang');
     Carbon::setlocale($lang);
     return Carbon::parse($date)->translatedFormat($format);
 }
 
-function showDate($date, $format = 'Y-m-d')
+function showDate($date, $format = 'd-m-Y')
 {
     $lang = session()->get('lang');
     Carbon::setlocale($lang);
