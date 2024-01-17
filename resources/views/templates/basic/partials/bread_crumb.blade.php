@@ -22,12 +22,37 @@
 </section>
 <!-- inner hero section end -->
 
-<section class="nifty--section">
-    <div class="container-fluid">
-        <div class="row g-1">
-            <div class="col-lg-4 col-md-4 col-4"><p>@lang('Nifty') <span class="text--base">1254789</span></p></div>
-            <div class="col-lg-4 col-md-4 col-4"><p>@lang('BankNifty') <span class="text--base">1254789</span></p></div>
-            <div class="col-lg-4 col-md-4 col-4"><p>@lang('Nasdaq') <span class="text--base">1254789</span></p></div>
-        </div>
-    </div>
+<section class="nifty--section" id="nifty-section">
+    
 </section>
+
+@push('script')
+<script>
+    function fetchMarketData(){
+        $.get('{{route("get-market-data")}}',function(data){
+            if(data.length){
+                var str = `<div class="container-fluid">
+                    <div class="row g-1">`;
+                    for(var i in data){
+                        str+=`
+                        <div class="col-lg-4 col-md-4 col-4"><p>${data[i].tradingSymbol} <span class="text--base">${data[i].ltp}</span></p></div>
+                        `;
+                    }
+                    str+=`</div></div>`;
+                    $("#nifty-section").html(str);
+            }else{
+                $("#nifty-section").html('');
+            }
+        });
+    }
+    $(document).ready(function(){
+        fetchMarketData();
+        setInterval(() => {
+            fetchMarketData();
+        }, 10 * 1000);
+        
+
+
+    });
+</script>
+@endpush

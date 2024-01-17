@@ -16,10 +16,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use App\Constants\Status;
-
+use App\Traits\AngelApiAuth;
 class SiteController extends Controller
 {
+    use AngelApiAuth;
     public function index(){
+        // dd($this->getMarketData());
         $reference = @$_GET['reference'];
         if ($reference) {
             session()->put('reference', $reference);
@@ -230,6 +232,10 @@ class SiteController extends Controller
         $deviceToken->save();
 
         return ['success'=>true, 'message'=>'Token save successfully'];
+    }
+
+    public function getMarketData(){
+        return response()->json($this->getMarketDataResp());
     }
 
 }

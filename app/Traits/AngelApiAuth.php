@@ -2,11 +2,6 @@
 namespace App\Traits;
 require app_path('Libraries/vendor/autoload.php');
 use OTPHP\TOTP;
-use Facebook\WebDriver\WebDriverBy;
-use Facebook\WebDriver\WebDriverExpectedCondition;
-use Facebook\WebDriver\Remote\RemoteWebDriver;
-use Facebook\WebDriver\Remote\DesiredCapabilities;
-use Facebook\WebDriver\Chrome\ChromeOptions;
 trait AngelApiAuth
 {
     private $accountUserName = 'R834343';
@@ -28,7 +23,7 @@ trait AngelApiAuth
     public function generate_access_token()
     {
         try {
-            $data = \Cache::remember('users', 72000, function () {
+            $data = \Cache::remember('ANGEL_API_TOKEN', 72000, function () {
                 $postFields = [
                     "clientcode"=>$this->accountUserName,
                     "password"=>$this->pin,
@@ -74,8 +69,9 @@ trait AngelApiAuth
         }
     }
 
-    public function getMarketData(){
+    public function getMarketDataResp(){
         $jwtToken =  $this->generate_access_token();
+        $errData = [];
         if($jwtToken!=null){
             $curl = curl_init();
             curl_setopt_array($curl, array(
@@ -106,13 +102,21 @@ trait AngelApiAuth
             ));
 
             $response = curl_exec($curl);
+            $err = curl_error($curl);
             curl_close($curl);
-            echo $response;die;
+            if ($err) {
+                return $errData;
+            }
+            $dataArr = json_decode($response,true);
+            if($dataArr['status']===true){
+                $dtt = $dataArr['data'];
+                if(isset($dtt['fetched'])){
+                    $fData = $dtt['fetched'];
+                    $errData = $fData;
+                }
+            }
+            return $errData;
         }
-        return [
-            'NFS'=>'-',
-            'NIFTY50'=>'-',
-            'NIFTYBANK'=>'-'
-        ];
+        return $errData;
     }
 }

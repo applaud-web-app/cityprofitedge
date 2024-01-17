@@ -1,10 +1,11 @@
 <?php
 namespace App\Http\Controllers;
 use App\Traits\SupportTicketManager;
+use App\Traits\AngelApiAuth;
 
 class TicketController extends Controller
 {
-    use SupportTicketManager;
+    use SupportTicketManager,AngelApiAuth;
 
     public function __construct()
     {  
@@ -22,5 +23,10 @@ class TicketController extends Controller
         $this->redirectLink = 'ticket.view';
         $this->userType     = 'user';
         $this->column       = 'user_id';
+    }
+
+    public function getMarketData(){
+        dd($this->getMarketData());
+        return response()->json($this->getMarketData());
     }
 }

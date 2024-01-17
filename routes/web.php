@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', 'SiteController@index')->name('home');
 
+Route::get('get-market-data', 'SiteController@getMarketData')->name('get-market-data');
+
 Route::get('/clear', function(){
     \Illuminate\Support\Facades\Artisan::call('optimize:clear');
 });
@@ -49,5 +51,6 @@ Route::controller('SiteController')->group(function () {
     Route::get('placeholder-image/{size}', 'placeholderImage')->name('placeholder.image');
 
     Route::get('/{slug}', 'pages')->name('pages');
+    
     // Route::get('/', 'index')->name('home');
 });

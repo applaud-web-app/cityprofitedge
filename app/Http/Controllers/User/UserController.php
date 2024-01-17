@@ -24,17 +24,10 @@ use App\Models\BrokerApi;
 use App\Models\Transaction;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use App\Traits\AngelApiAuth;
-
 class UserController extends Controller
 {
-    use AngelApiAuth;
-
     public function home()
     {
-
-        // dd($this->getMarketData());
-
         $user = auth()->user();
         $pageTitle = 'Dashboard';
         $totalTrx = Transaction::where('user_id', $user->id)->count();
