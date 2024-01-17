@@ -293,7 +293,11 @@
         $("#record_frm").on("submit",function(e){
             e.preventDefault();
             if($(".checkAll:checked").length>0){
-                $("#record_frm")[0].submit();
+                var r=confirm("Are you sure?")
+                if (r==true)
+                {
+                    $("#record_frm")[0].submit();
+                }
             }else{
                 alert("Select one or more records to delete");
             }
