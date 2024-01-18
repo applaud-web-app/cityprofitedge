@@ -16,7 +16,7 @@ use Illuminate\Support\Str;
 
 function systemDetails()
 {
-    $system['name'] = 'signallab';
+    $system['name'] = 'City Profitedge';
     $system['version'] = '2.2';
     $system['build_version'] = '4.4.7';
     return $system;
