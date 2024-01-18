@@ -80,6 +80,8 @@ Route::middleware('auth')->name('user.')->group(function () {
 
                 Route::get('attachment-download/{fil_hash}','attachmentDownload')->name('attachment.download');
 
+                Route::get('oms-config', 'omsConfig')->name('portfolio.oms-config');
+
             });
 
             //Profile setting
