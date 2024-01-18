@@ -59,20 +59,13 @@
                                             foreach($data as $vvl){
                                                 if(isset($vvl->atm) && $vvl->atm=="ATM"){
                                                     $atmData[] = $vvl;
-
                                                 }
                                             }
                                         @endphp
-
-                                        @php
-                                            $i=1;
-                                        @endphp
+                                        @php $i=1; @endphp
                                         @forelse($atmData as $val)
-                                               
-
                                                 @php
                                                     $arrData = json_decode($val->data,true);    
-
                                                     // dd($arrData);
                                                     $CE = array_slice($arrData['CE'],-5);
                                                     $PE = array_slice($arrData['PE'],-5);
@@ -88,7 +81,6 @@
                                                     $close_CE = array_slice($arrData['close_CE'],-5);
                                                     $close_PE = array_slice($arrData['close_PE'],-5);
                                                 @endphp
-
                                                 @foreach ($CE as $k=>$item)
                                                     <tr>
                                                         {{-- <td>{{$i++}}</td> --}}
@@ -107,11 +99,9 @@
                                                         <td>{{$Strategy_name[$k]}}</td>
                                                     </tr>
                                                 @endforeach
-
-
                                         @empty
                                             <tr>
-                                                <td colspan="11"><h5 class="text-danger text-center">NO DATA</h5></td>
+                                                <td colspan="100%"><h5 class="text-danger text-center">NO DATA</h5></td>
                                             </tr>
                                         @endforelse
                                     </tbody>
@@ -121,11 +111,7 @@
                     </div>
                 </div>
             </div>
-
         @endforeach
-        
-
-
         <div class="mt-4 justify-content-center d-flex">
             {{-- {{ paginateLinks($portfolioTopGainers) }} --}}
         </div>

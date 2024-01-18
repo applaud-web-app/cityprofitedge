@@ -581,9 +581,145 @@ class UserController extends Controller
         return view($this->activeTemplate . 'user.trade-book',$data);
     }
 
-    public function plReports(){
+    public function getStockName(){
+        $Ledger = Ledger::select(['*', 'bought_date as buy_date'])->where('user_id',auth()->user()->id)->get();
+        $MetalsPortfolio = MetalsPortfolio::where('user_id',auth()->user()->id)->get();
+        $FOPortfolios = FOPortfolios::where('user_id',auth()->user()->id)->get();
+        $GlobalStockPortfolio = GlobalStockPortfolio::where('user_id',auth()->user()->id)->get();
+        $StockPortfolio = StockPortfolio::where('user_id',auth()->user()->id)->get();
+
+        // Merge Data
+        $combinedArray = array_merge($Ledger->toArray(), $MetalsPortfolio->toArray(), $FOPortfolios->toArray(), $GlobalStockPortfolio->toArray() , $StockPortfolio->toArray());
+
+        // Sort Data
+        $dates = array_column($combinedArray, 'buy_date');
+        array_multisort($dates, SORT_ASC, $combinedArray);
+
+        return $combinedArray;
+
+        // ->whereBetween('buy_date',[now()->subdays(30), now()->subday()])
+
+    }
+
+    public function plReports(Request $request){
+
         $pageTitle = 'PL Reports';
         $data['pageTitle'] = $pageTitle;
-        return view($this->activeTemplate . 'user.pl-reports',$data);
+
+        $segments = "all";
+        $type = "all";
+        $symbol = 'all';
+        $buyDate = 'all';
+
+        if(!empty($request->buyDate) && $request->buyDate !='all'){
+            $array = explode('-', $request->buyDate);
+        }else{
+            $request->buyDate = "30daysData";
+            $array[0] =   now()->subday();
+            $array[1] = now()->subdays(30);
+        }
+
+        $Ledger = Ledger::select(['*', 'bought_date as buy_date'])->where('user_id',auth()->user()->id);
+        if(!empty($request->symbol) && $request->symbol!='all'){
+            $Ledger->where('stock_name',$request->symbol);
+        }
+        if(!empty($request->buyDate) && $request->buyDate!='all'){
+            $Ledger->whereBetween('bought_date',[trim($array[1]),trim($array[0])]);
+        }
+        $Ledger = $Ledger->get();
+
+
+        $MetalsPortfolio = MetalsPortfolio::where('user_id',auth()->user()->id);
+        if(!empty($request->symbol) && $request->symbol!='all'){
+            $MetalsPortfolio->where('stock_name',$request->symbol);
+        }
+        if(!empty($request->buyDate) && $request->buyDate!='all'){
+            $MetalsPortfolio->whereBetween('buy_date',[trim($array[1]),trim($array[0])]);
+        }
+        $MetalsPortfolio = $MetalsPortfolio->get();
+
+
+        $FOPortfolios = FOPortfolios::where('user_id',auth()->user()->id);
+        if(!empty($request->symbol) && $request->symbol!='all'){
+            $FOPortfolios->where('stock_name',$request->symbol);
+        }
+        if(!empty($request->buyDate) && $request->buyDate!='all'){
+            $FOPortfolios->whereBetween('buy_date',[trim($array[1]),trim($array[0])]);
+        }
+        $FOPortfolios = $FOPortfolios->get();
+
+
+        $GlobalStockPortfolio = GlobalStockPortfolio::where('user_id',auth()->user()->id);
+        if(!empty($request->symbol) && $request->symbol!='all'){
+            $GlobalStockPortfolio->where('stock_name',$request->symbol);
+        }
+        if(!empty($request->buyDate) && $request->buyDate!='all'){
+            $GlobalStockPortfolio->whereBetween('buy_date',[trim($array[1]),trim($array[0])]);
+        }
+        $GlobalStockPortfolio = $GlobalStockPortfolio->get();
+
+
+        $StockPortfolio = StockPortfolio::where('user_id',auth()->user()->id);
+        if(!empty($request->symbol) && $request->symbol!='all'){
+            $StockPortfolio->where('stock_name',$request->symbol);
+        }
+        if(!empty($request->buyDate) && $request->buyDate!='all'){
+            $StockPortfolio->whereBetween('buy_date',[trim($array[1]),trim($array[0])]);
+        }
+        $StockPortfolio = $StockPortfolio->get();
+
+
+        if(!empty($request->type) && $request->type!='all'){
+            if($request->type == "realised"){
+                // Merge All Data
+                if(!empty($request->segments) && $request->segments!='all'){
+                    if($request->segments == "global"){
+                        $combinedArray = array_merge($GlobalStockPortfolio->toArray());
+                    }else if($request->segments == "fQ"){
+                        $combinedArray = array_merge($FOPortfolios->toArray());
+                    }else if($request->segments == "metals"){
+                        $combinedArray = array_merge($MetalsPortfolio->toArray());
+                    }else if($request->segments == "stock"){
+                        $combinedArray = array_merge($StockPortfolio->toArray());
+                    }
+                }else{
+                    $combinedArray = array_merge($MetalsPortfolio->toArray(), $FOPortfolios->toArray(), $GlobalStockPortfolio->toArray() , $StockPortfolio->toArray());
+                }
+            }else{
+                // Merge All Data
+                $combinedArray = array_merge($Ledger->toArray());
+            }
+        }else{
+            // Merge All Data
+            if(!empty($request->segments) && $request->segments!='all'){
+                if($request->segments == "global"){
+                    $combinedArray = array_merge($GlobalStockPortfolio->toArray());
+                }else if($request->segments == "fQ"){
+                    $combinedArray = array_merge($FOPortfolios->toArray());
+                }else if($request->segments == "metals"){
+                    $combinedArray = array_merge($MetalsPortfolio->toArray());
+                }else if($request->segments == "stock"){
+                    $combinedArray = array_merge($StockPortfolio->toArray());
+                }
+            }else{
+                $combinedArray = array_merge($Ledger->toArray(), $MetalsPortfolio->toArray(), $FOPortfolios->toArray(), $GlobalStockPortfolio->toArray() , $StockPortfolio->toArray());
+            }
+        }
+
+        // Sort Data
+        $dates = array_column($combinedArray, 'buy_date');
+        array_multisort($dates, SORT_ASC, $combinedArray);
+
+        $allData = $this->getStockName();
+
+
+        return view($this->activeTemplate . 'user.pl-reports',$data,compact('combinedArray','allData'));
     }
+
+    public function omsConfig(){
+        $pageTitle = 'OMS CONFIG';
+        $data['pageTitle'] = $pageTitle;
+        return view($this->activeTemplate . 'user.oms-config',$data);
+    }
+    
 }
