@@ -5309,6 +5309,10 @@ body:not(.lightmode) .maintenance-page-color p {
 .nifty--section{
     background-color: #0d222b;
     padding: 10px;
-    font-size: 18px;
+   
     text-align: center;
+}
+
+.nifty--section p{
+    font-size: 18px;
 }

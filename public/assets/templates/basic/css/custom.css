@@ -217,8 +217,13 @@
   }
   .nifty--section {
     padding: 5px;
-    font-size: 12px;
+  
    
+}
+.nifty--section p{
+
+  font-size: 12px;
+ 
 }
 .nifty--section p span{
   display: block;

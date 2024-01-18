@@ -35,7 +35,7 @@
                     <div class="row g-1">`;
                     for(var i in data){
                         str+=`
-                        <div class="col-lg-4 col-md-4 col-4"><p style="font-size:16px;">${data[i].tradingSymbol} <span class="text--base">${data[i].ltp}</span></p></div>
+                        <div class="col-lg-4 col-md-4 col-4"><p >${data[i].tradingSymbol} <span class="text--base">${data[i].ltp}</span></p></div>
                         `;
                     }
                     str+=`</div></div>`;
