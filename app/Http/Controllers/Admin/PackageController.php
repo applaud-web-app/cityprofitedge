@@ -35,9 +35,9 @@ class PackageController extends Controller{
 
         $validation = [
             'name'=> 'required|max:250|unique:packages,name,'.$request->id,
-            'price'=> 'required|numeric|gt:0',
-            'validity'=> 'required|integer|gt:0',
-            'features' => 'required|array|max:60000',
+            // 'price'=> 'required|numeric|gt:0',
+            // 'validity'=> 'required|integer|gt:0',
+            // 'features' => 'required|array|max:60000',
             'description'=> 'required',
             'asset_type'=> 'required',
             'min_investment'=> 'required|gt:0',
@@ -59,9 +59,9 @@ class PackageController extends Controller{
         }
 
         $package->name = $request->name;
-        $package->price = $request->price;
-        $package->validity = $request->validity;
-        $package->features = $request->features;
+        $package->price = NULL;
+        $package->validity = NULL;
+        $package->features = NULL;
         $package->description = $request->description;
         $package->asset_type = $request->asset_type;
         $package->min_investment = $request->min_investment;

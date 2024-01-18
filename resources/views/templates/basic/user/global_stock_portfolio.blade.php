@@ -37,9 +37,9 @@
                                         <th>@lang('Stock Name')</th>
                                         <th>@lang('Qty')</th>
                                         <th>@lang('Buy Date')</th>
-                                        <th>@lang('Buy Price')</th>
-                                        <th>@lang('CMP')</th>
-                                        <th>@lang('Current Value')</th>
+                                        <th>@lang('Buy Price (USD)')</th>
+                                        <th>@lang('CMP (USD)')</th>
+                                        <th>@lang('Current Value (INR)')</th>
                                         <th>@lang('Profit/Loss')</th>
                                         <th>@lang('Sector')</th>
                                         <th>@lang('Pooling Broker Name')</th>
@@ -61,13 +61,13 @@
                                                 {{ showDate($globalStockPortfolio->buy_date) }}
                                             </td>
                                             <td>
-                                                {{ showAmount($globalStockPortfolio->buy_price) }}
+                                                ${{ showAmount($globalStockPortfolio->buy_price) }}
                                             </td>
                                             <td>
-                                                {{ $globalStockPortfolio->cmp }}
+                                                ${{ $globalStockPortfolio->cmp }}
                                             </td>
                                             <td>
-                                                {{ showAmount($globalStockPortfolio->current_value) }}
+                                                ₹{{ showAmount($globalStockPortfolio->current_value) }}
                                             </td>
                                             <td>{{ $globalStockPortfolio->profit_loss }}</td>
                                             <td>{{ $globalStockPortfolio->sector }}</td>

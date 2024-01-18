@@ -10,9 +10,8 @@
                         <thead>
                         <tr>
                             <th>@lang('Portfolio Name')</th>
-                            <th>@lang('Price')</th>
-                            <th>@lang('Validity')</th>
-                            <th>@lang('Status')</th>
+                            {{-- <th>@lang('Price')</th>
+                            <th>@lang('Validity')</th> --}}
                             <th>@lang('Description')</th>
                             <th>@lang('Asset Type')</th>
                             <th>@lang('Minimum Investment')</th>
@@ -21,6 +20,7 @@
                             <th>@lang('Expected Returns')</th>
                             <th>@lang('Rebalance Frequency')</th>
                             <th>@lang('Hedging Strategy')</th>
+                            <th>@lang('Status')</th>
                             <th>@lang('Action')</th>
                         </tr>
                         </thead>
@@ -30,15 +30,12 @@
                                     <td>
                                         <span class="fw-bold">{{ __($package->name) }}</span>
                                     </td>
-                                    <td>
+                                    {{-- <td>
                                         <span>{{ showAmount($package->price) }} {{ __($general->cur_text) }}</span>
                                     </td>
                                     <td>
                                         {{ $package->validity }} @lang('Days')
-                                    </td>
-                                    <td>
-                                        @php echo $package->statusBadge; @endphp
-                                     </td>
+                                    </td> --}}
                                     <td>
                                        @php echo $package->description; @endphp
                                     </td>
@@ -63,6 +60,9 @@
                                      <td>
                                         @php echo $package->hedging_strategy; @endphp
                                      </td>
+                                     <td>
+                                         @php echo $package->statusBadge; @endphp
+                                      </td>
                                     <td>
                                        <div class="justify-content-end d-flex flex-wrap gap-1">
                                             <button class="btn btn-sm btn-outline--primary editBtn" data-data="{{ $package }}">
@@ -116,7 +116,7 @@
                             <label>@lang('Portfolio Name')</label>
                             <input type="text" class="form-control" name="name" placeholder="@lang('Portfolio Name')" required value="{{old('name')}}">
                         </div>
-                        <div class="form-group col-lg-6 col-md-6">
+                        {{-- <div class="form-group col-lg-6 col-md-6">
                             <label>@lang('Price')</label>
                             <div class="input-group">
                                 <input type="number" step="any" class="form-control" name="price" placeholder="@lang('Price')" required value="{{old('price')}}">
@@ -129,12 +129,12 @@
                                 <input type="number" class="form-control" name="validity" placeholder="@lang('Validity')" required value="{{old('validity')}}">
                                 <span class="input-group-text">@lang('Days')</span>
                             </div>
-                        </div>
-                        <div class="form-group col-lg-6 col-md-6">
+                        </div> --}}
+                        {{-- <div class="form-group col-lg-6 col-md-6">
                             <label for="features">@lang('Features')</label>
                             <select name="features[]" id="features" class="form-control select2-auto-tokenize" multiple required>
                             </select>
-                        </div>
+                        </div> --}}
                         <div class="form-group col-lg-6 col-md-6">
                             <label>@lang('Description')</label>
                             <div class="input-group">
@@ -155,7 +155,7 @@
                         <div class="form-group col-lg-6 col-md-6">
                             <label>@lang('Time Horizon')</label>
                             <div class="input-group">
-                                <input type="time" class="form-control" name="time_horizon" placeholder="@lang('Time Horizon')" required>
+                                <input type="number" class="form-control" name="time_horizon" placeholder="@lang('No. Of Years')" required>
                             </div>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
@@ -211,7 +211,7 @@
                             <label>@lang('Name')</label>
                             <input type="text" class="form-control" name="name" placeholder="@lang('Name')" required>
                         </div>
-                        <div class="form-group col-lg-6 col-md-6">
+                        {{-- <div class="form-group col-lg-6 col-md-6">
                             <label>@lang('Price')</label>
                             <div class="input-group">
                                 <input type="number" step="any" class="form-control" name="price" placeholder="@lang('Price')" required>
@@ -224,12 +224,12 @@
                                 <input type="number" class="form-control" name="validity" placeholder="@lang('Validity')" required>
                                 <span class="input-group-text">@lang('Days')</span>
                             </div>
-                        </div>
-                        <div class="form-group col-lg-6 col-md-6">
+                        </div> --}}
+                        {{-- <div class="form-group col-lg-6 col-md-6">
                             <label for="editFeatures">@lang('Features')</label>
                             <select name="features[]" id="editFeatures" class="form-control select2-auto-tokenize" multiple required>
                             </select>
-                        </div>
+                        </div> --}}
                         <div class="form-group col-lg-6 col-md-6">
                             <label>@lang('Description')</label>
                             <div class="input-group">
@@ -250,7 +250,7 @@
                         <div class="form-group col-lg-6 col-md-6">
                             <label>@lang('Time Horizon')</label>
                             <div class="input-group">
-                                <input type="time" class="form-control" name="time_horizon" placeholder="@lang('Time Horizon')" required>
+                                <input type="number" class="form-control" name="time_horizon" placeholder="@lang('No. Of Years')" required>
                             </div>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
