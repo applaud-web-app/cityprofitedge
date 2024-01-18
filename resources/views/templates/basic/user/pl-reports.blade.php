@@ -158,8 +158,13 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <script>
-    dates_range
-    $('#dates_range').daterangepicker();
+   $("#dates_range").daterangepicker({
+        autoUpdateInput: false,
+        minYear: 1901,
+        showDropdowns: true,
+    }).on("apply.daterangepicker", function (e, picker) {
+        picker.element.val(picker.startDate.format(picker.locale.format) + " - " + picker.endDate.format(picker.locale.format));
+    });
 
 </script>
 @endpush
