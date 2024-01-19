@@ -112,7 +112,7 @@
                     <h5 class="card-title mb-0 justify-content-between d-flex flex-wrap">
                         <div>
                             @lang('Information of') {{$user->fullname}}
-                            (@lang('Package') - <span class="text--primary">{{ $user->package_id ? __(@$user->package->name) : __('N/A') }}</span>)
+                            (@lang('Product') - <span class="text--primary">{{ $user->package_id ? __(@$user->package->name) : __('N/A') }}</span>)
                         </div>
                         <div>
                             @lang('Validity') - <span class="text--primary">{{ $user->package_id ? showDateTime($user->validity) : __('N/A') }}</span>
@@ -334,7 +334,7 @@
                 <div class="modal-header">
                     <h5 class="modal-title">
                         <span class="type"></span>
-                        <span>@lang('Package Validity') 
+                        <span>@lang('Product Validity') 
                             <small class="text--primary d-block d-lg-inline d-md-inline d-sm-inline">({{ showDateTime($user->validity, 'Y-d-m') }})</small>
                         </span>
                     </h5>

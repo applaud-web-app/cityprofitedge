@@ -71,6 +71,9 @@ Route::middleware('admin')->group(function () {
         Route::get('notification-log/{id}', 'notificationLog')->name('notification.log');
         Route::get('signal-log/{id}', 'signalLog')->name('signal.log');
         Route::get('referrals/{id}', 'referrals')->name('referrals');
+
+        
+        Route::get('user-enquiry','getuserEnquiry')->name('getuserEnquiry');
     });
 
     // Route::controller('TradeController')->group(function(){

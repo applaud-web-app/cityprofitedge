@@ -29,7 +29,7 @@
                                 <span class="plan-icon"><i class="fas la-hand-point-right"></i></span>
                                 {{ __($package->name) }}
                             </h4>
-                            <h4 class="plan-price fw-semibold"><sub class="pre-sub">{{ $general->cur_sym }}</sub>{{ showAmount($package->price, 0) }} <sub>/ @lang('Package')</sub>
+                            <h4 class="plan-price fw-semibold"><sub class="pre-sub">{{ $general->cur_sym }}</sub>{{ showAmount($package->price, 0) }} <sub>/ @lang('Products')</sub>
                             </h4>
                         </div>
                         <div class="plan-item__body">
@@ -80,7 +80,7 @@
                     </div>
                     <ul class="list-group list-group-flush mt-3">
                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                            @lang('Package') <span class="packageName"></span>
+                            @lang('Product') <span class="packageName"></span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             @lang('Price') <span class="packagePrice"></span>
@@ -109,11 +109,11 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content border-0">
             <div class="modal-header bg--base">
-                <h5 class="modal-title method-name">@lang('Please login before buy a package')</h5>
+                <h5 class="modal-title method-name">@lang('Please login before buy a Product')</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p class="mb-3">@lang('To purchase a package, you have to login into your account')</p>
+                <p class="mb-3">@lang('To purchase a Product, you have to login into your account')</p>
                 <div class="form-group">
                     <a href="{{ route('user.login') }}" class="btn btn--sm btn--base w-100">@lang('Login')</a>
                 </div>

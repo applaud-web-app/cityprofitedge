@@ -26,7 +26,7 @@
                     <a href="{{route('admin.package.all')}}" class="nav-link"
                        data-default-url="{{route('admin.package.all')}}">
                         <i class="menu-icon las la-box"></i>
-                        <span class="menu-title">@lang('Manage Package')</span>
+                        <span class="menu-title">@lang('Manage Product')</span>
                     </a>
                 </li>
 
@@ -603,6 +603,13 @@
                             </li>
                         </ul>
                     </div>
+                </li>
+
+                <li class="sidebar-menu-item {{menuActive('admin.users.getuserEnquiry')}}">
+                    <a href="{{route('admin.users.getuserEnquiry')}}" class="nav-link">
+                        <i class="menu-icon lab la-css3-alt"></i>
+                        <span class="menu-title">@lang('User Enquiry')</span>
+                    </a>
                 </li>
 
                 <li class="sidebar-menu-item {{menuActive('admin.setting.custom.css')}}">

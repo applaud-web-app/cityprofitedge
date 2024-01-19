@@ -57,7 +57,7 @@
                         <div class="col-xl-4 mt-xl-0 mt-3">
                             <div class="card">
                                 <div class="card-header justify-content-between d-flex flex-wrap">
-                                    <h6 class="card-title">@lang('Selected Package For This Signal')</h6>
+                                    <h6 class="card-title">@lang('Selected Product For This Signal')</h6>
                                     <button class="btn btn-sm btn-outline--primary checkedPackage" type="button">@lang('Select All')</button>
                                 </div>
                                 <div class="card-body packages">

@@ -36,6 +36,270 @@
     @endif
 
     <div class="row gy-4">
+        <div class="col-lg-4 col-md-6 col-12">
+            <div class="card bg--primary overflow-hidden box--shadow2">
+                <div class="card-body">
+                    <div class="d-widget has--link">
+                        {{-- <a href="{{ route('user.transactions') }}" class="item--link"></a>
+                        <div class="d-widget__icon text-center">
+                            <i class="las la-users f-size--56"></i>
+                        </div> --}}
+                        <div class="d-widget__content">
+                            <h4 class="d-widget__caption text-center text--white">@lang('Invested Amount')</h4>
+                            <div class="row">
+                                <div class="col-xl-6 text-center col-lg-6 col-md-6">
+                                    <p class="d-widget__caption fs--12px text--white">@lang('Invested Value')</p>
+                                    <h6 class="d-widget__amount mt-1 text--white">
+                                        {{ $general->cur_sym }} {{ showAmount($totalInvestedAmount, 2) }}
+                                    </h6>
+                                </div>
+                                <div class="col-xl-6 text-center col-lg-6 col-md-6">
+                                    <p class="d-widget__caption fs--12px text--white">@lang('Current Value')</p>
+                                    <h6 class="d-widget__amount mt-1 text--white">
+                                        {{ $general->cur_sym }} {{ showAmount($totalCurrentAmount, 2) }}
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- d-widget end -->
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-12">
+            <div class="card bg--success overflow-hidden box--shadow2">
+                <div class="card-body">
+                    <div class="d-widget has--link">
+                        {{-- <a href="{{ route('user.transactions') }}" class="item--link"></a>
+                        <div class="d-widget__icon text-center">
+                            <i class="las la-users f-size--56"></i>
+                        </div> --}}
+                        <div class="d-widget__content">
+                            <h4 class="d-widget__caption text-center text--white">@lang('Stock Portfolio')</h4>
+                            <div class="row">
+                                <div class="col-xl-6 text-center col-lg-6 col-md-6">
+                                    <p class="d-widget__caption fs--12px text--white">@lang('Invested Value')</p>
+                                    <h6 class="d-widget__amount mt-1 text--white">
+                                        {{ $general->cur_sym }} {{ showAmount($stockPortFolio->buy_value,2) }}
+                                    </h6>
+                                </div>
+                                <div class="col-xl-6 text-center col-lg-6 col-md-6">
+                                    <p class="d-widget__caption fs--12px text--white">@lang('Current Value')</p>
+                                    <h6 class="d-widget__amount mt-1 text--white">
+                                        {{ $general->cur_sym }} {{ showAmount($stockPortFolio->current_value,2) }}
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- d-widget end -->
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-12">
+            <div class="card bg--danger overflow-hidden box--shadow2">
+                <div class="card-body">
+                    <div class="d-widget has--link">
+                        {{-- <a href="{{ route('user.transactions') }}" class="item--link"></a>
+                        <div class="d-widget__icon text-center">
+                            <i class="las la-users f-size--56"></i>
+                        </div> --}}
+                        <div class="d-widget__content">
+                            <h4 class="d-widget__caption text-center text--white">@lang('Thematic Portfolio')</h4>
+                            <div class="row">
+                                <div class="col-xl-6 text-center col-lg-6 col-md-6">
+                                    <p class="d-widget__caption fs--12px text--white">@lang('Invested Value')</p>
+                                    <h6 class="d-widget__amount mt-1 text--white">
+                                        {{ $general->cur_sym }} {{ showAmount($user, 2) }}
+                                    </h6>
+                                </div>
+                                <div class="col-xl-6 text-center col-lg-6 col-md-6">
+                                    <p class="d-widget__caption fs--12px text--white">@lang('Current Value')</p>
+                                    <h6 class="d-widget__amount mt-1 text--white">
+                                        {{ $general->cur_sym }} {{ showAmount($user, 2) }}
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- d-widget end -->
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-12">
+            <div class="card bg--warning overflow-hidden box--shadow2">
+                <div class="card-body">
+                    <div class="d-widget has--link">
+                        {{-- <a href="{{ route('user.transactions') }}" class="item--link"></a>
+                        <div class="d-widget__icon text-center">
+                            <i class="las la-users f-size--56"></i>
+                        </div> --}}
+                        <div class="d-widget__content">
+                            <h4 class="d-widget__caption text-center text--white">@lang('Global Stock Portfolio')</h4>
+                            <div class="row">
+                                <div class="col-xl-6 text-center col-lg-6 col-md-6">
+                                    <p class="d-widget__caption fs--12px text--white">@lang('Invested Value')</p>
+                                    <h6 class="d-widget__amount mt-1 text--white">
+                                        {{ $general->cur_sym }} {{ showAmount($globalStockPortFolio->buy_value,2) }}
+                                    </h6>
+                                </div>
+                                <div class="col-xl-6 text-center col-lg-6 col-md-6">
+                                    <p class="d-widget__caption fs--12px text--white">@lang('Current Value')</p>
+                                    <h6 class="d-widget__amount mt-1 text--white">
+                                        {{ $general->cur_sym }} {{ showAmount($globalStockPortFolio->current_value,2) }}
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- d-widget end -->
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-12">
+            <div class="card bg--info overflow-hidden box--shadow2">
+                <div class="card-body">
+                    <div class="d-widget has--link">
+                        {{-- <a href="{{ route('user.transactions') }}" class="item--link"></a>
+                        <div class="d-widget__icon text-center">
+                            <i class="las la-users f-size--56"></i>
+                        </div> --}}
+                        <div class="d-widget__content">
+                            <h4 class="d-widget__caption text-center text--white">@lang('F&O Portfolio-Hedging')</h4>
+                            <div class="row">
+                                <div class="col-xl-6 text-center col-lg-6 col-md-6">
+                                    <p class="d-widget__caption fs--12px text--white">@lang('Invested Value')</p>
+                                    <h6 class="d-widget__amount mt-1 text--white">
+                                        {{ $general->cur_sym }} {{ showAmount($foglobalStockPortFolio->buy_value,2) }}
+                                    </h6>
+                                </div>
+                                <div class="col-xl-6 text-center col-lg-6 col-md-6">
+                                    <p class="d-widget__caption fs--12px text--white">@lang('Current Value')</p>
+                                    <h6 class="d-widget__amount mt-1 text--white">
+                                        {{ $general->cur_sym }} {{ showAmount($foglobalStockPortFolio->current_value,2) }}
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- d-widget end -->
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-12">
+            <div class="card bg--primary overflow-hidden box--shadow2">
+                <div class="card-body">
+                    <div class="d-widget has--link">
+                        {{-- <a href="{{ route('user.transactions') }}" class="item--link"></a>
+                        <div class="d-widget__icon text-center">
+                            <i class="las la-users f-size--56"></i>
+                        </div> --}}
+                        <div class="d-widget__content">
+                            <h4 class="d-widget__caption text-center text--white">@lang('Metals Portfolio (Gold & Silver)')</h4>
+                            <div class="row">
+                                <div class="col-xl-6 text-center col-lg-6 col-md-6">
+                                    <p class="d-widget__caption fs--12px text--white">@lang('Invested Value')</p>
+                                    <h6 class="d-widget__amount mt-1 text--white">
+                                        {{ $general->cur_sym }} {{ showAmount($metalsPortFolio->buy_value,2) }}
+                                    </h6>
+                                </div>
+                                <div class="col-xl-6 text-center col-lg-6 col-md-6">
+                                    <p class="d-widget__caption fs--12px text--white">@lang('Current Value')</p>
+                                    <h6 class="d-widget__amount mt-1 text--white">
+                                        {{ $general->cur_sym }} {{ showAmount($metalsPortFolio->current_value,2) }}
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- d-widget end -->
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-12">
+            <div class="card bg--danger overflow-hidden box--shadow2">
+                <div class="card-body">
+                    <div class="d-widget has--link">
+                        {{-- <a href="{{ route('user.transactions') }}" class="item--link"></a>
+                        <div class="d-widget__icon text-center">
+                            <i class="las la-users f-size--56"></i>
+                        </div> --}}
+                        <div class="d-widget__content">
+                            <h4 class="d-widget__caption text-center text--white">@lang('Invested in All Portfolios')</h4>
+                            <div class="row">
+                                <div class="col-xl-6 text-center col-lg-6 col-md-6">
+                                    <p class="d-widget__caption fs--12px text--white">@lang('Invested in All Portfolios')</p>
+                                    <h6 class="d-widget__amount mt-1 text--white">
+                                        {{ $general->cur_sym }} {{ showAmount($user, 2) }}
+                                    </h6>
+                                </div>
+                                <div class="col-xl-6 text-center col-lg-6 col-md-6">
+                                    <p class="d-widget__caption fs--12px text--white">@lang('Current Value')</p>
+                                    <h6 class="d-widget__amount mt-1 text--white">
+                                        {{ $general->cur_sym }} {{ showAmount($user, 2) }}
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- d-widget end -->
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-12">
+            <div class="card bg--success overflow-hidden box--shadow2">
+                <div class="card-body">
+                    <div class="d-widget has--link">
+                        {{-- <a href="{{ route('user.transactions') }}" class="item--link"></a>
+                        <div class="d-widget__icon text-center">
+                            <i class="las la-users f-size--56"></i>
+                        </div> --}}
+                        <div class="d-widget__content">
+                            <h4 class="d-widget__caption text-center text--white">@lang('All Portfolios Current Value')</h4>
+                            <div class="row">
+                                <div class="col-xl-6 text-center col-lg-6 col-md-6">
+                                    <p class="d-widget__caption fs--12px text--white">@lang('Invested in All Portfolios')</p>
+                                    <h6 class="d-widget__amount mt-1 text--white">
+                                        {{ $general->cur_sym }} {{ showAmount($user, 2) }}
+                                    </h6>
+                                </div>
+                                <div class="col-xl-6 text-center col-lg-6 col-md-6">
+                                    <p class="d-widget__caption fs--12px text--white">@lang('Current Value')</p>
+                                    <h6 class="d-widget__amount mt-1 text--white">
+                                        {{ $general->cur_sym }} {{ showAmount($user, 2) }}
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- d-widget end -->
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-12">
+            <div class="card bg--warning overflow-hidden box--shadow2">
+                <div class="card-body">
+                    <div class="d-widget has--link">
+                        {{-- <a href="{{ route('user.transactions') }}" class="item--link"></a>
+                        <div class="d-widget__icon text-center">
+                            <i class="las la-users f-size--56"></i>
+                        </div> --}}
+                        <div class="d-widget__content">
+                            <h4 class="d-widget__caption text-center text--white">@lang('Users Networth')</h4>
+                            <div class="row">
+                                <div class="col-xl-6 text-center col-lg-6 col-md-6">
+                                    <p class="d-widget__caption fs--12px text--white">@lang('Invested in All Portfolios')</p>
+                                    <h6 class="d-widget__amount mt-1 text--white">
+                                        {{ $general->cur_sym }} {{ showAmount($user, 2) }}
+                                    </h6>
+                                </div>
+                                <div class="col-xl-6 text-center col-lg-6 col-md-6">
+                                    <p class="d-widget__caption fs--12px text--white">@lang('Current Value')</p>
+                                    <h6 class="d-widget__amount mt-1 text--white">
+                                        {{ $general->cur_sym }} {{ showAmount($user, 2) }}
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- d-widget end -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row gy-4 mt-2">
         <div class="col-xxl-3 col-sm-6">
             <x-widget
                 link="{{route('admin.users.all')}}"
@@ -161,7 +425,7 @@
                 link="{{ route('admin.package.all') }}"
                 icon="las la-box" 
                 icon_style="outline"
-                title="Total Packages"
+                title="Total Products"
                 value="{{ $totalPackage }}"
                 color="primary"
             />

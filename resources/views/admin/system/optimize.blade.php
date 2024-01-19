@@ -18,7 +18,7 @@
                             <span><i class="las la-check-double text--success"></i> @lang('Configuration cache will be cleared')</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                            <span><i class="las la-check-double text--success"></i> @lang('Compiled services and packages files will be removed')</span>
+                            <span><i class="las la-check-double text--success"></i> @lang('Compiled services and products files will be removed')</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                             <span><i class="las la-check-double text--success"></i> @lang('Caches will be cleared')</span>

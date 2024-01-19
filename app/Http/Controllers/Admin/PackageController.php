@@ -9,7 +9,7 @@ use App\Models\Package;
 class PackageController extends Controller{
 
     public function all(){
-        $pageTitle = 'Manage Package';
+        $pageTitle = 'Manage Product';
         $packages = Package::paginate(getPaginate());
         return view('admin.package.all', compact('pageTitle' , 'packages'));
     }
@@ -17,14 +17,14 @@ class PackageController extends Controller{
     public function add(){
         $this->addOrUpdate();
 
-        $notify[] = ['success', 'Package added successfully'];
+        $notify[] = ['success', 'Product added successfully'];
         return back()->withNotify($notify);
     }
 
     public function update(){
         $this->addOrUpdate();
 
-        $notify[] = ['success', 'Package updated successfully'];
+        $notify[] = ['success', 'Product updated successfully'];
         return back()->withNotify($notify);
     }
 

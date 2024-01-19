@@ -5,7 +5,7 @@
 @endpush
 <section class="pt-100 pb-100">
     <div class="container content-container">
-        <form action="#" class="transparent-form mb-3">
+        <form action="#" class="transparent-form mb-3" autocomplete="off">
             <div class="row">
                 <div class="col-lg-2 col-md-2 col-6 form-group">
                     <label>@lang('Segments')</label>
@@ -55,6 +55,9 @@
                 <div class="col-lg-2 col-md-2 col-6 form-group mt-auto">
                     <button class="btn btn--base w-100" type="submit"><i class="las la-filter"></i> @lang('Filter')</button>
                 </div>
+                <div class="col-lg-2 col-md-2 col-6 form-group mt-auto">
+                    <a href="{{url('/user/pl-reports')}}" class="btn btn--base w-100"><i class="las la-redo-alt"></i> @lang('Refresh')</a>
+                </div>
             </div>
         </form>
         <div class="row g-3">
@@ -63,12 +66,56 @@
                     <div class="card-body">
                         <h5 class="card-title">@lang('Realised PNL')</h5>
                         <h2 class="text--base">
-                            @isset($allData)
+                            @isset($combinedArray)
                             @php
                                 $Realised = 0;
                             @endphp
-                                @foreach ($allData as $item)
-                                    @if (isset($item['cmp']))
+                                @foreach ($combinedArray as $item)
+                                    @if (isset($item['bought_date']))
+                                        @php
+                                            $Realised += $item['profit_loss'];
+                                        @endphp
+                                    @endif
+                                @endforeach
+                            @endisset    
+                            @lang($Realised)</h2>
+                        </h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-12">
+                <div class="custom--card">
+                    <div class="card-body">
+                        <h5 class="card-title">@lang('Other Credits & Debits')</h5>
+                        <h2 class="text--base">
+                            @isset($combinedArray)
+                            @php
+                                $Realised = 0;
+                            @endphp
+                                @foreach ($combinedArray as $item)
+                                    @if (isset($item['bought_date']))
+                                        @php
+                                            $Realised += $item['profit_loss'];
+                                        @endphp
+                                    @endif
+                                @endforeach
+                            @endisset    
+                            @lang($Realised)</h2>
+                        </h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-12">
+                <div class="custom--card">
+                    <div class="card-body">
+                        <h5 class="card-title">@lang('Charges & Taxes')</h5>
+                        <h2 class="text--base">
+                            @isset($combinedArray)
+                            @php
+                                $Realised = 0;
+                            @endphp
+                                @foreach ($combinedArray as $item)
+                                    @if (isset($item['bought_date']))
                                         @php
                                             $Realised += $item['profit_loss'];
                                         @endphp
@@ -85,12 +132,12 @@
                     <div class="card-body">
                         <h5 class="card-title">@lang('Not Realised PNL')</h5>
                         <h2 class="text--base">
-                            @isset($allData)
+                            @isset($combinedArray)
                             @php
                                 $notRealised = 0;
                             @endphp
-                                @foreach ($allData as $item)
-                                    @if (isset($item['bought_date']))
+                                @foreach ($combinedArray as $item)
+                                    @if (isset($item['cmp']))
                                         @php
                                             $notRealised += $item['profit_loss'];
                                         @endphp
@@ -121,7 +168,8 @@
                                 </thead>
                                 <tbody>
                                     @isset($combinedArray)
-                                        @foreach ($combinedArray as $item)
+                                        @if (!empty($combinedArray))
+                                            @foreach ($combinedArray as $item)
                                             <tr>
                                                 <td>{{$item['stock_name']}}</td>
                                                 <td>{{showDate($item['buy_date'])}}</td>
@@ -139,7 +187,12 @@
                                                 @endif</td>
                                                 <td>{{$item['profit_loss']}}</td>
                                             </tr>
-                                        @endforeach
+                                            @endforeach
+                                        @else
+                                            <tr>
+                                                <td colspan="100%"><span class="text--base">NO DATA</span></td> 
+                                            </tr>
+                                        @endif
                                     @endisset
                                 </tbody>
                             </table>
@@ -163,9 +216,8 @@
         minYear: 1901,
         showDropdowns: true,
     }).on("apply.daterangepicker", function (e, picker) {
-        picker.element.val(picker.startDate.format(picker.locale.format) + " - " + picker.endDate.format(picker.locale.format));
+        picker.element.val(picker.startDate.format('YYYY-MM-DD') + "/" + picker.endDate.format('YYYY-MM-DD'));
     });
-
 </script>
 @endpush
 @endsection

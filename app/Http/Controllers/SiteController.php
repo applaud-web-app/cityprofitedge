@@ -7,10 +7,12 @@ use App\Models\DeviceToken;
 use App\Models\Frontend;
 use App\Models\Language;
 use App\Models\Page;
+use App\Models\Package;
 use App\Models\Subscriber;
 use App\Models\SupportMessage;
 use App\Models\SupportTicket;
 use Carbon\Carbon;
+use App\Models\UserEnquiry;
 use Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -203,7 +205,7 @@ class SiteController extends Controller
     }
 
     public function packages(){
-        $pageTitle = 'Packages';
+        $pageTitle = 'Products';
         $extends = Auth::user() ? $this->activeTemplate.'layouts.master' : $this->activeTemplate.'layouts.frontend';
         $sections = Page::where('tempname', $this->activeTemplate)->where('slug','packages')->first();
         return view($this->activeTemplate.'package',compact('pageTitle', 'extends','sections'));
@@ -236,6 +238,33 @@ class SiteController extends Controller
 
     public function getMarketData(){
         return response()->json($this->getMarketDataResp());
+    }
+
+    public function packageDetails($id){
+        $pageTitle = 'Products Details';
+        $packageDetails = Package::Where('id',$id)->first();
+        return view($this->activeTemplate.'package-details',compact('pageTitle', 'packageDetails'));
+    }
+
+    public function storeUserRequest(Request $request,$id){
+
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email',
+            'number' => 'required|integer',
+        ]);
+
+        $userId = Auth::id();
+        $userEnquiry = new UserEnquiry;
+        $userEnquiry->user_id = $userId;
+        $userEnquiry->package_id = $id;
+        $userEnquiry->name = $request->name;
+        $userEnquiry->email = $request->email;
+        $userEnquiry->phone = $request->number;
+        $userEnquiry->save();
+
+        $notify[] = ['success', 'Request Submitted Successfully'];
+        return back()->withNotify($notify);
     }
 
 }

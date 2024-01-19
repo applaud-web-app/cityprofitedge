@@ -41,6 +41,8 @@ Route::controller('SiteController')->group(function () {
 
     Route::get('/cookie/accept', 'cookieAccept')->name('cookie.accept');
     Route::get('/packages', 'packages')->name('packages');
+    Route::get('/package-details/{id}', 'packageDetails')->name('packagedetails');
+    Route::post('/package-details/{id}', 'storeUserRequest')->name('storeUserRequest');
 
     Route::get('/blogs', 'blogs')->name('blogs');
     Route::get('blog/{slug}/{id}', 'blogDetails')->name('blog.details');

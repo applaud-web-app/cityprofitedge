@@ -16,7 +16,7 @@
                             <li><a href="{{ route('user.deposit.history') }}">@lang('Deposit History')</a></li>
                         </ul>
                     </li>
-                    <li><a href="{{ route('packages') }}">@lang('Package')</a></li>
+                    <li><a href="{{ route('packages') }}">@lang('Products')</a></li>
                     <li><a href="{{ route('user.signals') }}">@lang('Signals')</a></li>
                     <li><a href="{{ route('user.referrals') }}">@lang('Referrals')</a></li>
                     <li>

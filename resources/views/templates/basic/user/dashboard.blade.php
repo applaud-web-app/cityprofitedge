@@ -462,7 +462,7 @@
                             <input type="hidden" name="id" required>
                         </div>
                         <ul class="list-group list-group-flush">
-                            <li class="list-group-item d-flex justify-content-between align-items-center">@lang('Package') <span class="packageName"></span></li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">@lang('Product') <span class="packageName"></span></li>
                             <li class="list-group-item d-flex justify-content-between align-items-center">@lang('Price') <span class="packagePrice"></span></li>
                             <li class="list-group-item d-flex justify-content-between align-items-center">@lang('Validity') <span class="packageValidity"></span></li>
                             <li class="list-group-item d-flex justify-content-between align-items-center">@lang('Your Balance')

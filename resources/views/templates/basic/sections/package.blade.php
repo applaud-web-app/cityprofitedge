@@ -1,5 +1,6 @@
 @php
     $package = getContent('package.content', true);
+
     if (request()->routeIs('home')) {
         $packages = App\Models\Package::active()
             ->take(3)
@@ -7,6 +8,7 @@
     } else {
         $packages = App\Models\Package::active()->paginate(getPaginate());
     }
+
 @endphp
 
 <!-- packaage section start -->
@@ -34,13 +36,16 @@
                                     <li>Risk Appetite : <span class="text--base">{{ $package->risk_appetite }}</span></li>
                                 </ul>
                                 <div class="mt-4">
-                                    <a href="javascript:void(0)" class="btn btn-outline--base chooseBtn"
+                                    <a href="{{url('/package-details/'.$package->id.'')}}" class="btn btn-outline--base ">
+                                        @lang('View Product')
+                                    </a>
+                                    {{-- <a href="{{url('/package-details/'.$package->id.'')}}" class="btn btn-outline--base chooseBtn"
                                         @auth data-id="{{ $package->id }}"
                                         data-name="{{ $package->name }}"
                                         data-price="{{ showAmount($package->min_investment, 2) }}"
                                         data-validity="{{ $package->validity }}" @endauth>
                                         @lang('View Product')
-                                    </a>
+                                    </a> --}}
                                 </div>
                             </div><!-- package-card end -->
                         </div>
@@ -52,6 +57,7 @@
                     {{ $packages->links() }}
                 </div>
             @endif
+
         </div><!-- row end -->
     </div>
 </section>
@@ -73,7 +79,7 @@
                         </div>
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item d-flex justify-content-between align-items-center">
-                                @lang('Package') <span class="packageName"></span>
+                                @lang('Product') <span class="packageName"></span>
                             </li>
                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                 @lang('Price') <span class="packagePrice"></span>
@@ -102,7 +108,7 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header"> 
-                    <h5 class="modal-title method-name">@lang('Please login before buy a package')</h5>
+                    <h5 class="modal-title method-name">@lang('Please login before buy a product')</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">

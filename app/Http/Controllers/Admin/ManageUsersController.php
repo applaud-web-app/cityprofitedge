@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Constants\Status;
+use App\Models\UserEnquiry;
 use Carbon\Carbon;
 
 class ManageUsersController extends Controller
@@ -355,8 +356,14 @@ class ManageUsersController extends Controller
         $user->validity = $newValidity;
         $user->save();
 
-        $notify[] = ['success', 'Package validity updated successfully'];
+        $notify[] = ['success', 'Product validity updated successfully'];
         return back()->withNotify($notify);
+    }
+
+    public function getuserEnquiry(){
+        $pageTitle = 'Users Enquiry';
+        $enquiry = UserEnquiry::with('user','package')->orderBy('id','desc')->paginate(getPaginate());
+        return view('admin.users.user-enquiry', compact('pageTitle','enquiry'));
     }
 
 }

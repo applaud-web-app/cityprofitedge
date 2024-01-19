@@ -69,11 +69,11 @@
                                                 <i class="la la-pencil"></i> @lang('Edit')
                                             </button>
                                             @if($package->status == Status::DISABLE)
-                                                <button class="btn btn-sm btn-outline--success ms-1 confirmationBtn" data-question="@lang('Are you sure to enable this package?')" data-action="{{ route('admin.package.status',$package->id) }}">
+                                                <button class="btn btn-sm btn-outline--success ms-1 confirmationBtn" data-question="@lang('Are you sure to enable this product?')" data-action="{{ route('admin.package.status',$package->id) }}">
                                                     <i class="la la-eye"></i> @lang('Enable')
                                                 </button>
                                             @else
-                                                <button class="btn btn-sm btn-outline--danger ms-1 confirmationBtn" data-question="@lang('Are you sure to disable this package?')" data-action="{{ route('admin.package.status',$package->id) }}">
+                                                <button class="btn btn-sm btn-outline--danger ms-1 confirmationBtn" data-question="@lang('Are you sure to disable this product?')" data-action="{{ route('admin.package.status',$package->id) }}">
                                                     <i class="la la-eye-slash"></i> @lang('Disable')
                                                 </button>
                                             @endif
@@ -103,7 +103,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="createModalLabel">@lang('Add New Package')</h5>
+                <h5 class="modal-title" id="createModalLabel">@lang('Add New Product')</h5>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <i class="las la-times"></i>
                 </button>
@@ -197,7 +197,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="createModalLabel">@lang('Update Package')</h5>
+                <h5 class="modal-title" id="createModalLabel">@lang('Update Product')</h5>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <i class="las la-times"></i>
                 </button>

@@ -30,6 +30,7 @@ class UserController extends Controller
     {
         $user = auth()->user();
         $pageTitle = 'Dashboard';
+        
         $totalTrx = Transaction::where('user_id', $user->id)->count();
         $totalSignal = SignalHistory::where('user_id', $user->id)->count();
         $latestTrx = Transaction::where('user_id', $user->id)->orderBy('id', 'DESC')->limit(10)->get();
@@ -379,7 +380,7 @@ class UserController extends Controller
         $user = auth()->user();
 
         if($user->package_id != $package->id){
-            $notify[] = ['error', 'Sorry, There is no package to renew'];
+            $notify[] = ['error', 'Sorry, There is no Product to renew'];
             return back()->withNotify($notify);
         }
 
@@ -575,29 +576,48 @@ class UserController extends Controller
         return to_route('user.portfolio.broker-details')->withNotify($notify);
     }
 
-    public function tradeBook(){
+    public function tradeBook(Request $request){
         $pageTitle = 'Trade Book';
         $data['pageTitle'] = $pageTitle;
-        return view($this->activeTemplate . 'user.trade-book',$data);
+        
+        if(!empty($request->buyDate) && $request->buyDate!='all'){
+            $array = explode('/' ,$request->buyDate);
+            $dataFrom = $array[0];
+            $dateTo = $array[1];
+        }
+
+        $Ledger = Ledger::where('user_id',auth()->user()->id);
+        if(!empty($request->symbol) && $request->symbol!='all'){
+            $Ledger->where('stock_name',$request->symbol);
+        }
+        if(empty($request->symbol) && $request->symbol!='all' && empty($request->buyDate) && $request->buyDate!='all'){
+            $Ledger->whereBetween('bought_date', [Carbon::now()->subMonth(6), Carbon::now()]);
+        }
+        if(!empty($request->buyDate) && $request->buyDate!='all'){
+            $Ledger->whereBetween('bought_date',[$dataFrom,$dateTo]);
+        }
+        $Ledger = $Ledger->get();
+
+        $stock = Ledger::select('stock_name')->where('user_id',auth()->user()->id)->get();
+
+        return view($this->activeTemplate . 'user.trade-book',$data,compact('Ledger','stock'));
     }
 
     public function getStockName(){
-        $Ledger = Ledger::select(['*', 'bought_date as buy_date'])->where('user_id',auth()->user()->id)->get();
-        $MetalsPortfolio = MetalsPortfolio::where('user_id',auth()->user()->id)->get();
-        $FOPortfolios = FOPortfolios::where('user_id',auth()->user()->id)->get();
-        $GlobalStockPortfolio = GlobalStockPortfolio::where('user_id',auth()->user()->id)->get();
-        $StockPortfolio = StockPortfolio::where('user_id',auth()->user()->id)->get();
+        $Ledger = Ledger::select('stock_name')->where('user_id',auth()->user()->id)->get();
+        $MetalsPortfolio = MetalsPortfolio::select('stock_name')->where('user_id',auth()->user()->id)->get();
+        $FOPortfolios = FOPortfolios::select('stock_name')->where('user_id',auth()->user()->id)->get();
+        $GlobalStockPortfolio = GlobalStockPortfolio::select('stock_name')->where('user_id',auth()->user()->id)->get();
+        $StockPortfolio = StockPortfolio::select('stock_name')->where('user_id',auth()->user()->id)->get();
 
         // Merge Data
         $combinedArray = array_merge($Ledger->toArray(), $MetalsPortfolio->toArray(), $FOPortfolios->toArray(), $GlobalStockPortfolio->toArray() , $StockPortfolio->toArray());
 
         // Sort Data
-        $dates = array_column($combinedArray, 'buy_date');
+        $dates = array_column($combinedArray, 'stock_name');
         array_multisort($dates, SORT_ASC, $combinedArray);
 
         return $combinedArray;
-
-        // ->whereBetween('buy_date',[now()->subdays(30), now()->subday()])
 
     }
 
@@ -610,21 +630,23 @@ class UserController extends Controller
         $type = "all";
         $symbol = 'all';
         $buyDate = 'all';
+        $array = [];  
 
-        if(!empty($request->buyDate) && $request->buyDate !='all'){
-            $array = explode('-', $request->buyDate);
-        }else{
-            $request->buyDate = "30daysData";
-            $array[0] =   now()->subday();
-            $array[1] = now()->subdays(30);
+        if(!empty($request->buyDate) && $request->buyDate!='all'){
+            $array = explode('/' ,$request->buyDate);
+            $dataFrom = $array[0];
+            $dateTo = $array[1];
         }
 
         $Ledger = Ledger::select(['*', 'bought_date as buy_date'])->where('user_id',auth()->user()->id);
         if(!empty($request->symbol) && $request->symbol!='all'){
             $Ledger->where('stock_name',$request->symbol);
         }
+        if(empty($request->symbol) && $request->symbol!='all' && empty($request->type) && $request->type!='all' && empty($request->symbol) && $request->symbol!='all'  && empty($request->buyDate) && $request->buyDate!='all'){
+            $Ledger->whereBetween('bought_date', [Carbon::now()->subMonth(6), Carbon::now()]);
+        }
         if(!empty($request->buyDate) && $request->buyDate!='all'){
-            $Ledger->whereBetween('bought_date',[trim($array[1]),trim($array[0])]);
+            $Ledger->whereBetween('bought_date',[$dataFrom,$dateTo]);
         }
         $Ledger = $Ledger->get();
 
@@ -633,8 +655,11 @@ class UserController extends Controller
         if(!empty($request->symbol) && $request->symbol!='all'){
             $MetalsPortfolio->where('stock_name',$request->symbol);
         }
+        if(empty($request->symbol) && $request->symbol!='all' && empty($request->type) && $request->type!='all' && empty($request->symbol) && $request->symbol!='all'  && empty($request->buyDate) && $request->buyDate!='all'){
+            $MetalsPortfolio->whereBetween('buy_date', [Carbon::now()->subMonth(6), Carbon::now()]);
+        }
         if(!empty($request->buyDate) && $request->buyDate!='all'){
-            $MetalsPortfolio->whereBetween('buy_date',[trim($array[1]),trim($array[0])]);
+            $MetalsPortfolio->whereBetween('buy_date',[$dataFrom,$dateTo]);
         }
         $MetalsPortfolio = $MetalsPortfolio->get();
 
@@ -643,8 +668,11 @@ class UserController extends Controller
         if(!empty($request->symbol) && $request->symbol!='all'){
             $FOPortfolios->where('stock_name',$request->symbol);
         }
+        if(empty($request->symbol) && $request->symbol!='all' && empty($request->type) && $request->type!='all' && empty($request->symbol) && $request->symbol!='all'  && empty($request->buyDate) && $request->buyDate!='all'){
+            $FOPortfolios->whereBetween('buy_date', [Carbon::now()->subMonth(6), Carbon::now()]);
+        }
         if(!empty($request->buyDate) && $request->buyDate!='all'){
-            $FOPortfolios->whereBetween('buy_date',[trim($array[1]),trim($array[0])]);
+            $FOPortfolios->whereBetween('buy_date',[$dataFrom,$dateTo]);
         }
         $FOPortfolios = $FOPortfolios->get();
 
@@ -653,8 +681,11 @@ class UserController extends Controller
         if(!empty($request->symbol) && $request->symbol!='all'){
             $GlobalStockPortfolio->where('stock_name',$request->symbol);
         }
+        if(empty($request->symbol) && $request->symbol!='all' && empty($request->type) && $request->type!='all' && empty($request->symbol) && $request->symbol!='all'  && empty($request->buyDate) && $request->buyDate!='all'){
+            $GlobalStockPortfolio->whereBetween('buy_date', [Carbon::now()->subMonth(6), Carbon::now()]);
+        }
         if(!empty($request->buyDate) && $request->buyDate!='all'){
-            $GlobalStockPortfolio->whereBetween('buy_date',[trim($array[1]),trim($array[0])]);
+            $GlobalStockPortfolio->whereBetween('buy_date',[$dataFrom,$dateTo]);
         }
         $GlobalStockPortfolio = $GlobalStockPortfolio->get();
 
@@ -663,15 +694,17 @@ class UserController extends Controller
         if(!empty($request->symbol) && $request->symbol!='all'){
             $StockPortfolio->where('stock_name',$request->symbol);
         }
+        if(empty($request->symbol) && $request->symbol!='all' && empty($request->type) && $request->type!='all' && empty($request->symbol) && $request->symbol!='all'  && empty($request->buyDate) && $request->buyDate!='all'){
+            $StockPortfolio->whereBetween('buy_date', [Carbon::now()->subMonth(6), Carbon::now()]);
+        }
         if(!empty($request->buyDate) && $request->buyDate!='all'){
-            $StockPortfolio->whereBetween('buy_date',[trim($array[1]),trim($array[0])]);
+            $StockPortfolio->whereBetween('buy_date',[$dataFrom,$dateTo]);
         }
         $StockPortfolio = $StockPortfolio->get();
 
-
+        // Type = Realised (Lagyer) , Unrelized = (Except Lagyer)
         if(!empty($request->type) && $request->type!='all'){
-            if($request->type == "realised"){
-                // Merge All Data
+            if($request->type == "unrealized"){
                 if(!empty($request->segments) && $request->segments!='all'){
                     if($request->segments == "global"){
                         $combinedArray = array_merge($GlobalStockPortfolio->toArray());
@@ -687,7 +720,12 @@ class UserController extends Controller
                 }
             }else{
                 // Merge All Data
-                $combinedArray = array_merge($Ledger->toArray());
+                if($request->segments=='all'){
+                  $combinedArray = array_merge($Ledger->toArray());
+                }else{
+                    $combinedArray = [];
+                }
+
             }
         }else{
             // Merge All Data
