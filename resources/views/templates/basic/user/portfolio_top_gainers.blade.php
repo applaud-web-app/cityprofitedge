@@ -23,8 +23,13 @@
         </form>
         
         @foreach($symbolArr as $v)
-            @php
-               $data = \DB::connection('mysql_rm')->table($v)->select('*')->where(['date'=>$todayDate,'timeframe'=>$timeFrame])->get(); 
+            @php 
+               if($v == "LTP"){
+
+               }else{
+                $data = \DB::connection('mysql_rm')->table($v)->select('*')->where(['date'=>$todayDate,'timeframe'=>$timeFrame])->get(); 
+               }
+              
             @endphp
             <div class="row mb-5">
                 <div class="col-lg-12">
