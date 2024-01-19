@@ -1,6 +1,5 @@
 @php
     $package = getContent('package.content', true);
-
     if (request()->routeIs('home')) {
         $packages = App\Models\Package::active()
             ->take(3)
@@ -8,7 +7,6 @@
     } else {
         $packages = App\Models\Package::active()->paginate(getPaginate());
     }
-
 @endphp
 
 <!-- packaage section start -->
@@ -49,13 +47,11 @@
                     @endforeach
                 </div><!-- row end -->
             </div>
-
             @if (!request()->routeIs('home'))
                 <div class="pt-50 d-flex text-center justify-content-center">
                     {{ $packages->links() }}
                 </div>
             @endif
-
         </div><!-- row end -->
     </div>
 </section>
