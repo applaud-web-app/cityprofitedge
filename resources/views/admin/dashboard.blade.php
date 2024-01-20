@@ -308,7 +308,7 @@
                 value="{{$widget['total_users']}}"
                 bg="primary"
             />
-        </div><!-- dashboard-w1 end -->
+        </div>
         <div class="col-xxl-3 col-sm-6">
             <x-widget
                 link="{{route('admin.users.active')}}"
@@ -317,7 +317,7 @@
                 value="{{$widget['verified_users']}}"
                 bg="success"
             />
-        </div><!-- dashboard-w1 end -->
+        </div>
         <div class="col-xxl-3 col-sm-6">
             <x-widget
                 link="{{route('admin.users.email.unverified')}}"
@@ -326,7 +326,7 @@
                 value="{{$widget['email_unverified_users']}}"
                 bg="danger"
             />
-        </div><!-- dashboard-w1 end -->
+        </div>
         <div class="col-xxl-3 col-sm-6">
             <x-widget
                 link="{{route('admin.users.mobile.unverified')}}"
@@ -335,10 +335,10 @@
                 value="{{$widget['mobile_unverified_users']}}"
                 bg="red"
             />
-        </div><!-- dashboard-w1 end -->
+        </div>
     </div><!-- row end-->
 
-    <div class="row gy-4 mt-2">
+    {{-- <div class="row gy-4 mt-2">
         <div class="col-xxl-3 col-sm-6">
             <x-widget
                 style="2"
@@ -349,7 +349,7 @@
                 value="{{ $general->cur_sym }}{{showAmount($deposit['total_deposit_amount'])}}"
                 color="success"
             />
-        </div><!-- dashboard-w1 end -->
+        </div>
         <div class="col-xxl-3 col-sm-6">
             <x-widget
                 style="2"
@@ -360,7 +360,7 @@
                 value="{{$deposit['total_deposit_pending']}}"
                 color="warning"
             />
-        </div><!-- dashboard-w1 end -->
+        </div>
         <div class="col-xxl-3 col-sm-6">
             <x-widget
                 style="2"
@@ -371,7 +371,7 @@
                 value="{{$deposit['total_deposit_rejected']}}"
                 color="danger"
             />
-        </div><!-- dashboard-w1 end -->
+        </div>
         <div class="col-xxl-3 col-sm-6">
             <x-widget
                 style="2"
@@ -382,10 +382,10 @@
                 value="{{ $general->cur_sym }}{{showAmount($deposit['total_deposit_charge'])}}"
                 color="primary"
             />
-        </div><!-- dashboard-w1 end -->
-    </div><!-- row end-->
+        </div>
+    </div>--}}
 
-    <div class="row gy-4 mt-2">
+    {{-- <div class="row gy-4 mt-2">
         <div class="col-xxl-3 col-sm-6">
             <x-widget
                 style="2"
@@ -430,7 +430,7 @@
                 color="primary"
             />
         </div>
-    </div><!-- row end-->
+    </div>--}}
 
     <div class="row mb-none-30 mt-30">
         <div class="col-xl-6 mb-30">
