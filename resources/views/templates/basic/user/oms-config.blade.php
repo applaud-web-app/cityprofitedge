@@ -21,7 +21,7 @@
                                         <th>Symbol Name</th>
                                         <th>Signal TF</th>
                                         <th>TXN Type</th>
-                                        <th>Entry Poit</th>
+                                        <th>Entry Point</th>
                                         <th>Pyramid1</th>
                                         <th>Pyramid2</th>
                                         <th>Pyramid3</th>
@@ -44,226 +44,36 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @for ($i = 0; $i < 10; $i++)
-                                    <tr>
-                                      <td>
-                                         <div class="form-group mb-0">
-                                              <select name="" class="form--control" id="">
-                                                  <option value="">Select</option>
-                                                  <option value="">1</option>
-                                                  <option value="">2</option>
-                                                  <option value="">3</option>
-                                                  <option value="">4</option>
-                                              </select>
-                                         </div>
-                                      </td>
-                                      <td>
-                                        <div class="form-group mb-0">
-                                            <select name="" class="form--control" id="">
-                                                <option value="">Select</option>
-                                                <option value="">1</option>
-                                                <option value="">2</option>
-                                                <option value="">3</option>
-                                                <option value="">4</option>
-                                            </select>
-                                        </div>
-                                     </td>
-
-                                     <td>
-                                        <div class="form-group mb-0">
-                                           <input type="text" class="form--control" placeholder="Enter Text">
-                                        </div>
-                                     </td>
-
-                                     <td>
-                                        <div class="form-group mb-0">
-                                            <select name="" class="form--control" id="">
-                                                <option value="">Select</option>
-                                                <option value="">1</option>
-                                                <option value="">2</option>
-                                                <option value="">3</option>
-                                                <option value="">4</option>
-                                            </select>
-                                        </div>
-                                     </td>
-
-                                     <td>
-                                        <div class="form-group mb-0">
-                                           <input type="text" class="form--control" placeholder="Enter Text">
-                                        </div>
-                                     </td>
-
-                                     <td>
-                                        <div class="form-group mb-0">
-                                           <input type="text" class="form--control" placeholder="Enter Text">
-                                        </div>
-                                     </td>
-
-                                     <td>
-                                        <div class="form-group mb-0">
-                                           <input type="text" class="form--control" placeholder="Enter Text">
-                                        </div>
-                                     </td>
-
-                                     <td>
-                                        <div class="form-group mb-0">
-                                           <input type="text" class="form--control" placeholder="Enter Text">
-                                        </div>
-                                     </td>
-
-                                     <td>
-                                        <div class="form-group mb-0">
-                                          <select name="" class="form--control" id="">
-                                                  <option value="">Select</option>
-                                                  <option value="">1</option>
-                                                  <option value="">2</option>
-                                                  <option value="">3</option>
-                                                  <option value="">4</option>
-                                              </select>
-                                        </div>
-                                     </td>
-
-                                     <td>
-                                        <div class="form-group mb-0">
-                                          <select name="" class="form--control" id="">
-                                                  <option value="">Select</option>
-                                                  <option value="">1</option>
-                                                  <option value="">2</option>
-                                                  <option value="">3</option>
-                                                  <option value="">4</option>
-                                              </select>
-                                        </div>
-                                     </td>
-
-                                     <td>
-                                        <div class="form-group mb-0">
-                                           <input type="text" class="form--control" placeholder="Enter Text">
-                                        </div>
-                                     </td>
-
-                                     <td>
-                                        <div class="form-group mb-0">
-                                            <select name="" class="form--control" id="">
-                                                <option value="">Select</option>
-                                                <option value="">1</option>
-                                                <option value="">2</option>
-                                                <option value="">3</option>
-                                                <option value="">4</option>
-                                            </select>
-                                        </div>
-                                     </td>
-
-                                     <td>
-                                        <div class="form-group mb-0">
-                                           <input type="text" class="form--control" placeholder="Enter Text">
-                                        </div>
-                                     </td>
-
-                                     <td>
-                                        <div class="form-group mb-0">
-                                            <select name="" class="form--control" id="">
-                                                <option value="">Select</option>
-                                                <option value="">1</option>
-                                                <option value="">2</option>
-                                                <option value="">3</option>
-                                                <option value="">4</option>
-                                            </select>
-                                        </div>
-                                     </td>
-
-                                     <td>
-                                        <div class="form-group mb-0">
-                                           <input type="text" class="form--control" placeholder="Enter Text">
-                                        </div>
-                                     </td>
-
-                                     <td>
-                                        <div class="form-group mb-0">
-                                            <select name="" class="form--control" id="">
-                                                  <option value="">Select</option>
-                                                  <option value="">1</option>
-                                                  <option value="">2</option>
-                                                  <option value="">3</option>
-                                                  <option value="">4</option>
-                                              </select>
-                                        </div>
-                                     </td>
-
-                                     <td>
-                                        <div class="form-group mb-0">
-                                            <select name="" class="form--control" id="">
-                                                  <option value="">Select</option>
-                                                  <option value="">1</option>
-                                                  <option value="">2</option>
-                                                  <option value="">3</option>
-                                                  <option value="">4</option>
-                                              </select>
-                                        </div>
-                                     </td>
-
-                                     <td>
-                                        <div class="form-group mb-0">
-                                            <select name="" class="form--control" id="">
-                                                  <option value="">Select</option>
-                                                  <option value="">1</option>
-                                                  <option value="">2</option>
-                                                  <option value="">3</option>
-                                                  <option value="">4</option>
-                                              </select>
-                                        </div>
-                                     </td>
-
-                                     <td>
-                                        <div class="form-group mb-0">
-                                            <select name="" class="form--control" id="">
-                                                  <option value="">Select</option>
-                                                  <option value="">1</option>
-                                                  <option value="">2</option>
-                                                  <option value="">3</option>
-                                                  <option value="">4</option>
-                                              </select>
-                                        </div>
-                                     </td>
-
-                                     <td>
-                                        <div class="form-group mb-0">
-                                            <select name="" class="form--control" id="">
-                                                  <option value="">Select</option>
-                                                  <option value="">1</option>
-                                                  <option value="">2</option>
-                                                  <option value="">3</option>
-                                                  <option value="">4</option>
-                                              </select>
-                                        </div>
-                                     </td>
-
-                                     <td>
-                                        <div class="form-group mb-0">
-                                            <select name="" class="form--control" id="">
-                                                  <option value="">Select</option>
-                                                  <option value="">1</option>
-                                                  <option value="">2</option>
-                                                  <option value="">3</option>
-                                                  <option value="">4</option>
-                                              </select>
-                                        </div>
-                                     </td>
-
-                                     <td>
-                                        <div class="form-group mb-0">
-                                          <button class="btn btn-sm btn--base deplay_btn" type="submit">@lang('deploy')</button>
-                                        </div>
-                                     </td>
-
-                                     
-
-
-
-                                      
-                                       
-                                    
-                                    </tr>    
-                                    @endfor
+                                    @forelse ($omsData as $item)
+                                        <tr>
+                                            <td>{{$item->symbol_name}}</td>
+                                            <td>{{$item->signal_tf}}</td>
+                                            <td>{{$item->txn_type}}</td>
+                                            <td>{{$item->entry_point}}</td>
+                                            <td>{{$item->ce_pyramid_1}}</td>
+                                            <td>{{$item->ce_pyramid_2}}</td>
+                                            <td>{{$item->ce_pyramid_3}}</td>
+                                            <td>{{$item->pyramid_percent}}</td>
+                                            <td>{{$item->order_type}}</td>
+                                            <td>{{$item->product}}</td>
+                                            <td>{{$item->pyramid_freq}}</td>
+                                            <td>{{$item->ce_symbol_name}}</td>
+                                            <td>{{$item->ce_quantity}}</td>
+                                            <td>{{$item->pe_symbol_name}}</td>
+                                            <td>{{$item->pe_quantity}}</td>
+                                            <td>{{$item->broker->client_name}}</td>
+                                            <td>{{$item->strategy_name}}</td>
+                                            <td>{{$item->exit_1_qty}}</td>
+                                            <td>{{$item->exit_2_qty}}</td>
+                                            <td>{{$item->exit_1_target}}</td>
+                                            <td>{{$item->exit_2_target}}</td>
+                                            <td>-</td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="22" class="text-center">NO DATA</td>
+                                        </tr>
+                                    @endforelse
                                              
                                 </tbody>
                             </table>
@@ -281,7 +91,7 @@
 <div class="modal fade" id="clientModal" tabindex="-1" aria-labelledby="clientModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
-        <form action="{{route('user.portfolio.store-broker-details')}}" class="transparent-form" method="post">
+        <form action="{{route('user.portfolio.store-oms-config')}}" class="transparent-form" method="post">
             @csrf
             <div class="modal-header">
             <h5 class="modal-title" id="clientModalLabel">Add New</h5>
@@ -309,16 +119,27 @@
                         </select>
                     </div>
 
-                    <div class="col-lg-6 form-group ce_pe_symbl" style="display: none;">
-                        <label for="ce_symbol_name" class="required">CE Symbol Name<sup class="text--danger">*</sup></label>
-                        <select name="ce_symbol_name" class="form--control" required="" id="ce_symbol_name">
+                    <div class="col-lg-6 form-group">
+                        <label for="strategy_name" class="required">Strategy Name<sup class="text--danger">*</sup></label>
+                        <select name="strategy_name" class="form--control" required="" id="strategy_name">
+                            <option value="">Select Strategy</option>
+                            @foreach (strategyNames() as $item)
+                                <option value="{{$item}}">{{$item}}</option>    
+                            @endforeach
+                        </select>
+                    </div>
+
+
+                    <div class="col-lg-6 form-group ce_pe_symbl_1" style="display: none;">
+                        <label for="ce_symbol_name" class="required">CE Symbol Name</label>
+                        <select name="ce_symbol_name" class="form--control" id="ce_symbol_name">
                            
                         </select>
                     </div>
 
-                    <div class="col-lg-6 form-group ce_pe_symbl" style="display: none;">
-                        <label for="pe_symbol_name" class="required">PE Symbol Name<sup class="text--danger">*</sup></label>
-                        <select name="pe_symbol_name" class="form--control" required="" id="pe_symbol_name">
+                    <div class="col-lg-6 form-group ce_pe_symbl_2" style="display: none;">
+                        <label for="pe_symbol_name" class="required">PE Symbol Name</label>
+                        <select name="pe_symbol_name" class="form--control" id="pe_symbol_name">
                             
                         </select>
                     </div>
@@ -335,17 +156,14 @@
                         </select>
                     </div>
 
-                    
-
                     <div class="col-lg-6 form-group">
-                        <label for="strategy_name" class="required">Strategy Name<sup class="text--danger">*</sup></label>
-                        <select name="strategy_name" class="form--control" required="" id="strategy_name">
-                            <option value="">Select Strategy</option>
-                            @foreach (strategyNames() as $item)
-                                <option value="{{$item}}">{{$item}}</option>    
-                            @endforeach
+                        <label for="entry_point" class="required">Entry Point <sup class="text--danger">*</sup></label>
+                        <select name="entry_point" class="form--control" required="" id="entry_point">
+                            <option value="Fibonacci">Fibonacci</option>
                         </select>
                     </div>
+
+                    
                     
                     <div class="col-lg-6 form-group">
                         <label for="order_type" class="required">Order Type<sup class="text--danger">*</sup></label>
@@ -367,8 +185,8 @@
                     </div>
 
                     <div class="col-lg-6 form-group">
-                        <label for="pyramid_percent" class="required">Product<sup class="text--danger">*</sup></label>
-                        <select name="pyramid_percent" class="form--control" id="pyramid_percent" required>
+                        <label for="product" class="required">Product<sup class="text--danger">*</sup></label>
+                        <select name="product" class="form--control" id="product" required>
                             <option value="">Select Product</option>
                             <option value="NRML">NRML</option>
                             <option value="MIS">MIS</option>  
@@ -408,9 +226,7 @@
                     <div class="col-lg-6 form-group">
                         <label for="exit_2_target" class="required">Exit 2 Target<sup class="text--danger">*</sup></label>
                         <input type="text" name="exit_2_target" id="exit_2_target" class="form--control">
-                    </div>
-
-                   
+                    </div>                   
                 </div>
             </div>
             <div class="modal-footer">
@@ -427,8 +243,10 @@
         var vl = $(this).val();
         if(vl=='LIMIT'){
             $("#pyramid_percent_dv").show();
+            $("#pyramid_percent").attr('required','required');
         }else{
             $("#pyramid_percent_dv").hide();
+            $("#pyramid_percent").removeAttr('required');
         }
     });
 </script>
@@ -437,7 +255,6 @@
         var symbl = $("#symbol_name option:selected").val();
         var signl = $("#signal_tf option:selected").val();
         if(symbl!='' && signl!=''){
-            $(".ce_pe_symbl").show();
             $("#ce_symbol_name").html('<option value="">Loading...</option>');
             $("#pe_symbol_name").html('<option value="">Loading...</option>');
             $.post('{{url("user/get-pe-ce-symbol-names")}}',{'_token':'{{csrf_token()}}','symbol':symbl,'signal':signl},function(data){
@@ -447,18 +264,68 @@
                     var dataA = data.data;
                     for(var i in dataA){
                         cestr+=`<option value="${dataA[i].ce}">${dataA[i].ce}</option>`;
-                        pestr+=`<option value="${dataA[i].ce}">${dataA[i].ce}</option>`;
+                        pestr+=`<option value="${dataA[i].pe}">${dataA[i].ce}</option>`;
                     }
                 }
-                $(".ce_pe_symbl").show();
                 $("#ce_symbol_name").html(cestr);
                 $("#pe_symbol_name").html(pestr);
             });
         }else{
-            $(".ce_pe_symbl").hide();
+            $("#ce_symbol_name").html('<option value="">Select</option>');
+            $("#pe_symbol_name").html('<option value="">Select</option>');
         }
     })
 </script>
+
+<script>
+    $("#strategy_name").on('change',function(){
+        switch($("#strategy_name option:selected").val()){
+            case 'Short Straddle':
+                $(".ce_pe_symbl_1").show();
+                $(".ce_pe_symbl_2").show();
+                $("#ce_symbol_name").attr('required','required');
+                $("#pe_symbol_name").attr('required','required');
+                break;
+            case 'Long Straddle':
+                $(".ce_pe_symbl_1").show();
+                $(".ce_pe_symbl_2").show();
+                $("#ce_symbol_name").attr('required','required');
+                $("#pe_symbol_name").attr('required','required');
+                break;
+            case 'Buy CE':
+                $(".ce_pe_symbl_1").show();
+                $(".ce_pe_symbl_2").hide();
+                $("#ce_symbol_name").attr('required','required');
+                $("#pe_symbol_name").removeAttr('required');
+                break;
+            case 'Buy PE':
+                $(".ce_pe_symbl_1").hide();
+                $(".ce_pe_symbl_2").show();
+                $("#pe_symbol_name").attr('required','required');
+                $("#ce_symbol_name").removeAttr('required');
+                break;
+            case 'Sell CE':
+                $(".ce_pe_symbl_1").show();
+                $(".ce_pe_symbl_2").hide();
+                $("#ce_symbol_name").attr('required','required');
+                $("#pe_symbol_name").removeAttr('required');
+                break;
+            case 'Sell PE':
+                $(".ce_pe_symbl_1").hide();
+                $(".ce_pe_symbl_2").show();
+                $("#pe_symbol_name").attr('required','required');
+                $("#ce_symbol_name").removeAttr('required');
+                break;
+            default:
+                $(".ce_pe_symbl_1").hide();
+                $(".ce_pe_symbl_2").hide();
+                $("#ce_symbol_name").removeAttr('required');
+                $("#pe_symbol_name").removeAttr('required');
+
+        }
+    });
+</script>
+
 @endpush
 @endsection
 

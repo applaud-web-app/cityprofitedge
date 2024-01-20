@@ -25,6 +25,8 @@ use App\Models\Transaction;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Helpers\KiteConnectCls;
+use App\Models\OmsConfig;
+
 class UserController extends Controller
 {
     public function home()
@@ -759,23 +761,7 @@ class UserController extends Controller
         $pageTitle = 'OMS CONFIG';
         $data['pageTitle'] = $pageTitle;
        
-        // $numbertodivise = 23;
-        // $no = 2;
-
-        // $intnumber = intval($numbertodivise / $no);
-        // $rem = $numbertodivise % $no;
-        // $array = [];
-
-        // for($i=1;$i<=$no;$i++) {
-        //     if($i==$no) {
-        //         $array[] = $intnumber + $rem;
-        //     } else {
-        //         $array[] = $intnumber;
-        //     }
-        // }
-
-        // echo "<pre>";
-        // print_r($array);die;
+        
 
         
 
@@ -793,6 +779,8 @@ class UserController extends Controller
 
         $brokers = BrokerApi::select('client_name','id')->where('user_id',auth()->user()->id)->get();
         $data['brokers'] = $brokers;
+        $data['omsData'] = OmsConfig::where('user_id',auth()->user()->id)->with('broker:id,client_name')->paginate(50);
+        // dd($data['omsData']);
         return view($this->activeTemplate . 'user.oms-config',$data);
     }
 
@@ -804,7 +792,7 @@ class UserController extends Controller
         
         $atmData = [];
         foreach($data as $vvl){
-            if(isset($vvl->atm) && $vvl->atm=="ATM"){
+            if(isset($vvl->atm) && ($vvl->atm=="ATM" || $vvl->atm=="ATM-3" || $vvl->atm=="ATM+3")){
                 $atmData[] = $vvl;
             }
         }
@@ -825,6 +813,107 @@ class UserController extends Controller
 
         return response()->json(['s'=>1,'data'=>$fData]);
    
+    }
+
+    public function storeOmsConfig(Request $request){
+        $txnType = '';
+        switch($request->strategy_name){
+            case 'Short Straddle':
+                $txnType = 'SELL';
+            break;
+            case 'Long Straddle':
+                $txnType = 'BUY';
+            break;
+            case 'Buy CE':
+                $txnType = 'BUY';
+            break;
+            case 'Buy PE':
+                $txnType = 'BUY';
+            break;
+            case 'Sell CE':
+                $txnType = 'SELL';
+            break;
+            case 'Sell PE':
+                $txnType = 'SELL';
+            break;
+        }
+
+        $ce_pyramid_1 = null;
+        $ce_pyramid_2 = null;
+        $ce_pyramid_3 = null;
+        $pe_pyramid_1 = null;
+        $pe_pyramid_2 = null;
+        $pe_pyramid_3 = null;
+
+        if($request->order_type=="LIMIT"){
+            $ce_quantity = $request->ce_quantity > 0 ? $request->ce_quantity : 0;
+            $numbertodivise = $ce_quantity;
+            $no=1;
+            if($request->pyramid_percent==33){
+                $no = 3;
+            }elseif($request->pyramid_percent==50){
+                $no = 2;
+            }
+            $pData = calculatePyramids($numbertodivise,$no);
+            if($no==3){
+                $ce_pyramid_1 = $pData[0];
+                $ce_pyramid_2 = $pData[1];
+                $ce_pyramid_3 = $pData[2];
+            }
+            if($no==2){
+                $ce_pyramid_1 = $pData[0];
+                $ce_pyramid_2 = $pData[1];
+            }
+            if($no==1){
+                $ce_pyramid_1 = $pData[0];
+            }
+            //
+            $pe_quantity = $request->pe_quantity >0 ? $request->pe_quantity : 0;
+            $numbertodivise = $pe_quantity;
+            $pData = calculatePyramids($numbertodivise,$no);
+            if($no==3){
+                $pe_pyramid_1 = $pData[0];
+                $pe_pyramid_2 = $pData[1];
+                $pe_pyramid_3 = $pData[2];
+            }
+            if($no==2){
+                $pe_pyramid_1 = $pData[0];
+                $pe_pyramid_2 = $pData[1];
+            }
+            if($no==1){
+                $pe_pyramid_1 = $pData[0];
+            }
+        }
+
+        $omsObj = new OmsConfig();
+        $omsObj->symbol_name = $request->symbol_name;
+        $omsObj->signal_tf = $request->signal_tf;
+        $omsObj->ce_symbol_name = $request->ce_symbol_name;
+        $omsObj->pe_symbol_name = $request->pe_symbol_name;
+        $omsObj->broker_api_id = $request->client_name;
+        $omsObj->entry_point = $request->entry_point;
+        $omsObj->strategy_name = $request->strategy_name;
+        $omsObj->product = $request->product;
+        $omsObj->order_type = $request->order_type;
+        $omsObj->pyramid_percent = $request->pyramid_percent;
+        $omsObj->ce_pyramid_1 = $ce_pyramid_1;
+        $omsObj->ce_pyramid_2 = $ce_pyramid_2;
+        $omsObj->ce_pyramid_3 = $ce_pyramid_3;
+        $omsObj->pe_pyramid_1 = $pe_pyramid_1;
+        $omsObj->pe_pyramid_2 = $pe_pyramid_2;
+        $omsObj->pe_pyramid_3 = $pe_pyramid_3;
+        $omsObj->txn_type = $txnType;
+        $omsObj->ce_quantity = $request->ce_quantity;
+        $omsObj->pe_quantity = $request->pe_quantity;
+        $omsObj->pyramid_freq = $request->pyramid_freq;
+        $omsObj->exit_1_qty = $request->exit_1_qty;
+        $omsObj->exit_1_target = $request->exit_1_target;
+        $omsObj->exit_2_qty = $request->exit_2_qty;
+        $omsObj->exit_2_target = $request->exit_2_target;
+        $omsObj->user_id = auth()->user()->id;
+        $omsObj->save();
+        $notify[] = ['success', 'Data added Successfully...'];
+        return to_route('user.portfolio.oms-config')->withNotify($notify);
     }
     
 }

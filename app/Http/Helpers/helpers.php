@@ -489,3 +489,17 @@ function allTradeTimeFrames(){
 function strategyNames(){
     return ["Short Straddle","Long Straddle","Buy CE","Buy PE","Sell CE","Sell PE"];
 }
+
+function calculatePyramids($numbertodivise,$no){
+    $intnumber = intval($numbertodivise / $no);
+    $rem = $numbertodivise % $no;
+    $array = [];
+    for($i=1;$i<=$no;$i++) {
+        if($i==$no) {
+            $array[] = $intnumber + $rem;
+        } else {
+            $array[] = $intnumber;
+        }
+    }
+    return $array;
+}
