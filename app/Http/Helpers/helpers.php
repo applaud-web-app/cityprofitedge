@@ -485,3 +485,7 @@ function allTradeSymbols(){
 function allTradeTimeFrames(){
     return [1,3,5];
 }
+
+function strategyNames(){
+    return ["Short Straddle","Long Straddle","Buy CE","Buy PE","Sell CE","Sell PE"];
+}

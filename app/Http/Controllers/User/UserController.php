@@ -24,6 +24,7 @@ use App\Models\BrokerApi;
 use App\Models\Transaction;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Helpers\KiteConnectCls;
 class UserController extends Controller
 {
     public function home()
@@ -757,7 +758,73 @@ class UserController extends Controller
     public function omsConfig(){
         $pageTitle = 'OMS CONFIG';
         $data['pageTitle'] = $pageTitle;
+       
+        // $numbertodivise = 23;
+        // $no = 2;
+
+        // $intnumber = intval($numbertodivise / $no);
+        // $rem = $numbertodivise % $no;
+        // $array = [];
+
+        // for($i=1;$i<=$no;$i++) {
+        //     if($i==$no) {
+        //         $array[] = $intnumber + $rem;
+        //     } else {
+        //         $array[] = $intnumber;
+        //     }
+        // }
+
+        // echo "<pre>";
+        // print_r($array);die;
+
+        
+
+        // $params = [
+        //     'accountUserName'=>'BFF348',
+        //     'accountPassword'=>'venue@123',
+        //     'totpSecret'=>'4AMQ5W5EHKIRZ33Z6EVI7W4HUS3KKDB2',
+        //     'apiKey'=>'99n9vrxlgyxklpht',
+        //     'apiSecret'=>'adjl97sewgv1utfycl3ens7ks545hpcr'
+        // ];
+        // $kiteObj = new KiteConnectCls($params);
+        // $kite = $kiteObj->generateSession();
+        // echo "Positions: \n";
+        // print_r($kite->getPositions());die;
+
+        $brokers = BrokerApi::select('client_name','id')->where('user_id',auth()->user()->id)->get();
+        $data['brokers'] = $brokers;
         return view($this->activeTemplate . 'user.oms-config',$data);
+    }
+
+    public function getPeCeSymbolNames(Request $request){
+        $symbol = $request->symbol;
+        $signal = $request->signal;
+        $todayDate = date("Y-m-d");
+        $data = \DB::connection('mysql_rm')->table($symbol)->select('*')->where(['date'=>$todayDate,'timeframe'=>$signal])->get(); 
+        
+        $atmData = [];
+        foreach($data as $vvl){
+            if(isset($vvl->atm) && $vvl->atm=="ATM"){
+                $atmData[] = $vvl;
+            }
+        }
+
+        $fData = [];
+
+        foreach($atmData as $val){
+            $arrData = json_decode($val->data,true);   
+            $CE = array_slice($arrData['CE'],-5);
+            $PE = array_slice($arrData['PE'],-5);
+            foreach ($CE as $k=>$item){
+                $fData[] = [
+                    'ce'=>$item,
+                    'pe'=>$PE[$k]
+                ];
+            }
+        }
+
+        return response()->json(['s'=>1,'data'=>$fData]);
+   
     }
     
 }
