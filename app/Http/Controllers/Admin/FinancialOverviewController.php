@@ -22,11 +22,60 @@ class FinancialOverviewController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function allLedger()
+    public function allLedger(Request $request)
     {
         $pageTitle = 'All Ledger';
-        $ledgers = Ledger::with(['user', 'poolingAccountPortfolio'])->paginate(getPaginate());
-        return view('admin.financial.ledger.all', compact('pageTitle', 'ledgers'));
+        $ledgers = Ledger::with(['user', 'poolingAccountPortfolio']);
+
+        $clientId = 'all';
+        $stockName = 'all';
+        $buyDate = 'all';
+
+        if(!empty($request->client_id) && $request->client_id!='all'){
+            $ledgers->whereHas('user',function($q) use($request){
+                $q->where('user_code',$request->client_id);
+            });
+            $clientId = $request->client_id;
+        }
+        if(!empty($request->stock_name) && $request->stock_name!='all'){
+            $ledgers->where('stock_name',$request->stock_name);
+            $stockName = $request->stock_name;
+        }
+        if(!empty($request->buy_date) && $request->buy_date!='all'){
+            $ledgers->where('bought_date',$request->buy_date);
+            $buyDate = $request->buy_date;
+        }
+        
+        $ledgers = $ledgers->paginate(getPaginate());
+        return view('admin.financial.ledger.all', compact('pageTitle', 'ledgers','buyDate','clientId','stockName'));
+
+    }
+
+    public function getLedger(Request $request){
+        $term = $request->term;
+        $data = [];
+        if(!empty($term)){
+            $data = Ledger::select('id','stock_name')->where('stock_name','like','%'.$term.'%')->limit(10)->groupBy('stock_name')->get();
+        }
+        return response()->json($data);
+    }
+
+    public function getLedgerSearchClientId(Request $request){
+        $term = $request->term;
+        $data = [];
+        if(!empty($term)){
+            $data = User::select('id','user_code')->where('user_code','like','%'.$term.'%')->limit(10)->get();
+        }
+        return response()->json($data);
+    }
+
+    public function removeLedger(Request $request){
+        $data = $request->data;
+        if(!empty($data)){
+            Ledger::whereIn('id',$data)->delete();
+        }        
+        $notify[] = ['success', 'Ledger deleted successfully'];
+        return back()->withNotify($notify);
     }
 
     /**

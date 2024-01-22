@@ -117,8 +117,11 @@ Route::middleware('admin')->group(function () {
 
             Route::get('download', 'templateThematicPortfolioDownload')->name('download.template');
             Route::post('upload', 'uploadThematicPortfolios')->name('upload');
-
             Route::post('delete', 'deleteThematicPortfolio')->name('delete');
+            // New
+            Route::get('get-search-client-id', 'getThematicPortfoliosSearchClientId')->name('get-search-client-id');
+            Route::get('get-stock-name', 'getThematicPortfolios')->name('get-stock-name');
+            Route::post('remove-stock-portfolio', 'removeThematicPortfolios')->name('remove-stock-portfolio');
         });
 
         // global-stock portfolio
@@ -176,11 +179,13 @@ Route::middleware('admin')->group(function () {
             Route::get('/', 'allTopGainers')->name('all');
             Route::get('add', 'addTopGainers')->name('add.page');
             Route::post('add', 'addSubmitTopGainers')->name('add.submit');
-
             Route::get('download', 'templateTopGainersDownload')->name('download.template');
             Route::post('upload', 'uploadTopGainers')->name('upload');
-
             Route::post('delete', 'deleteTopGainer')->name('delete');
+
+            Route::get('get-stock-name', 'getTopGainers')->name('get-stock-name');
+            Route::post('remove-stock-portfolio', 'removeTopGainers')->name('remove-stock-portfolio');
+
         });
 
         // Portfolio Top Losers
@@ -193,6 +198,8 @@ Route::middleware('admin')->group(function () {
             Route::post('upload', 'uploadTopLosers')->name('upload');
 
             Route::post('delete', 'deleteTopLoser')->name('delete');
+            Route::get('get-stock-name', 'getTopLosers')->name('get-stock-name');
+            Route::post('remove-stock-portfolio', 'removeTopLosers')->name('remove-stock-portfolio');
         });
     });
 
@@ -204,8 +211,11 @@ Route::middleware('admin')->group(function () {
 
             Route::get('download', 'templateLedgerDownload')->name('download.template');
             Route::post('upload', 'uploadLedger')->name('upload');
-
             Route::post('delete', 'deleteLedger')->name('delete');
+
+            Route::get('get-search-client-id', 'getLedgerSearchClientId')->name('get-search-client-id');
+            Route::get('get-stock-name', 'getLedger')->name('get-stock-name');
+            Route::post('remove-stock-portfolio', 'removeLedger')->name('remove-stock-portfolio');
         });
 
         // Stock Portfolio
@@ -229,8 +239,10 @@ Route::middleware('admin')->group(function () {
         Route::get('download', 'templateTransactionDownload')->name('download.template');
         // upload transaction template
         Route::post('upload', 'uploadTransaction')->name('upload');
-
         Route::post('delete', 'deleteTransaction')->name('delete');
+
+        Route::get('get-stock-name', 'getTransactions')->name('get-stock-name');
+        Route::post('remove-stock-portfolio', 'removeTransactions')->name('remove-stock-portfolio');
     });
 
     // Subscriber

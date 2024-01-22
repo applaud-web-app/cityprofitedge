@@ -19,11 +19,38 @@ class PortfolioInsightsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function allTopGainers()
+    public function allTopGainers(Request $request)
     {
         $pageTitle = 'All Portfolio Top Gainers';
-        $portfolioTopGainers = PortfolioTopGainer::paginate(getPaginate());
-        return view('admin.insights.top_gainer.all', compact('pageTitle', 'portfolioTopGainers'));
+        $portfolioTopGainers = PortfolioTopGainer::orderBy('id','ASC');
+        $stockName = 'all';
+
+        if(!empty($request->stock_name) && $request->stock_name!='all'){
+            $portfolioTopGainers->where('stock_name',$request->stock_name);
+            $stockName = $request->stock_name;
+        }
+        
+        $portfolioTopGainers = $portfolioTopGainers->paginate(getPaginate());
+        return view('admin.insights.top_gainer.all', compact('pageTitle', 'portfolioTopGainers','stockName'));
+
+    }
+
+    public function getTopGainers(Request $request){
+        $term = $request->term;
+        $data = [];
+        if(!empty($term)){
+            $data = PortfolioTopGainer::select('id','stock_name')->where('stock_name','like','%'.$term.'%')->limit(10)->groupBy('stock_name')->get();
+        }
+        return response()->json($data);
+    }
+
+    public function removeTopGainers(Request $request){
+        $data = $request->data;
+        if(!empty($data)){
+            PortfolioTopGainer::whereIn('id',$data)->delete();
+        }        
+        $notify[] = ['success', 'Portfolio Top Gainers deleted successfully'];
+        return back()->withNotify($notify);
     }
 
     /**
@@ -107,13 +134,42 @@ class PortfolioInsightsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function allTopLosers()
+    public function allTopLosers(Request $request)
     {
         $pageTitle = 'All Portfolio Top Losers';
-        $portfolioTopLosers = PortfolioTopLoser::paginate(getPaginate());
-        return view('admin.insights.top_loser.all', compact('pageTitle', 'portfolioTopLosers'));
+        $portfolioTopLosers = PortfolioTopLoser::orderBy('id','ASC');
+        $stockName = 'all';
+
+        if(!empty($request->stock_name) && $request->stock_name!='all'){
+            $portfolioTopLosers->where('stock_name',$request->stock_name);
+            $stockName = $request->stock_name;
+        }
+        
+        $portfolioTopLosers = $portfolioTopLosers->paginate(getPaginate());
+        return view('admin.insights.top_loser.all', compact('pageTitle', 'portfolioTopLosers','stockName'));
+
+
     }
 
+    public function getTopLosers(Request $request){
+        $term = $request->term;
+        $data = [];
+        if(!empty($term)){
+            $data = PortfolioTopLoser::select('id','stock_name')->where('stock_name','like','%'.$term.'%')->limit(10)->groupBy('stock_name')->get();
+        }
+        return response()->json($data);
+    }
+
+    public function removeTopLosers(Request $request){
+        $data = $request->data;
+        if(!empty($data)){
+            PortfolioTopLoser::whereIn('id',$data)->delete();
+        }        
+        $notify[] = ['success', 'Portfolio Top Losers deleted successfully'];
+        return back()->withNotify($notify);
+    }
+
+    
     /**
      * Show the form for creating a new resource.
      *

@@ -16,11 +16,37 @@ class TransactionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function allTransactions()
+    public function allTransactions(Request $request)
     {
         $pageTitle = 'All Transactions';
-        $transactions = Transaction::with(['user', 'poolingAccountPortfolio'])->paginate(getPaginate());
-        return view('admin.transaction.all', compact('pageTitle', 'transactions'));
+        $transactions = Transaction::with(['user', 'poolingAccountPortfolio']);
+
+        $stockName = 'all';
+        if(!empty($request->stock_name) && $request->stock_name!='all'){
+            $transactions->where('stock_name',$request->stock_name);
+            $stockName = $request->stock_name;
+        }
+        $transactions = $transactions->paginate(getPaginate());
+        return view('admin.transaction.all', compact('pageTitle', 'transactions','stockName'));
+
+    }
+
+    public function getTransactions(Request $request){
+        $term = $request->term;
+        $data = [];
+        if(!empty($term)){
+            $data = Transaction::select('id','stock_name')->where('stock_name','like','%'.$term.'%')->limit(10)->groupBy('stock_name')->get();
+        }
+        return response()->json($data);
+    }
+
+    public function removeTransactions(Request $request){
+        $data = $request->data;
+        if(!empty($data)){
+            Transaction::whereIn('id',$data)->delete();
+        }        
+        $notify[] = ['success', 'Transactions deleted successfully'];
+        return back()->withNotify($notify);
     }
 
     /**

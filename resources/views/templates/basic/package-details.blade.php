@@ -129,11 +129,11 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header"> 
-                    <h5 class="modal-title method-name">@lang('Please login before buy a product')</h5>
+                    <h5 class="modal-title method-name">@lang('Kindly login before proceeding with the request callback')</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p class="mb-3">@lang('To purchase a package, you have to login into your account')</p>
+                    <p class="mb-3">@lang('To enquire about product, please ensure you are logged into your account')</p>
                     <div class="form-group">
                         <a href="{{ route('user.login') }}" class="btn btn-sm btn--success w-100">@lang('Login')</a>
                     </div>

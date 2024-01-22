@@ -26,11 +26,53 @@ class InvestmentOverviewController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function allThematicPortfolios()
+    public function allThematicPortfolios(Request $request)
     {
         $pageTitle = 'All Thematic Portfolios';
-        $thematicPortfolios = ThematicPortfolio::paginate(getPaginate());
-        return view('admin.investments.thematic.all', compact('pageTitle', 'thematicPortfolios'));
+        $thematicPortfolios = ThematicPortfolio::orderBy('id','ASC');
+
+        $clientId = 'all';
+        $stockName = 'all';
+
+        if(!empty($request->client_id) && $request->client_id!='all'){
+            $thematicPortfolios->where('sector',$request->client_id);
+            $clientId = $request->client_id;
+        }
+        if(!empty($request->stock_name) && $request->stock_name!='all'){
+            $thematicPortfolios->where('stock_name',$request->stock_name);
+            $stockName = $request->stock_name;
+        }
+        
+        $thematicPortfolios = $thematicPortfolios->paginate(getPaginate());
+        return view('admin.investments.thematic.all', compact('pageTitle', 'thematicPortfolios','clientId','stockName'));
+
+    }
+
+    public function getThematicPortfolios(Request $request){
+        $term = $request->term;
+        $data = [];
+        if(!empty($term)){
+            $data = ThematicPortfolio::select('id','stock_name')->where('stock_name','like','%'.$term.'%')->limit(10)->groupBy('stock_name')->get();
+        }
+        return response()->json($data);
+    }
+
+    public function getThematicPortfoliosSearchClientId(Request $request){
+        $term = $request->term;
+        $data = [];
+        if(!empty($term)){
+            $data = ThematicPortfolio::select('id','sector')->where('sector','like','%'.$term.'%')->limit(10)->limit(10)->groupBy('sector')->get();
+        }
+        return response()->json($data);
+    }
+
+    public function removeThematicPortfolios(Request $request){
+        $data = $request->data;
+        if(!empty($data)){
+            ThematicPortfolio::whereIn('id',$data)->delete();
+        }        
+        $notify[] = ['success', 'Thematic Portfolios deleted successfully'];
+        return back()->withNotify($notify);
     }
 
     /**
