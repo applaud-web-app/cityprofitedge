@@ -2,6 +2,12 @@
 @section('content')
 @push('style')
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+<style>
+    .ch-container{
+        width: 100%;
+    }
+</style>
 @endpush
 
 <section class="pt-100 pb-100">
@@ -61,6 +67,7 @@
         </form>
         <div class="row">
             <div class="col-lg-12">
+                <div id="ex-wind" class="mb-3" style="width: 100%;"></div>
                 <div class="custom--card">
                     <div class="card-body p-0">
                         <div class="table-responsive--md">
@@ -119,6 +126,18 @@
 @push('script')
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<!-- v6 is also supported -->
+<script src="https://d3js.org/d3.v6.min.js"></script>
+<script src="https://unpkg.com/cal-heatmap/dist/cal-heatmap.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/cal-heatmap/dist/cal-heatmap.css">
+<script src="https://unpkg.com/@popperjs/core@2"></script>
+<script src="https://unpkg.com/cal-heatmap/dist/plugins/Tooltip.min.js"></script>
+<script src="https://unpkg.com/cal-heatmap/dist/plugins/Legend.min.js"></script>
+<script src="https://unpkg.com/cal-heatmap/dist/plugins/CalendarLabel.min.js"></script>
+
+
 <script>
     $("#dates_range").daterangepicker({
         autoUpdateInput: false,
@@ -128,6 +147,70 @@
         picker.element.val(picker.startDate.format('YYYY-MM-DD') + "/" + picker.endDate.format('YYYY-MM-DD'));
     });
 </script>
+
+<script type="text/javascript">
+    const cal = new CalHeatmap();
+  cal.paint(
+    {
+      data: {
+        source: '../fixtures/seattle-weather.csv',
+        type: 'csv',
+        x: 'date',
+        y: d => +d['wind'],
+        groupY: 'max',
+      },
+      date: { start: new Date('2012-01-01') },
+      range: 12,
+      scale: {
+        color: {
+          type: 'quantize',
+          scheme: 'Oranges',
+          domain: [0, 1, 2, 3, 4, 5, 6, 7,8,9,10,11],
+        },
+      },
+      domain: {
+        type: 'month',
+      },
+      subDomain: { type: 'day', radius: 2 },
+      itemSelector: '#ex-wind',
+    },
+    [
+      [
+        Tooltip,
+        {
+          text: function (date, value, dayjsDate) {
+            return (
+              (value ? value + 'km/h' : 'No data') +
+              ' on ' +
+              dayjsDate.format('LL')
+            );
+          },
+        },
+      ],
+      [
+        Legend,
+        {
+          tickSize: 0,
+          width: '100%',
+          itemSelector: '#ex-wind-legend',
+          label: 'Seattle wind (km/h)',
+        },
+      ],
+    ]
+  );
+  render(
+  );
+      </script>
+      <script>
+          function next(e){
+              e.preventDefault();
+              cal.next();
+          }
+          function prev(e){
+              e.preventDefault();
+              cal.previous();
+          }
+      </script>
 @endpush
 
 @endsection
