@@ -52,6 +52,7 @@ Route::middleware('auth')->name('user.')->group(function () {
                 Route::post('renew/package', 'renewPackage')->name('renew.package');
                 Route::get('signals', 'signals')->name('signals');
                 Route::get('referrals', 'referrals')->name('referrals');
+                Route::get('option-analysis', 'OptionAnalysis')->name('referrals');
 
                 //2FA
                 Route::get('twofactor', 'show2faForm')->name('twofactor');

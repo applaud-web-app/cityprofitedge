@@ -930,5 +930,9 @@ class UserController extends Controller
         $notify[] = ['success', 'Data removed Successfully...'];
         return to_route('user.portfolio.oms-config')->withNotify($notify);
     }
+
+    public function OptionAnalysis(){
+        return view($this->activeTemplate . 'user.option-analysis',$data,compact('combinedArray','allData'));
+    }
     
 }
