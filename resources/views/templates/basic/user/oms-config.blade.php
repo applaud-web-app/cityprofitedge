@@ -67,7 +67,13 @@
                                             <td>{{$item->exit_2_qty}}</td>
                                             <td>{{$item->exit_1_target}}</td>
                                             <td>{{$item->exit_2_target}}</td>
-                                            <td>-</td>
+                                            <td>
+                                                <div>
+                                                    {{-- <a href="javascript:void(0)" class="btn btn-sm btn-secondary me-2 edit_details" data-id="{{$item->id}}"><i class="las la-pencil-alt"></i></a> --}}
+                                                    <a href="#" class="btn btn-sm btn-danger remove_details" data-id="{{$item->id}}"><i class="las la-trash-alt"></i></a>
+                                                    
+                                                </div>
+                                            </td>
                                         </tr>
                                     @empty
                                         <tr>
@@ -204,8 +210,8 @@
                     </div>
 
                     <div class="col-lg-6 form-group">
-                        <label for="pyramid_freq" class="required">Pyramid Freq.<sup class="text--danger">*</sup></label>
-                        <input type="text" name="pyramid_freq" id="pyramid_freq" class="form--control">
+                        <label for="pyramid_freq" class="required">Pyramid Freq. (In Minutes)<sup class="text--danger">*</sup></label>
+                        <input type="number" name="pyramid_freq" id="pyramid_freq" class="form--control">
                     </div>
 
                     <div class="col-lg-6 form-group">
@@ -237,6 +243,22 @@
     </div>
 </div>
 
+<div class="modal fade" id="editClientModal" tabindex="-1" aria-labelledby="editclientModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content" id="editClientModalBody">
+        <h4 class="text-center my-5">Loading data...</h4>
+      </div>
+    </div>
+</div>
+
+<div class="modal fade" id="removeClientModal" tabindex="-1" aria-labelledby="removeclientModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+      <div class="modal-content" id="removeClientModalBody">
+       
+      </div>
+    </div>
+</div>
+
 @push('script')
 <script>
     $("#order_type").on('click',function(){
@@ -264,7 +286,7 @@
                     var dataA = data.data;
                     for(var i in dataA){
                         cestr+=`<option value="${dataA[i].ce}">${dataA[i].ce}</option>`;
-                        pestr+=`<option value="${dataA[i].pe}">${dataA[i].ce}</option>`;
+                        pestr+=`<option value="${dataA[i].pe}">${dataA[i].pe}</option>`;
                     }
                 }
                 $("#ce_symbol_name").html(cestr);
@@ -324,6 +346,44 @@
 
         }
     });
+</script>
+
+<script>
+    $(".edit_details").on('click',function(){
+        var id = $(this).data('id');
+        $("#editClientModal").modal('show');
+        $("#editClientModalBody").html(`<h4 class="text-center my-5">Loading data...</h4>`);
+        $.post('{{url("user/get-omg-config-data")}}',{'id':id,'_token':'{{csrf_token()}}'},function(data){
+            $("#editClientModalBody").html(data);
+        });
+    })
+</script>
+
+<script>
+    $(".remove_details").on('click',function(){
+        var id = $(this).data('id');
+        $("#removeClientModal").modal('show');
+        $("#removeClientModalBody").html(`
+        <form action="{{route('user.portfolio.remove-oms-config')}}" class="transparent-form" method="post">
+            @csrf
+            <div class="modal-header">
+            <h5 class="modal-title" id="clientModalLabel">Remove</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h5 class="text-center">Are you sure you want to remove this data</h5>   
+                        <input type="hidden" value="${id}" name="id"> 
+                    </div>             
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-md btn--base">Remove</button>
+            </div>
+        </form>
+        `);
+    })
 </script>
 
 @endpush

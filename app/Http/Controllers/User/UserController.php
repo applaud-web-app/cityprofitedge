@@ -787,7 +787,8 @@ class UserController extends Controller
     public function getPeCeSymbolNames(Request $request){
         $symbol = $request->symbol;
         $signal = $request->signal;
-        $todayDate = date("Y-m-d");
+        // $todayDate = date("Y-m-d");
+        $todayDate = date("2024-01-20");
         $data = \DB::connection('mysql_rm')->table($symbol)->select('*')->where(['date'=>$todayDate,'timeframe'=>$signal])->get(); 
         
         $atmData = [];
@@ -801,8 +802,8 @@ class UserController extends Controller
 
         foreach($atmData as $val){
             $arrData = json_decode($val->data,true);   
-            $CE = array_slice($arrData['CE'],-5);
-            $PE = array_slice($arrData['PE'],-5);
+            $CE = $arrData['CE'];
+            $PE = $arrData['PE'];
             foreach ($CE as $k=>$item){
                 $fData[] = [
                     'ce'=>$item,
@@ -913,6 +914,20 @@ class UserController extends Controller
         $omsObj->user_id = auth()->user()->id;
         $omsObj->save();
         $notify[] = ['success', 'Data added Successfully...'];
+        return to_route('user.portfolio.oms-config')->withNotify($notify);
+    }
+
+    public function getOmgConfigData(Request $request){
+        $id = $request->id;
+        $brokers = BrokerApi::select('client_name','id')->where('user_id',auth()->user()->id)->get();
+        $data['brokers'] = $brokers;
+        return view($this->activeTemplate . 'user.get-omg-config-data',$data);
+    }
+
+    public function removeOmsConfig(Request $request){
+        $id = $request->id;
+        OmsConfig::where(['id'=>$id,'user_id'=>auth()->user()->id])->delete();
+        $notify[] = ['success', 'Data removed Successfully...'];
         return to_route('user.portfolio.oms-config')->withNotify($notify);
     }
     
