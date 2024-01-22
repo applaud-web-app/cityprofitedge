@@ -76,6 +76,7 @@
                                 <li><a href="{{ route('user.transactions') }}">@lang('Stock Transactions')</a></li>
                                 <li><a href="{{ route('user.trade-book') }}">@lang('Trade Book')</a></li>
                                 <li><a href="{{ route('user.pl-reports') }}">@lang('PL Reports')</a></li>
+                                <li><a href="{{ route('user.option-analysis') }}">@lang('Option Analysis')</a></li>
                                 <li><a href="{{ route('user.logout') }}">@lang('Logout')</a></li>
                             </ul>
                         </li>

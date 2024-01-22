@@ -932,7 +932,8 @@ class UserController extends Controller
     }
 
     public function OptionAnalysis(){
-        return view($this->activeTemplate . 'user.option-analysis',$data,compact('combinedArray','allData'));
+        $pageTitle = 'Option Analysis';
+        return view($this->activeTemplate . 'user.option-analysis', compact('pageTitle'));
     }
     
 }
