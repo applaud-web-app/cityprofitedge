@@ -67,7 +67,7 @@
         </form>
         <div class="row">
             <div class="col-lg-12">
-                <div id="ex-wind" class="mb-3" style="width: 100%;"></div>
+                <div id="ex-wind"  style="width: 100%;"></div>
                 <div class="custom--card">
                     <div class="card-body p-0">
                         <div class="table-responsive--md">
