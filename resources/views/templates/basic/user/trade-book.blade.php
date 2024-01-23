@@ -22,7 +22,6 @@
     display: block;
     height: 14px;
 }
-
 .ch-year{
     display: flex;
     flex-wrap: wrap;
