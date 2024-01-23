@@ -304,9 +304,7 @@ function diffForHumans($date)
 
 function showDateTime($date, $format = 'd-m-Y h:i A')
 {
-    if($date == null || $date=='0000-00-00'){
-        return '-';
-    }
+    
     $lang = session()->get('lang');
     Carbon::setlocale($lang);
     return Carbon::parse($date)->translatedFormat($format);
@@ -314,6 +312,9 @@ function showDateTime($date, $format = 'd-m-Y h:i A')
 
 function showDate($date, $format = 'd-m-Y')
 {
+    if($date == null || $date=='0000-00-00'){
+        return '-';
+    }
     $lang = session()->get('lang');
     Carbon::setlocale($lang);
     return Carbon::parse($date)->translatedFormat($format);
