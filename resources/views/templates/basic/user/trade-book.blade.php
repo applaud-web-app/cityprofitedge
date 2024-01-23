@@ -104,9 +104,14 @@
         </form>
         <div class="row">
             <div class="col-lg-12">
-                <div class="row my-2">
+                <div class="row">
                     <div class="col-lg-12">
-                        <div id="heatmap-1"></div>
+                        <div class="custom--card mb-3">
+                            <div class="card-body">
+                                <div id="heatmap-1"></div>
+                            </div>
+                        </div>
+                       
                     </div>
                 </div>
                 <div class="custom--card">
