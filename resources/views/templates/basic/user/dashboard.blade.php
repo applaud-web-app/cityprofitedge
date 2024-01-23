@@ -534,8 +534,11 @@
         chart: {
              width: '100%',
             height: 360,
-            type: 'area'
-            
+            type: 'area',
+            toolbar: {
+        show: false,
+       
+    }
         },
         dataLabels: {
             enabled: false
@@ -563,6 +566,8 @@
             }
         },
         tooltip: {
+            enabled: true,
+            theme: 'dark',
             x: {
                 format: 'MM yyyy',
                 style: {
