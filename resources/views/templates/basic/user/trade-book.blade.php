@@ -22,9 +22,7 @@
     display: block;
     height: 14px;
 }
-.ch-day{
-    min-width: 40px;
-}
+
 .ch-year{
     display: flex;
     flex-wrap: wrap;
