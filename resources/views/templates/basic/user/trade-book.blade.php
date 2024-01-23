@@ -22,6 +22,9 @@
     display: block;
     height: 14px;
 }
+.ch-day{
+    min-width: 40px;
+}
 .ch-year{
     display: flex;
     flex-wrap: wrap;
@@ -135,7 +138,7 @@
                                             @foreach ($Ledger as $item)
                                             <tr>
                                                 <td>{{$item['stock_name']}}</td>
-                                                <td>{{showDate($item['buy_date'])}}</td>
+                                                <td>{{showDate($item['bought_date'])}}</td>
                                                 <td>{{$item['buy_price']}}</td>
                                                 <td>{{$item['quantity']}}</td>
                                                 <td> @if (isset($item['sold_date']))
