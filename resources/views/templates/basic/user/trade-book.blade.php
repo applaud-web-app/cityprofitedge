@@ -8,6 +8,9 @@
         width: 100%;
     }
 </style>
+
+{{-- Chart Js --}}
+<link rel="stylesheet" type="text/css" href="{{asset('/assets/templates/basic/js/jquery.CalendarHeatmap.min.css')}}">
 @endpush
 
 <section class="pt-100 pb-100">
@@ -67,7 +70,11 @@
         </form>
         <div class="row">
             <div class="col-lg-12">
-                <div id="ex-wind"  style="width: 100%;"></div>
+                <div class="row my-4">
+                    <div class="col">
+                        <div id="heatmap-1"></div>
+                    </div>
+                </div>
                 <div class="custom--card">
                     <div class="card-body p-0">
                         <div class="table-responsive--md">
@@ -127,15 +134,6 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 
-<script src="https://d3js.org/d3.v7.min.js"></script>
-<!-- v6 is also supported -->
-<script src="https://d3js.org/d3.v6.min.js"></script>
-<script src="https://unpkg.com/cal-heatmap/dist/cal-heatmap.min.js"></script>
-<link rel="stylesheet" href="https://unpkg.com/cal-heatmap/dist/cal-heatmap.css">
-<script src="https://unpkg.com/@popperjs/core@2"></script>
-<script src="https://unpkg.com/cal-heatmap/dist/plugins/Tooltip.min.js"></script>
-<script src="https://unpkg.com/cal-heatmap/dist/plugins/Legend.min.js"></script>
-<script src="https://unpkg.com/cal-heatmap/dist/plugins/CalendarLabel.min.js"></script>
 
 
 <script>
@@ -148,71 +146,30 @@
     });
 </script>
 
-<script type="text/javascript">
-    const cal = new CalHeatmap();
-  cal.paint(
-    {
-      data: {
-        source: '../fixtures/seattle-weather.csv',
-        type: 'csv',
-        x: 'date',
-        y: d => +d['wind'],
-        groupY: 'max',
-      },
-      date: { start: new Date('2012-01-01') },
-      range: 12,
-      scale: {
-        color: {
-          type: 'quantize',
-          scheme: 'Oranges',
-          domain: [0, 1, 2, 3, 4, 5, 6, 7,8,9,10,11],
-        },
-      },
-      domain: {
-        type: 'month',
-      },
-      subDomain: { type: 'day', radius: 2 },
-      itemSelector: '#ex-wind',
-    },
-    [
-      [
-        Tooltip,
-        {
-          text: function (date, value, dayjsDate) {
-            return (
-              (value ? value + 'km/h' : 'No data') +
-              ' on ' +
-              dayjsDate.format('LL')
-            );
-          },
-        },
-      ],
-      [
-        Legend,
-        {
-          tickSize: 0,
-          width: '100%',
-          itemSelector: '#ex-wind-legend',
-          label: 'Seattle wind (km/h)',
-        },
-      ],
-    ]
-  );
-  render(
-  );
-      </script>
-      <script>
-          function next(e){
-              e.preventDefault();
-              cal.next();
-          }
-          function prev(e){
-              e.preventDefault();
-              cal.previous();
-          }
-      </script>
+
 @endpush
 
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment-with-locales.min.js"></script>
+<script src="{{asset('/assets/templates/basic/js/jquery.CalendarHeatmap.js')}}"></script>
+
+<script>
+    var data = {!! $datas !!};
+
+$("#heatmap-1").CalendarHeatmap(data, {
+    title: null,
+    labels: {
+        days:true,
+        months:true,
+    },
+    tooltips: {
+        show:true,
+        options: {}
+    }
+
+});
+</script>
 @endsection
 
 

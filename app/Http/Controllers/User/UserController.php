@@ -603,7 +603,12 @@ class UserController extends Controller
 
         $stock = Ledger::select('stock_name')->where('user_id',auth()->user()->id)->get();
 
-        return view($this->activeTemplate . 'user.trade-book',$data,compact('Ledger','stock'));
+
+        $currentYear = date('Y');
+        $datas = Ledger::select('bought_date as date', \DB::raw('COUNT(*) as count'))->where('user_id',auth()->user()->id)->whereYear('bought_date', $currentYear)->groupBy('bought_date')->orderBy('bought_date')->get();
+
+
+        return view($this->activeTemplate . 'user.trade-book',$data,compact('Ledger','stock','datas'));
     }
 
     public function getStockName(){
@@ -760,11 +765,6 @@ class UserController extends Controller
     public function omsConfig(){
         $pageTitle = 'OMS CONFIG';
         $data['pageTitle'] = $pageTitle;
-       
-        
-
-        
-
         // $params = [
         //     'accountUserName'=>'BFF348',
         //     'accountPassword'=>'venue@123',
@@ -934,6 +934,10 @@ class UserController extends Controller
     public function OptionAnalysis(){
         $pageTitle = 'Option Analysis';
         return view($this->activeTemplate . 'user.option-analysis', compact('pageTitle'));
+    }
+
+    public function fetchTradeRecord(Request $request){
+      
     }
     
 }
