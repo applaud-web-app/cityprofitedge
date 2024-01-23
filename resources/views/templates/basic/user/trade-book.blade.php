@@ -25,7 +25,7 @@
 .ch-year{
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: space-evenly;
     width: 100%;
     gap: 5px;
     
