@@ -607,7 +607,7 @@ class UserController extends Controller
         $currentYear = date('Y');
         $datas = Ledger::select('bought_date as date', \DB::raw('COUNT(*) as count'))->where('user_id',auth()->user()->id)->whereYear('bought_date', $currentYear)->groupBy('bought_date')->orderBy('bought_date')->get();
 
-
+        // dd($datas);
         return view($this->activeTemplate . 'user.trade-book',$data,compact('Ledger','stock','datas'));
     }
 
