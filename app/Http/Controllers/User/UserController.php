@@ -512,8 +512,9 @@ class UserController extends Controller
         $portfolioTopGainers = [];
         $symbolArr = allTradeSymbols();
         $todayDate = date("Y-m-d");
-        $timeFrame = $request->time_frame ?: 5;
-        return view($this->activeTemplate . 'user.portfolio_top_gainers', compact('pageTitle', 'portfolioTopGainers','symbolArr','todayDate','timeFrame'));
+        $stockName = $request->stock_name;
+        $timeFrame = $request->time_frame ? : 5;
+        return view($this->activeTemplate . 'user.portfolio_top_gainers', compact('pageTitle', 'portfolioTopGainers','symbolArr','todayDate','timeFrame','stockName'));
     }
 
     public function brokerDetails(){
