@@ -4,9 +4,42 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 
 <style>
-    .ch-container{
+    #heatmap-1{
         width: 100%;
     }
+    .ch-month, .ch-week-labels {
+   
+    margin: 0px 5px !important;
+}
+.ch-day-labels {
+    
+    width: 20px !important;
+    text-align: left;
+}
+.ch-day-label {
+    text-align: left!important;
+    font-size: 12px !important;
+    display: block;
+    height: 14px;
+}
+.ch-year{
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 5px;
+    
+}
+.ch-month-label {
+    text-align: left !important;
+    
+}
+
+.ch-day {
+    
+    width: 12px !important;
+    height: 12px!important;
+   
+}
 </style>
 
 {{-- Chart Js --}}
@@ -70,8 +103,8 @@
         </form>
         <div class="row">
             <div class="col-lg-12">
-                <div class="row my-4">
-                    <div class="col">
+                <div class="row my-2">
+                    <div class="col-lg-12">
                         <div id="heatmap-1"></div>
                     </div>
                 </div>
@@ -159,6 +192,7 @@
 
 $("#heatmap-1").CalendarHeatmap(data, {
     title: null,
+    
     labels: {
         days:true,
         months:true,

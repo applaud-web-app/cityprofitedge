@@ -515,7 +515,7 @@
                             $( "<div/>", {
                                 "class": "ch-day lvl-" + obj.level + color,
                                 "title": title,
-                                "data-toggle": "tooltip"
+                                "data-bs-toggle": "tooltip"
                             } ).appendTo(
                                 $( ".ch-month:last .ch-weeks .ch-week:last", this.element )
                             );
@@ -579,7 +579,7 @@
                         $( "<li>", {
                             "class": "ch-lvl lvl-" + i,
                             "title": binLabels[ i ],
-                            "data-toggle": "tooltip"
+                            "data-bs-toggle": "tooltip"
                         } )
                         .appendTo( $( ".ch-lvls", this.element ) );
                         if ( this.settings.coloring ) {
