@@ -40,7 +40,7 @@
                         if(change > 0){
                             str+=`<div class="col-lg-4 col-md-4 col-4"><p >${data[i].tradingSymbol} <span class="text-light">${latestPrice} <em class="text-success">+${change.toFixed(2)} (${data[i].percentChange}%)</em></span></p></div>`;
                         }else{
-                            str+=`<div class="col-lg-4 col-md-4 col-4"><p >${data[i].tradingSymbol} <span class="text-light ">${latestPrice} <em class="text-danger">-${change} (${data[i].percentChange}%)</em></span></p></div>`;
+                            str+=`<div class="col-lg-4 col-md-4 col-4"><p >${data[i].tradingSymbol} <span class="text-light ">${latestPrice} <em class="text-danger">-$${change.toFixed(2)} (${data[i].percentChange}%)</em></span></p></div>`;
                         }
 
                         // str+=`<div class="col-lg-4 col-md-4 col-4"><p >${data[i].tradingSymbol} <span class="text--base">${latestPrice}</span></p></div>`;
