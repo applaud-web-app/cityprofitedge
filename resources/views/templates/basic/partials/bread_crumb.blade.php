@@ -23,7 +23,7 @@
 <!-- inner hero section end -->
 
 <section class="nifty--section" id="nifty-section">
-    
+   
 </section>
 
 @push('script')
@@ -34,9 +34,16 @@
                 var str = `<div class="container-fluid">
                     <div class="row g-1">`;
                     for(var i in data){
-                        str+=`
-                        <div class="col-lg-4 col-md-4 col-4"><p >${data[i].tradingSymbol} <span class="text--base">${data[i].ltp}</span></p></div>
-                        `;
+                        var closePrice = data[i].close;
+                        var latestPrice = data[i].ltp;
+                        var change = latestPrice - closePrice;
+                        if(change > 0){
+                            str+=`<div class="col-lg-4 col-md-4 col-4"><p >${data[i].tradingSymbol} <span class="text-light">${latestPrice} <em class="text-success">+${change.toFixed(2)} (${data[i].percentChange}%)</em></span></p></div>`;
+                        }else{
+                            str+=`<div class="col-lg-4 col-md-4 col-4"><p >${data[i].tradingSymbol} <span class="text-light ">${latestPrice} <em class="text-danger">-${change} (${data[i].percentChange}%)</em></span></p></div>`;
+                        }
+
+                        // str+=`<div class="col-lg-4 col-md-4 col-4"><p >${data[i].tradingSymbol} <span class="text--base">${latestPrice}</span></p></div>`;
                     }
                     str+=`</div></div>`;
                     $("#nifty-section").html(str);
@@ -51,8 +58,6 @@
             fetchMarketData();
         }, 10 * 1000);
         
-
-
     });
 </script>
 @endpush

@@ -84,7 +84,7 @@ trait AngelApiAuth
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'POST',
             CURLOPT_POSTFIELDS =>'{
-            "mode": "LTP",
+            "mode": "FULL",
             "exchangeTokens": {
             "NSE": ["99926000","99926009","99926037"]
             }

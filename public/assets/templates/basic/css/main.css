@@ -5318,7 +5318,6 @@ body:not(.lightmode) .maintenance-page-color p {
     color: white !important;
 }
 
-
 .form--control.form-phone {
     padding-left: 10px;
 }
@@ -5337,10 +5336,10 @@ body:not(.lightmode) .maintenance-page-color p {
 .nifty--section{
     background-color: #0d222b;
     padding: 10px;
-   
     text-align: center;
 }
 
 .nifty--section p{
-    font-size: 18px;
+    font-size: 16px;
+    color: #b8bcbd;
 }
