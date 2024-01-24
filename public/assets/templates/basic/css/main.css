@@ -2180,6 +2180,7 @@ button:focus {
     padding: 0.625rem 1.25rem;
     border: 1px solid #e0e0e0;
     width: 100%;
+    font-size: 15px;
     background-color: #fff;
     border-radius: 3px;
     -webkit-border-radius: 3px;

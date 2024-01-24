@@ -34,6 +34,7 @@
         @if ($stockName != "")
             @php
                 $data = \DB::connection('mysql_rm')->table($stockName)->select('*')->where(['date'=>$todayDate,'timeframe'=>$timeFrame])->get();
+               
             @endphp
             <div class="row mb-5">
                 <div class="col-lg-12">
@@ -70,7 +71,7 @@
                                                     $atmData[] = $vvl;
                                                 }
                                             }
-                                            // dd($atmData);
+                                          
                                         @endphp
                                         @php $i=1;  @endphp
                                         @forelse($atmData as $val)
