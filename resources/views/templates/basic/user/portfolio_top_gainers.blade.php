@@ -69,7 +69,6 @@
                                                 if(isset($vvl->atm) && $vvl->atm=="ATM"){
                                                     $atmData[] = $vvl;
                                                 }
-
                                             }
                                             // dd($atmData);
                                         @endphp
@@ -78,19 +77,19 @@
                                                 @php
                                                     $arrData = json_decode($val->data,true);    
                                                     // dd($arrData);
-                                                    $CE = array_slice($arrData['CE'],-5);
-                                                    $PE = array_slice($arrData['PE'],-5);
-                                                    $Date = array_slice($arrData['Date'],-5);
-                                                    $time = array_slice($arrData['time'],-5);
-                                                    $BUY_Action = array_slice($arrData['BUY_Action'],-5);
-                                                    $SELL_Action = array_slice($arrData['SELL_Action'],-5);
-                                                    $Strategy_name = array_slice($arrData['Strategy_name'],-5);
-                                                    $vwap_CE_signal = array_slice($arrData['vwap_CE_signal'],-5);
-                                                    $vwap_PE_signal = array_slice($arrData['vwap_PE_signal'],-5);
-                                                    $CE_consolidated = array_slice($arrData['CE_consolidated'],-5);
-                                                    $PE_consolidated = array_slice($arrData['PE_consolidated'],-5);
-                                                    $close_CE = array_slice($arrData['close_CE'],-5);
-                                                    $close_PE = array_slice($arrData['close_PE'],-5);
+                                                    $CE = $arrData['CE'];
+                                                    $PE = $arrData['PE'];
+                                                    $Date = $arrData['Date'];
+                                                    $time = $arrData['time'];
+                                                    $BUY_Action = $arrData['BUY_Action'];
+                                                    $SELL_Action = $arrData['SELL_Action'];
+                                                    $Strategy_name = $arrData['Strategy_name'];
+                                                    $vwap_CE_signal = $arrData['vwap_CE_signal'];
+                                                    $vwap_PE_signal = $arrData['vwap_PE_signal'];
+                                                    $CE_consolidated = $arrData['CE_consolidated'];
+                                                    $PE_consolidated = $arrData['PE_consolidated'];
+                                                    $close_CE = $arrData['close_CE'];
+                                                    $close_PE = $arrData['close_PE'];
                                                 @endphp
                                                 @foreach ($CE as $k=>$item)
                                                     <tr>
