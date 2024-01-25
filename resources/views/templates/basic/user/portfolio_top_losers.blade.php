@@ -35,8 +35,13 @@
                                         <th>@lang('Change%')</th>
                                     </tr>
                                 </thead>
+                                @php
+                                $date = \DB::connection('mysql_pr')->table('LTP')->WHEREIN('symbol',$symbolArray)->pluck('ltp','symbol')->toArray();  
+                                @endphp
                                 <tbody>
                                     @forelse($portfolioTopLosers as $portfolioTopLoser)
+                                    @php  $key = isset($date[$portfolioTopLoser->stock_name.'.NS']) ? $date[$portfolioTopLoser->stock_name.'.NS'] : 0;
+                                    @endphp
                                     <tr>
                                         <td>
                                             {{ $portfolioTopLoser->stock_name }}
@@ -44,9 +49,7 @@
                                         <td>
                                             {{ showAmount($portfolioTopLoser->avg_buy_price) }}
                                         </td>
-                                        <td>
-                                            {{ $portfolioTopLoser->cmp }}
-                                        </td>
+                                        <td>{{showAmount($key)}}</td>
                                         <td>{{ $portfolioTopLoser->change_percentage }}</td>
                                     </tr>
                                 @empty

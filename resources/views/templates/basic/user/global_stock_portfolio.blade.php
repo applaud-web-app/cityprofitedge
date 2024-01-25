@@ -39,14 +39,19 @@
                                         <th>@lang('Buy Date')</th>
                                         <th>@lang('Buy Price (USD)')</th>
                                         <th>@lang('CMP (USD)')</th>
-                                        <th>@lang('Current Value (INR)')</th>
-                                        <th>@lang('Profit/Loss')</th>
+                                        <th>@lang('Current Value (USD)')</th>
+                                        <th>@lang('Profit/Loss (USD)')</th>
                                         <th>@lang('Sector')</th>
                                         <th>@lang('Pooling Broker Name')</th>
                                     </tr>
                                 </thead>
+                                @php
+                                $date = \DB::connection('mysql_pr')->table('LTP')->WHEREIN('symbol',$symbolArray)->pluck('ltp','symbol')->toArray();  
+                                @endphp
                                 <tbody>
                                     @forelse($globalStockPortfolios as $globalStockPortfolio)
+                                        @php  $key = isset($date[$globalStockPortfolio->stock_name.'.NS']) ? $date[$globalStockPortfolio->stock_name.'.NS'] : 0;
+                                        @endphp
                                         <tr>
                                             <td>
                                                 {{ $globalStockPortfolio->broker_name }}
@@ -63,15 +68,14 @@
                                             <td>
                                                 ${{ showAmount($globalStockPortfolio->buy_price) }}
                                             </td>
+                                            <td>${{showAmount($key)}}</td>
                                             <td>
-                                                ${{ $globalStockPortfolio->cmp }}
+                                                ${{ showAmount($globalStockPortfolio->quantity*$key) }}
                                             </td>
-                                            <td>
-                                                ₹{{ showAmount($globalStockPortfolio->current_value) }}
-                                            </td>
-                                            <td>{{ $globalStockPortfolio->profit_loss }}</td>
+                                            <td> {{showAmount($globalStockPortfolio->quantity*($key - $globalStockPortfolio->buy_price))}} </td>
                                             <td>{{ $globalStockPortfolio->sector }}</td>
                                             <td>{{ $globalStockPortfolio->poolingAccountPortfolio->broker_name }}</td>
+                                        </tr>
                                     @empty
                                         <tr>
                                             <td class="text-muted text-center" colspan="100%">{{ __($emptyMessage) }}</td>

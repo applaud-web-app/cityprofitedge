@@ -91,8 +91,13 @@
                             <th>@lang('Action')</th>
                         </tr>
                         </thead>
+                        @php
+                        $date = \DB::connection('mysql_pr')->table('LTP')->WHEREIN('symbol',$symbolArray)->pluck('ltp','symbol')->toArray();  
+                        @endphp
                         <tbody>
                             @forelse($thematicPortfolios as $thematicPortfolio)
+                                @php  $key = isset($date[$thematicPortfolio->stock_name.'.NS']) ? $date[$thematicPortfolio->stock_name.'.NS'] : 0;
+                                @endphp
                                 <tr>
                                     <td>
                                         <input type="checkbox" name="data[]" value="{{$thematicPortfolio->id}}" class="checkAll">
@@ -106,9 +111,7 @@
                                     <td>
                                         {{ showAmount($thematicPortfolio->buy_price) }}
                                     </td>
-                                    <td>
-                                        {{ $thematicPortfolio->cmp }}
-                                    </td>
+                                    <td>{{showAmount($key)}}</td>
                                     <td>
                                         {{ $thematicPortfolio->pnl }}
                                     </td>

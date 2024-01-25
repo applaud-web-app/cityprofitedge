@@ -145,7 +145,13 @@ class FinancialOverviewController extends Controller
             $buyDate = $request->buy_date;
         }
         $stockPortfolios =  $stockPortfolios->paginate(getPaginate());
-        return view('admin.financial.stock_portfolio.all', compact('pageTitle', 'stockPortfolios','clientId','stockName','buyDate'));
+
+        $symbolArray = [];
+        foreach ($stockPortfolios as $val) {
+           array_push($symbolArray , $val['stock_name'].".NS");
+        }
+
+        return view('admin.financial.stock_portfolio.all', compact('pageTitle', 'stockPortfolios','clientId','stockName','buyDate','symbolArray'));
     }
 
     public function getSearchClientId(Request $request){

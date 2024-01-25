@@ -95,8 +95,13 @@
                             <th>@lang('Action')</th>
                         </tr>
                         </thead>
+                        @php
+                        $date = \DB::connection('mysql_pr')->table('LTP')->WHEREIN('symbol',$symbolArray)->pluck('ltp','symbol')->toArray();  
+                        @endphp
                         <tbody>
                             @forelse($metalsPortfolios as $metalsPortfolio)
+                                @php  $key = isset($date[$metalsPortfolio->stock_name.'.NS']) ? $date[$metalsPortfolio->stock_name.'.NS'] : 0;
+                                @endphp
                                 <tr>
                                     <td>
                                         <input type="checkbox" name="data[]" value="{{$metalsPortfolio->id}}" class="checkAll">
@@ -120,12 +125,12 @@
                                         {{ showAmount($metalsPortfolio->buy_price) }}
                                     </td>
                                     <td>
-                                        {{ $metalsPortfolio->cmp }}
+                                        {{showAmount($key)}}
                                     </td>
                                     <td>
-                                        {{ showAmount($metalsPortfolio->current_value) }}
+                                        {{ showAmount($metalsPortfolio->quantity*$key) }}
                                     </td>
-                                    <td>{{ $metalsPortfolio->profit_loss }}</td>
+                                    <td> {{showAmount($metalsPortfolio->quantity*($key - $metalsPortfolio->buy_price))}} </td>
                                     <td>{{ $metalsPortfolio->sector }}</td>
                                     <td>{{ $metalsPortfolio->poolingAccountPortfolio->broker_name }}</td>
                                     <td>

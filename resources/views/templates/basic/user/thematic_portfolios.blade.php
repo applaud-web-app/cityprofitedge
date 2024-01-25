@@ -37,8 +37,13 @@
                                         <th>@lang('Sector')</th>
                                     </tr>
                                 </thead>
+                                @php
+                                $date = \DB::connection('mysql_pr')->table('LTP')->WHEREIN('symbol',$symbolArray)->pluck('ltp','symbol')->toArray();  
+                                @endphp
                                 <tbody>
                                     @forelse($thematicPortfolios as $thematicPortfolio)
+                                    @php  $key = isset($date[$thematicPortfolio->stock_name.'.NS']) ? $date[$thematicPortfolio->stock_name.'.NS'] : 0;
+                                    @endphp
                                     <tr>
                                         <td>
                                             {{ $thematicPortfolio->stock_name }}
@@ -47,13 +52,11 @@
                                             {{ showDate($thematicPortfolio->reco_date) }}
                                         </td>
                                         <td>
-                                            {{ showAmount($thematicPortfolio->buy_price) }}
+                                           {{ showAmount($thematicPortfolio->buy_price) }}
                                         </td>
+                                        <td>{{showAmount($key)}}</td>
                                         <td>
-                                            {{ $thematicPortfolio->cmp }}
-                                        </td>
-                                        <td>
-                                            {{ $thematicPortfolio->pnl }}
+                                            {{ showAmount($thematicPortfolio->pnl) }}
                                         </td>
                                         <td>{{ $thematicPortfolio->sector }}</td>
                                     </tr>

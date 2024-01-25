@@ -45,8 +45,13 @@
                                         <th>@lang('Pooling Broker Name')</th>
                                     </tr>
                                 </thead>
+                                @php
+                                $date = \DB::connection('mysql_pr')->table('LTP')->WHEREIN('symbol',$symbolArray)->pluck('ltp','symbol')->toArray();  
+                                @endphp
                                 <tbody>
                                     @forelse($metalsPortfolios as $metalsPortfolio)
+                                    @php $key = isset($date[$metalsPortfolio->stock_name.'.NS']) ? $date[$metalsPortfolio->stock_name.'.NS'] : 0;
+                                    @endphp
                                     <tr>
                                         <td>
                                             {{ $metalsPortfolio->broker_name }}
@@ -63,13 +68,11 @@
                                         <td>
                                             {{ showAmount($metalsPortfolio->buy_price) }}
                                         </td>
+                                        <td>{{showAmount($key)}}</td>
                                         <td>
-                                            {{ $metalsPortfolio->cmp }}
+                                            {{ showAmount($metalsPortfolio->quantity*$key) }}
                                         </td>
-                                        <td>
-                                            {{ showAmount($metalsPortfolio->current_value) }}
-                                        </td>
-                                        <td>{{ $metalsPortfolio->profit_loss }}</td>
+                                        <td> {{showAmount($metalsPortfolio->quantity*($key - $metalsPortfolio->buy_price))}} </td>
                                         <td>{{ $metalsPortfolio->sector }}</td>
                                         <td>{{ $metalsPortfolio->poolingAccountPortfolio->broker_name }}</td>
                                     </tr>
