@@ -464,7 +464,13 @@ class UserController extends Controller
 
         // TODO:: modify commented code to implement searchable and filterable.
         $stockPortfolios = StockPortfolio::with('poolingAccountPortfolio')->where('user_id', auth()->id())->searchable(['broker_name', 'stock_price'])/* ->filter(['trx_type', 'remark']) */->orderBy('id', 'desc')->paginate(getPaginate());
-        return view($this->activeTemplate . 'user.stock_portfolio', compact('pageTitle', 'stockPortfolios'));
+
+        $symbolArray = [];
+        foreach ($stockPortfolios as $val) {
+           array_push($symbolArray , $val['stock_name'].".NS");
+        }
+
+        return view($this->activeTemplate . 'user.stock_portfolio', compact('pageTitle', 'stockPortfolios','symbolArray'));
     }
 
     public function thematicPortfolios()
@@ -473,6 +479,7 @@ class UserController extends Controller
 
         // TODO:: modify commented code to implement searchable and filterable.
         $thematicPortfolios = ThematicPortfolio::searchable(['stock_name'])/* ->filter(['trx_type', 'remark']) */->orderBy('id', 'desc')->paginate(getPaginate());
+
         $symbolArray = [];
         foreach ($thematicPortfolios as $val) {
            array_push($symbolArray , $val['stock_name'].".NS");
@@ -561,7 +568,13 @@ class UserController extends Controller
 
         // TODO:: modify commented code to implement searchable and filterable.
         $portfolioTopLosers = PortfolioTopLoser::searchable(['stock_name'])/* filter(['trx_type', 'remark']) ->*/->orderBy('id', 'desc')->paginate(getPaginate());
-        return view($this->activeTemplate . 'user.portfolio_top_losers', compact('pageTitle', 'portfolioTopLosers'));
+
+        $symbolArray = [];
+        foreach ($portfolioTopLosers as $val) {
+           array_push($symbolArray , $val['stock_name'].".NS");
+        }
+
+        return view($this->activeTemplate . 'user.portfolio_top_losers', compact('pageTitle', 'portfolioTopLosers','symbolArray'));
     }
 
     public function storeBrokerDetails(Request $request){
