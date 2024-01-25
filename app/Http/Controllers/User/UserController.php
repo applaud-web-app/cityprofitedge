@@ -473,10 +473,9 @@ class UserController extends Controller
 
         // TODO:: modify commented code to implement searchable and filterable.
         $thematicPortfolios = ThematicPortfolio::searchable(['stock_name'])/* ->filter(['trx_type', 'remark']) */->orderBy('id', 'desc')->paginate(getPaginate());
-
         $symbolArray = [];
         foreach ($thematicPortfolios as $val) {
-           array_push($symbolArray , $val['stock_name']);
+           array_push($symbolArray , $val['stock_name'].".NS");
         }
 
         return view($this->activeTemplate . 'user.thematic_portfolios', compact('pageTitle', 'thematicPortfolios','symbolArray'));
@@ -491,7 +490,7 @@ class UserController extends Controller
 
         $symbolArray = [];
         foreach ($globalStockPortfolios as $val) {
-           array_push($symbolArray , $val['stock_name']);
+           array_push($symbolArray , $val['stock_name'].".NS");
         }
         
         // $date = \DB::connection('mysql_pr')->table('LTP')->select('*')->get();
@@ -508,7 +507,7 @@ class UserController extends Controller
         
         $symbolArray = [];
         foreach ($foPortFolioHedgings as $val) {
-           array_push($symbolArray , $val['stock_name']);
+           array_push($symbolArray , $val['stock_name'].".NS");
         }
 
         return view($this->activeTemplate . 'user.fo_portfolio_hedging', compact('pageTitle', 'foPortFolioHedgings','symbolArray'));
@@ -523,7 +522,7 @@ class UserController extends Controller
 
         $symbolArray = [];
         foreach ($metalsPortfolios as $val) {
-           array_push($symbolArray , $val['stock_name']);
+           array_push($symbolArray , $val['stock_name'].".NS");
         }
 
         return view($this->activeTemplate . 'user.metals_portfolio', compact('pageTitle', 'metalsPortfolios','symbolArray'));

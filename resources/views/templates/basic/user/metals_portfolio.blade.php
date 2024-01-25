@@ -37,10 +37,10 @@
                                         <th>@lang('Stock Name')</th>
                                         <th>@lang('Qty')</th>
                                         <th>@lang('Buy Date')</th>
-                                        <th>@lang('Buy Price (USD)')</th>
-                                        <th>@lang('CMP (USD)')</th>
-                                        <th>@lang('Current Value (USD)')</th>
-                                        <th>@lang('Profit/Loss (USD)')</th>
+                                        <th>@lang('Buy Price')</th>
+                                        <th>@lang('CMP')</th>
+                                        <th>@lang('Current Value')</th>
+                                        <th>@lang('Profit/Loss')</th>
                                         <th>@lang('Sector')</th>
                                         <th>@lang('Pooling Broker Name')</th>
                                     </tr>
@@ -50,7 +50,7 @@
                                 @endphp
                                 <tbody>
                                     @forelse($metalsPortfolios as $metalsPortfolio)
-                                    @php $key = isset($date[$metalsPortfolio->stock_name]) ? $date[$metalsPortfolio->stock_name] : 0;
+                                    @php $key = isset($date[$metalsPortfolio->stock_name.'.NS']) ? $date[$metalsPortfolio->stock_name.'.NS'] : 0;
                                     @endphp
                                     <tr>
                                         <td>
@@ -66,11 +66,11 @@
                                             {{ showDate($metalsPortfolio->buy_date) }}
                                         </td>
                                         <td>
-                                            ${{ showAmount($metalsPortfolio->buy_price) }}
+                                            {{ showAmount($metalsPortfolio->buy_price) }}
                                         </td>
-                                        <td>${{showAmount($key)}}</td>
+                                        <td>{{showAmount($key)}}</td>
                                         <td>
-                                            ${{ showAmount($metalsPortfolio->quantity*$key) }}
+                                            {{ showAmount($metalsPortfolio->quantity*$key) }}
                                         </td>
                                         <td> {{showAmount($metalsPortfolio->quantity*($key - $metalsPortfolio->buy_price))}} </td>
                                         <td>{{ $metalsPortfolio->sector }}</td>

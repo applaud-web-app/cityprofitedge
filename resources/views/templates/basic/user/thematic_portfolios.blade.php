@@ -31,9 +31,9 @@
                                     <tr>
                                         <th>@lang('Stock Name')</th>
                                         <th>@lang('Reco Date')</th>
-                                        <th>@lang('Buy Price (USD)')</th>
-                                        <th>@lang('CMP (USD)')</th>
-                                        <th>@lang('PNL (USD)')</th>
+                                        <th>@lang('Buy Price')</th>
+                                        <th>@lang('CMP')</th>
+                                        <th>@lang('PNL')</th>
                                         <th>@lang('Sector')</th>
                                     </tr>
                                 </thead>
@@ -42,7 +42,7 @@
                                 @endphp
                                 <tbody>
                                     @forelse($thematicPortfolios as $thematicPortfolio)
-                                    @php  $key = isset($date[$thematicPortfolio->stock_name]) ? $date[$thematicPortfolio->stock_name] : 0;
+                                    @php  $key = isset($date[$thematicPortfolio->stock_name.'.NS']) ? $date[$thematicPortfolio->stock_name.'.NS'] : 0;
                                     @endphp
                                     <tr>
                                         <td>
@@ -52,11 +52,11 @@
                                             {{ showDate($thematicPortfolio->reco_date) }}
                                         </td>
                                         <td>
-                                            ${{ showAmount($thematicPortfolio->buy_price) }}
+                                           {{ showAmount($thematicPortfolio->buy_price) }}
                                         </td>
-                                        <td>${{showAmount($key)}}</td>
+                                        <td>{{showAmount($key)}}</td>
                                         <td>
-                                            ${{ showAmount($thematicPortfolio->pnl) }}
+                                            {{ showAmount($thematicPortfolio->pnl) }}
                                         </td>
                                         <td>{{ $thematicPortfolio->sector }}</td>
                                     </tr>

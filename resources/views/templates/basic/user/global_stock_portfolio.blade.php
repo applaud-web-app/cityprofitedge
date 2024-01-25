@@ -46,12 +46,11 @@
                                     </tr>
                                 </thead>
                                 @php
-                                // $date = \DB::connection('mysql_pr')->table('LTP')->select('*')->get();
                                 $date = \DB::connection('mysql_pr')->table('LTP')->WHEREIN('symbol',$symbolArray)->pluck('ltp','symbol')->toArray();  
                                 @endphp
                                 <tbody>
                                     @forelse($globalStockPortfolios as $globalStockPortfolio)
-                                        @php  $key = isset($date[$globalStockPortfolio->stock_name]) ? $date[$globalStockPortfolio->stock_name] : 0;
+                                        @php  $key = isset($date[$globalStockPortfolio->stock_name.'.NS']) ? $date[$globalStockPortfolio->stock_name.'.NS'] : 0;
                                         @endphp
                                         <tr>
                                             <td>

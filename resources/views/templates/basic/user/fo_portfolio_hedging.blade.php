@@ -37,10 +37,10 @@
                                         <th>@lang('Stock Name')</th>
                                         <th>@lang('Qty')</th>
                                         <th>@lang('Buy Date')</th>
-                                        <th>@lang('Buy Price (USD)')</th>
-                                        <th>@lang('CMP (USD)')</th>
-                                        <th>@lang('Current Value (USD)')</th>
-                                        <th>@lang('Profit/Loss (USD)')</th>
+                                        <th>@lang('Buy Price')</th>
+                                        <th>@lang('CMP')</th>
+                                        <th>@lang('Current Value')</th>
+                                        <th>@lang('Profit/Loss')</th>
                                         <th>@lang('Sector')</th>
                                         <th>@lang('Pooling Broker Name')</th>
                                     </tr>
@@ -50,7 +50,7 @@
                                 @endphp
                                 <tbody>
                                     @forelse($foPortFolioHedgings as $foPortFolioHedging)
-                                        @php  $key = isset($date[$foPortFolioHedging->stock_name]) ? $date[$foPortFolioHedging->stock_name] : 0;
+                                        @php  $key = isset($date[$foPortFolioHedging->stock_name.'.NS']) ? $date[$foPortFolioHedging->stock_name.'.NS'] : 0;
                                         @endphp
                                         <tr>
                                             <td>
@@ -66,11 +66,11 @@
                                                 {{ showDate($foPortFolioHedging->buy_date) }}
                                             </td>
                                             <td>
-                                                ${{ showAmount($foPortFolioHedging->buy_price) }}
+                                                {{ showAmount($foPortFolioHedging->buy_price) }}
                                             </td>
-                                            <td>${{showAmount($key)}}</td>
+                                            <td>{{showAmount($key)}}</td>
                                             <td>
-                                                ${{ showAmount($foPortFolioHedging->quantity*$key) }}
+                                                {{ showAmount($foPortFolioHedging->quantity*$key) }}
                                             </td>
                                             <td> {{showAmount($foPortFolioHedging->quantity*($key - $foPortFolioHedging->buy_price))}} </td>
                                             <td>{{ $foPortFolioHedging->sector }}</td>
