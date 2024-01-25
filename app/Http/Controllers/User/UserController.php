@@ -473,7 +473,13 @@ class UserController extends Controller
 
         // TODO:: modify commented code to implement searchable and filterable.
         $thematicPortfolios = ThematicPortfolio::searchable(['stock_name'])/* ->filter(['trx_type', 'remark']) */->orderBy('id', 'desc')->paginate(getPaginate());
-        return view($this->activeTemplate . 'user.thematic_portfolios', compact('pageTitle', 'thematicPortfolios'));
+
+        $symbolArray = [];
+        foreach ($thematicPortfolios as $val) {
+           array_push($symbolArray , $val['stock_name']);
+        }
+
+        return view($this->activeTemplate . 'user.thematic_portfolios', compact('pageTitle', 'thematicPortfolios','symbolArray'));
     }
 
     public function globalStockPortfolio()
