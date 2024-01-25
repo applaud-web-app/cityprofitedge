@@ -37,16 +37,21 @@
                                         <th>@lang('Stock Name')</th>
                                         <th>@lang('Qty')</th>
                                         <th>@lang('Buy Date')</th>
-                                        <th>@lang('Buy Price')</th>
-                                        <th>@lang('CMP')</th>
-                                        <th>@lang('Current Value')</th>
-                                        <th>@lang('Profit/Loss')</th>
+                                        <th>@lang('Buy Price (USD)')</th>
+                                        <th>@lang('CMP (USD)')</th>
+                                        <th>@lang('Current Value (USD)')</th>
+                                        <th>@lang('Profit/Loss (USD)')</th>
                                         <th>@lang('Sector')</th>
                                         <th>@lang('Pooling Broker Name')</th>
                                     </tr>
                                 </thead>
+                                @php
+                                $date = \DB::connection('mysql_pr')->table('LTP')->WHEREIN('symbol',$symbolArray)->pluck('ltp','symbol')->toArray();  
+                                @endphp
                                 <tbody>
                                     @forelse($foPortFolioHedgings as $foPortFolioHedging)
+                                        @php  $key = isset($date[$foPortFolioHedging->stock_name]) ? $date[$foPortFolioHedging->stock_name] : 0;
+                                        @endphp
                                         <tr>
                                             <td>
                                                 {{ $foPortFolioHedging->broker_name }}
@@ -61,15 +66,13 @@
                                                 {{ showDate($foPortFolioHedging->buy_date) }}
                                             </td>
                                             <td>
-                                                {{ showAmount($foPortFolioHedging->buy_price) }}
+                                                ${{ showAmount($foPortFolioHedging->buy_price) }}
                                             </td>
+                                            <td>${{showAmount($key)}}</td>
                                             <td>
-                                                {{ $foPortFolioHedging->cmp }}
+                                                ${{ showAmount($foPortFolioHedging->quantity*$key) }}
                                             </td>
-                                            <td>
-                                                {{ showAmount($foPortFolioHedging->current_value) }}
-                                            </td>
-                                            <td>{{ $foPortFolioHedging->profit_loss }}</td>
+                                            <td> {{showAmount($foPortFolioHedging->quantity*($key - $foPortFolioHedging->buy_price))}} </td>
                                             <td>{{ $foPortFolioHedging->sector }}</td>
                                             <td>{{ $foPortFolioHedging->poolingAccountPortfolio->broker_name }}</td>
                                         </tr>

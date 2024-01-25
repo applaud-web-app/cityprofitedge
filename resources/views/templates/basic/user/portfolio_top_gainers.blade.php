@@ -39,7 +39,6 @@
 
         @if ($stockName != "")
             @php
-                
                 $data = \DB::connection('mysql_rm')->table($stockName)->select('*')->where(['date'=>$todayDate,'timeframe'=>$timeFrame])->get();
             @endphp
             <div class="row mb-5">
@@ -122,7 +121,7 @@
                                                         <td>{{$arrData['close_CE'][$k]}}</td>
                                                         <td>{{$arrData['close_PE'][$k]}}</td>
                                                         <td>{{$arrData['BUY_Action'][$k]}}</td>
-                                                        <td>{{$arrData['BUY_Action'][$k]}}</td>
+                                                        <td>{{$arrData['SELL_Action'][$k]}}</td>
                                                         <td>{{$arrData['Strategy_name'][$k]}}</td>
                                                     </tr>
                                                     @php
@@ -171,6 +170,8 @@
                 if($v == "LTP"){
 
                 }else{
+                    // $date = \DB::connection('mysql_pr')->table('LTP')->select('*')->whereIn('symbol',[symbolArray])->get();
+                    // dd($date);
                     $data = \DB::connection('mysql_rm')->table($v)->select('*')->where(['date'=>$todayDate,'timeframe'=>$timeFrame])->get(); 
                 }
                 @endphp
