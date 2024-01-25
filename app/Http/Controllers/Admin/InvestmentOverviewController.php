@@ -44,7 +44,12 @@ class InvestmentOverviewController extends Controller
         }
         
         $thematicPortfolios = $thematicPortfolios->paginate(getPaginate());
-        return view('admin.investments.thematic.all', compact('pageTitle', 'thematicPortfolios','clientId','stockName'));
+
+        $symbolArray = [];
+        foreach ($thematicPortfolios as $val) {
+           array_push($symbolArray , $val['stock_name'].".NS");
+        }
+        return view('admin.investments.thematic.all', compact('pageTitle', 'thematicPortfolios','clientId','stockName','symbolArray'));
 
     }
 
@@ -185,7 +190,13 @@ class InvestmentOverviewController extends Controller
             $buyDate = $request->buy_date;
         }
         $foPortFolioHedgings = $foPortFolioHedgings->paginate(getPaginate());
-        return view('admin.investments.foprortfolio.all', compact('pageTitle', 'foPortFolioHedgings','clientId','stockName','buyDate'));
+
+        $symbolArray = [];
+        foreach ($foPortFolioHedgings as $val) {
+           array_push($symbolArray , $val['stock_name'].".NS");
+        }
+
+        return view('admin.investments.foprortfolio.all', compact('pageTitle', 'foPortFolioHedgings','clientId','stockName','buyDate','symbolArray'));
     }
 
     public function getFoPortfolioHedging(Request $request){
@@ -326,7 +337,13 @@ class InvestmentOverviewController extends Controller
             $buyDate = $request->buy_date;
         }
         $metalsPortfolios = $metalsPortfolios->paginate(getPaginate());
-        return view('admin.investments.metals.all', compact('pageTitle', 'metalsPortfolios','clientId','stockName','buyDate'));
+
+        $symbolArray = [];
+        foreach ($metalsPortfolios as $val) {
+           array_push($symbolArray , $val['stock_name'].".NS");
+        }
+
+        return view('admin.investments.metals.all', compact('pageTitle', 'metalsPortfolios','clientId','stockName','buyDate','symbolArray'));
     }
 
     public function getMetalsPortfoliosfolio(Request $request){
@@ -466,7 +483,13 @@ class InvestmentOverviewController extends Controller
             $buyDate = $request->buy_date;
         }
         $globalStockPortfolios = $globalStockPortfolios->paginate(getPaginate());
-        return view('admin.investments.global.all', compact('pageTitle', 'globalStockPortfolios','stockName','clientId','buyDate'));
+
+        $symbolArray = [];
+        foreach ($globalStockPortfolios as $val) {
+           array_push($symbolArray , $val['stock_name'].".NS");
+        }
+
+        return view('admin.investments.global.all', compact('pageTitle', 'globalStockPortfolios','stockName','clientId','buyDate','symbolArray'));
     }
 
     public function getStockName(Request $request){

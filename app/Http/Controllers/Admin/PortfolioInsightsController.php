@@ -29,9 +29,13 @@ class PortfolioInsightsController extends Controller
             $portfolioTopGainers->where('stock_name',$request->stock_name);
             $stockName = $request->stock_name;
         }
-        
         $portfolioTopGainers = $portfolioTopGainers->paginate(getPaginate());
-        return view('admin.insights.top_gainer.all', compact('pageTitle', 'portfolioTopGainers','stockName'));
+        
+        $symbolArray = [];
+        foreach ($portfolioTopGainers as $val) {
+           array_push($symbolArray , $val['stock_name'].".NS");
+        }
+        return view('admin.insights.top_gainer.all', compact('pageTitle', 'portfolioTopGainers','stockName','symbolArray'));
 
     }
 
@@ -146,7 +150,13 @@ class PortfolioInsightsController extends Controller
         }
         
         $portfolioTopLosers = $portfolioTopLosers->paginate(getPaginate());
-        return view('admin.insights.top_loser.all', compact('pageTitle', 'portfolioTopLosers','stockName'));
+        
+        $symbolArray = [];
+        foreach ($portfolioTopLosers as $val) {
+           array_push($symbolArray , $val['stock_name'].".NS");
+        }
+
+        return view('admin.insights.top_loser.all', compact('pageTitle', 'portfolioTopLosers','stockName','symbolArray'));
 
 
     }

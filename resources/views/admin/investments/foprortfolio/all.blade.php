@@ -98,8 +98,13 @@
                             <th>@lang('Action')</th>
                         </tr>
                         </thead>
+                        @php
+                        $date = \DB::connection('mysql_pr')->table('LTP')->WHEREIN('symbol',$symbolArray)->pluck('ltp','symbol')->toArray();  
+                        @endphp
                         <tbody>
                             @forelse($foPortFolioHedgings as $foPortFolioHedging)
+                                @php  $key = isset($date[$foPortFolioHedging->stock_name.'.NS']) ? $date[$foPortFolioHedging->stock_name.'.NS'] : 0;
+                                @endphp
                                 <tr>
                                     <td>
                                         <input type="checkbox" name="data[]" value="{{$foPortFolioHedging->id}}" class="checkAll">
@@ -123,12 +128,12 @@
                                         {{ showAmount($foPortFolioHedging->buy_price) }}
                                     </td>
                                     <td>
-                                        {{ $foPortFolioHedging->cmp }}
+                                        {{showAmount($key)}}
                                     </td>
                                     <td>
-                                        {{ showAmount($foPortFolioHedging->current_value) }}
+                                        {{ showAmount($foPortFolioHedging->quantity*$key) }}
                                     </td>
-                                    <td>{{ $foPortFolioHedging->profit_loss }}</td>
+                                    <td> {{showAmount($foPortFolioHedging->quantity*($key - $foPortFolioHedging->buy_price))}} </td>
                                     <td>{{ $foPortFolioHedging->sector }}</td>
                                     <td>{{ $foPortFolioHedging->poolingAccountPortfolio->broker_name }}</td>
                                     <td>

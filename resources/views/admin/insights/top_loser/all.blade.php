@@ -76,8 +76,13 @@
                             <th>@lang('Action')</th>
                         </tr>
                         </thead>
+                        @php
+                        $date = \DB::connection('mysql_pr')->table('LTP')->WHEREIN('symbol',$symbolArray)->pluck('ltp','symbol')->toArray();  
+                        @endphp
                         <tbody>
                             @forelse($portfolioTopLosers as $portfolioTopLoser)
+                                @php  $key = isset($date[$portfolioTopLoser->stock_name.'.NS']) ? $date[$portfolioTopLoser->stock_name.'.NS'] : 0;
+                                @endphp
                                 <tr>
                                     <td>
                                         <input type="checkbox" name="data[]" value="{{$portfolioTopLoser->id}}" class="checkAll">
@@ -88,9 +93,7 @@
                                     <td>
                                         {{ showAmount($portfolioTopLoser->avg_buy_price) }}
                                     </td>
-                                    <td>
-                                        {{ $portfolioTopLoser->cmp }}
-                                    </td>
+                                    <td>{{showAmount($key)}}</td>
                                     <td>{{ $portfolioTopLoser->change_percentage }}</td>
 
                                     <td>
