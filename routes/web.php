@@ -8,7 +8,10 @@ Route::get('get-market-data', 'SiteController@getMarketData')->name('get-market-
 Route::get('get-top-loser-api-data', 'SiteController@getTopLoserData')->name('get-top-loser-api-data');
 Route::get('get-top-gainer-api-data', 'SiteController@getTopGainerApiData')->name('get-top-gainer-api-data');
 Route::get('get-pcr-api-data', 'SiteController@getPcrApiData')->name('get-pcr-api-data');
-Route::get('get-oi-api-data', 'SiteController@getOIApiData')->name('get-oi-api-data');
+Route::get('get-long-build-api-data', 'SiteController@getLongBuildApiData')->name('get-long-build-api-data');
+Route::get('get-short-build-api-data', 'SiteController@getShortBuildApiData')->name('get-short-build-api-data');
+Route::get('get-short-covering-api-data', 'SiteController@getShortCoveringApiData')->name('get-short-covering-api-data');
+Route::get('get-long-unwilling-api-data', 'SiteController@getLongUnwillingApiData')->name('get-long-unwilling-api-data');
 Route::get('/clear', function(){
     \Illuminate\Support\Facades\Artisan::call('optimize:clear');
 });

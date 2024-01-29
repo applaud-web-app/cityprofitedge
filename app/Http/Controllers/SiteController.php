@@ -253,8 +253,20 @@ class SiteController extends Controller
         return response()->json($this->getPCRApiDatas());
     }
 
-    public function getOIApiData(){
-        return response()->json($this->getOIBuildupApiData());
+    public function getLongBuildApiData(){
+        return response()->json($this->getLongBuildData());
+    }
+
+    public function getShortBuildApiData(){
+        return response()->json($this->getShortBuildData());
+    }
+
+    public function getShortCoveringApiData(){
+        return response()->json($this->getShortCoveringData());
+    }
+
+    public function getLongUnwillingApiData(){
+        return response()->json($this->getLongUnwillingData());
     }
 
     public function packageDetails($id){
