@@ -176,9 +176,6 @@
             if(data.length > 0){
                 var str = "";
                 for (var i in data) {
-                    if(i>4){
-                        break;
-                    } 
                     str += `<tr>
                        <td class="text-start">${data[i].tradingSymbol}</td>
                        <td class="text-start">${data[i].pcr}</td>`;
