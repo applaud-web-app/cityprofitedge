@@ -97,10 +97,9 @@
 <script>
     function FetchTopLoserData(){
         $.get('{{route("get-top-loser-api-data")}}',function(data){
-           console.log(data);
            if(data['status'] === true){
             data = data['data'];
-            if(data.length){
+            if(data.length > 0){
                 var str = "";
                 var j =0;
                 for (var i in data) {
@@ -114,18 +113,15 @@
             }else{
                 $("#topLoser").html('');
             }
-           }else{
-            console.log('Not FOund');
            }
         });
     }
 
     function FetchTopGainerData(){
         $.get('{{route("get-top-gainer-api-data")}}',function(data){
-            console.log(data);
            if(data['status'] === true){
             data = data['data'];
-            if(data.length){
+            if(data.length > 0){
                 var str = "";
                 var j =0;
                 for (var i in data) {
@@ -139,8 +135,6 @@
             }else{
                 $("#topGainer").html('');
             }
-           }else{
-            console.log('Not Found');
            }
         });
           
