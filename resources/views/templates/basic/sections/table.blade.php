@@ -3,34 +3,6 @@
         <div class="about-thumb -from-top-wow fadeInUp" data-wow-duration="0.5" data-wow-delay="0.5s" id="faqAccordion">
             <div class="row g-3">
                 <div class="col-lg-6">
-                    <h2>Top Losers</h2>
-                    <div class="custom--card">
-                        <div class="card-body p-0">
-                            <div class="table-responsive--md">
-                                <table class="text-start table custom--table">
-                                    <thead>
-                                        <tr>
-                                            <th class="text-start">@lang('Symbol')</th>
-                                            <th class="text-start">@lang('LTP')</th>
-                                            <th class="text-start">@lang('Change')</th>
-                                            <th class="text-start">@lang('%Change')</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="topLoser">
-                                        <tr>
-                                            <td colspan="100%">
-                                                <div class="spinner-border" role="status">
-                                                    <span class="sr-only">Loading...</span>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6">
                     <h2>Top Gainers</h2>
                     <div class="custom--card">
                         <div class="card-body p-0">
@@ -45,6 +17,34 @@
                                         </tr>
                                     </thead>
                                     <tbody id="topGainer">
+                                        <tr>
+                                            <td colspan="100%">
+                                                <div class="spinner-border" role="status">
+                                                    <span class="sr-only">Loading...</span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <h2>Top Losers</h2>
+                    <div class="custom--card">
+                        <div class="card-body p-0">
+                            <div class="table-responsive--md">
+                                <table class="text-start table custom--table">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-start">@lang('Symbol')</th>
+                                            <th class="text-start">@lang('LTP')</th>
+                                            <th class="text-start">@lang('Change')</th>
+                                            <th class="text-start">@lang('%Change')</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="topLoser">
                                         <tr>
                                             <td colspan="100%">
                                                 <div class="spinner-border" role="status">
