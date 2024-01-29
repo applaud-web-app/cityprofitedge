@@ -7,6 +7,8 @@ Route::get('/', 'SiteController@index')->name('home');
 Route::get('get-market-data', 'SiteController@getMarketData')->name('get-market-data');
 Route::get('get-top-loser-api-data', 'SiteController@getTopLoserData')->name('get-top-loser-api-data');
 Route::get('get-top-gainer-api-data', 'SiteController@getTopGainerApiData')->name('get-top-gainer-api-data');
+Route::get('get-pcr-api-data', 'SiteController@getPcrApiData')->name('get-pcr-api-data');
+Route::get('get-oi-api-data', 'SiteController@getOIApiData')->name('get-oi-api-data');
 Route::get('/clear', function(){
     \Illuminate\Support\Facades\Artisan::call('optimize:clear');
 });

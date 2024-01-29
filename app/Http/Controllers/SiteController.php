@@ -242,13 +242,19 @@ class SiteController extends Controller
     }
 
     public function getTopLoserData(){
-        $fetchType = "PercPriceLosers";
-        return response()->json($this->getAngleApiData($fetchType));
+        return response()->json($this->getTopLoserAngleApiData());
     }
 
     public function getTopGainerApiData(){
-        $fetchType = "PercPriceGainers";
-        return response()->json($this->getAngleApiData($fetchType));
+        return response()->json($this->getTopGainerAngleApiData());
+    }
+
+    public function getPcrApiData(){
+        return response()->json($this->getPCRApiDatas());
+    }
+
+    public function getOIApiData(){
+        return response()->json($this->getOIBuildupApiData());
     }
 
     public function packageDetails($id){

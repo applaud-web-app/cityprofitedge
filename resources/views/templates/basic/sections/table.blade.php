@@ -7,14 +7,13 @@
                     <div class="custom--card">
                         <div class="card-body p-0">
                             <div class="table-responsive--md">
-                                <table class="table custom--table">
+                                <table class="text-start table custom--table">
                                     <thead>
                                         <tr>
-                                            <th>@lang('SNo.')</th>
-                                            <th>@lang('Symbol')</th>
-                                            <th>@lang('LTP')</th>
-                                            <th>@lang('Change')</th>
-                                            <th>@lang('%Change')</th>
+                                            <th class="text-start">@lang('Symbol')</th>
+                                            <th class="text-start">@lang('LTP')</th>
+                                            <th class="text-start">@lang('Change')</th>
+                                            <th class="text-start">@lang('%Change')</th>
                                         </tr>
                                     </thead>
                                     <tbody id="topLoser">
@@ -29,38 +28,16 @@
                     <div class="custom--card">
                         <div class="card-body p-0">
                             <div class="table-responsive--md">
-                                <table class="table custom--table">
+                                <table class="text-start table custom--table">
                                     <thead>
                                         <tr>
-                                            <th>@lang('SNo.')</th>
-                                            <th>@lang('Symbol')</th>
-                                            <th>@lang('LTP')</th>
-                                            <th>@lang('Change')</th>
-                                            <th>@lang('%Change')</th>
+                                            <th class="text-start">@lang('Symbol')</th>
+                                            <th class="text-start">@lang('LTP')</th>
+                                            <th class="text-start">@lang('Change')</th>
+                                            <th class="text-start">@lang('%Change')</th>
                                         </tr>
                                     </thead>
                                     <tbody id="topGainer">
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {{-- <div class="col-lg-6">
-                    <div class="custom--card">
-                        <div class="card-body p-0">
-                            <div class="table-responsive--md">
-                                <table class="table custom--table">
-                                    <thead>
-                                        <tr>
-                                            <th>@lang('SNo.')</th>
-                                            <th>@lang('Company')</th>
-                                            <th>@lang('LTP')</th>
-                                            <th>@lang('Change')</th>
-                                            <th>@lang('%Change')</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
                                     </tbody>
                                 </table>
                             </div>
@@ -71,23 +48,42 @@
                     <div class="custom--card">
                         <div class="card-body p-0">
                             <div class="table-responsive--md">
-                                <table class="table custom--table">
+                                <table class="text-start table custom--table">
                                     <thead>
                                         <tr>
-                                            <th>@lang('SNo.')</th>
-                                            <th>@lang('Company')</th>
-                                            <th>@lang('LTP')</th>
-                                            <th>@lang('Change')</th>
-                                            <th>@lang('%Change')</th>
+                                            <th class="text-start">@lang('Company')</th>
+                                            <th class="text-start">@lang('PCR')</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody id="pcr">
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
-                </div> --}}
+                </div>
+                <div class="col-lg-6">
+                    <div class="custom--card">
+                        <div class="card-body p-0">
+                            <div class="table-responsive--md">
+                                <table class="text-start table custom--table">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-start">@lang('Company')</th>
+                                            <th class="text-start">@lang('LTP')</th>
+                                            <th class="text-start">@lang('Net Change')</th>
+                                            <th class="text-start">@lang('%Change')</th>
+                                            <th class="text-start">@lang('Interest')</th>
+                                            <th class="text-start">@lang('Net Change Interest')</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="oi">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -101,13 +97,15 @@
             data = data['data'];
             if(data.length > 0){
                 var str = "";
-                var j =0;
                 for (var i in data) {
-                    str += `<tr><td>${++j}</td>
-                       <td>${data[i].tradingSymbol}</td>
-                       <td>${data[i].ltp}</td>
-                       <td>${data[i].netChange}</td>
-                       <td>${data[i].percentChange}</td></tr>`;
+                    if(i>4){
+                        break;
+                    } 
+                    str += `<tr>
+                       <td class="text-start">${data[i].tradingSymbol}</td>
+                       <td class="text-start">${data[i].ltp}</td>
+                       <td class="text-start">${data[i].netChange}</td>
+                       <td class="text-start">${data[i].percentChange}</td></tr>`;
                 }
                 $("#topLoser").html(str);
             }else{
@@ -123,13 +121,15 @@
             data = data['data'];
             if(data.length > 0){
                 var str = "";
-                var j =0;
                 for (var i in data) {
-                    str += `<tr><td>${++j}</td>
-                       <td>${data[i].tradingSymbol}</td>
-                       <td>${data[i].ltp}</td>
-                       <td>${data[i].netChange}</td>
-                       <td>${data[i].percentChange}</td></tr>`;
+                    if(i>4){
+                        break;
+                    } 
+                    str += `<tr>
+                       <td class="text-start">${data[i].tradingSymbol}</td>
+                       <td class="text-start">${data[i].ltp}</td>
+                       <td class="text-start">${data[i].netChange}</td>
+                       <td class="text-start">${data[i].percentChange}</td></tr>`;
                 }
                 $("#topGainer").html(str);
             }else{
@@ -137,19 +137,73 @@
             }
            }
         });
-          
+    }
+
+    function FetchPCRData(){
+        $.get('{{route("get-pcr-api-data")}}',function(data){
+           if(data['status'] === true){
+            data = data['data'];
+            if(data.length > 0){
+                var str = "";
+                for (var i in data) {
+                    if(i>4){
+                        break;
+                    } 
+                    str += `<tr>
+                       <td class="text-start">${data[i].tradingSymbol}</td>
+                       <td class="text-start">${data[i].pcr}</td>`;
+                    if(i>4){
+                        break;
+                    } 
+                }
+                $("#pcr").html(str);
+            }else{
+                $("#pcr").html('');
+            }
+           }
+        });
+    }
+
+    function FetchOIData(){
+        $.get('{{route("get-oi-api-data")}}',function(data){
+           if(data['status'] === true){
+            data = data['data'];
+            if(data.length > 0){
+                var str = "";
+                for (var i in data) {
+                    if(i>4){
+                        break;
+                    } 
+                    str += `<tr>
+                       <td class="text-start">${data[i].tradingSymbol}</td>
+                       <td class="text-start">${data[i].ltp}</td>
+                       <td class="text-start">${data[i].netChange}</td>
+                       <td class="text-start">${data[i].percentChange}</td>
+                       <td class="text-start">${data[i].opnInterest}</td>
+                       <td class="text-start">${data[i].netChangeOpnInterest}</td>`;
+                    if(i>4){
+                        break;
+                    } 
+                }
+                $("#oi").html(str);
+            }else{
+                $("#oi").html('');
+            }
+           }
+        });
     }
   
     $(document).ready(function(){
+        FetchOIData();
+        FetchPCRData();
         FetchTopLoserData();
         FetchTopGainerData();
         setInterval(() => {
+            FetchOIData();
             FetchTopLoserData();
-        }, 10 * 1000);
-
-        setInterval(() => {
+            FetchPCRData();
             FetchTopGainerData();
-        }, 5 * 1000);
+        }, 10 * 1000);
         
     });
 </script>
