@@ -115,8 +115,6 @@
             }
         });
     }
-    FetchTopLoserData();
-
 
     function FetchTopGainerData(){
         $.get('{{route("get-api-data", ["type"=>"PercPriceGainers"])}}',function(data){
@@ -138,13 +136,15 @@
             }
         });
     }
-    FetchTopGainerData();
-    // $(document).ready(function(){
-    //     FetchApiData();
-    //     setInterval(() => {
-    //         FetchApiData();
-    //     }, 10 * 1000);
+  
+    $(document).ready(function(){
+        FetchTopLoserData();
+        FetchTopGainerData();
+        setInterval(() => {
+            FetchTopLoserData();
+            FetchTopGainerData();
+        }, 10 * 1000);
         
-    // });
+    });
 </script>
 @endpush
