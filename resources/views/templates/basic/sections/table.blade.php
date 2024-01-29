@@ -96,9 +96,10 @@
 @push('script')
 <script>
     function FetchTopLoserData(){
-        $.get('{{route("get-api-data", ["type"=>"PercPriceLosers"])}}',function(data){
-           data = data['data'];
+        $.get('{{route("get-top-loser-api-data")}}',function(data){
            console.log(data);
+           if(data['status'] === true){
+            data = data['data'];
             if(data.length){
                 var str = "";
                 var j =0;
@@ -113,13 +114,17 @@
             }else{
                 $("#topLoser").html('');
             }
+           }else{
+            console.log('Not FOund');
+           }
         });
     }
 
     function FetchTopGainerData(){
-        $.get('{{route("get-api-data", ["type"=>"PercPriceGainers"])}}',function(data){
-           data = data['data'];
-           console.log(data);
+        $.get('{{route("get-top-gainer-api-data")}}',function(data){
+            console.log(data);
+           if(data['status'] === true){
+            data = data['data'];
             if(data.length){
                 var str = "";
                 var j =0;
@@ -134,7 +139,11 @@
             }else{
                 $("#topGainer").html('');
             }
+           }else{
+            console.log('Not Found');
+           }
         });
+          
     }
   
     $(document).ready(function(){
@@ -142,8 +151,11 @@
         FetchTopGainerData();
         setInterval(() => {
             FetchTopLoserData();
-            FetchTopGainerData();
         }, 10 * 1000);
+
+        setInterval(() => {
+            FetchTopGainerData();
+        }, 5 * 1000);
         
     });
 </script>

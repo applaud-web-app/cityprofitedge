@@ -162,38 +162,7 @@ trait AngelApiAuth
         return $errData;
     }    
 
-    function getStockName($apiKey, $symbol) {
-        $baseURL = "https://api.angelone.com/v1"; // Replace with the actual base URL for Angel One API
-        $endpoint = "/stocks"; // Replace with the actual endpoint for fetching stock details
-        $url = $baseURL . $endpoint . "?symbol=" . urlencode($symbol);
-        $headers = [
-            "Authorization: Bearer $apiKey", // Replace with your actual API key
-        ];
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $response = curl_exec($ch);
-        $statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-        if ($statusCode == 200) {
-            $stockData = json_decode($response, true);
-            $stockName = $stockData["name"] ?? "N/A";
-            return $stockName;
-        } else {
-            echo "Error: $statusCode - $response";
-            return null;
-        }
-
-        // Example usage
-    // $apiKey = $this->apiKey;
-    // $symbolToLookup = "AAPL";
-    // $stockName = getStockName($apiKey, $symbolToLookup);
-    // if ($stockName) {
-    //     echo "The stock name for symbol $symbolToLookup is: $stockName";
-    // } else {
-    //     echo "Failed to retrieve stock name.";
-    // }
-    }
+   
     
 
 }

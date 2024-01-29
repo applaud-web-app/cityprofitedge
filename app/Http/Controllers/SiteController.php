@@ -241,8 +241,13 @@ class SiteController extends Controller
         return response()->json($this->getMarketDataResp());
     }
 
-    public function getApiData(Request $req){
-        $fetchType = $req->type;
+    public function getTopLoserData(){
+        $fetchType = "PercPriceLosers";
+        return response()->json($this->getAngleApiData($fetchType));
+    }
+
+    public function getTopGainerApiData(){
+        $fetchType = "PercPriceGainers";
         return response()->json($this->getAngleApiData($fetchType));
     }
 
