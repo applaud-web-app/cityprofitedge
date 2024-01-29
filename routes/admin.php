@@ -88,6 +88,8 @@ Route::middleware('admin')->group(function () {
 
 
     Route::controller('TradeController')->name('trade.')->prefix('trade')->group(function(){
+        Route::get('save-all-angel-instruments', 'saveAllAngelInstruments');
+
         Route::group(['as' => 'trade-desk-signal.', 'prefix' => 'trade-desk-signal'], function() {
             Route::get('/', 'tradeDeskSignal')->name('all');
         });

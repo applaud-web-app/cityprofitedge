@@ -119,4 +119,81 @@ trait AngelApiAuth
         }
         return $errData;
     }
+
+    public function getAngleApiData($type){
+        $jwtToken =  $this->generate_access_token();
+        $errData = [];
+        if($jwtToken!=null){
+            $curl = curl_init();
+            curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://apiconnect.angelbroking.com/rest/secure/angelbroking/marketData/v1/gainersLosers',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => '{
+                "datatype": "'.$type.'",
+                "expirytype": "NEAR"
+            }',
+            CURLOPT_HTTPHEADER => array(
+                'X-UserType: USER',
+                'X-SourceID: WEB',
+                'X-PrivateKey: '.$this->apiKey,
+                'X-ClientLocalIP: '.$this->clientLocalIp,
+                'X-ClientPublicIP: '.$this->clientPublicIp,
+                'X-MACAddress: '.$this->macAddress,
+                'Content-Type: application/json',
+                'Authorization: Bearer '.$jwtToken
+            ),
+            ));
+
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+            curl_close($curl);
+            if ($err) {
+                return $errData;
+            }
+            $errData = json_decode($response,true);
+            return $errData;
+        }
+        return $errData;
+    }    
+
+    function getStockName($apiKey, $symbol) {
+        $baseURL = "https://api.angelone.com/v1"; // Replace with the actual base URL for Angel One API
+        $endpoint = "/stocks"; // Replace with the actual endpoint for fetching stock details
+        $url = $baseURL . $endpoint . "?symbol=" . urlencode($symbol);
+        $headers = [
+            "Authorization: Bearer $apiKey", // Replace with your actual API key
+        ];
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($ch);
+        $statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+        if ($statusCode == 200) {
+            $stockData = json_decode($response, true);
+            $stockName = $stockData["name"] ?? "N/A";
+            return $stockName;
+        } else {
+            echo "Error: $statusCode - $response";
+            return null;
+        }
+
+        // Example usage
+    // $apiKey = $this->apiKey;
+    // $symbolToLookup = "AAPL";
+    // $stockName = getStockName($apiKey, $symbolToLookup);
+    // if ($stockName) {
+    //     echo "The stock name for symbol $symbolToLookup is: $stockName";
+    // } else {
+    //     echo "Failed to retrieve stock name.";
+    // }
+    }
+    
+
 }

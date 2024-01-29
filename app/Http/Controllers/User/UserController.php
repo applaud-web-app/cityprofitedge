@@ -495,11 +495,15 @@ class UserController extends Controller
         // TODO:: modify commented code to implement searchable and filterable.
         $globalStockPortfolios = GlobalStockPortfolio::with('poolingAccountPortfolio')->where('user_id', auth()->id())->searchable(['broker_name', 'stock_price'])->orderBy('id', 'desc')->paginate(getPaginate());
 
+        
         $symbolArray = [];
         foreach ($globalStockPortfolios as $val) {
-           array_push($symbolArray , $val['stock_name'].".NS");
+        //    array_push($symbolArray , $val['stock_name'].".NS");
+        array_push($symbolArray , $val['stock_name']);
         }
-        
+        $getToken = AngelApiInstrument::select('token')->WhereIn(['symbol',$symbolArray])->get();
+
+        // dd($getToken);
         // $date = \DB::connection('mysql_pr')->table('LTP')->select('*')->get();
         
         return view($this->activeTemplate . 'user.global_stock_portfolio', compact('pageTitle', 'globalStockPortfolios','symbolArray'));

@@ -39,6 +39,7 @@ class SiteController extends Controller
         $page = Page::where('tempname',$this->activeTemplate)->where('slug',$slug)->firstOrFail();
         $pageTitle = $page->name;
         $sections = $page->secs;
+        dd($this->activeTemplate . 'pages');
         return view($this->activeTemplate . 'pages', compact('pageTitle','sections'));
     }
 
@@ -240,6 +241,11 @@ class SiteController extends Controller
         return response()->json($this->getMarketDataResp());
     }
 
+    public function getApiData(Request $req){
+        $fetchType = $req->type;
+        return response()->json($this->getAngleApiData($fetchType));
+    }
+
     public function packageDetails($id){
         $pageTitle = 'Products Details';
         $packageDetails = Package::Where('id',$id)->first();
@@ -267,4 +273,5 @@ class SiteController extends Controller
         return back()->withNotify($notify);
     }
 
+   
 }
