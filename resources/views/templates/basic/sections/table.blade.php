@@ -17,6 +17,13 @@
                                         </tr>
                                     </thead>
                                     <tbody id="topLoser">
+                                        <tr>
+                                            <td colspan="100%">
+                                                <div class="spinner-border" role="status">
+                                                    <span class="sr-only">Loading...</span>
+                                                </div>
+                                            </td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -38,6 +45,13 @@
                                         </tr>
                                     </thead>
                                     <tbody id="topGainer">
+                                        <tr>
+                                            <td colspan="100%">
+                                                <div class="spinner-border" role="status">
+                                                    <span class="sr-only">Loading...</span>
+                                                </div>
+                                            </td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -45,6 +59,7 @@
                     </div>
                 </div>
                 <div class="col-lg-6">
+                    <h2>PCR Volume</h2>
                     <div class="custom--card">
                         <div class="card-body p-0">
                             <div class="table-responsive--md">
@@ -56,6 +71,13 @@
                                         </tr>
                                     </thead>
                                     <tbody id="pcr">
+                                        <tr>
+                                            <td colspan="100%">
+                                                <div class="spinner-border" role="status">
+                                                    <span class="sr-only">Loading...</span>
+                                                </div>
+                                            </td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -63,6 +85,7 @@
                     </div>
                 </div>
                 <div class="col-lg-6">
+                    <h2>OI BuildUp</h2>
                     <div class="custom--card">
                         <div class="card-body p-0">
                             <div class="table-responsive--md">
@@ -78,6 +101,13 @@
                                         </tr>
                                     </thead>
                                     <tbody id="oi">
+                                        <tr>
+                                            <td colspan="100%">
+                                                <div class="spinner-border" role="status">
+                                                    <span class="sr-only">Loading...</span>
+                                                </div>
+                                            </td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
