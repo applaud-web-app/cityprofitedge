@@ -406,9 +406,15 @@
         FetchPCRData();
         FetchTopLoserData();
         FetchTopGainerData();
-        // setInterval(() => {
-            
-        // }, 10 * 1000);
+        setInterval(() => {
+            FetchLongOIData();
+            FetchShortOIData();
+            FetchShortCoveringOIData();
+            FetchLongUnwilingOIData();
+            FetchPCRData();
+            FetchTopLoserData();
+            FetchTopGainerData();
+        }, 10 * 1000);
         
     });
 </script>
