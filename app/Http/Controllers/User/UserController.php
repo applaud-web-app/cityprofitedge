@@ -572,9 +572,6 @@ class UserController extends Controller
         $broker_data = BrokerApi::where('user_id',auth()->user()->id)->get();
         $data['broker_data'] = $broker_data;
         if($broker_data){
-
-            $output = shell_exec('/home/forge/cityprofitedge.com/public/chromdriver.exe');
-            dd($output);
             $brokerId = !empty($request->broker_name) ? $request->broker_name : $broker_data[0]->id;
             $userData = null;
             foreach($broker_data as $val){
