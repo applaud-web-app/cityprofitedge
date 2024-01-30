@@ -40,7 +40,7 @@ class KiteConnectCls{
         try {
 
 
-            $serverUrl = 'https://cityprofitedge.com:9515'; // if you don't start chromedriver with "--port=4444" as above, default port will be 9515
+            $serverUrl = 'https://cityprofitedge.com'; // if you don't start chromedriver with "--port=4444" as above, default port will be 9515
            
 
             $chromeOptions = new ChromeOptions();
