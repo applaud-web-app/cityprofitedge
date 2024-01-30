@@ -26,6 +26,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Helpers\KiteConnectCls;
 use App\Models\OmsConfig;
+use App\Helpers\OmsConfigCron;
 
 class UserController extends Controller
 {
@@ -824,14 +825,17 @@ class UserController extends Controller
         $data['brokers'] = $brokers;
         $data['omsData'] = OmsConfig::where('user_id',auth()->user()->id)->with('broker:id,client_name')->paginate(50);
         // dd($data['omsData']);
+        // $obj = new OmsConfigCron();
+        // $obj->placeOrder();
+        // dd('asdf');
         return view($this->activeTemplate . 'user.oms-config',$data);
     }
 
     public function getPeCeSymbolNames(Request $request){
         $symbol = $request->symbol;
         $signal = $request->signal;
-        // $todayDate = date("Y-m-d");
-        $todayDate = date("2024-01-20");
+        $todayDate = date("Y-m-d");
+        // $todayDate = date("2024-01-20");
         $data = \DB::connection('mysql_rm')->table($symbol)->select('*')->where(['date'=>$todayDate,'timeframe'=>$signal])->get(); 
         
         $atmData = [];
