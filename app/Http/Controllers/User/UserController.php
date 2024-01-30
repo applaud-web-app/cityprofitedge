@@ -588,6 +588,8 @@ class UserController extends Controller
                     'apiSecret'=>$userData->api_secret_key
                 ];
                 $kiteObj = new KiteConnectCls($params);
+                $kite = $kiteObj->generateSession();
+                dd($kite);
                 $kite = \Cache::remember('KITE_AUTH_'.$userData->account_user_name, 18000, function () use($kiteObj) {
                     $kite = $kiteObj->generateSession();
                     return $kite;
