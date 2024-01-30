@@ -40,6 +40,8 @@ return new class extends Migration
             $table->integer('exit_2_qty')->nullable();
             $table->integer('exit_2_target')->nullable();
             $table->bigInteger('user_id')->nullable();
+            $table->dateTime('cron_run_at')->nullable();
+            $table->tinyInteger('is_api_pushed')->default(0);
             $table->timestamps();
         });
     }

@@ -27,6 +27,11 @@ class TradeController extends Controller
     }
     public function tradePosition(){
         $pageTitle = 'Trade Position';
+        // $kiteObj = new KiteConnectCls($params);
+        // $kite = \Cache::remember('KITE_AUTH_'.$broker->account_user_name, 3600, function () use($kiteObj) {
+        //     $kite = $kiteObj->generateSession();
+        //     return $kite;
+        // });
         return view('admin.trade.trade-position', compact('pageTitle'));
      
     }

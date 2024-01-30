@@ -24,10 +24,9 @@ use App\Models\BrokerApi;
 use App\Models\Transaction;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use App\Helpers\KiteConnectCls;
 use App\Models\OmsConfig;
-use App\Helpers\OmsConfigCron;
-
+use App\Models\OrderBook;
+use App\Helpers\KiteConnectCls;
 class UserController extends Controller
 {
     public function home()
@@ -560,6 +559,54 @@ class UserController extends Controller
         return view($this->activeTemplate . 'user.broker_details',$data);
     }
 
+    public function orderBooks(){
+        $data['pageTitle'] = 'Order Boook';
+        $data['order_data'] = OrderBook::select('*')->where('user_id',auth()->user()->id)->paginate(50);
+        return view($this->activeTemplate . 'user.order_books',$data);
+    }
+
+    
+
+    public function tradePositions(Request $request){
+        $data['pageTitle'] = 'Trade Positions';
+        $broker_data = BrokerApi::where('user_id',auth()->user()->id)->get();
+        $data['broker_data'] = $broker_data;
+        if($broker_data){
+            // $brokerId = !empty($request->broker_name) ? $request->broker_name : $broker_data[0]->id;
+            // $userData = null;
+            // foreach($broker_data as $val){
+            //     if($val->id == $brokerId){
+            //         $userData = $val;
+            //     }
+            // }
+            // if(!is_null($userData)){
+            //     $params = [
+            //         'accountUserName'=>$userData->account_user_name,
+            //         'accountPassword'=>$userData->account_password,
+            //         'totpSecret'=>$userData->totp,
+            //         'apiKey'=>$userData->api_key,
+            //         'apiSecret'=>$userData->api_secret_key
+            //     ];
+            //     $kiteObj = new KiteConnectCls($params);
+            //     $kite = \Cache::remember('KITE_AUTH_'.$userData->account_user_name, 18000, function () use($kiteObj) {
+            //         $kite = $kiteObj->generateSession();
+            //         return $kite;
+            //     });
+            //     $positionData = $kite->getPositions();
+            //     dd($positionData);
+            // }
+        }
+        
+
+        
+
+        $data['order_data'] = OrderBook::select('*')->where('user_id',auth()->user()->id)->paginate(50);
+        
+        return view($this->activeTemplate . 'user.trade_positions',$data);
+    }
+
+
+
     public function getBrokerDetails(Request $request,$id){
         $data['broker_data'] = BrokerApi::where(['user_id'=>auth()->user()->id,'id'=>$id])->first();
         return view($this->activeTemplate.'user.get_broker_details',$data);
@@ -809,25 +856,9 @@ class UserController extends Controller
     public function omsConfig(){
         $pageTitle = 'OMS CONFIG';
         $data['pageTitle'] = $pageTitle;
-        // $params = [
-        //     'accountUserName'=>'BFF348',
-        //     'accountPassword'=>'venue@123',
-        //     'totpSecret'=>'4AMQ5W5EHKIRZ33Z6EVI7W4HUS3KKDB2',
-        //     'apiKey'=>'99n9vrxlgyxklpht',
-        //     'apiSecret'=>'adjl97sewgv1utfycl3ens7ks545hpcr'
-        // ];
-        // $kiteObj = new KiteConnectCls($params);
-        // $kite = $kiteObj->generateSession();
-        // echo "Positions: \n";
-        // print_r($kite->getPositions());die;
-
         $brokers = BrokerApi::select('client_name','id')->where('user_id',auth()->user()->id)->get();
         $data['brokers'] = $brokers;
         $data['omsData'] = OmsConfig::where('user_id',auth()->user()->id)->with('broker:id,client_name')->paginate(50);
-        // dd($data['omsData']);
-        // $obj = new OmsConfigCron();
-        // $obj->placeOrder();
-        // dd('asdf');
         return view($this->activeTemplate . 'user.oms-config',$data);
     }
 

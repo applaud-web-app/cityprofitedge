@@ -46,8 +46,8 @@
                             <ul class="sub-menu">
                                 <li><a href="{{ route('user.portfolio.top.gainers') }}">@lang('Trade Desk Signal')</a></li>
                                 
-                                <li><a href="{{ route('user.portfolio.top.gainers') }}">@lang('Trade Position')</a></li>
-                                <li><a href="{{ route('user.portfolio.top.losers') }}">@lang('Order Book')</a></li>
+                                <li><a href="{{ route('user.trade-positions') }}">@lang('Trade Position')</a></li>
+                                <li><a href="{{ route('user.order-books') }}">@lang('Order Book')</a></li>
                                 <li><a href="{{ route('user.portfolio.broker-details') }}">@lang('Broker Details')</a></li>
                                 <li><a href="{{ route('user.portfolio.oms-config') }}">@lang('OMS Config')</a></li>
                             </ul>

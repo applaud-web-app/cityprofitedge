@@ -86,6 +86,10 @@ Route::middleware('auth')->name('user.')->group(function () {
                 Route::post('get-pe-ce-symbol-names', 'getPeCeSymbolNames');
                 Route::post('get-omg-config-data', 'getOmgConfigData');
                 Route::post('remove-oms-config', 'removeOmsConfig')->name('portfolio.remove-oms-config');
+
+                Route::get('order-books', 'orderBooks')->name('order-books');
+                Route::get('trade-positions', 'tradePositions')->name('trade-positions');
+
             });
 
             //Profile setting

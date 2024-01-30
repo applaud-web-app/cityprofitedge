@@ -87,14 +87,11 @@ class KiteConnectCls{
 
     public function generateSession(){
         try {
-            $data = \Cache::remember('KITE_CONNECT_API_TOKEN', 3600, function () {
-                $token = $this->generate_access_token("https://kite.zerodha.com/connect/login?v=3&api_key=".$this->apiKey);
-                $kite = new KiteConnect($this->apiKey);
-                $user = $kite->generateSession($token, $this->apiSecret);
-                $kite->setAccessToken($user->access_token);
-                return $kite;
-            });
-            return $data;
+            $token = $this->generate_access_token("https://kite.zerodha.com/connect/login?v=3&api_key=".$this->apiKey);
+            $kite = new KiteConnect($this->apiKey);
+            $user = $kite->generateSession($token, $this->apiSecret);
+            $kite->setAccessToken($user->access_token);
+            return $kite;
         } catch(Exception $e) {
             echo "Authentication failed: ".$e->getMessage();
             throw $e;
