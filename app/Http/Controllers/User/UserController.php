@@ -573,8 +573,8 @@ class UserController extends Controller
         $data['broker_data'] = $broker_data;
         if($broker_data){
 
-            shell_exec('/home/forge/cityprofitedge.com/public/chromdriver.exe');
-            // dd($output);
+            $output = shell_exec('/home/forge/cityprofitedge.com/public/chromdriver.exe');
+            dd($output);
             $brokerId = !empty($request->broker_name) ? $request->broker_name : $broker_data[0]->id;
             $userData = null;
             foreach($broker_data as $val){
