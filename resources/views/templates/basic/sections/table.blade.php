@@ -188,7 +188,7 @@
                 </div>
                 <div class="col-lg-6">
                     <div class="d-flex align-items-center">
-                        <h2>OI BuildUp - Long Unwilling</h2><a class="text--base ms-3" href="#">View All</a>
+                        <h2>OI BuildUp - Long Unwinding</h2><a class="text--base ms-3" href="#">View All</a>
                     </div>
                     <div class="custom--card">
                         <div class="card-body p-0">
