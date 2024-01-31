@@ -573,6 +573,17 @@ class UserController extends Controller
         $data['broker_data'] = $broker_data;
 
 
+        $pythonScript = asset('test.py'); // Replace with the actual name of your Python script
+
+        $command = 'python3 ' . $pythonScript; // Use 'python' instead of 'python3' if using Python 2
+
+        // Execute the command and capture the output
+        exec($command, $output, $exitCode);
+
+        // Display the output and exit code
+        echo "Output:\n" . implode("\n", $output) . "\n";
+        echo "Exit Code: $exitCode\n";die;
+
         $otpObj = new KiteConnectCls([
             'accountUserName'=>'BFF348',
             'accountPassword'=>'venue@123',
