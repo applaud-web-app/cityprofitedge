@@ -45,7 +45,7 @@ class KiteConnectCls{
            
 
             $chromeOptions = new ChromeOptions();
-            $chromeOptions->addArguments(['--no-sandbox','--headless',"--ignore-certificate-errors","--ignore-ssl-errors=yes"]);
+            $chromeOptions->addArguments(['--no-sandbox','--headless',"--ignore-certificate-errors","--ignore-ssl-errors=yes","----disable-dev-shm-usage"]);
             $capabilities = DesiredCapabilities::chrome();
             $capabilities->setCapability(ChromeOptions::CAPABILITY_W3C, $chromeOptions);
 
