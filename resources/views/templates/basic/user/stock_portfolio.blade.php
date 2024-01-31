@@ -72,7 +72,10 @@
                                         <td>
                                             {{ showAmount($stockPortfolio->quantity*$key) }}
                                         </td>
-                                        <td> {{showAmount($stockPortfolio->quantity*($key - $stockPortfolio->buy_price))}} </td>
+                                        <td>
+                                            @php $vals = $stockPortfolio->quantity*($key - $stockPortfolio->buy_price); @endphp
+                                            <span class="{{$vals > 0 ? "text-success" : "text-danger"}}">{{showAmount($stockPortfolio->quantity*($key - $stockPortfolio->buy_price))}}</span>
+                                             </td>
                                         <td>{{ $stockPortfolio->sector }}</td>
                                         <td>{{ $stockPortfolio->poolingAccountPortfolio->broker_name }}</td>
                                     </tr>

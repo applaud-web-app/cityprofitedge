@@ -72,7 +72,11 @@
                                             <td>
                                                 ${{ showAmount($globalStockPortfolio->quantity*$key) }}
                                             </td>
-                                            <td> {{showAmount($globalStockPortfolio->quantity*($key - $globalStockPortfolio->buy_price))}} </td>
+                                            <td>   
+                                                @php $vals = $globalStockPortfolio->quantity*($key - $globalStockPortfolio->buy_price);
+                                                @endphp
+                                                <span class='{{$vals > 0 ? "text-success" :"text-danger"}}'>{{showAmount($globalStockPortfolio->quantity*($key - $globalStockPortfolio->buy_price))}}</span>
+                                            </td>
                                             <td>{{ $globalStockPortfolio->sector }}</td>
                                             <td>{{ $globalStockPortfolio->poolingAccountPortfolio->broker_name }}</td>
                                         </tr>

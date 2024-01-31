@@ -72,7 +72,11 @@
                                             <td>
                                                 {{ showAmount($foPortFolioHedging->quantity*$key) }}
                                             </td>
-                                            <td> {{showAmount($foPortFolioHedging->quantity*($key - $foPortFolioHedging->buy_price))}} </td>
+                                            <td> 
+                                                @php $vals = $foPortFolioHedging->quantity*($key - $foPortFolioHedging->buy_price);
+                                                @endphp
+                                                <span class="{{$vals > 0 ? "text-success" : "text-danger"}}">{{showAmount($foPortFolioHedging->quantity*($key - $foPortFolioHedging->buy_price))}}</span>
+                                                 </td>
                                             <td>{{ $foPortFolioHedging->sector }}</td>
                                             <td>{{ $foPortFolioHedging->poolingAccountPortfolio->broker_name }}</td>
                                         </tr>

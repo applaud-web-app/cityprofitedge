@@ -72,7 +72,10 @@
                                         <td>
                                             {{ showAmount($metalsPortfolio->quantity*$key) }}
                                         </td>
-                                        <td> {{showAmount($metalsPortfolio->quantity*($key - $metalsPortfolio->buy_price))}} </td>
+                                        <td>
+                                            @php $vals = $metalsPortfolio->quantity*($key - $metalsPortfolio->buy_price);  @endphp
+                                            <span class="{{ $vals > 0 ? "text-success" : "text-danger"}}"> {{showAmount($metalsPortfolio->quantity*($key - $metalsPortfolio->buy_price))}}</span>
+                                            </td>
                                         <td>{{ $metalsPortfolio->sector }}</td>
                                         <td>{{ $metalsPortfolio->poolingAccountPortfolio->broker_name }}</td>
                                     </tr>

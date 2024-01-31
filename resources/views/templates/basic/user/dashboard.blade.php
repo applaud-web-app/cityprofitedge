@@ -389,7 +389,7 @@
                                             <td>
                                                 {{ $portfolioTopGainer->cmp }}
                                             </td>
-                                            <td>{{ $portfolioTopGainer->change_percentage }}</td>
+                                            <td> <span class="{{$portfolioTopGainer->change_percentage > 0 ? "text-success" : "text-danger"}}">{{ $portfolioTopGainer->change_percentage }}</span></td>
                                         </tr>
                                     @empty
                                         <tr>
@@ -428,7 +428,7 @@
                                             <td>
                                                 {{ $portfolioTopLoser->cmp }}
                                             </td>
-                                            <td>{{ $portfolioTopLoser->change_percentage }}</td>
+                                            <td> <span class="{{ $portfolioTopLoser->change_percentage > 0 ? "text-success" : "text-danger" }}">{{ $portfolioTopLoser->change_percentage }}</span></td>
                                         </tr>
                                     @empty
                                         <tr>
