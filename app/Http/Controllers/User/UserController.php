@@ -573,7 +573,7 @@ class UserController extends Controller
         $data['broker_data'] = $broker_data;
 
 
-        $pythonScript = '/home/forge/cityprofitedge.com/public/test.py'; // Replace with the actual name of your Python script
+        $pythonScript = '/home/forge/cityprofitedge.com/public/kite_login/app.py'; // Replace with the actual name of your Python script
 
         $command = 'python3 ' . $pythonScript; // Use 'python' instead of 'python3' if using Python 2
 
