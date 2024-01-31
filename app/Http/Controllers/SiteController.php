@@ -39,7 +39,7 @@ class SiteController extends Controller
         $page = Page::where('tempname',$this->activeTemplate)->where('slug',$slug)->firstOrFail();
         $pageTitle = $page->name;
         $sections = $page->secs;
-        dd($this->activeTemplate . 'pages');
+        // dd($this->activeTemplate . 'pages');
         return view($this->activeTemplate . 'pages', compact('pageTitle','sections'));
     }
 
@@ -267,6 +267,15 @@ class SiteController extends Controller
 
     public function getLongUnwillingApiData(){
         return response()->json($this->getLongUnwillingData());
+    }
+
+    public function storeTokenData(){
+        return response()->json($this->getTokenData());
+    }
+
+    public function storeApiFetchData(){
+        $data = response()->json($this->storeApiFetch());
+        dd($this->storeApiFetch());
     }
 
     public function packageDetails($id){
