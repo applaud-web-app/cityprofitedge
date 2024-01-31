@@ -15,7 +15,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('oms-config:command')->everyMinute()->between('8:00','20:00');
+        $schedule->command('oms-config:command')->everyMinute()->between('8:00','20:00')->sendOutputTo('command1_output.log');
     }
 
     /**
