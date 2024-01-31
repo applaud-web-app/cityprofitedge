@@ -32,13 +32,7 @@ class OmsConfigSchedule extends Command
         if(in_array($day,['Sat','Sun'])){
             return;
         }
-
-        \DB::table('test')->insert([
-            'id'=>1,
-            'name'=>'asdfasdf'
-        ]);
-        return 0;
-
+        
         $obj = new OmsConfigCron();
         $obj->placeOrder();
     }
