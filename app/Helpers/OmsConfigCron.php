@@ -45,8 +45,8 @@ class OmsConfigCron{
         ];
         // dd($params);
         $kiteObj = new KiteConnectCls($params);
-        $kite = \Cache::remember('KITE_AUTH_'.$broker->account_user_name, 18000, function () use($kiteObj) {
-            $kite = $kiteObj->generateSession();
+        $kite = \Cache::remember('KITE_AUTH_'.$broker->account_user_name, 18000, function () use($kiteObj,$broker) {
+            $kite = $kiteObj->generateSessionManual($broker->request_token);
             return $kite;
         });
         $order = $kite->placeOrder("regular", $apiData);

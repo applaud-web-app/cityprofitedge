@@ -40,17 +40,15 @@ class KiteConnectCls{
         try {
 
 
-            // $serverUrl = 'http://10.52.96.4:9515'; // if you don't start chromedriver with "--port=4444" as above, default port will be 9515
-            $serverUrl = 'http://10.52.96.4:9515/wd/hub'; // if you don't start chromedriver with "--port=4444" as above, default port will be 9515
+            $serverUrl = 'http://10.52.96.4:9515'; // if you don't start chromedriver with "--port=4444" as above, default port will be 9515
            
 
             $chromeOptions = new ChromeOptions();
-            $chromeOptions->addArguments(['--no-sandbox','--headless',"--ignore-certificate-errors","--ignore-ssl-errors=yes","----disable-dev-shm-usage"]);
+            $chromeOptions->addArguments(['--headless']);
             $capabilities = DesiredCapabilities::chrome();
             $capabilities->setCapability(ChromeOptions::CAPABILITY_W3C, $chromeOptions);
 
             $driver = RemoteWebDriver::create($serverUrl, $capabilities);
-            dd($driver);
             $driver->get($login_url);
             $driver->wait()->until(WebDriverExpectedCondition::presenceOfElementLocated(WebDriverBy::xpath('//input[@type="text"]')))
                 ->sendKeys($this->accountUserName);
@@ -99,4 +97,17 @@ class KiteConnectCls{
             throw $e;
         }
     }
+
+    public function generateSessionManual($token){
+        try {
+            $kite = new KiteConnect($this->apiKey);
+            $user = $kite->generateSession($token, $this->apiSecret);
+            $kite->setAccessToken($user->access_token);
+            return $kite;
+        } catch(Exception $e) {
+            echo "Authentication failed: ".$e->getMessage();
+            throw $e;
+        }
+    }
+
 }
