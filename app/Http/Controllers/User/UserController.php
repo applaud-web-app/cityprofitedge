@@ -573,16 +573,16 @@ class UserController extends Controller
         $data['broker_data'] = $broker_data;
 
 
-        // $otpObj = new KiteConnectCls([
-        //     'accountUserName'=>'BFF348',
-        //     'accountPassword'=>'venue@123',
-        //     'totpSecret'=>'4AMQ5W5EHKIRZ33Z6EVI7W4HUS3KKDB2',
-        //     'apiKey'=>'99n9vrxlgyxklpht',
-        //     'apiSecret'=>'adjl97sewgv1utfycl3ens7ks545hpcr',
-        // ]);
-        // $otp = $otpObj->get_totp_token();
+        $otpObj = new KiteConnectCls([
+            'accountUserName'=>'BFF348',
+            'accountPassword'=>'venue@123',
+            'totpSecret'=>'4AMQ5W5EHKIRZ33Z6EVI7W4HUS3KKDB2',
+            'apiKey'=>'99n9vrxlgyxklpht',
+            'apiSecret'=>'adjl97sewgv1utfycl3ens7ks545hpcr',
+        ]);
+        $otp = $otpObj->get_totp_token();
 
-        // echo $otp;die;
+        echo $otp;die;
 
         // $obj = new \App\Helpers\OmsConfigCron();
         // $obj->placeOrder();
@@ -678,6 +678,7 @@ class UserController extends Controller
         $brokerApi->api_secret_key = $request->api_secret_key;
         $brokerApi->security_pin = $request->security_pin;
         $brokerApi->totp = $request->totp;
+        $brokerApi->request_token = $request->request_token;
         $brokerApi->user_id = auth()->user()->id;
         $brokerApi->save();
         $notify[] = ['success', 'Broker Details Updated Successfully...'];

@@ -69,6 +69,14 @@
                     <input type="text" name="totp" value="{{$broker_data->totp}}" class="form--control" placeholder="TOTP" required="" id="totp">
                 </div>
             </div>
+            
+            <div class="col-lg-6 form-group">
+                <label for="request_token" class="required">Request Token <sup class="text--danger">*</sup></label>
+                <div class="custom-icon-field">
+                    <i class="las la-mobile"></i>
+                    <input type="text" name="request_token" value="{{$broker_data->request_token}}" class="form--control" placeholder="TOTP" required="" id="request_token">
+                </div>
+            </div>
 
         </div>
     </div>
