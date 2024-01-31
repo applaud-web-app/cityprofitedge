@@ -40,15 +40,17 @@ class KiteConnectCls{
         try {
 
 
-            $serverUrl = 'http://10.52.96.4:9515'; // if you don't start chromedriver with "--port=4444" as above, default port will be 9515
+            // $serverUrl = 'http://10.52.96.4:9515'; // if you don't start chromedriver with "--port=4444" as above, default port will be 9515
+            $serverUrl = 'http://10.52.96.4:4444/wd/hub'; // if you don't start chromedriver with "--port=4444" as above, default port will be 9515
            
 
             $chromeOptions = new ChromeOptions();
-            $chromeOptions->addArguments(['--headless','--ignore-ssl-errors=yes','--ignore-certificate-errors']);
+            $chromeOptions->addArguments(['--headless',"--ignore-certificate-errors","--ignore-ssl-errors=yes"]);
             $capabilities = DesiredCapabilities::chrome();
             $capabilities->setCapability(ChromeOptions::CAPABILITY_W3C, $chromeOptions);
 
             $driver = RemoteWebDriver::create($serverUrl, $capabilities);
+            dd($driver);
             $driver->get($login_url);
             $driver->wait()->until(WebDriverExpectedCondition::presenceOfElementLocated(WebDriverBy::xpath('//input[@type="text"]')))
                 ->sendKeys($this->accountUserName);

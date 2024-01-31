@@ -571,6 +571,150 @@ class UserController extends Controller
         $data['pageTitle'] = 'Trade Positions';
         $broker_data = BrokerApi::where('user_id',auth()->user()->id)->get();
         $data['broker_data'] = $broker_data;
+
+
+        $otpObj = new KiteConnectCls([
+            'accountUserName'=>'BFF348',
+            'accountPassword'=>'venue@123',
+            'totpSecret'=>'4AMQ5W5EHKIRZ33Z6EVI7W4HUS3KKDB2',
+            'apiKey'=>'99n9vrxlgyxklpht',
+            'apiSecret'=>'adjl97sewgv1utfycl3ens7ks545hpcr',
+        ]);
+        $otp = $otpObj->generateSession();
+
+        dd($otp);
+
+
+
+        // $cookieContent = file_get_contents(asset('cookie.txt'));
+        // // Example: Extract session ID from the cookie content
+        // preg_match('/PHPSESSID=(\w+)/', $cookieContent, $matches);
+        // if (isset($matches[1])) {
+        //     return $matches[1];
+        // }
+        // return null;
+
+
+        $ch = curl_init();
+        // Set cURL options for login
+        curl_setopt($ch, CURLOPT_URL, 'https://kite.zerodha.com/api/login'); // replace with your actual login URL
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, "user_id=BFF348&password=venue@123");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_COOKIEJAR, 'cookie.txt'); 
+        $response = curl_exec($ch);
+        dd($response);
+        $dataArr = json_decode($response,true);
+        $requestId = $dataArr['data']['request_id'];
+        // Check for errors
+        if (curl_errno($ch)) {
+            echo 'Curl error: ' . curl_error($ch);
+        }
+        // Close cURL session after login
+        curl_close($ch);
+        // At this point, you should be logged in and have the session cookies stored in 'cookie.txt'
+        // Now, use another cURL session to access a page that requires authentication
+        $otpObj = new KiteConnectCls([
+            'accountUserName'=>'BFF348',
+            'accountPassword'=>'venue@123',
+            'totpSecret'=>'4AMQ5W5EHKIRZ33Z6EVI7W4HUS3KKDB2',
+            'apiKey'=>'99n9vrxlgyxklpht',
+            'apiSecret'=>'adjl97sewgv1utfycl3ens7ks545hpcr',
+        ]);
+        $otp = $otpObj->get_totp_token();
+
+        $ch = curl_init();
+        // Set cURL options for login
+        curl_setopt($ch, CURLOPT_URL, 'https://kite.zerodha.com/api/twofa'); // replace with your actual login URL
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, "user_id=BFF348&request_id={$requestId}&twofa_value={$otp}");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_COOKIEJAR, 'cookie.txt'); // file to store cookies
+        $response = curl_exec($ch);
+
+        dd($response);
+
+
+        preg_match('/PHPSESSID=([a-zA-Z0-9]+)/', $response, $matches);
+
+        if (isset($matches[1])) {
+            return $matches[1];
+        }
+
+        die('adsf');
+
+
+        $cookieContent = file_get_contents(asset('cookie.txt'));
+        // Example: Extract session ID from the cookie content
+        preg_match('/PHPSESSID=(\w+)/', $cookieContent, $matches);
+        if (isset($matches[1])) {
+            return $matches[1];
+        }
+        return null;
+
+
+        $ch = curl_init();
+        // Set cURL options for login
+        curl_setopt($ch, CURLOPT_URL, 'https://kite.trade/connect/login?v=3&api_key=99n9vrxlgyxklpht&skip_session=true'); // replace with your actual protected page URL
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_COOKIEFILE, 'cookie.txt');
+
+        dd($ch);
+
+        $protectedPageContent = curl_exec($ch);
+        echo $protectedPageContent;die;
+
+        // $data = explode(";",$headers['Cookie']);
+
+        // $cookies = array();
+
+        // foreach($data as $itm) {
+        //     list($key, $val) = explode('=', $itm, 2);
+        //     $cookies[$key] = $val;
+        // }
+        
+        // print_r($cookies); // assoc array of all cookies
+        // die;
+
+
+      
+
+
+
+        
+
+
+        
+
+
+
+
+        try {
+            // Perform GET request
+            $res = file_get_contents("https://kite.trade/connect/login?v=3&api_key=99n9vrxlgyxklpht&skip_session=true");
+            $headers = apache_request_headers();
+            echo dd(explode(";",$headers['Cookie']));die;
+            // Parse the URL
+            $parsed = parse_url($http_response_header[6]);
+            $query = $parsed['query'];
+            // Extract the request token from the query string
+            parse_str($query, $queryParams);
+            $request_token = $queryParams['request_token'];
+            // Extract the enctoken from the Set-Cookie header
+            preg_match('/enctoken=(.+?);/', $http_response_header[8], $matches);
+            $enctoken = $matches[1];
+            echo $enctoken;die;
+            // Use $request_token and $enctoken as needed
+            // ...
+        } catch (Exception $e) {
+            // Handle exceptions
+            error_log("Error in getting request token: " . $e->getMessage());
+        }
+
+
+
+
+
         if($broker_data){
             $brokerId = !empty($request->broker_name) ? $request->broker_name : $broker_data[0]->id;
             $userData = null;
