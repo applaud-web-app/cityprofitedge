@@ -333,10 +333,10 @@
                     str += `<tr>
                        <td class="text-start">${data[i].tradingSymbol}</td>
                        <td class="text-start">${data[i].ltp}</td>
-                       <td class="text-start" ${data[i].netChange > 0 ? 'text-success' : 'text-danger'}>${data[i].netChange}</td>
-                       <td class="text-start" ${data[i].percentChange > 0 ? 'text-success' : 'text-danger'}>${data[i].percentChange}</td>
+                       <td class="text-start ${data[i].netChange > 0 ? 'text-success' : 'text-danger'}">${data[i].netChange}</td>
+                       <td class="text-start ${data[i].percentChange > 0 ? 'text-success' : 'text-danger'}">${data[i].percentChange}</td>
                        <td class="text-start">${Math.trunc(data[i].opnInterest)}</td>
-                       <td class="text-start" ${data[i].netChangeOpnInterest > 0 ? 'text-success' : 'text-danger'}>${Math.trunc(data[i].netChangeOpnInterest)}</td>`;
+                       <td class="text-start ${data[i].netChangeOpnInterest > 0 ? 'text-success' : 'text-danger'}">${Math.trunc(data[i].netChangeOpnInterest)}</td>`;
                 }
                 $("#shortBuild").html(str);
             }else{
