@@ -50,7 +50,9 @@
                                         <td>{{ $ledger->quantity }}</td>
                                         <td>{{ showDate($ledger->sold_date) }}</td>
                                         <td>{{ $ledger->sell_price }}</td>
-                                        <td>{{ $ledger->profit_loss }}</td>
+                                        <td> 
+                                            <span class="{{$ledger->profit_loss > 0 ? "text-success" : "text-danger"}}"> {{ $ledger->profit_loss }}</span>
+                                           </td>
                                         <td>{{ $ledger->poolingAccountPortfolio->broker_name }}</td>
                                     </tr>
                                 @empty

@@ -92,7 +92,7 @@
                 </div>
                 <div class="col-lg-6">
                     <div class="d-flex align-items-center">
-                        <h2>OI BuildUp - Long Build</h2><a class="text--base ms-3" href="#">View All</a>
+                        <h2>OI BuildUp - Long</h2><a class="text--base ms-3" href="#">View All</a>
                     </div>
                     <div class="custom--card">
                         <div class="card-body p-0">
@@ -104,8 +104,8 @@
                                             <th class="text-start">@lang('LTP')</th>
                                             <th class="text-start">@lang('Net Change')</th>
                                             <th class="text-start">@lang('%Change')</th>
-                                            <th class="text-start">@lang('Interest')</th>
-                                            <th class="text-start">@lang('Net Change Interest')</th>
+                                            <th class="text-start">@lang('OI')</th>
+                                            <th class="text-start">@lang('OI NET CHANGE')</th>
                                         </tr>
                                     </thead>
                                     <tbody id="longBuild">
@@ -124,7 +124,7 @@
                 </div>
                 <div class="col-lg-6">
                     <div class="d-flex align-items-center">
-                        <h2>OI BuildUp - Short Build</h2><a class="text--base ms-3" href="#">View All</a>
+                        <h2>OI BuildUp - Short</h2><a class="text--base ms-3" href="#">View All</a>
                     </div>
                     <div class="custom--card">
                         <div class="card-body p-0">
@@ -136,8 +136,8 @@
                                             <th class="text-start">@lang('LTP')</th>
                                             <th class="text-start">@lang('Net Change')</th>
                                             <th class="text-start">@lang('%Change')</th>
-                                            <th class="text-start">@lang('Interest')</th>
-                                            <th class="text-start">@lang('Net Change Interest')</th>
+                                            <th class="text-start">@lang('OI')</th>
+                                            <th class="text-start">@lang('OI NET CHANGE')</th>
                                         </tr>
                                     </thead>
                                     <tbody id="shortBuild">
@@ -168,8 +168,8 @@
                                             <th class="text-start">@lang('LTP')</th>
                                             <th class="text-start">@lang('Net Change')</th>
                                             <th class="text-start">@lang('%Change')</th>
-                                            <th class="text-start">@lang('Interest')</th>
-                                            <th class="text-start">@lang('Net Change Interest')</th>
+                                            <th class="text-start">@lang('OI')</th>
+                                            <th class="text-start">@lang('OI NET CHANGE')</th>
                                         </tr>
                                     </thead>
                                     <tbody id="shortCovering">
@@ -200,8 +200,8 @@
                                             <th class="text-start">@lang('LTP')</th>
                                             <th class="text-start">@lang('Net Change')</th>
                                             <th class="text-start">@lang('%Change')</th>
-                                            <th class="text-start">@lang('Interest')</th>
-                                            <th class="text-start">@lang('Net Change Interest')</th>
+                                            <th class="text-start">@lang('OI')</th>
+                                            <th class="text-start">@lang('OI NET CHANGE')</th>
                                         </tr>
                                     </thead>
                                     <tbody id="longUnwilling">
@@ -248,7 +248,7 @@
            }
         });
     }
-
+    
     function FetchTopGainerData(){
         $.get('{{route("get-top-gainer-api-data")}}',function(data){
            if(data['status'] === true){
@@ -307,10 +307,10 @@
                     str += `<tr>
                        <td class="text-start">${data[i].tradingSymbol}</td>
                        <td class="text-start">${data[i].ltp}</td>
-                       <td class="text-start">${data[i].netChange}</td>
-                       <td class="text-start">${data[i].percentChange}</td>
-                       <td class="text-start">${data[i].opnInterest}</td>
-                       <td class="text-start">${data[i].netChangeOpnInterest}</td>`;
+                       <td class="text-start ${data[i].netChange > 0 ? 'text-success' : 'text-danger'}">${data[i].netChange}</td>
+                       <td class="text-start ${data[i].percentChange > 0 ? 'text-success' : 'text-danger'}">${data[i].percentChange}</td>
+                       <td class="text-start">${Math.trunc(data[i].opnInterest)}</td>
+                       <td class="text-start ${data[i].netChangeOpnInterest > 0 ? 'text-success' : 'text-danger'}">${Math.trunc(data[i].netChangeOpnInterest)}</td>`;
                 }
                 $("#longBuild").html(str);
             }else{
@@ -333,10 +333,10 @@
                     str += `<tr>
                        <td class="text-start">${data[i].tradingSymbol}</td>
                        <td class="text-start">${data[i].ltp}</td>
-                       <td class="text-start">${data[i].netChange}</td>
-                       <td class="text-start">${data[i].percentChange}</td>
-                       <td class="text-start">${data[i].opnInterest}</td>
-                       <td class="text-start">${data[i].netChangeOpnInterest}</td>`;
+                       <td class="text-start ${data[i].netChange > 0 ? 'text-success' : 'text-danger'}">${data[i].netChange}</td>
+                       <td class="text-start ${data[i].percentChange > 0 ? 'text-success' : 'text-danger'}">${data[i].percentChange}</td>
+                       <td class="text-start">${Math.trunc(data[i].opnInterest)}</td>
+                       <td class="text-start ${data[i].netChangeOpnInterest > 0 ? 'text-success' : 'text-danger'}">${Math.trunc(data[i].netChangeOpnInterest)}</td>`;
                 }
                 $("#shortBuild").html(str);
             }else{
@@ -359,10 +359,10 @@
                     str += `<tr>
                        <td class="text-start">${data[i].tradingSymbol}</td>
                        <td class="text-start">${data[i].ltp}</td>
-                       <td class="text-start">${data[i].netChange}</td>
-                       <td class="text-start">${data[i].percentChange}</td>
-                       <td class="text-start">${data[i].opnInterest}</td>
-                       <td class="text-start">${data[i].netChangeOpnInterest}</td>`;
+                       <td class="text-start ${data[i].netChange > 0 ? 'text-success' : 'text-danger'}">${data[i].netChange}</td>
+                       <td class="text-start ${data[i].percentChange > 0 ? 'text-success' : 'text-danger'}">${data[i].percentChange}</td>
+                       <td class="text-start">${Math.trunc(data[i].opnInterest)}</td>
+                       <td class="text-start ${data[i].netChangeOpnInterest > 0 ? 'text-success' : 'text-danger'}">${Math.trunc(data[i].netChangeOpnInterest)}</td>`;
                 }
                 $("#shortCovering").html(str);
             }else{
@@ -385,10 +385,10 @@
                     str += `<tr>
                        <td class="text-start">${data[i].tradingSymbol}</td>
                        <td class="text-start">${data[i].ltp}</td>
-                       <td class="text-start">${data[i].netChange}</td>
-                       <td class="text-start">${data[i].percentChange}</td>
-                       <td class="text-start">${data[i].opnInterest}</td>
-                       <td class="text-start">${data[i].netChangeOpnInterest}</td>`;
+                       <td class="text-start ${data[i].netChange > 0 ? 'text-success' : 'text-danger'}">${data[i].netChange}</td>
+                       <td class="text-start ${data[i].percentChange > 0 ? 'text-success' : 'text-danger'}">${data[i].percentChange}</td>
+                       <td class="text-start">${Math.trunc(data[i].opnInterest)}</td>
+                       <td class="text-start ${data[i].netChangeOpnInterest > 0 ? 'text-success' : 'text-danger'}">${Math.trunc(data[i].netChangeOpnInterest)}</td>`;
                 }
                 $("#longUnwilling").html(str);
             }else{

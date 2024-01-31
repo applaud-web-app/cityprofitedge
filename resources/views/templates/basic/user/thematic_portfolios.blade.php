@@ -56,7 +56,7 @@
                                         </td>
                                         <td>{{showAmount($key)}}</td>
                                         <td>
-                                            {{ showAmount($thematicPortfolio->pnl) }}
+                                          <span class="{{$key-$thematicPortfolio->buy_price > 0 ? "text-success" : "text-danger"}}">{{ showAmount($key-$thematicPortfolio->buy_price) }}</span>  
                                         </td>
                                         <td>{{ $thematicPortfolio->sector }}</td>
                                     </tr>

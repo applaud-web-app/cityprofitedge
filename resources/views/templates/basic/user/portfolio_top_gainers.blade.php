@@ -36,7 +36,6 @@
                 </div>
             </div>
         </form>
-
         @if ($stockName != "")
             @php
                 $data = \DB::connection('mysql_rm')->table($stockName)->select('*')->where(['date'=>$todayDate,'timeframe'=>$timeFrame])->get();
@@ -170,11 +169,10 @@
                 if($v == "LTP"){
 
                 }else{
-                    // $date = \DB::connection('mysql_pr')->table('LTP')->select('*')->whereIn('symbol',[symbolArray])->get();
-                    // dd($date);
                     $data = \DB::connection('mysql_rm')->table($v)->select('*')->where(['date'=>$todayDate,'timeframe'=>$timeFrame])->get(); 
                 }
                 @endphp
+            </pre>
                 <div class="row mb-5">
                     <div class="col-lg-12">
                         <div class="custom--card card">
@@ -215,7 +213,6 @@
                                             @forelse($atmData as $val)
                                                     @php
                                                         $arrData = json_decode($val->data,true);    
-                                                        // dd($arrData);
                                                         $CE = array_slice($arrData['CE'],-5);
                                                         $PE = array_slice($arrData['PE'],-5);
                                                         $Date = array_slice($arrData['Date'],-5);

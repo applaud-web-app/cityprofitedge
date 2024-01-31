@@ -501,7 +501,7 @@ class UserController extends Controller
         //    array_push($symbolArray , $val['stock_name'].".NS");
         array_push($symbolArray , $val['stock_name']);
         }
-        $getToken = AngelApiInstrument::select('token')->WhereIn(['symbol',$symbolArray])->get();
+        // $getToken = AngelApiInstrument::select('token')->WhereIn(['symbol',$symbolArray])->get();
 
         // dd($getToken);
         // $date = \DB::connection('mysql_pr')->table('LTP')->select('*')->get();

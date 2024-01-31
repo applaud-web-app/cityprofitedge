@@ -185,7 +185,7 @@
                                                 @else
                                                     {{"---"}}
                                                 @endif</td>
-                                                <td>{{$item['profit_loss']}}</td>
+                                                <td> <span class="{{$item['profit_loss'] > 0 ? "text-success" : "text-danger"}}">{{$item['profit_loss']}}</span> </td>
                                             </tr>
                                             @endforeach
                                         @else
