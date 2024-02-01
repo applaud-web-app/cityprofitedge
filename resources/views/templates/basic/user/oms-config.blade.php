@@ -263,13 +263,13 @@
 <script>
     $("#order_type").on('click',function(){
         var vl = $(this).val();
-        if(vl=='LIMIT'){
+        // if(vl=='LIMIT'){
             $("#pyramid_percent_dv").show();
             $("#pyramid_percent").attr('required','required');
-        }else{
-            $("#pyramid_percent_dv").hide();
-            $("#pyramid_percent").removeAttr('required');
-        }
+        // }else{
+        //     $("#pyramid_percent_dv").hide();
+        //     $("#pyramid_percent").removeAttr('required');
+        // }
     });
 </script>
 <script>

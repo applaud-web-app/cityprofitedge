@@ -931,7 +931,7 @@ class UserController extends Controller
         $pe_pyramid_2 = null;
         $pe_pyramid_3 = null;
 
-        if($request->order_type=="LIMIT"){
+        // if($request->order_type=="LIMIT"){
             $ce_quantity = $request->ce_quantity > 0 ? $request->ce_quantity : 0;
             $numbertodivise = $ce_quantity;
             $no=1;
@@ -969,7 +969,7 @@ class UserController extends Controller
             if($no==1){
                 $pe_pyramid_1 = $pData[0];
             }
-        }
+        // }
 
         $omsObj = new OmsConfig();
         $omsObj->symbol_name = $request->symbol_name;
