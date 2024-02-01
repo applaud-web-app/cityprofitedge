@@ -107,50 +107,54 @@ class OmsConfigCron{
                     $high = $highCEArr[$key];
                     $low = $lowCEArr[$key];
 
-                    $fData["tradingsymbol"] = $omsData->ce_symbol_name;
-                    if(!is_null($omsData->ce_pyramid_1)){
-                       $price =  $this->getCeLimitPrice($high,$low,38.20,$txnType);
-                       $fData['price'] = $price;
-                       $fData['quantity'] = $omsData->ce_pyramid_1;
-                       $this->postPlaceOrder($omsData->broker,$fData);
-                    }
-                    if(!is_null($omsData->ce_pyramid_2)){
-                        //50%
-                        $price =  $this->getCeLimitPrice($high,$low,50,$txnType);
-                        $fData['price'] = $price;
-                        $fData['quantity'] = $omsData->ce_pyramid_2;
-                        $this->postPlaceOrder($omsData->broker,$fData);
-                    }
-                    if(!is_null($omsData->ce_pyramid_3)){
-                        $price =  $this->getCeLimitPrice($high,$low,61.80,$txnType);
-                        $fData['price'] = $price;
-                        $fData['quantity'] = $omsData->ce_pyramid_3;
-                        $this->postPlaceOrder($omsData->broker,$fData);
-                    }
 
-                    //
-                    $fData["tradingsymbol"] = $omsData->pe_symbol_name;
-                    $high = $highPEArr[$key];
-                    $low = $lowPEArr[$key];
-                    if(!is_null($omsData->pe_pyramid_1)){
-                        $price =  $this->getPeLimitPrice($high,$low,38.20,$txnType);
+                    if($omsData->order_type=="LIMIT"){
+                        $fData["tradingsymbol"] = $omsData->ce_symbol_name;
+                        if(!is_null($omsData->ce_pyramid_1)){
+                        $price =  $this->getCeLimitPrice($high,$low,38.20,$txnType);
                         $fData['price'] = $price;
-                        $fData['quantity'] = $omsData->pe_pyramid_1;
+                        $fData['quantity'] = $omsData->ce_pyramid_1;
                         $this->postPlaceOrder($omsData->broker,$fData);
-                    }
-                    if(!is_null($omsData->pe_pyramid_2)){
-                        $price =  $this->getPeLimitPrice($high,$low,50,$txnType);
-                        $fData['price'] = $price;
-                        $fData['quantity'] = $omsData->pe_pyramid_2;
-                        $this->postPlaceOrder($omsData->broker,$fData);
-                    }
-                    if(!is_null($omsData->pe_pyramid_3)){
-                        $price =  $this->getPeLimitPrice($high,$low,61.80,$txnType);
-                        $fData['price'] = $price;
-                        $fData['quantity'] = $omsData->pe_pyramid_3;
-                        $this->postPlaceOrder($omsData->broker,$fData);
-                    }
+                        }
+                        if(!is_null($omsData->ce_pyramid_2)){
+                            //50%
+                            $price =  $this->getCeLimitPrice($high,$low,50,$txnType);
+                            $fData['price'] = $price;
+                            $fData['quantity'] = $omsData->ce_pyramid_2;
+                            $this->postPlaceOrder($omsData->broker,$fData);
+                        }
+                        if(!is_null($omsData->ce_pyramid_3)){
+                            $price =  $this->getCeLimitPrice($high,$low,61.80,$txnType);
+                            $fData['price'] = $price;
+                            $fData['quantity'] = $omsData->ce_pyramid_3;
+                            $this->postPlaceOrder($omsData->broker,$fData);
+                        }
 
+                        //
+                        $fData["tradingsymbol"] = $omsData->pe_symbol_name;
+                        $high = $highPEArr[$key];
+                        $low = $lowPEArr[$key];
+                        if(!is_null($omsData->pe_pyramid_1)){
+                            $price =  $this->getPeLimitPrice($high,$low,38.20,$txnType);
+                            $fData['price'] = $price;
+                            $fData['quantity'] = $omsData->pe_pyramid_1;
+                            $this->postPlaceOrder($omsData->broker,$fData);
+                        }
+                        if(!is_null($omsData->pe_pyramid_2)){
+                            $price =  $this->getPeLimitPrice($high,$low,50,$txnType);
+                            $fData['price'] = $price;
+                            $fData['quantity'] = $omsData->pe_pyramid_2;
+                            $this->postPlaceOrder($omsData->broker,$fData);
+                        }
+                        if(!is_null($omsData->pe_pyramid_3)){
+                            $price =  $this->getPeLimitPrice($high,$low,61.80,$txnType);
+                            $fData['price'] = $price;
+                            $fData['quantity'] = $omsData->pe_pyramid_3;
+                            $this->postPlaceOrder($omsData->broker,$fData);
+                        }
+                    }else{
+                        $this->postPlaceOrder($omsData->broker,$fData);
+                    }
 
                     OmsConfig::where("id",$omsData->id)->update([
                         'is_api_pushed'=>1
