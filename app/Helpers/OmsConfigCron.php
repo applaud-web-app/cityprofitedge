@@ -49,7 +49,8 @@ class OmsConfigCron{
             $pythonScript = '/home/forge/cityprofitedge.com/public/kite_login/app.py -u '.$broker->account_user_name;
             $command = 'python3 ' . $pythonScript; 
             exec($command, $output, $exitCode);
-            $token = implode("\n", $output);
+            $tokenArr =  explode("=",implode("\n", $output));
+            $token =  $tokenArr[1];
             $kite = $kiteObj->generateSessionManual($token);
             return $kite;
         });
