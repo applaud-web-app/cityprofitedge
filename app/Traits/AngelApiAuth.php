@@ -1,15 +1,29 @@
 <?php
 namespace App\Traits;
+
+use App\Models\AngelApiInstrument;
+use App\Models\AngleHistoricalApi;
+
 require app_path('Libraries/vendor/autoload.php');
 use OTPHP\TOTP;
 trait AngelApiAuth
 {
-    private $accountUserName = 'R834343';
-    private $accountPassword = 'city@123';
-    private $totp_secret = 'M46VHZKUIVRYBWO3CBF4B4BGLM';
-    private $apiKey = 'fAIucOM2';
-    private $pin = '1234';
-    private $apiSecret = '1abcbf62-552f-4022-b073-d76bad9a06a5';
+    // private $accountUserName = 'R834343';
+    // private $accountPassword = 'city@123';
+    // private $totp_secret = 'M46VHZKUIVRYBWO3CBF4B4BGLM';
+    // private $apiKey = 'fAIucOM2';
+    // private $pin = '1234';
+    // private $apiSecret = '1abcbf62-552f-4022-b073-d76bad9a06a5';
+    // private $clientLocalIp = '192.168.1.31';
+    // private $clientPublicIp = '122.161.67.85';
+    // private $macAddress = '14-85-7F-92-D0-B0';
+
+    private $accountUserName =  "P713842";
+    private $accountPassword = "city@123";
+    private $apiSecret = "1a8f300a-8d49-4581-9b1e-4ac78f6c997a";
+    private $apiKey = "WGgAXzmi";
+    private $pin = "1234";
+    private $totp_secret = "JINWAFYURA5IDPO6X5D2UWUWXE";
     private $clientLocalIp = '192.168.1.31';
     private $clientPublicIp = '122.161.67.85';
     private $macAddress = '14-85-7F-92-D0-B0';
@@ -55,6 +69,7 @@ trait AngelApiAuth
     
                 $response = curl_exec($curl);
                 $err = curl_error($curl);
+                // echo $response;die;
                 curl_close($curl);
                 if ($err) {
                     return null;
@@ -119,8 +134,7 @@ trait AngelApiAuth
         }
         return $errData;
     }
-    // expiry-date:current Month
-    // MCX,NFO
+
     public function getTopLoserAngleApiData(){
         $jwtToken =  $this->generate_access_token();
         $errData = [];
@@ -412,7 +426,230 @@ trait AngelApiAuth
         }
         return $errData;
     }
-   
     
+    function allTradeSymbols(){
+        $data = \DB::connection('mysql_rm')->select('SHOW TABLES');
+        $arr = [];
+        foreach($data as $vl){
+            $arr[] = $vl->Tables_in_PMS_Datastore;
+        }
+        return $arr;
+    }
+   
+    public function getTokenData(){
+        set_time_limit(0);
+        AngelApiInstrument::truncate();
+        $tables = $this->allTradeSymbols(); 
+        foreach ($tables as $search) {
+            $exhange = "NFO";
+            $mcxTable = ['CRUDEOIL','NATURALGAS','GOLD','SILVER'];
+            if(in_array($search,$mcxTable)){
+                $exhange = "MCX";
+            }
+            $jwtToken =  $this->generate_access_token();
+            $errData = [];
+            if($jwtToken!=null){
+                $curl = curl_init();
+                curl_setopt_array($curl, array(
+                CURLOPT_URL => 'https://apiconnect.angelbroking.com/rest/secure/angelbroking/order/v1/searchScrip',
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS => '{
+                    "exchange": "'.$exhange.'",
+                    "searchscrip": "'.$search.'"
+                }',
+                CURLOPT_HTTPHEADER => array(
+                    'X-UserType: USER',
+                    'X-SourceID: WEB',
+                    'X-PrivateKey: '.$this->apiKey,
+                    'X-ClientLocalIP: '.$this->clientLocalIp,
+                    'X-ClientPublicIP: '.$this->clientPublicIp,
+                    'X-MACAddress: '.$this->macAddress,
+                    'Content-Type: application/json',
+                    'Authorization: Bearer '.$jwtToken
+                ),
+                ));
+    
+                $response = curl_exec($curl);
+                $err = curl_error($curl);
+                curl_close($curl);
+                if ($err) {
+                   return $errData;
+                }
+                $response = json_decode($response,true);
+                $data = $response['data'];
+                foreach($data as $key => $item){
+                    $apiData = new AngelApiInstrument;
+                    $apiData->symbol_name = $data[$key]['tradingsymbol'];
+                    $apiData->token = $data[$key]['symboltoken'];
+                    $apiData->exch_seg = $data[$key]['exchange'];
+                    $apiData->save();
+                }
+            }
+            sleep(4);
+        }
+        return "Data Inserted Successfully";
+        
+    }
+   
 
+    public function storeApiFetch(){
+        set_time_limit(0);
+        AngleHistoricalApi::truncate();
+        $tables = $this->allTradeSymbols();
+        $timeFrame = 5;
+        $todayDate = date("Y-m-d");
+        $currentDate = date("Y-m-d H:s");
+        $previousDate =  date('Y-m-d H:s', strtotime($currentDate. ' - 30 days'));
+        
+        foreach ($tables as $v) {
+          
+            $data = \DB::connection('mysql_rm')->table($v)->select('*')->where(['date'=>$todayDate,'timeframe'=>$timeFrame])->get(); 
+          
+            $atmData = [];
+            foreach($data as $vvl){
+                if(isset($vvl->atm) && $vvl->atm=="ATM"){
+                    $atmData[] = $vvl;
+                }
+            }
+
+            foreach($atmData as $val){
+                
+                $arrData = json_decode($val->data,true);    
+                $CE = array_unique($arrData['CE']);
+                
+                foreach ($CE as $k=>$sym){
+                    $getDetails = AngelApiInstrument::Where('symbol_name',$sym)->first();
+                    
+                    if($getDetails != NULL){
+                        $timeFrame = ['FIVE_MINUTE'];
+
+                        foreach ($timeFrame as $interval) {
+                            $exhange = $getDetails['exch_seg'];
+                            $token = $getDetails['token'];
+                            $jwtToken =  $this->generate_access_token();
+                            $errData = [];
+                            
+                            if($jwtToken!=null){
+                                $curl = curl_init();
+                                curl_setopt_array($curl, array(
+                                    CURLOPT_URL => 'https://apiconnect.angelbroking.com/rest/secure/angelbroking/historical/v1/getCandleData',
+                                    CURLOPT_RETURNTRANSFER => true,
+                                    CURLOPT_ENCODING => '',
+                                    CURLOPT_MAXREDIRS => 10,
+                                    CURLOPT_TIMEOUT => 0,
+                                    CURLOPT_FOLLOWLOCATION => true,
+                                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                                    CURLOPT_CUSTOMREQUEST => 'POST',
+                                    CURLOPT_POSTFIELDS => '{
+                                        "exchange": "'.$exhange.'",
+                                        "symboltoken": "'.$token.'",
+                                        "interval": "'.$interval.'",
+                                        "fromdate": "'.$previousDate.'",
+                                        "todate": "'.$currentDate.'"
+                                    }',
+                                    CURLOPT_HTTPHEADER => array(
+                                        'X-UserType: USER',
+                                        'X-SourceID: WEB',
+                                        'X-PrivateKey: '.$this->apiKey,
+                                        'X-ClientLocalIP: '.$this->clientLocalIp,
+                                        'X-ClientPublicIP: '.$this->clientPublicIp,
+                                        'X-MACAddress: '.$this->macAddress,
+                                        'Content-Type: application/json',
+                                        'Authorization: Bearer '.$jwtToken
+                                    ),
+                                ));
+                    
+                                $response = curl_exec($curl);
+                                // dd($response);
+                                $err = curl_error($curl);
+                                curl_close($curl);
+
+                                if ($err) {
+                                   return $errData;
+                                }
+
+                                $response = json_decode($response,true);
+                                $data = $response['data'];
+                                
+                                foreach($data as $key => $item){
+                                    $apiData = new AngleHistoricalApi;
+                                    $apiData->token = $token;
+                                    $apiData->symbol = $sym;
+                                    $apiData->time_interval = $interval;
+                                    $apiData->exchange = $exhange;
+                                    $apiData->fromdate = $previousDate;
+                                    $apiData->todate = $currentDate;
+                                    $apiData->timestamp = $data[$key][0];
+                                    $apiData->open = $data[$key][1];
+                                    $apiData->high = $data[$key][2];
+                                    $apiData->low = $data[$key][3];
+                                    $apiData->close = $data[$key][4];
+                                    $apiData->volume = $data[$key][5];
+                                    $apiData->save();
+                                }
+                            }
+                        }
+                    }
+                }
+                sleep(4);
+            }
+        }  
+
+        return "Data Inserted Successfully";
+    }
+
+
+    // public function storeApiFetch(){       
+    //     $jwtToken =  $this->generate_access_token();
+    //     $errData = [];
+    //     if($jwtToken!=null){
+    //         $curl = curl_init();
+    //         curl_setopt_array($curl, array(
+    //             CURLOPT_URL => 'https://apiconnect.angelbroking.com/rest/secure/angelbroking/historical/v1/getCandleData',
+    //             CURLOPT_RETURNTRANSFER => true,
+    //             CURLOPT_ENCODING => '',
+    //             CURLOPT_MAXREDIRS => 10,
+    //             CURLOPT_TIMEOUT => 0,
+    //             CURLOPT_FOLLOWLOCATION => true,
+    //             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    //             CURLOPT_CUSTOMREQUEST => 'POST',
+    //             CURLOPT_POSTFIELDS => '{
+    //                 "exchange": "MCX",
+    //                 "symboltoken": "254550",
+    //                 "interval": "FIVE_MINUTE",
+    //                 "fromdate": "2024-01-01 14:00",
+    //                 "todate": "2024-01-31 14:02"
+    //             }',
+    //             CURLOPT_HTTPHEADER => array(
+    //                 'X-UserType: USER',
+    //                 'X-SourceID: WEB',
+    //                 'X-PrivateKey: '.$this->apiKey,
+    //                 'X-ClientLocalIP: '.$this->clientLocalIp,
+    //                 'X-ClientPublicIP: '.$this->clientPublicIp,
+    //                 'X-MACAddress: '.$this->macAddress,
+    //                 'Content-Type: application/json',
+    //                 'Authorization: Bearer '.$jwtToken
+    //             ),
+    //         ));
+
+    //         $response = curl_exec($curl);
+    //         $err = curl_error($curl);
+    //         curl_close($curl);
+
+    //         if ($err) {
+    //             return $errData;
+    //         }
+
+    //         $response = json_decode($response,true);
+    //         dd($response['data'][1722]);
+    //     }
+    //     return "Data Inserted Successfully";
+        
+    // }
 }
