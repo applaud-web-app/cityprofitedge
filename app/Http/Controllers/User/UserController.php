@@ -575,8 +575,7 @@ class UserController extends Controller
         $pythonScript = '/home/forge/cityprofitedge.com/public/kite_login/app.py -u BFF348';
         $command = 'python3 ' . $pythonScript; 
         exec($command, $output, $exitCode);
-        echo "Output:\n" . implode("\n", $output) . "\n";
-        echo "Exit Code: $exitCode\n";die;
+        echo implode("\n", $output);die;
 
 
         // $pythonScript = '/home/forge/cityprofitedge.com/public/kite_login/app.py';
