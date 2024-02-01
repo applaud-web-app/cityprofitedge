@@ -58,6 +58,7 @@ class OmsConfigCron{
             $order = $kite->placeOrder("regular", $apiData);
             sleep(3);
             $orderData = $kite->getOrderHistory($order->order_id);
+            dd($orderData);
             $lastD = array_slice($orderData,-1);
             
             $bookOBj = new OrderBook();
