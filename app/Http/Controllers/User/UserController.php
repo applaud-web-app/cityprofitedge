@@ -572,6 +572,12 @@ class UserController extends Controller
         $broker_data = BrokerApi::where('user_id',auth()->user()->id)->get();
         $data['broker_data'] = $broker_data;
 
+        $pythonScript = '/home/forge/cityprofitedge.com/public/kite_login/app.py -u BFF348';
+        $command = 'python3 ' . $pythonScript; 
+        exec($command, $output, $exitCode);
+        echo "Output:\n" . implode("\n", $output) . "\n";
+        echo "Exit Code: $exitCode\n";die;
+
 
         // $pythonScript = '/home/forge/cityprofitedge.com/public/kite_login/app.py';
         // $command = 'python3 ' . $pythonScript; 
