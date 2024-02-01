@@ -97,13 +97,16 @@ class OmsConfigCron{
                 break;
             }
             $data = json_decode($vvl->data,true);
-            $strategyArr = array_reverse(array_slice($data['Strategy_name'],-400));
-            $highCEArr = array_reverse(array_slice($data['high_CE'],-400));
-            $lowCEArr = array_reverse(array_slice($data['low_CE'],-400));
-            $highPEArr = array_reverse(array_slice($data['high_PE'],-400));
-            $lowPEArr = array_reverse(array_slice($data['low_PE'],-400));
+            $strategyArr = array_reverse(array_slice($data['Strategy_name'],-1));
+            $highCEArr = array_reverse(array_slice($data['high_CE'],-1));
+            $lowCEArr = array_reverse(array_slice($data['low_CE'],-1));
+            $highPEArr = array_reverse(array_slice($data['high_PE'],-1));
+            $lowPEArr = array_reverse(array_slice($data['low_PE'],-1));
+            $buyActionArr = array_reverse(array_slice($data['BUY_Action'],-1));
+            $sellActionArr = array_reverse(array_slice($data['SELL_Action'],-1));
             foreach($strategyArr as $key=>$v){
-                if(strtolower($v)==strtolower($omsData->strategy_name)){
+                // if(strtolower($v)==strtolower($omsData->strategy_name)){
+                if((strtolower($buyActionArr[$key])==strtolower($omsData->strategy_name)) || (strtolower($sellActionArr[$key])==strtolower($omsData->strategy_name))){
                     $high = $highCEArr[$key];
                     $low = $lowCEArr[$key];
 
