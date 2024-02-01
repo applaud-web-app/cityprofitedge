@@ -572,62 +572,36 @@ class UserController extends Controller
         $broker_data = BrokerApi::where('user_id',auth()->user()->id)->get();
         $data['broker_data'] = $broker_data;
 
-        // $pythonScript = '/home/forge/cityprofitedge.com/public/kite_login/app.py -u BFF348';
-        // $command = 'python3 ' . $pythonScript; 
-        // exec($command, $output, $exitCode);
-        // $tokenArr =  explode("=",implode("\n", $output));
-        // echo $tokenArr[1];die;
-
-
-        // $pythonScript = '/home/forge/cityprofitedge.com/public/kite_login/app.py';
-        // $command = 'python3 ' . $pythonScript; 
-        // exec($command, $output, $exitCode);
-        // echo "Output:\n" . implode("\n", $output) . "\n";
-        // echo "Exit Code: $exitCode\n";die;
-
-        // $otpObj = new KiteConnectCls([
-        //     'accountUserName'=>'BFF348',
-        //     'accountPassword'=>'venue@123',
-        //     'totpSecret'=>'4AMQ5W5EHKIRZ33Z6EVI7W4HUS3KKDB2',
-        //     'apiKey'=>'99n9vrxlgyxklpht',
-        //     'apiSecret'=>'adjl97sewgv1utfycl3ens7ks545hpcr',
-        // ]);
-        // $otp = $otpObj->generateSessionManual('asd4545857');
-
-        // echo $otp;die;
-
-        // $obj = new \App\Helpers\OmsConfigCron();
-        // $obj->placeOrder();
-        // dd('asdf');
+        // if($broker_data){
+        //     $brokerId = !empty($request->broker_name) ? $request->broker_name : $broker_data[0]->id;
+        //     $userData = null;
+        //     foreach($broker_data as $val){
+        //         if($val->id == $brokerId){
+        //             $userData = $val;
+        //         }
+        //     }
+        //     if(!is_null($userData)){
+        //         $params = [
+        //             'accountUserName'=>$userData->account_user_name,
+        //             'accountPassword'=>$userData->account_password,
+        //             'totpSecret'=>$userData->totp,
+        //             'apiKey'=>$userData->api_key,
+        //             'apiSecret'=>$userData->api_secret_key
+        //         ];
+        //         $kiteObj = new KiteConnectCls($params);
+        //         $kite = $kiteObj->generateSession();
+        //         dd($kite);
+        //         $kite = \Cache::remember('KITE_AUTH_'.$userData->account_user_name, 18000, function () use($kiteObj) {
+        //             $kite = $kiteObj->generateSession();
+        //             return $kite;
+        //         });
+        //         $positionData = $kite->getPositions();
+        //         dd($positionData);
+        //     }
+        // }
 
        
-        if($broker_data){
-            $brokerId = !empty($request->broker_name) ? $request->broker_name : $broker_data[0]->id;
-            $userData = null;
-            foreach($broker_data as $val){
-                if($val->id == $brokerId){
-                    $userData = $val;
-                }
-            }
-            if(!is_null($userData)){
-                $params = [
-                    'accountUserName'=>$userData->account_user_name,
-                    'accountPassword'=>$userData->account_password,
-                    'totpSecret'=>$userData->totp,
-                    'apiKey'=>$userData->api_key,
-                    'apiSecret'=>$userData->api_secret_key
-                ];
-                $kiteObj = new KiteConnectCls($params);
-                $kite = $kiteObj->generateSession();
-                dd($kite);
-                $kite = \Cache::remember('KITE_AUTH_'.$userData->account_user_name, 18000, function () use($kiteObj) {
-                    $kite = $kiteObj->generateSession();
-                    return $kite;
-                });
-                $positionData = $kite->getPositions();
-                dd($positionData);
-            }
-        }
+        
         
 
         
