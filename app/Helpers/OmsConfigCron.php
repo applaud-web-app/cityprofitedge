@@ -75,6 +75,7 @@ class OmsConfigCron{
             $bookOBj->user_id = $broker->user_id;
             $bookOBj->save();
         }catch(\Exception $e){
+            echo $e->getMessage();
             \Cache::forget('KITE_AUTH_'.$broker->account_user_name);
         }
     }
@@ -105,6 +106,7 @@ class OmsConfigCron{
                 if(strtolower($v)==strtolower($omsData->strategy_name)){
                     $high = $highCEArr[$key];
                     $low = $lowCEArr[$key];
+
                     $fData["tradingsymbol"] = $omsData->ce_symbol_name;
                     if(!is_null($omsData->ce_pyramid_1)){
                        $price =  $this->getCeLimitPrice($high,$low,38.20,$txnType);
@@ -148,6 +150,8 @@ class OmsConfigCron{
                         $fData['quantity'] = $omsData->pe_pyramid_3;
                         $this->postPlaceOrder($omsData->broker,$fData);
                     }
+
+
                     OmsConfig::where("id",$omsData->id)->update([
                         'is_api_pushed'=>1
                     ]);
