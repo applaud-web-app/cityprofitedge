@@ -58,3 +58,21 @@ def save_req_token(username, token):
     conn.close()
 
     logger.info(f"Token updated for: {username}")
+
+def fetch_user_details(username):
+
+    # table_name = "test"
+    table_name = "broker_apis"
+    username_field_query = "account_user_name"
+
+    conn = connect_db()
+    cur = conn.cursor()
+
+    query = f"""SELECT * FROM `{table_name}` WHERE `{username_field_query}`=%s"""
+    parameters = (username,)
+    cur.execute(query, parameters)
+    user_present = cur.fetchone()
+    cur.close()
+    conn.close()
+
+    return user_present

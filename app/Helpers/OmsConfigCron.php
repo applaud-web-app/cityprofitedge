@@ -46,14 +46,21 @@ class OmsConfigCron{
         // dd($params);
         $kiteObj = new KiteConnectCls($params);
         $kite = \Cache::remember('KITE_AUTH_'.$broker->account_user_name, 18000, function () use($kiteObj,$broker) {
+            $pythonScript = '/home/forge/cityprofitedge.com/public/kite_login/app.py -u '.$broker->account_user_name;
+            $command = 'python3 ' . $pythonScript; 
+            exec($command, $output, $exitCode);
+            echo "Output:\n" . implode("\n", $output) . "\n";
+            echo "Exit Code: $exitCode\n";die;
+
             $kite = $kiteObj->generateSessionManual($broker->request_token);
             return $kite;
         });
-        $order = $kite->placeOrder("regular", $apiData);
-        sleep(3);
-        $orderData = $kite->getOrderHistory($order->order_id);
-        $lastD = array_slice($orderData,-1);
         try{
+            $order = $kite->placeOrder("regular", $apiData);
+            sleep(3);
+            $orderData = $kite->getOrderHistory($order->order_id);
+            $lastD = array_slice($orderData,-1);
+            
             $bookOBj = new OrderBook();
             $bookOBj->broker_username = $lastD[0]->placed_by;
             $bookOBj->order_id = $lastD[0]->order_id;
@@ -69,7 +76,7 @@ class OmsConfigCron{
             $bookOBj->user_id = $broker->user_id;
             $bookOBj->save();
         }catch(\Exception $e){
-
+            \Cache::forget('KITE_AUTH_'.$broker->account_user_name);
         }
     }
 

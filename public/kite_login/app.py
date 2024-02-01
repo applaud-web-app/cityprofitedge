@@ -1,18 +1,15 @@
 # from print import print
-import requests, json, re, pyotp
+import requests, json, re, pyotp, asyncio, argparse
 from urllib.parse import urlparse, parse_qs
-from kiteconnect import KiteConnect, KiteTicker
-# import pyotp, asyncio, aiohttp, time, datetime
-# import pandas as pd
-from db.connection import save_req_token
+from db.connection import save_req_token, fetch_user_details
 from logger import logger
 
 
 class API:
-
     def __init__(self, api_details):
         logger.info('kite api initialized')
         self.api_details = api_details
+        self.login()
 
     def login(self):
         apikey = self.api_details["api_key"]
@@ -88,10 +85,14 @@ class API:
         except Exception as e:
             self.broker = None
             save_req_token(self.api_details['user_name'], "")
-            # print.critical(f"Error in logging in for {username}, {e.__str__()}", exc_info=True)
+            logger.critical(f"Error in logging in for {username}, {e.__str__()}", exc_info=True)
 
-if __name__ == '__main__' :
+async def main():
+    """
+    ## Procedure
+    ### (check dev.log file, if you want to check the output status)
 
+    #### Get the api details dict
     api_details = {
         "api_key": "99n9vrxlgyxklpht",
         "api_secret": "adjl97sewgv1utfycl3ens7ks545hpcr",
@@ -100,5 +101,41 @@ if __name__ == '__main__' :
         "security_pin": "243569",
         "totp_secret": "4AMQ5W5EHKIRZ33Z6EVI7W4HUS3KKDB2"
     }
+
+    #### Pass it to API class which will perform login method and save token to MYSQL-DB
     u = API(api_details)
-    u.login()
+    """
+    
+    # create parser
+    parser = argparse.ArgumentParser(description='This Script gets the request token and saves it in DB')
+
+    # Add optional arguments
+    parser.add_argument('--user', '-u', help='Username on broker, eg; BFF348')
+    args = parser.parse_args()
+    
+    if args.user is not None:
+        username = args.user
+        user_data = fetch_user_details(username)
+        if user_data is not None and len(user_data) != 0:
+            logger.info(f"Username parameter: {username}")
+            logger.info(f"User data: {user_data}")
+
+            api_details = {
+                "api_key": user_data[6],
+                "api_secret": user_data[7],
+                "user_name": user_data[4],
+                "password": user_data[5],
+                "security_pin": user_data[8],
+                "totp_secret": user_data[9]
+            }
+            u = API(api_details)
+
+        else:
+            logger.error(f"No user Found: {username}")
+    else:
+        logger.warning(f"Username parameter empty: {args.user}")
+
+
+if __name__ == '__main__' :
+    asyncio.run(main())
+    

@@ -104,9 +104,8 @@ class KiteConnectCls{
             $user = $kite->generateSession($token, $this->apiSecret);
             $kite->setAccessToken($user->access_token);
             return $kite;
-        } catch(Exception $e) {
-            echo "Authentication failed: ".$e->getMessage();
-            throw $e;
+        } catch(\Exception $e) {
+            return 'TOKEN_EXPIRED';
         }
     }
 

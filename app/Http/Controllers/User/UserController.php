@@ -573,27 +573,22 @@ class UserController extends Controller
         $data['broker_data'] = $broker_data;
 
 
-        $pythonScript = '/home/forge/cityprofitedge.com/public/kite_login/app.py'; // Replace with the actual name of your Python script
+        // $pythonScript = '/home/forge/cityprofitedge.com/public/kite_login/app.py';
+        // $command = 'python3 ' . $pythonScript; 
+        // exec($command, $output, $exitCode);
+        // echo "Output:\n" . implode("\n", $output) . "\n";
+        // echo "Exit Code: $exitCode\n";die;
 
-        $command = 'python3 ' . $pythonScript; // Use 'python' instead of 'python3' if using Python 2
+        // $otpObj = new KiteConnectCls([
+        //     'accountUserName'=>'BFF348',
+        //     'accountPassword'=>'venue@123',
+        //     'totpSecret'=>'4AMQ5W5EHKIRZ33Z6EVI7W4HUS3KKDB2',
+        //     'apiKey'=>'99n9vrxlgyxklpht',
+        //     'apiSecret'=>'adjl97sewgv1utfycl3ens7ks545hpcr',
+        // ]);
+        // $otp = $otpObj->generateSessionManual('asd4545857');
 
-        // Execute the command and capture the output
-        exec($command, $output, $exitCode);
-
-        // Display the output and exit code
-        echo "Output:\n" . implode("\n", $output) . "\n";
-        echo "Exit Code: $exitCode\n";die;
-
-        $otpObj = new KiteConnectCls([
-            'accountUserName'=>'BFF348',
-            'accountPassword'=>'venue@123',
-            'totpSecret'=>'4AMQ5W5EHKIRZ33Z6EVI7W4HUS3KKDB2',
-            'apiKey'=>'99n9vrxlgyxklpht',
-            'apiSecret'=>'adjl97sewgv1utfycl3ens7ks545hpcr',
-        ]);
-        $otp = $otpObj->get_totp_token();
-
-        echo $otp;die;
+        // echo $otp;die;
 
         // $obj = new \App\Helpers\OmsConfigCron();
         // $obj->placeOrder();
