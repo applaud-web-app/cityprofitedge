@@ -69,6 +69,7 @@ class API:
             session.close()
 
             logger.info(f"request token = {request_token}")
+            print(f"requesttoken={request_token}")
 
             save_req_token(self.api_details['user_name'], request_token)
 
