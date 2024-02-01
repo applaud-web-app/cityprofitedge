@@ -242,40 +242,97 @@ class SiteController extends Controller
     }
 
     public function getTopLoserData(){
-        return response()->json($this->getTopLoserAngleApiData());
+        try {
+            return response()->json($this->getTopLoserAngleApiData());
+        } catch (\Throwable $th) {
+           return response()->json(
+            [ 'data' => ['status'=>false] ]
+           );
+        }
+        
     }
 
     public function getTopGainerApiData(){
-        return response()->json($this->getTopGainerAngleApiData());
+
+        try {
+            return response()->json($this->getTopGainerAngleApiData());
+        } catch (\Throwable $th) {
+           return response()->json(
+            [ 'data' => ['status'=>false] ]
+           );
+        }
     }
 
     public function getPcrApiData(){
-        return response()->json($this->getPCRApiDatas());
+        try {
+            return response()->json($this->getPCRApiDatas());
+        } catch (\Throwable $th) {
+           return response()->json(
+            [ 'data' => ['status'=>false] ]
+           );
+        }
     }
 
     public function getLongBuildApiData(){
-        return response()->json($this->getLongBuildData());
+        try {
+            return response()->json($this->getLongBuildData());
+        } catch (\Throwable $th) {
+           return response()->json(
+            [ 'data' => ['status'=>false] ]
+           );
+        }
     }
 
     public function getShortBuildApiData(){
-        return response()->json($this->getShortBuildData());
+        try {
+            return response()->json($this->getShortBuildData());
+        } catch (\Throwable $th) {
+           return response()->json(
+            [ 'data' => ['status'=>false] ]
+           );
+        }
     }
 
     public function getShortCoveringApiData(){
-        return response()->json($this->getShortCoveringData());
+        try {
+            return response()->json($this->getShortCoveringData());
+        } catch (\Throwable $th) {
+           return response()->json(
+            [ 'data' => ['status'=>false] ]
+           );
+        }
     }
 
     public function getLongUnwillingApiData(){
-        return response()->json($this->getLongUnwillingData());
+        try {
+            return response()->json($this->getLongUnwillingData());
+        } catch (\Throwable $th) {
+           return response()->json(
+            [ 'data' => ['status'=>false] ]
+           );
+        }
     }
 
     public function storeTokenData(){
-        return response()->json($this->getTokenData());
+        try {
+            return response()->json($this->getTokenData());
+        } catch (\Throwable $th) {
+           return response()->json(
+            [ 'data' => ['status'=>false] ]
+           );
+        }
     }
 
     public function storeApiFetchData(){
-        $data = response()->json($this->storeApiFetch());
-        dd($this->storeApiFetch());
+        try {
+            dd($this->storeApiFetch());
+            // $data = response()->json($this->storeApiFetch());
+        } catch (\Throwable $th) {
+           return response()->json(
+            [ 'data' => ['status'=>false] ]
+           );
+        }
+        
     }
 
     public function packageDetails($id){

@@ -225,27 +225,77 @@
 
 @push('script')
 <script>
+    let longIo;
+    let shortIo; 
+    let shortCover;
+    let longWill;
+    let pcrData;
+    let Toploser;
+    let topgainer;
+   $(document).ready(function(){
+        FetchLongOIData();
+        FetchShortOIData();
+        FetchShortCoveringOIData();
+        FetchLongUnwilingOIData();
+        FetchPCRData();
+        FetchTopLoserData();
+        FetchTopGainerData();
+
+        var longIo = setInterval(() => {
+            FetchLongOIData();
+        }, 10 * 1000);
+
+        var shortIo = setInterval(() => {
+            FetchShortOIData();
+        }, 10 * 1000);
+
+
+        var shortCover = setInterval(() => {
+            FetchShortCoveringOIData();
+        }, 10 * 1000);
+
+        var longWill = setInterval(() => {
+            FetchLongUnwilingOIData();
+        }, 10 * 1000);
+
+        var pcrData = setInterval(() => {
+            FetchPCRData();
+        }, 10 * 1000);
+
+        var Toploser = setInterval(() => {
+            FetchTopLoserData();
+        }, 10 * 1000);
+
+        var topgainer = setInterval(() => {
+            FetchTopGainerData();
+        }, 10 * 1000);
+        
+    });
+
     function FetchTopLoserData(){
         $.get('{{route("get-top-loser-api-data")}}',function(data){
            if(data['status'] === true){
-            data = data['data'];
-            if(data.length > 0){
-                var str = "";
-                for (var i in data) {
-                    if(i>4){
-                        break;
-                    } 
-                    str += `<tr>
-                       <td class="text-start">${data[i].tradingSymbol}</td>
-                       <td class="text-start">${data[i].ltp}</td>
-                       <td class="text-start text-danger">${data[i].netChange}</td>
-                       <td class="text-start text-danger">${data[i].percentChange}</td></tr>`;
+                data = data['data'];
+                if(data.length > 0){
+                    var str = "";
+                    for (var i in data) {
+                        if(i>4){
+                            break;
+                        } 
+                        str += `<tr>
+                        <td class="text-start">${data[i].tradingSymbol}</td>
+                        <td class="text-start">${data[i].ltp}</td>
+                        <td class="text-start text-danger">${data[i].netChange}</td>
+                        <td class="text-start text-danger">${data[i].percentChange}</td></tr>`;
+                    }
+                    $("#topLoser").html(str);
+                }else{
+                    $("#topLoser").html('');
                 }
-                $("#topLoser").html(str);
             }else{
-                $("#topLoser").html('');
+                $("#topLoser").html('<tr><td colspan="100%">No Response Please Try Again Later</tr></td>');
+                clearInterval(Toploser);
             }
-           }
         });
     }
     
@@ -269,7 +319,10 @@
             }else{
                 $("#topGainer").html('');
             }
-           }
+           }else{
+            $("#topGainer").html('<tr><td colspan="100%">No Response Please Try Again Later</tr></td>');
+                clearInterval(topgainer);
+            }
         });
     }
 
@@ -290,7 +343,10 @@
             }else{
                 $("#pcr").html('');
             }
-           }
+           }else{
+            $("#pcr").html('<tr><td colspan="100%">No Response Please Try Again Later</tr></td>');
+                clearInterval(pcrData);
+            }
         });
     }
 
@@ -316,106 +372,100 @@
             }else{
                 $("#longBuild").html('');
             }
-           }
+           }else{
+                $("#longBuild").html('<tr><td colspan="100%">No Response Please Try Again Later</tr></td>');
+                clearInterval(longIo);
+            }
         });
     }
 
     function FetchShortOIData(){
         $.get('{{route("get-short-build-api-data")}}',function(data){
-           if(data['status'] === true){
-            data = data['data'];
-            if(data.length > 0){
-                var str = "";
-                for (var i in data) {
-                    if(i>4){
-                        break;
-                    } 
-                    str += `<tr>
-                       <td class="text-start">${data[i].tradingSymbol}</td>
-                       <td class="text-start">${data[i].ltp}</td>
-                       <td class="text-start ${data[i].netChange > 0 ? 'text-success' : 'text-danger'}">${data[i].netChange}</td>
-                       <td class="text-start ${data[i].percentChange > 0 ? 'text-success' : 'text-danger'}">${data[i].percentChange}</td>
-                       <td class="text-start">${Math.trunc(data[i].opnInterest)}</td>
-                       <td class="text-start ${data[i].netChangeOpnInterest > 0 ? 'text-success' : 'text-danger'}">${Math.trunc(data[i].netChangeOpnInterest)}</td>`;
+            if(data['status'] === true){
+                data = data['data'];
+                if(data.length > 0){
+                    var str = "";
+                    for (var i in data) {
+                        if(i>4){
+                            break;
+                        } 
+                        str += `<tr>
+                        <td class="text-start">${data[i].tradingSymbol}</td>
+                        <td class="text-start">${data[i].ltp}</td>
+                        <td class="text-start ${data[i].netChange > 0 ? 'text-success' : 'text-danger'}">${data[i].netChange}</td>
+                        <td class="text-start ${data[i].percentChange > 0 ? 'text-success' : 'text-danger'}">${data[i].percentChange}</td>
+                        <td class="text-start">${Math.trunc(data[i].opnInterest)}</td>
+                        <td class="text-start ${data[i].netChangeOpnInterest > 0 ? 'text-success' : 'text-danger'}">${Math.trunc(data[i].netChangeOpnInterest)}</td>`;
+                    }
+                    $("#shortBuild").html(str);
+                }else{
+                    $("#shortBuild").html('');
                 }
-                $("#shortBuild").html(str);
             }else{
-                $("#shortBuild").html('');
+                $("#shortBuild").html('<tr><td colspan="100%">No Response Please Try Again Later</tr></td>');
+                clearInterval(shortIo);
             }
-           }
         });
     }
 
     function FetchShortCoveringOIData(){
         $.get('{{route("get-short-covering-api-data")}}',function(data){
            if(data['status'] === true){
-            data = data['data'];
-            if(data.length > 0){
-                var str = "";
-                for (var i in data) {
-                    if(i>4){
-                        break;
-                    } 
-                    str += `<tr>
-                       <td class="text-start">${data[i].tradingSymbol}</td>
-                       <td class="text-start">${data[i].ltp}</td>
-                       <td class="text-start ${data[i].netChange > 0 ? 'text-success' : 'text-danger'}">${data[i].netChange}</td>
-                       <td class="text-start ${data[i].percentChange > 0 ? 'text-success' : 'text-danger'}">${data[i].percentChange}</td>
-                       <td class="text-start">${Math.trunc(data[i].opnInterest)}</td>
-                       <td class="text-start ${data[i].netChangeOpnInterest > 0 ? 'text-success' : 'text-danger'}">${Math.trunc(data[i].netChangeOpnInterest)}</td>`;
+                data = data['data'];
+                if(data.length > 0){
+                    var str = "";
+                    for (var i in data) {
+                        if(i>4){
+                            break;
+                        } 
+                        str += `<tr>
+                        <td class="text-start">${data[i].tradingSymbol}</td>
+                        <td class="text-start">${data[i].ltp}</td>
+                        <td class="text-start ${data[i].netChange > 0 ? 'text-success' : 'text-danger'}">${data[i].netChange}</td>
+                        <td class="text-start ${data[i].percentChange > 0 ? 'text-success' : 'text-danger'}">${data[i].percentChange}</td>
+                        <td class="text-start">${Math.trunc(data[i].opnInterest)}</td>
+                        <td class="text-start ${data[i].netChangeOpnInterest > 0 ? 'text-success' : 'text-danger'}">${Math.trunc(data[i].netChangeOpnInterest)}</td>`;
+                    }
+                    $("#shortCovering").html(str);
+                }else{
+                    $("#shortCovering").html('');
                 }
-                $("#shortCovering").html(str);
-            }else{
-                $("#shortCovering").html('');
+           }else{
+                $("#shortCovering").html('<tr><td colspan="100%">No Response Please Try Again Later</tr></td>');
+                clearInterval(shortCover);
             }
-           }
         });
     }
 
     function FetchLongUnwilingOIData(){
         $.get('{{route("get-long-unwilling-api-data")}}',function(data){
-           if(data['status'] === true){
-            data = data['data'];
-            if(data.length > 0){
-                var str = "";
-                for (var i in data) {
-                    if(i>4){
-                        break;
-                    } 
-                    str += `<tr>
-                       <td class="text-start">${data[i].tradingSymbol}</td>
-                       <td class="text-start">${data[i].ltp}</td>
-                       <td class="text-start ${data[i].netChange > 0 ? 'text-success' : 'text-danger'}">${data[i].netChange}</td>
-                       <td class="text-start ${data[i].percentChange > 0 ? 'text-success' : 'text-danger'}">${data[i].percentChange}</td>
-                       <td class="text-start">${Math.trunc(data[i].opnInterest)}</td>
-                       <td class="text-start ${data[i].netChangeOpnInterest > 0 ? 'text-success' : 'text-danger'}">${Math.trunc(data[i].netChangeOpnInterest)}</td>`;
+            if(data['status'] === true){
+                data = data['data'];
+                if(data.length > 0){
+                    var str = "";
+                    for (var i in data) {
+                        if(i>4){
+                            break;
+                        } 
+                        str += `<tr>
+                        <td class="text-start">${data[i].tradingSymbol}</td>
+                        <td class="text-start">${data[i].ltp}</td>
+                        <td class="text-start ${data[i].netChange > 0 ? 'text-success' : 'text-danger'}">${data[i].netChange}</td>
+                        <td class="text-start ${data[i].percentChange > 0 ? 'text-success' : 'text-danger'}">${data[i].percentChange}</td>
+                        <td class="text-start">${Math.trunc(data[i].opnInterest)}</td>
+                        <td class="text-start ${data[i].netChangeOpnInterest > 0 ? 'text-success' : 'text-danger'}">${Math.trunc(data[i].netChangeOpnInterest)}</td>`;
+                    }
+                    $("#longUnwilling").html(str);
+                }else{
+                    $("#longUnwilling").html('');
                 }
-                $("#longUnwilling").html(str);
             }else{
-                $("#longUnwilling").html('');
+                $("#longUnwilling").html('<tr><td colspan="100%">No Response Please Try Again Later</tr></td>');
+                clearInterval(longWill);
             }
-           }
         });
     }
   
-    $(document).ready(function(){
-        FetchLongOIData();
-        FetchShortOIData();
-        FetchShortCoveringOIData();
-        FetchLongUnwilingOIData();
-        FetchPCRData();
-        FetchTopLoserData();
-        FetchTopGainerData();
-        setInterval(() => {
-            FetchLongOIData();
-            FetchShortOIData();
-            FetchShortCoveringOIData();
-            FetchLongUnwilingOIData();
-            FetchPCRData();
-            FetchTopLoserData();
-            FetchTopGainerData();
-        }, 10 * 1000);
-        
-    });
+    
 </script>
 @endpush
