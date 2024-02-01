@@ -97,11 +97,11 @@ class OmsConfigCron{
                 break;
             }
             $data = json_decode($vvl->data,true);
-            $strategyArr = array_reverse(array_slice($data['Strategy_name'],-72));
-            $highCEArr = array_reverse(array_slice($data['high_CE'],-72));
-            $lowCEArr = array_reverse(array_slice($data['low_CE'],-72));
-            $highPEArr = array_reverse(array_slice($data['high_PE'],-72));
-            $lowPEArr = array_reverse(array_slice($data['low_PE'],-72));
+            $strategyArr = array_reverse(array_slice($data['Strategy_name'],-400));
+            $highCEArr = array_reverse(array_slice($data['high_CE'],-400));
+            $lowCEArr = array_reverse(array_slice($data['low_CE'],-400));
+            $highPEArr = array_reverse(array_slice($data['high_PE'],-400));
+            $lowPEArr = array_reverse(array_slice($data['low_PE'],-400));
             foreach($strategyArr as $key=>$v){
                 if(strtolower($v)==strtolower($omsData->strategy_name)){
                     $high = $highCEArr[$key];
