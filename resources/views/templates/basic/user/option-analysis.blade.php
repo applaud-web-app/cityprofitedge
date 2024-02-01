@@ -5,7 +5,34 @@
 @endpush
 <section class="pt-100 pb-100">
     <div class="container-fluid">
-      
+          <div class="row">
+            <div class="col-lg-12 mb-3">
+                <div class="custom--card">
+                    <div class="card-body p-0">
+                        <div class="table-responsive--md">
+                            <table class="table custom--table">
+                                <thead>
+                                    <tr>
+                                        <th>@lang('Stock Name')</th>
+                                        <th>@lang('Expiry')</th>
+                                        <th>@lang('Strick Price')</th>
+                                        <th>@lang('Option Type')</th>
+                                        <th>@lang('Delta')</th>
+                                        <th>@lang('Damma')</th>
+                                        <th>@lang('Implied Volatility')</th>
+                                        <th>@lang('Theta')</th>
+                                        <th>@lang('Trade Volume')</th>
+                                        <th>@lang('Vega')</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="greekData">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="row">
             <div class="col-lg-12 mb-3">
                 <div class="custom--card">
@@ -23,7 +50,6 @@
                                 <option value="6">Symbol 6</option>
                             </select>
                         </div>
-
                     </div>
                     <div class="card-body">
                         <div id="apex-analysis-chart" style="width: 100%;"></div>
@@ -208,7 +234,63 @@ var options = {
 
         var chart = new ApexCharts(document.querySelector("#apex-analysis-chart2"), options);
         chart.render();
+</script>
 
+<script>
+  function fetchGreekData(){
+      $.get('{{route("fetch-option-greek-data")}}',function(response){
+          $symbol = "TCS";
+          $empDate = "25JAN2024";
+
+          if(response['status'] == true){
+            // console.log(response['data']);
+            records = response['data'];
+            if(records.length > 0){
+              var str = "";
+              for (var i in records) {
+                  str += `<tr>
+                      <td class="">${records[i].name}</td>
+                      <td class="">${records[i].expiry}</td>
+                      <td class=""> ${records[i].strikePrice}</td>
+                      <td class=""> ${records[i].optionType}</td>
+                      <td class="">${records[i].delta}</td>
+                      <td class="">${records[i].gamma}</td>
+                      <td class="">${records[i].impliedVolatility}</td>
+                      <td class="">${records[i].theta}
+                        <td class="">${records[i].tradeVolume}
+                          <td class="">${records[i].vega}</td>`;
+              }
+              $("#greekData").html(str);
+            }
+          }else{
+            $("#greekData").html('<tr><td colspan="100%">No Response Please Try Again Later</tr></td>');
+          }
+          // if(data['status'] === true){
+          // data = data['data'];
+          // if(data.length > 0){
+          //     var str = "";
+          //     for (var i in data) {
+          //         if(i>4){
+          //             break;
+          //         } 
+          //         str += `<tr>
+          //             <td class="text-start">${data[i].tradingSymbol}</td>
+          //             <td class="text-start">${data[i].ltp}</td>
+          //             <td class="text-start ${data[i].netChange > 0 ? 'text-success' : 'text-danger'}">${data[i].netChange}</td>
+          //             <td class="text-start ${data[i].percentChange > 0 ? 'text-success' : 'text-danger'}">${data[i].percentChange}</td>
+          //             <td class="text-start">${Math.trunc(data[i].opnInterest)}</td>
+          //             <td class="text-start ${data[i].netChangeOpnInterest > 0 ? 'text-success' : 'text-danger'}">${Math.trunc(data[i].netChangeOpnInterest)}</td>`;
+          //     }
+          //     $("#longBuild").html(str);
+          // }else{
+          //     $("#longBuild").html('');
+          // }
+          // }else{
+          //     
+          // }
+      });
+  }
+  fetchGreekData();
 </script>
 @endpush
 

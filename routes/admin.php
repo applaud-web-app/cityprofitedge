@@ -8,8 +8,8 @@ Route::namespace('Auth')->group(function () {
         Route::get('/', 'showLoginForm')->name('login');
         Route::post('/', 'login')->name('login');
         Route::get('logout', 'logout')->middleware('admin')->name('logout');
+        
     });
-
     // Admin Password Reset
     Route::controller('ForgotPasswordController')->prefix('password')->name('password.')->group(function(){
         Route::get('reset', 'showLinkRequestForm')->name('reset');

@@ -314,8 +314,14 @@ class SiteController extends Controller
     }
 
     public function storeTokenData(){
+        return response()->json($this->getTokenData());
+    }
+
+    public function storeApiFetchData(){
         try {
-            return response()->json($this->getTokenData());
+            // dd($this->storeApiFetch());
+            $data = response()->json($this->storeApiFetch());
+            dd('Inserted');
         } catch (\Throwable $th) {
            return response()->json(
             [ 'data' => ['status'=>false] ]
@@ -323,16 +329,16 @@ class SiteController extends Controller
         }
     }
 
-    public function storeApiFetchData(){
-        try {
-            dd($this->storeApiFetch());
-            // $data = response()->json($this->storeApiFetch());
-        } catch (\Throwable $th) {
-           return response()->json(
-            [ 'data' => ['status'=>false] ]
-           );
-        }
-        
+    public function fetchGreeksApiData(){
+        // try {
+        //     $symbol = "";
+        //     $expDate = "";
+            return response()->json($this->fetchGreeksApi());
+        // } catch (\Throwable $th) {
+        //    return response()->json(
+        //     [ 'data' => ['status'=>false] ]
+        //    );
+        // }
     }
 
     public function packageDetails($id){

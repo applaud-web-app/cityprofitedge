@@ -12,6 +12,15 @@ Route::get('get-long-build-api-data', 'SiteController@getLongBuildApiData')->nam
 Route::get('get-short-build-api-data', 'SiteController@getShortBuildApiData')->name('get-short-build-api-data');
 Route::get('get-short-covering-api-data', 'SiteController@getShortCoveringApiData')->name('get-short-covering-api-data');
 Route::get('get-long-unwilling-api-data', 'SiteController@getLongUnwillingApiData')->name('get-long-unwilling-api-data');
+
+// Store Instruments Data
+Route::get('store-token-data', 'SiteController@storeTokenData')->name('storeTokenData');
+
+// Store Historical Data
+Route::get('store-api-fetch-data', 'SiteController@storeApiFetchData');
+
+Route::get('fetch-option-greek-data','SiteController@fetchGreeksApiData')->name('fetch-option-greek-data');
+
 Route::get('/clear', function(){
     \Illuminate\Support\Facades\Artisan::call('optimize:clear');
 });
