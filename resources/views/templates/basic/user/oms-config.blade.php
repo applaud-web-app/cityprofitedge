@@ -49,7 +49,7 @@
                                             <td>{{$item->symbol_name}}</td>
                                             <td>{{$item->signal_tf}}</td>
                                             <td>{{$item->txn_type}}</td>
-                                            <td>{{$item->entry_point}}</td>
+                                            <td>{{$item->order_type=="LIMIT" ? $item->entry_point : '-'}}</td>
                                             <td>{{$item->ce_pyramid_1}}</td>
                                             <td>{{$item->ce_pyramid_2}}</td>
                                             <td>{{$item->ce_pyramid_3}}</td>
