@@ -26,11 +26,14 @@ class ZerodhaInstrumentCmd extends Command
      */
     public function handle()
     {
+        
         set_time_limit(0);
+       
         $content = file_get_contents('https://api.kite.trade/instruments');
         file_put_contents(public_path('file.csv'), $content);
         $file = fopen(public_path('file.csv'), 'r');
         if($file!=false){
+            ZerodhaInstrument::truncate();
             $header = fgetcsv($file);
             while (($row = fgetcsv($file)) !== false) {
                 if(empty($row[0])){
