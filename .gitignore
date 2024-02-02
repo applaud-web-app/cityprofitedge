@@ -13,3 +13,5 @@ npm-debug.log
 yarn-error.log
 /.idea
 command1_output.log
+command2_output.log
+command3_output.log
