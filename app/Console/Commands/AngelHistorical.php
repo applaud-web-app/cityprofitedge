@@ -40,7 +40,7 @@ class AngelHistorical extends Command
         $jwtToken =  $this->generate_access_token();
         
         $tables = allTradeSymbols();
-        $frame = [1,2,5];
+        $frame = [1,3,5];
         $todayDate = date("Y-m-d");
         $currentDate = date("Y-m-d H:s");
         $previousDate =  date('Y-m-d H:s', strtotime($currentDate. ' - 30 days'));
@@ -48,6 +48,7 @@ class AngelHistorical extends Command
         foreach ($tables as $v) {
 
             foreach ($frame as $tf) {
+
                 $data = \DB::connection('mysql_rm')->table($v)->select('*')->where(['date'=>$todayDate,'timeframe'=>$tf])->get(); 
           
                 $atmData = [];
@@ -61,8 +62,12 @@ class AngelHistorical extends Command
                     
                     $arrData = json_decode($val->data,true);    
                     $CE = array_unique($arrData['CE']);
+                    $PE = array_unique($arrData['PE']);
+
+                    $combineArray = array_merge($CE, $PE);
+                    // dd($combineArray);
                     
-                    foreach ($CE as $k=>$sym){
+                    foreach ($combineArray as $k => $sym){
                         $getDetails = AngelApiInstrument::Where('symbol_name',$sym)->first();
                         if($getDetails != NULL){
                             $timeFrame = ['ONE_MINUTE','THREE_MINUTE','FIVE_MINUTE'];
