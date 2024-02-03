@@ -6,6 +6,20 @@
     </div>
     <div class="modal-body">
         <div class="row">
+
+            <div class="col-lg-6 form-group">
+                <label for="client_type" class="required">Client<sup class="text--danger">*</sup></label>
+                <div class="custom-icon-field">
+                    <i class="las la-user"></i>
+                    <select name="client_type" class="form--control" required="" id="client_type">
+                        <option value="">Select Client</option>
+                        @foreach (clientList() as $item)
+                            <option value="{{$item}}" {{$item==$broker_data->client_type ? 'selected':''}}>{{$item}}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+
             <div class="col-lg-6 form-group">
                 <label for="client_name" class="required">Client Name <sup class="text--danger">*</sup></label>
                 <div class="custom-icon-field">

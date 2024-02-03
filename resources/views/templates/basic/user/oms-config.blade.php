@@ -2,6 +2,59 @@
 @section('content')
 @push('style')
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<link rel="stylesheet" href="{{asset('assets/admin/css/vendor/select2.min.css')}}">
+<style>
+    .select2-container {
+    width: 100% !important;
+}
+.select2-container .selection{
+    width: 100% !important;
+}
+.select2-container--default .select2-selection--single {
+    border-radius: 5px;
+    border: 0.0625rem solid #31434B;
+    height: 3rem;
+    background: #ffffff00;
+}
+.select2-container--default .select2-selection--single:hover,
+.select2-container--default .select2-selection--single:focus,
+.select2-container--default .select2-selection--single.active {
+    box-shadow: none;
+}
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 3rem;
+    color: #969BA0;
+    padding-left: 0.9375rem;
+    min-height: 3rem;
+}
+.select2-container--default .select2-selection--multiple {
+    border-color: #F5F5F5;
+    border-radius: 0;
+}
+.select2-dropdown {
+    border-radius: 0;
+}
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color:#3bb143;
+    color: #fff;
+}
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    top: 0.575rem;
+    right: 0.9375rem;
+}
+.select2-container .select2-selection--multiple {
+    min-height: 2.5rem;
+    color: #969BA0;
+    border-radius: 1.75rem;
+    border: 0.0625rem solid #C8C8C8;
+}
+.select2-results__option {
+    padding: 6px;
+    user-select: none;
+    color: #31434B;
+    -webkit-user-select: none;
+}
+</style>
 @endpush
 <section class="pt-100 pb-100">
     <div class="container content-container">
@@ -260,6 +313,7 @@
 </div>
 
 @push('script')
+<script src="{{asset('assets/admin/js/vendor/select2.min.js')}}"></script>
 <script>
     $("#order_type").on('click',function(){
         var vl = $(this).val();
@@ -296,6 +350,10 @@
             $("#ce_symbol_name").html('<option value="">Select</option>');
             $("#pe_symbol_name").html('<option value="">Select</option>');
         }
+        $("#ce_symbol_name,#pe_symbol_name").select2({
+            dropdownParent:$("#clientModal"),
+            tags:true
+        });
     })
 </script>
 

@@ -26,7 +26,9 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\OmsConfig;
 use App\Models\OrderBook;
+use App\Models\ZerodhaInstrument;
 use App\Helpers\KiteConnectCls;
+use App\Helpers\AngelConnectCls;
 class UserController extends Controller
 {
     public function home()
@@ -571,42 +573,62 @@ class UserController extends Controller
         $data['pageTitle'] = 'Trade Positions';
         $broker_data = BrokerApi::where('user_id',auth()->user()->id)->get();
         $data['broker_data'] = $broker_data;
-
-        // if($broker_data){
-        //     $brokerId = !empty($request->broker_name) ? $request->broker_name : $broker_data[0]->id;
-        //     $userData = null;
-        //     foreach($broker_data as $val){
-        //         if($val->id == $brokerId){
-        //             $userData = $val;
-        //         }
-        //     }
-        //     if(!is_null($userData)){
-        //         $params = [
-        //             'accountUserName'=>$userData->account_user_name,
-        //             'accountPassword'=>$userData->account_password,
-        //             'totpSecret'=>$userData->totp,
-        //             'apiKey'=>$userData->api_key,
-        //             'apiSecret'=>$userData->api_secret_key
-        //         ];
-        //         $kiteObj = new KiteConnectCls($params);
-        //         $kite = $kiteObj->generateSession();
-        //         dd($kite);
-        //         $kite = \Cache::remember('KITE_AUTH_'.$userData->account_user_name, 18000, function () use($kiteObj) {
-        //             $kite = $kiteObj->generateSession();
-        //             return $kite;
-        //         });
-        //         $positionData = $kite->getPositions();
-        //         dd($positionData);
-        //     }
-        // }
-
-       
-        
-        
-
-        
-
-        $data['order_data'] = OrderBook::select('*')->where('user_id',auth()->user()->id)->paginate(50);
+        $data['trade_book_data'] = [];
+        if($broker_data){
+            $brokerId = !empty($request->broker_name) ? $request->broker_name : $broker_data[0]->id;
+            $userData = null;
+            foreach($broker_data as $val){
+                if($val->id == $brokerId){
+                    $userData = $val;
+                }
+            }
+            if(!is_null($userData)){
+                if($userData->client_type=='Zerodha'){
+                    $params = [
+                        'accountUserName'=>$userData->account_user_name,
+                        'accountPassword'=>$userData->account_password,
+                        'totpSecret'=>$userData->totp,
+                        'apiKey'=>$userData->api_key,
+                        'apiSecret'=>$userData->api_secret_key
+                    ];
+                    $kiteObj = new KiteConnectCls($params);
+                    $kite = \Cache::remember('KITE_AUTH_'.$userData->account_user_name, 18000, function () use($kiteObj) {
+                        $kite = $kiteObj->generateSession();
+                        return $kite;
+                    });
+                    $positionData = $kite->getPositions();
+                    // dd($positionData->net[0]);
+                    $fDada = [];
+                    if(isset($positionData->net)){
+                        foreach($positionData->net as $vl){
+                            $fDada[] = [
+                                'product_type'=>$vl->product,
+                                'entry_time'=>'-',
+                                'txn_type'=>'-',
+                                'symbol_name'=>$vl->tradingsymbol,
+                                'qty'=>$vl->quantity,
+                                'entry_price'=>'-',
+                                'exit_price'=>'-',
+                                'sl_price'=>$vl->sell_price,
+                                'profile_loss'=>'',
+                            ];
+                        }
+                    }
+                    $data['trade_book_data'] = $fDada;
+                }elseif($userData->client_type=='Angel'){
+                    $param = [
+                        'accountUserName'=>$userData->account_user_name,
+                        'apiKey'=>$userData->api_key,
+                        'pin'=>$userData->security_pin,
+                        'totp_secret'=>$userData->totp,
+                    ];
+                    $angelObj = new AngelConnectCls($param);
+                    $accessToken = $angelObj->generate_access_token();
+                    $token = $accessToken['token'];
+                    echo $token;die;
+                }
+            }
+        }
         
         return view($this->activeTemplate . 'user.trade_positions',$data);
     }
@@ -645,6 +667,7 @@ class UserController extends Controller
         $brokerApi->api_secret_key = $request->api_secret_key;
         $brokerApi->security_pin = $request->security_pin;
         $brokerApi->totp = $request->totp;
+        $brokerApi->client_type = $request->client_type;
         $brokerApi->user_id = auth()->user()->id;
         $brokerApi->save();
         $notify[] = ['success', 'Broker Details Added Successfully...'];
@@ -665,6 +688,7 @@ class UserController extends Controller
         $brokerApi->security_pin = $request->security_pin;
         $brokerApi->totp = $request->totp;
         $brokerApi->request_token = $request->request_token;
+        $brokerApi->client_type = $request->client_type;
         $brokerApi->user_id = auth()->user()->id;
         $brokerApi->save();
         $notify[] = ['success', 'Broker Details Updated Successfully...'];
@@ -901,8 +925,30 @@ class UserController extends Controller
    
     }
 
+    public function checkTradingSymbolExists($symbol){
+        if(!empty($symbol)){
+            $cnt = ZerodhaInstrument::where('trading_symbol',$symbol)->count();
+            if($cnt){
+                return true;
+            }
+            return false;
+        }
+        return true;
+    }
+
     public function storeOmsConfig(Request $request){
         $txnType = '';
+
+        // ce symbol
+        if(!$this->checkTradingSymbolExists($request->ce_symbol_name)){
+            $notify[] = ['error', 'Enter valid trading symbol'];
+            return to_route('user.portfolio.oms-config')->withNotify($notify);
+        }
+        if(!$this->checkTradingSymbolExists($request->pe_symbol_name)){
+            $notify[] = ['error', 'Enter valid trading symbol'];
+            return to_route('user.portfolio.oms-config')->withNotify($notify);
+        }
+
         switch($request->strategy_name){
             case 'Short Straddle':
                 $txnType = 'SELL';

@@ -494,6 +494,11 @@ function strategyNames(){
     return ["Short Straddle","Long Straddle","Buy CE","Buy PE","Sell CE","Sell PE"];
 }
 
+function clientList(){
+    return ["Zerodha","Angel"];
+}
+
+
 function calculatePyramids($numbertodivise,$no){
     $intnumber = intval($numbertodivise / $no);
     $rem = $numbertodivise % $no;
