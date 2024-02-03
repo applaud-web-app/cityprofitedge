@@ -86,13 +86,15 @@
                             <div class="col-xl-6 col-lg-6 col-md-6">
                                 <p class="d-widget__caption fs--12px">@lang('Invested Value')</p>
                                 <h6 class="d-widget__amount mt-1">
-                                    {{ $general->cur_sym }} {{ showAmount($user->balance, 2) }}
+                                    ----
+                                    {{-- {{ $general->cur_sym }} {{ showAmount($user->balance, 2) }} --}}
                                 </h6>
                             </div>
                             <div class="col-xl-6 col-lg-6 col-md-6">
                                 <p class="d-widget__caption fs--12px">@lang('Current Value')</p>
                                 <h6 class="d-widget__amount mt-1">
-                                    {{ $general->cur_sym }} {{ showAmount($user->balance, 2) }}
+                                    ----
+                                    {{-- {{ $general->cur_sym }} {{ showAmount($user->balance, 2) }} --}}
                                 </h6>
                             </div>
                         </div>
