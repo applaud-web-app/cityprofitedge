@@ -36,9 +36,15 @@ class AngelInstrument extends Command
                 'token'=>$d['token'],
                 'symbol_name'=>$d['symbol'],
                 'name'=>$d['name'],
+                'strike'=>$d['strike'],
+                'lotsize'=>$d['lotsize'],
+                'instrumenttype'=>$d['instrumenttype'],
                 'exch_seg'=>$d['exch_seg'],
                 'expiry'=>$d['expiry'],
+                'tick_size'=>$d['tick_size']
            ]);
         });
+
+        // {"token":"12048","symbol":"UTIRAP35P1-MF","name":"UTIRAP35P1","expiry":"","strike":"-1.000000","lotsize":"1","instrumenttype":"","exch_seg":"NSE","tick_size":"1.000000"}
     }
 }
