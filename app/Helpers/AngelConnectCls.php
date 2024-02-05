@@ -29,7 +29,7 @@ class AngelConnectCls{
     public function generate_access_token()
     {
         try {
-            // $data = \Cache::remember('ANGEL_API_TOKEN_'.$this->accountUserName, 72000, function () {
+            $data = \Cache::remember('ANGEL_API_TOKEN_'.$this->accountUserName, 72000, function () {
                 $postFields = [
                     "clientcode"=>$this->accountUserName,
                     "password"=>$this->pin,
@@ -61,7 +61,7 @@ class AngelConnectCls{
     
                 $response = curl_exec($curl);
                 $err = curl_error($curl);
-                echo $response;die;
+                // echo $response;die;
                 curl_close($curl);
                 if ($err) {
                     return null;
@@ -73,8 +73,8 @@ class AngelConnectCls{
                     'clientPublicIp'=>$this->clientPublicIp,
                     'macAddress'=>$this->macAddress
                 ];
-            // });
-            // return $data;
+            });
+            return $data;
         } catch (Exception $ex) {
            return null;
         }
