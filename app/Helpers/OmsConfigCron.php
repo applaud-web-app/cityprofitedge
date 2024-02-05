@@ -208,8 +208,6 @@ class OmsConfigCron{
         $angelTokenArrObj = new AngelConnectCls($params);
         $angelTokenArr = $angelTokenArrObj->generate_access_token();
 
-        dd($angelTokenArr);
-
 
         if(is_null($angelTokenArr)){
             \Cache::forget('ANGEL_API_TOKEN_'.$broker->account_user_name);
@@ -244,7 +242,7 @@ class OmsConfigCron{
             ));    
             $response = curl_exec($curl);
             $err = curl_error($curl);
-            // dd($response);
+            dd($response);
             curl_close($curl);
             if ($err || $response=="") {
                 \Cache::forget('ANGEL_API_TOKEN_'.$broker->account_user_name);
