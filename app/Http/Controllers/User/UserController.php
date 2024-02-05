@@ -1096,8 +1096,9 @@ class UserController extends Controller
         $omsObj->exit_2_qty = $request->exit_2_qty;
         $omsObj->exit_2_target = $request->exit_2_target;
         $omsObj->user_id = auth()->user()->id;
-        $omsObj->cron_run_at = date("Y-m-d H:i:s");
+        $omsObj->cron_run_at = date("Y-m-d H:i:s",strtotime('-'.$request->pyramid_freq.' minutes'));
         $omsObj->save();
+        
         $notify[] = ['success', 'Data added Successfully...'];
         return to_route('user.portfolio.oms-config')->withNotify($notify);
     }
