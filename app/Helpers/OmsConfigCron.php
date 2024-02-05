@@ -13,19 +13,19 @@ class OmsConfigCron{
         set_time_limit(0);
     }
 
-    public function getCeLimitPrice($high,$low,$per,$type){
+    public function getCeLimitPrice($high,$low,$per,$type,$closePrice){
         $diff = ($high - $low) * ($per/100);
         if($type=="BUY"){
-            $price = $high - $diff;
+            $price = $closePrice - $diff;
         }else{
-            $price = $high + $diff;
+            $price = $closePrice + $diff;
         }
         
         $finalPrice = round($price,2);
         return $finalPrice;
     }
 
-    public function getPeLimitPrice($high,$low,$per,$type){
+    public function getPeLimitPrice($high,$low,$per,$type,$closePrice){
         $diff = ($high - $low) * ($per/100);
         if($type=="BUY"){
             $price = $high - $diff;
@@ -70,7 +70,7 @@ class OmsConfigCron{
             $bookOBj->order_type =  $lastD[0]->order_type;
             $bookOBj->transaction_type = $lastD[0]->transaction_type;
             $bookOBj->product = $lastD[0]->product;
-            $bookOBj->price = $lastD[0]->price;
+            $bookOBj->price = $apiData['price'];
             $bookOBj->quantity = $lastD[0]->quantity;
             $bookOBj->status_message = $lastD[0]->status_message;
             $bookOBj->order_datetime = $lastD[0]->order_timestamp->format('Y-m-d H:i:s');
@@ -114,18 +114,21 @@ class OmsConfigCron{
             $lowPEArr = array_reverse(array_slice($data['low_PE'],-1));
             $buyActionArr = array_reverse(array_slice($data['BUY_Action'],-1));
             $sellActionArr = array_reverse(array_slice($data['SELL_Action'],-1));
+            $closeCEArr = array_reverse(array_slice($data['close_CE'],-1));
+            $closePEArr = array_reverse(array_slice($data['close_PE'],-1));
             foreach($strategyArr as $key=>$v){
                 // if(strtolower($v)==strtolower($omsData->strategy_name)){
                 if((strtolower($buyActionArr[$key])==strtolower($omsData->strategy_name)) || (strtolower($sellActionArr[$key])==strtolower($omsData->strategy_name))){
                     $high = $highCEArr[$key];
                     $low = $lowCEArr[$key];
+                    $closePrice = $closeCEArr[$key];
 
                     
                     $fData["tradingsymbol"] = $omsData->ce_symbol_name;
                     $lotSize = $this->getZerodhaSymLotSize($omsData->ce_symbol_name);
                     if(!is_null($omsData->ce_pyramid_1)){
                         if($omsData->order_type=="LIMIT"){ 
-                            $price =  $this->getCeLimitPrice($high,$low,38.20,$txnType);
+                            $price =  $this->getCeLimitPrice($high,$low,38.20,$txnType,$closePrice);
                             $fData['price'] = $price;
                         }
                        
@@ -135,7 +138,7 @@ class OmsConfigCron{
                     if(!is_null($omsData->ce_pyramid_2)){
                         //50%
                         if($omsData->order_type=="LIMIT"){ 
-                            $price =  $this->getCeLimitPrice($high,$low,50,$txnType);
+                            $price =  $this->getCeLimitPrice($high,$low,50,$txnType,$closePrice);
                             $fData['price'] = $price;
                         }
                         $fData['quantity'] = $omsData->ce_pyramid_2 * $lotSize;
@@ -143,7 +146,7 @@ class OmsConfigCron{
                     }
                     if(!is_null($omsData->ce_pyramid_3)){
                         if($omsData->order_type=="LIMIT"){ 
-                            $price =  $this->getCeLimitPrice($high,$low,61.80,$txnType);
+                            $price =  $this->getCeLimitPrice($high,$low,61.80,$txnType,$closePrice);
                             $fData['price'] = $price;
                         }
                         $fData['quantity'] = $omsData->ce_pyramid_3 * $lotSize;
@@ -155,9 +158,10 @@ class OmsConfigCron{
                     $lotSize = $this->getZerodhaSymLotSize($omsData->pe_symbol_name);
                     $high = $highPEArr[$key];
                     $low = $lowPEArr[$key];
+                    $closePrice = $closePEArr[$key];
                     if(!is_null($omsData->pe_pyramid_1)){
                         if($omsData->order_type=="LIMIT"){ 
-                            $price =  $this->getPeLimitPrice($high,$low,38.20,$txnType);
+                            $price =  $this->getPeLimitPrice($high,$low,38.20,$txnType,$closePrice);
                             $fData['price'] = $price;
                         }
                         $fData['quantity'] = $omsData->pe_pyramid_1 * $lotSize;
@@ -165,7 +169,7 @@ class OmsConfigCron{
                     }
                     if(!is_null($omsData->pe_pyramid_2)){
                         if($omsData->order_type=="LIMIT"){ 
-                            $price =  $this->getPeLimitPrice($high,$low,50,$txnType);
+                            $price =  $this->getPeLimitPrice($high,$low,50,$txnType,$closePrice);
                             $fData['price'] = $price;
                         }
                         $fData['quantity'] = $omsData->pe_pyramid_2 * $lotSize;
@@ -173,7 +177,7 @@ class OmsConfigCron{
                     }
                     if(!is_null($omsData->pe_pyramid_3)){
                         if($omsData->order_type=="LIMIT"){ 
-                            $price =  $this->getPeLimitPrice($high,$low,61.80,$txnType);
+                            $price =  $this->getPeLimitPrice($high,$low,61.80,$txnType,$closePrice);
                             $fData['price'] = $price;
                         }
                         $fData['quantity'] = $omsData->pe_pyramid_3 * $lotSize;
@@ -278,7 +282,7 @@ class OmsConfigCron{
                         $bookOBj->order_type =  $lastD['ordertype'];
                         $bookOBj->transaction_type = $lastD['transactiontype'];
                         $bookOBj->product = $lastD['producttype'];
-                        $bookOBj->price = $lastD['price'];
+                        $bookOBj->price = $apiData['price'];;
                         $bookOBj->quantity = $lastD['quantity'];
                         $bookOBj->status_message = $lastD['text'];
                         $bookOBj->order_datetime = date("Y-m-d H:i:s",strtotime($lastD['updatetime']));
@@ -342,13 +346,16 @@ class OmsConfigCron{
             $lowPEArr = array_reverse(array_slice($data['low_PE'],-1));
             $buyActionArr = array_reverse(array_slice($data['BUY_Action'],-1));
             $sellActionArr = array_reverse(array_slice($data['SELL_Action'],-1));
-
+            $sellActionArr = array_reverse(array_slice($data['SELL_Action'],-1));
+            $sellActionArr = array_reverse(array_slice($data['SELL_Action'],-1));
+            $closeCEArr = array_reverse(array_slice($data['close_CE'],-1));
+            $closePEArr = array_reverse(array_slice($data['close_PE'],-1));
             foreach($strategyArr as $key=>$v){
                 // if(strtolower($v)==strtolower($omsData->strategy_name)){
                 if((strtolower($buyActionArr[$key])==strtolower($omsData->strategy_name)) || (strtolower($sellActionArr[$key])==strtolower($omsData->strategy_name))){
                     $high = $highCEArr[$key];
                     $low = $lowCEArr[$key];
-
+                    $closePrice = $closeCEArr[$key];
                     $symArr =  $this->getTokenBySymbolName($omsData->ce_symbol_name);
                     
                     $fData["tradingsymbol"] = $symArr['symbol'];
@@ -357,7 +364,7 @@ class OmsConfigCron{
 
                     if(!is_null($omsData->ce_pyramid_1)){
                         if($omsData->order_type=="LIMIT"){ 
-                            $price =  $this->getCeLimitPrice($high,$low,38.20,$txnType);
+                            $price =  $this->getCeLimitPrice($high,$low,38.20,$txnType,$closePrice);
                             $fData['price'] = $price;
                         }
                        
@@ -369,7 +376,7 @@ class OmsConfigCron{
                     if(!is_null($omsData->ce_pyramid_2)){
                         //50%
                         if($omsData->order_type=="LIMIT"){ 
-                            $price =  $this->getCeLimitPrice($high,$low,50,$txnType);
+                            $price =  $this->getCeLimitPrice($high,$low,50,$txnType,$closePrice);
                             $fData['price'] = $price;
                         }
                         // $fData['quantity'] = $omsData->ce_pyramid_2;
@@ -378,7 +385,7 @@ class OmsConfigCron{
                     }
                     if(!is_null($omsData->ce_pyramid_3)){
                         if($omsData->order_type=="LIMIT"){ 
-                            $price =  $this->getCeLimitPrice($high,$low,61.80,$txnType);
+                            $price =  $this->getCeLimitPrice($high,$low,61.80,$txnType,$closePrice);
                             $fData['price'] = $price;
                         }
                         // $fData['quantity'] = $omsData->ce_pyramid_3;
@@ -394,9 +401,11 @@ class OmsConfigCron{
                     $fData['symboltoken'] = $symArr['token'];
                     $high = $highPEArr[$key];
                     $low = $lowPEArr[$key];
+                    $closePrice = $closePEArr[$key];
+
                     if(!is_null($omsData->pe_pyramid_1)){
                         if($omsData->order_type=="LIMIT"){ 
-                            $price =  $this->getPeLimitPrice($high,$low,38.20,$txnType);
+                            $price =  $this->getPeLimitPrice($high,$low,38.20,$txnType,$closePrice);
                             $fData['price'] = $price;
                         }
                         // $fData['quantity'] = $omsData->pe_pyramid_1;
@@ -405,7 +414,7 @@ class OmsConfigCron{
                     }
                     if(!is_null($omsData->pe_pyramid_2)){
                         if($omsData->order_type=="LIMIT"){ 
-                            $price =  $this->getPeLimitPrice($high,$low,50,$txnType);
+                            $price =  $this->getPeLimitPrice($high,$low,50,$txnType,$closePrice);
                             $fData['price'] = $price;
                         }
                         // $fData['quantity'] = $omsData->pe_pyramid_2;
@@ -414,7 +423,7 @@ class OmsConfigCron{
                     }
                     if(!is_null($omsData->pe_pyramid_3)){
                         if($omsData->order_type=="LIMIT"){ 
-                            $price =  $this->getPeLimitPrice($high,$low,61.80,$txnType);
+                            $price =  $this->getPeLimitPrice($high,$low,61.80,$txnType,$closePrice);
                             $fData['price'] = $price;
                         }
                         // $fData['quantity'] = $omsData->pe_pyramid_3;

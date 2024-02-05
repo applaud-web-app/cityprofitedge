@@ -630,6 +630,7 @@ class UserController extends Controller
                     ];
                     $angelObj = new AngelConnectCls($param);
                     $angelTokenArr = $angelObj->generate_access_token();
+                    // dd($angelTokenArr);
                     $tokenA = $angelTokenArr['token'];
                     $clientLocalIp = $angelTokenArr['clientLocalIp'];
                     $clientPublicIp = $angelTokenArr['clientPublicIp'];
