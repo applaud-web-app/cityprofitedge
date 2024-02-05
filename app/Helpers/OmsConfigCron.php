@@ -226,7 +226,6 @@ class OmsConfigCron{
                 'Content-Type: application/json',
                 'Authorization: Bearer '.$tokenA
             );
-
             $curl = curl_init();
             curl_setopt_array($curl, array(
                 CURLOPT_URL => 'https://apiconnect.angelbroking.com/rest/secure/angelbroking/order/v1/placeOrder',
@@ -241,8 +240,8 @@ class OmsConfigCron{
                 CURLOPT_HTTPHEADER => $httpHeaders,
             ));    
             $response = curl_exec($curl);
+            // echo $response;die;
             $err = curl_error($curl);
-            dd($response);
             curl_close($curl);
             if ($err || $response=="") {
                 \Cache::forget('ANGEL_API_TOKEN_'.$broker->account_user_name);
@@ -297,10 +296,10 @@ class OmsConfigCron{
     }
 
     public function getTokenBySymbolName($symbName){
-       $data =  AngelApiInstrument::select('trading_symbol','zi.exchange_token','lotsize')->join('zerodha_instruments as zi','zi.exchange_token','token')->where('symbol_name',$symbName)->first();
+       $data =  AngelApiInstrument::select('trading_symbol','zi.exchange_token','lotsize','symbol_name')->join('zerodha_instruments as zi','zi.exchange_token','token')->where('trading_symbol',$symbName)->first();
        if($data){
             return [
-                'symbol'=> $data->trading_symbol,
+                'symbol'=> $data->symbol_name,
                 'token'=> $data->exchange_token,
                 'lot_size'=>$data->lotsize
             ];
@@ -351,6 +350,7 @@ class OmsConfigCron{
                     $low = $lowCEArr[$key];
 
                     $symArr =  $this->getTokenBySymbolName($omsData->ce_symbol_name);
+                    
                     $fData["tradingsymbol"] = $symArr['symbol'];
                     $fData['symboltoken'] = $symArr['token'];
                     
@@ -389,6 +389,7 @@ class OmsConfigCron{
                     //
 
                     $symArr =  $this->getTokenBySymbolName($omsData->pe_symbol_name);
+                    // dd($symArr);
                     $fData["tradingsymbol"] = $symArr['symbol'];
                     $fData['symboltoken'] = $symArr['token'];
                     $high = $highPEArr[$key];
