@@ -591,9 +591,15 @@ class UserController extends Controller
                         'apiKey'=>$userData->api_key,
                         'apiSecret'=>$userData->api_secret_key
                     ];
+
                     $kiteObj = new KiteConnectCls($params);
-                    $kite = \Cache::remember('KITE_AUTH_'.$userData->account_user_name, 18000, function () use($kiteObj) {
-                        $kite = $kiteObj->generateSession();
+                    $kite = \Cache::remember('KITE_AUTH_'.$userData->account_user_name, 18000, function () use($kiteObj,$userData) {
+                        $pythonScript = '/home/forge/cityprofitedge.com/public/kite_login/app.py -u '.$userData->account_user_name;
+                        $command = 'python3 ' . $pythonScript; 
+                        exec($command, $output, $exitCode);
+                        $tokenArr =  explode("=",implode("\n", $output));
+                        $token =  $tokenArr[1];
+                        $kite = $kiteObj->generateSessionManual($token);
                         return $kite;
                     });
                     $positionData = $kite->getPositions();
@@ -601,7 +607,7 @@ class UserController extends Controller
                     $fDada = [];
                     if(isset($positionData->net)){
                         foreach($positionData->net as $vl){
-                            $fDada[] = [
+                            $fDada[] = (object)[
                                 'product_type'=>$vl->product,
                                 'entry_time'=>'-',
                                 'txn_type'=>'-',
@@ -623,13 +629,59 @@ class UserController extends Controller
                         'totp_secret'=>$userData->totp,
                     ];
                     $angelObj = new AngelConnectCls($param);
-                    $accessToken = $angelObj->generate_access_token();
-                    $token = $accessToken['token'];
-                    echo $token;die;
+                    $angelTokenArr = $angelObj->generate_access_token();
+                    $tokenA = $angelTokenArr['token'];
+                    $clientLocalIp = $angelTokenArr['clientLocalIp'];
+                    $clientPublicIp = $angelTokenArr['clientPublicIp'];
+                    $macAddress = $angelTokenArr['macAddress'];
+                    $httpHeaders = array(
+                        'X-UserType: USER',
+                        'X-SourceID: WEB',
+                        'X-PrivateKey: '.$userData->api_key,
+                        'X-ClientLocalIP: '.$clientLocalIp,
+                        'X-ClientPublicIP: '.$clientPublicIp,
+                        'X-MACAddress: '.$macAddress,
+                        'Content-Type: application/json',
+                        'Authorization: Bearer '.$tokenA
+                    );
+                    $fDada = [];
+
+                    $curl = curl_init();
+                    curl_setopt_array($curl, array(
+                        CURLOPT_URL => 'https://apiconnect.angelbroking.com/rest/secure/angelbroking/order/v1/getPosition',
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_ENCODING => '',
+                        CURLOPT_MAXREDIRS => 10,
+                        CURLOPT_TIMEOUT => 0,
+                        CURLOPT_FOLLOWLOCATION => true,
+                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                        CURLOPT_CUSTOMREQUEST => 'GET',
+                        CURLOPT_HTTPHEADER => $httpHeaders,
+                    ));
+                    $response = curl_exec($curl);
+                    curl_close($curl);
+                    $dataArr = json_decode($response);
+                    if($dataArr->status==true){
+                        if(!is_null($dataArr->data)){
+                            foreach($dataArr->data as $vl){
+                                $fDada[] = (object)[
+                                    'product_type'=>$vl->producttype,
+                                    'entry_time'=>'-',
+                                    'txn_type'=>'-',
+                                    'symbol_name'=>$vl->tradingsymbol,
+                                    'qty'=>$vl->quantity,
+                                    'entry_price'=>'-',
+                                    'exit_price'=>'-',
+                                    'sl_price'=>$vl->sellamount,
+                                    'profile_loss'=>'',
+                                ];
+                            }
+                        }
+                    }
+                    $data['trade_book_data'] = $fDada;
                 }
             }
         }
-        
         return view($this->activeTemplate . 'user.trade_positions',$data);
     }
 

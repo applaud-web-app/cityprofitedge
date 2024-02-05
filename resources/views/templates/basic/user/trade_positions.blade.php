@@ -42,6 +42,23 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                @forelse ($trade_book_data as $item)
+                                    <tr>
+                                        <td>{{$item->product_type}}</td>
+                                        <td>{{$item->entry_time}}</td>
+                                        <td>{{$item->txn_type}}</td>
+                                        <td>{{$item->symbol_name}}</td>
+                                        <td>{{$item->qty}}</td>
+                                        <td>{{$item->entry_price}}</td>
+                                        <td>{{$item->exit_price}}</td>
+                                        <td>{{$item->sl_price}}</td>
+                                        <td>{{$item->profile_loss}}</td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="100%">NO DATA</td>
+                                    </tr>
+                                @endforelse
                                   
                                              
                                 </tbody>
