@@ -29,6 +29,7 @@ use App\Models\OrderBook;
 use App\Models\ZerodhaInstrument;
 use App\Helpers\KiteConnectCls;
 use App\Helpers\AngelConnectCls;
+use App\Jobs\PlaceOmsOrder;
 class UserController extends Controller
 {
     public function home()
@@ -570,6 +571,9 @@ class UserController extends Controller
     
 
     public function tradePositions(Request $request){
+        
+        dispatch(new PlaceOmsOrder([]))->delay(now()->addMinutes(3));
+        
         $data['pageTitle'] = 'Trade Positions';
         $broker_data = BrokerApi::where('user_id',auth()->user()->id)->get();
         $data['broker_data'] = $broker_data;
