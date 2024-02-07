@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Models\ZerodhaInstrument;
+use App\Models\OrderBook;
 class ZerodhaInstrumentCmd extends Command
 {
     /**
@@ -29,6 +30,9 @@ class ZerodhaInstrumentCmd extends Command
         
         set_time_limit(0);
        
+        //delete old order books
+        $today = date("Y-m-d");
+        OrderBook::whereDate('created_at','<',$today)->delete();
         $content = file_get_contents('https://api.kite.trade/instruments');
         file_put_contents(public_path('file.csv'), $content);
         $file = fopen(public_path('file.csv'), 'r');

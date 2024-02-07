@@ -13,27 +13,35 @@ class OmsConfigCron{
         set_time_limit(0);
     }
 
-    public function getCeLimitPrice($high,$low,$per,$type,$closePrice){
+    public function calculateTickSize($price,$tickSize){
+        // echo $price.'--'.$tickSize;die;
+        $mul = $tickSize/100;
+        if($mul > 0){
+            return ceil($price / $mul) * $mul; 
+        }
+        return $price;   
+    }
+
+    public function getCeLimitPrice($high,$low,$per,$type,$closePrice,$tickSize){
         $diff = ($high - $low) * ($per/100);
         if($type=="BUY"){
             $price = $closePrice - $diff;
         }else{
             $price = $closePrice + $diff;
         }
-        
         $finalPrice = round($price,2);
-        return $finalPrice;
+        return $this->calculateTickSize($finalPrice,$tickSize);
     }
 
-    public function getPeLimitPrice($high,$low,$per,$type,$closePrice){
+    public function getPeLimitPrice($high,$low,$per,$type,$closePrice,$tickSize){
         $diff = ($high - $low) * ($per/100);
         if($type=="BUY"){
-            $price = $high - $diff;
+            $price = $closePrice - $diff;
         }else{
-            $price = $high + $diff;
+            $price = $closePrice + $diff;
         }
         $finalPrice = round($price,2);
-        return $finalPrice;
+        return $this->calculateTickSize($finalPrice,$tickSize);
     }
 
     public function postPlaceOrder(object $broker,array $apiData){
@@ -83,11 +91,17 @@ class OmsConfigCron{
     }
 
     public function getZerodhaSymLotSize($symbol){
-        $lotSizeDat = ZerodhaInstrument::select('lot_size')->where('trading_symbol',$symbol)->first();
+        $lotSizeDat = ZerodhaInstrument::select('lot_size','tick_size')->where('trading_symbol',$symbol)->first();
         if($lotSizeDat){
-            return $lotSizeDat->lot_size;
+            return [
+                'lot_size'=>$lotSizeDat->lot_size,
+                'tick_size'=>$lotSizeDat->tick_size
+            ];
         }
-        return 0;
+        return [
+            'lot_size'=>null,
+            'tick_size'=>null
+        ];
     }
 
     public function callKiteApi($signalData,object $omsData){
@@ -125,10 +139,12 @@ class OmsConfigCron{
 
                     
                     $fData["tradingsymbol"] = $omsData->ce_symbol_name;
-                    $lotSize = $this->getZerodhaSymLotSize($omsData->ce_symbol_name);
+                    $lotSizeArr = $this->getZerodhaSymLotSize($omsData->ce_symbol_name);
+                    $lotSize = $lotSizeArr['lot_size'];
+                    $tickSize = $lotSizeArr['tick_size'];
                     if(!is_null($omsData->ce_pyramid_1)){
                         if($omsData->order_type=="LIMIT"){ 
-                            $price =  $this->getCeLimitPrice($high,$low,38.20,$txnType,$closePrice);
+                            $price =  $this->getCeLimitPrice($high,$low,38.20,$txnType,$closePrice,$tickSize);
                             $fData['price'] = $price;
                         }
                        
@@ -138,7 +154,7 @@ class OmsConfigCron{
                     if(!is_null($omsData->ce_pyramid_2)){
                         //50%
                         if($omsData->order_type=="LIMIT"){ 
-                            $price =  $this->getCeLimitPrice($high,$low,50,$txnType,$closePrice);
+                            $price =  $this->getCeLimitPrice($high,$low,50,$txnType,$closePrice,$tickSize);
                             $fData['price'] = $price;
                         }
                         $fData['quantity'] = $omsData->ce_pyramid_2 * $lotSize;
@@ -146,7 +162,7 @@ class OmsConfigCron{
                     }
                     if(!is_null($omsData->ce_pyramid_3)){
                         if($omsData->order_type=="LIMIT"){ 
-                            $price =  $this->getCeLimitPrice($high,$low,61.80,$txnType,$closePrice);
+                            $price =  $this->getCeLimitPrice($high,$low,61.80,$txnType,$closePrice,$tickSize);
                             $fData['price'] = $price;
                         }
                         $fData['quantity'] = $omsData->ce_pyramid_3 * $lotSize;
@@ -155,13 +171,15 @@ class OmsConfigCron{
 
                     //
                     $fData["tradingsymbol"] = $omsData->pe_symbol_name;
-                    $lotSize = $this->getZerodhaSymLotSize($omsData->pe_symbol_name);
+                    $lotSizeArr = $this->getZerodhaSymLotSize($omsData->pe_symbol_name);
+                    $lotSize = $lotSizeArr['lot_size'];
+                    $tickSize = $lotSizeArr['tick_size'];
                     $high = $highPEArr[$key];
                     $low = $lowPEArr[$key];
                     $closePrice = $closePEArr[$key];
                     if(!is_null($omsData->pe_pyramid_1)){
                         if($omsData->order_type=="LIMIT"){ 
-                            $price =  $this->getPeLimitPrice($high,$low,38.20,$txnType,$closePrice);
+                            $price =  $this->getPeLimitPrice($high,$low,38.20,$txnType,$closePrice,$tickSize);
                             $fData['price'] = $price;
                         }
                         $fData['quantity'] = $omsData->pe_pyramid_1 * $lotSize;
@@ -169,7 +187,7 @@ class OmsConfigCron{
                     }
                     if(!is_null($omsData->pe_pyramid_2)){
                         if($omsData->order_type=="LIMIT"){ 
-                            $price =  $this->getPeLimitPrice($high,$low,50,$txnType,$closePrice);
+                            $price =  $this->getPeLimitPrice($high,$low,50,$txnType,$closePrice,$tickSize);
                             $fData['price'] = $price;
                         }
                         $fData['quantity'] = $omsData->pe_pyramid_2 * $lotSize;
@@ -177,7 +195,7 @@ class OmsConfigCron{
                     }
                     if(!is_null($omsData->pe_pyramid_3)){
                         if($omsData->order_type=="LIMIT"){ 
-                            $price =  $this->getPeLimitPrice($high,$low,61.80,$txnType,$closePrice);
+                            $price =  $this->getPeLimitPrice($high,$low,61.80,$txnType,$closePrice,$tickSize);
                             $fData['price'] = $price;
                         }
                         $fData['quantity'] = $omsData->pe_pyramid_3 * $lotSize;
@@ -300,29 +318,31 @@ class OmsConfigCron{
     }
 
     public function getTokenBySymbolName($symbName){
-       $data =  AngelApiInstrument::select('trading_symbol','zi.exchange_token','lotsize','symbol_name')->join('zerodha_instruments as zi','zi.exchange_token','token')->where('trading_symbol',$symbName)->first();
+       $data =  AngelApiInstrument::select('trading_symbol','zi.exchange_token','lotsize','symbol_name','angel_api_instruments.tick_size')->join('zerodha_instruments as zi','zi.exchange_token','token')->where('trading_symbol',$symbName)->first();
        if($data){
             return [
                 'symbol'=> $data->symbol_name,
                 'token'=> $data->exchange_token,
-                'lot_size'=>$data->lotsize
+                'lot_size'=>$data->lotsize,
+                'tick_size'=>$data->tick_size
             ];
            
        }
        return [
         'symbol'=>null,
         'token'=>null,
-        'lot_size'=>null
+        'lot_size'=>null,
+        'tick_size'=>null,
        ];
     }
 
     public function callAngelApi($signalData,object $omsData){
-        
         $mcxSymArr = ['CRUDEOIL','NATURALGAS','GOLD','SILVER'];
         $txnType = $omsData->txn_type;
+        $extType = in_array($omsData->symbol_name,$mcxSymArr) ? "MCX" : "NFO";
         $fData = [
             'variety'=>'NORMAL',
-            "exchange" => in_array($omsData->symbol_name,$mcxSymArr) ? "MCX" : "NFO",//crude oil,naturalgas,gold,silver--mcx .. remaining --NFO
+            "exchange" => $extType,//crude oil,naturalgas,gold,silver--mcx .. remaining --NFO
             "transactiontype" => $txnType,
             "ordertype" => $omsData->order_type,
             // "producttype" => $omsData->product,
@@ -333,23 +353,22 @@ class OmsConfigCron{
         ];
 
         $breakForeach = 0;
-
         foreach($signalData as $vvl){
             if($breakForeach == 1){
                 break;
             }
             $data = json_decode($vvl->data,true);
-            $strategyArr = array_reverse(array_slice($data['Strategy_name'],-1));
-            $highCEArr = array_reverse(array_slice($data['high_CE'],-1));
-            $lowCEArr = array_reverse(array_slice($data['low_CE'],-1));
-            $highPEArr = array_reverse(array_slice($data['high_PE'],-1));
-            $lowPEArr = array_reverse(array_slice($data['low_PE'],-1));
-            $buyActionArr = array_reverse(array_slice($data['BUY_Action'],-1));
-            $sellActionArr = array_reverse(array_slice($data['SELL_Action'],-1));
-            $sellActionArr = array_reverse(array_slice($data['SELL_Action'],-1));
-            $sellActionArr = array_reverse(array_slice($data['SELL_Action'],-1));
-            $closeCEArr = array_reverse(array_slice($data['close_CE'],-1));
-            $closePEArr = array_reverse(array_slice($data['close_PE'],-1));
+            $strategyArr = array_slice($data['Strategy_name'],-1);
+            $highCEArr = array_slice($data['high_CE'],-1);
+            $lowCEArr = array_slice($data['low_CE'],-1);
+            $highPEArr = array_slice($data['high_PE'],-1);
+            $lowPEArr = array_slice($data['low_PE'],-1);
+            $buyActionArr = array_slice($data['BUY_Action'],-1);
+            $sellActionArr = array_slice($data['SELL_Action'],-1);
+            $sellActionArr = array_slice($data['SELL_Action'],-1);
+            $sellActionArr = array_slice($data['SELL_Action'],-1);
+            $closeCEArr = array_slice($data['close_CE'],-1);
+            $closePEArr = array_slice($data['close_PE'],-1);
             foreach($strategyArr as $key=>$v){
                 // if(strtolower($v)==strtolower($omsData->strategy_name)){
                 if((strtolower($buyActionArr[$key])==strtolower($omsData->strategy_name)) || (strtolower($sellActionArr[$key])==strtolower($omsData->strategy_name))){
@@ -360,36 +379,40 @@ class OmsConfigCron{
                     
                     $fData["tradingsymbol"] = $symArr['symbol'];
                     $fData['symboltoken'] = $symArr['token'];
+                    $tickSize = $symArr['tick_size'];
                     
+                    // $lotSize = $extType=='MCX' ? ($symArr['lot_size']/100) : $symArr['lot_size'];
+                    $lotSize = $symArr['lot_size'];
 
                     if(!is_null($omsData->ce_pyramid_1)){
                         if($omsData->order_type=="LIMIT"){ 
-                            $price =  $this->getCeLimitPrice($high,$low,38.20,$txnType,$closePrice);
+                            $price =  $this->getCeLimitPrice($high,$low,38.20,$txnType,$closePrice,$tickSize);
                             $fData['price'] = $price;
                         }
                        
                     //     $fData['quantity'] = $omsData->ce_pyramid_1;
-                           $fData['quantity'] = $symArr['lot_size'] * $omsData->ce_pyramid_1;
+
+                           $fData['quantity'] = $lotSize * $omsData->ce_pyramid_1;
                        
                        $this->postPlaceOrderAngel($omsData->broker,$fData);
                     }
                     if(!is_null($omsData->ce_pyramid_2)){
                         //50%
                         if($omsData->order_type=="LIMIT"){ 
-                            $price =  $this->getCeLimitPrice($high,$low,50,$txnType,$closePrice);
+                            $price =  $this->getCeLimitPrice($high,$low,50,$txnType,$closePrice,$tickSize);
                             $fData['price'] = $price;
                         }
                         // $fData['quantity'] = $omsData->ce_pyramid_2;
-                        $fData['quantity'] = $symArr['lot_size'] * $omsData->ce_pyramid_2;
+                        $fData['quantity'] = $lotSize * $omsData->ce_pyramid_2;
                         $this->postPlaceOrderAngel($omsData->broker,$fData);
                     }
                     if(!is_null($omsData->ce_pyramid_3)){
                         if($omsData->order_type=="LIMIT"){ 
-                            $price =  $this->getCeLimitPrice($high,$low,61.80,$txnType,$closePrice);
+                            $price =  $this->getCeLimitPrice($high,$low,61.80,$txnType,$closePrice,$tickSize);
                             $fData['price'] = $price;
                         }
                         // $fData['quantity'] = $omsData->ce_pyramid_3;
-                        $fData['quantity'] = $symArr['lot_size'] * $omsData->ce_pyramid_3;
+                        $fData['quantity'] = $lotSize * $omsData->ce_pyramid_3;
                         $this->postPlaceOrderAngel($omsData->broker,$fData);
                     }
 
@@ -399,35 +422,39 @@ class OmsConfigCron{
                     // dd($symArr);
                     $fData["tradingsymbol"] = $symArr['symbol'];
                     $fData['symboltoken'] = $symArr['token'];
+                    $tickSize = $symArr['tick_size'];
                     $high = $highPEArr[$key];
                     $low = $lowPEArr[$key];
                     $closePrice = $closePEArr[$key];
 
+                    // $lotSize = $extType=='MCX' ? ($symArr['lot_size']/100) : $symArr['lot_size'];
+                    $lotSize = $symArr['lot_size'];
+
                     if(!is_null($omsData->pe_pyramid_1)){
                         if($omsData->order_type=="LIMIT"){ 
-                            $price =  $this->getPeLimitPrice($high,$low,38.20,$txnType,$closePrice);
+                            $price =  $this->getPeLimitPrice($high,$low,38.20,$txnType,$closePrice,$tickSize);
                             $fData['price'] = $price;
                         }
                         // $fData['quantity'] = $omsData->pe_pyramid_1;
-                        $fData['quantity'] = $symArr['lot_size'] *  $omsData->pe_pyramid_1;
+                        $fData['quantity'] = $lotSize *  $omsData->pe_pyramid_1;
                         $this->postPlaceOrderAngel($omsData->broker,$fData);
                     }
                     if(!is_null($omsData->pe_pyramid_2)){
                         if($omsData->order_type=="LIMIT"){ 
-                            $price =  $this->getPeLimitPrice($high,$low,50,$txnType,$closePrice);
+                            $price =  $this->getPeLimitPrice($high,$low,50,$txnType,$closePrice,$tickSize);
                             $fData['price'] = $price;
                         }
                         // $fData['quantity'] = $omsData->pe_pyramid_2;
-                        $fData['quantity'] = $symArr['lot_size'] * $omsData->pe_pyramid_2;
+                        $fData['quantity'] = $lotSize * $omsData->pe_pyramid_2;
                         $this->postPlaceOrderAngel($omsData->broker,$fData);
                     }
                     if(!is_null($omsData->pe_pyramid_3)){
                         if($omsData->order_type=="LIMIT"){ 
-                            $price =  $this->getPeLimitPrice($high,$low,61.80,$txnType,$closePrice);
+                            $price =  $this->getPeLimitPrice($high,$low,61.80,$txnType,$closePrice,$tickSize);
                             $fData['price'] = $price;
                         }
                         // $fData['quantity'] = $omsData->pe_pyramid_3;
-                        $fData['quantity'] = $symArr['lot_size'] * $omsData->pe_pyramid_3;
+                        $fData['quantity'] = $lotSize * $omsData->pe_pyramid_3;
                         $this->postPlaceOrderAngel($omsData->broker,$fData);
                     }
 
@@ -449,24 +476,39 @@ class OmsConfigCron{
 
     public function placeOrder(){
         $todayDate=date("Y-m-d");
+        $startDateTime = strtotime(date("Y-m-d 15:30:00"));
+        $endDateTime = strtotime(date("Y-m-d 23:30:00"));
+        $currentDateTime = strtotime(date("Y-m-d H:i:s"));
         // $todayDate="2024-02-02";
-        OmsConfig::select('*')->with('broker')
-        ->where('is_api_pushed',0)
-        ->chunk(100, function($omgData) use($todayDate){
+        $omsDt = OmsConfig::select('*')->with('broker')
+        ->where('is_api_pushed',0);
+        if($currentDateTime > $startDateTime && $currentDateTime < $endDateTime){
+            $omsDt->where('symbol_name','CRUDEOIL');
+        }
+        $omsDt->chunk(100, function($omgData) use($todayDate){
             foreach ($omgData as $val) {
                 $signalData = \DB::connection('mysql_rm')->table($val->symbol_name)->select('*')->where(['date'=>$todayDate,'timeframe'=>$val->signal_tf])->get();
+               
                 $pFreq = "-".$val->pyramid_freq." minutes";
                 $nextRun = strtotime(date("Y-m-d H:i:s",strtotime($pFreq)));
                 $lstRun = strtotime($val->cron_run_at);
                 if($nextRun > $lstRun){
                     if(count($signalData)){
-                        $omsData = $val;
-                        if($omsData->broker->client_type=="Zerodha"){
-                            $this->callKiteApi($signalData,$omsData);
-                        }     
-                        elseif($omsData->broker->client_type=="Angel"){
-                            $this->callAngelApi($signalData,$omsData);
-                        }              
+                        $fffData = [];
+                       
+                        foreach($signalData as $vvvl){
+                            if(isset($vvvl->atm) && $vvvl->atm=="ATM"){
+                                $omsData = $val;
+                                $fffData[] = $vvvl;
+                                if($omsData->broker->client_type=="Zerodha"){
+                                    $this->callKiteApi($fffData,$omsData);
+                                }     
+                                elseif($omsData->broker->client_type=="Angel"){
+                                    $this->callAngelApi($fffData,$omsData);
+                                }  
+                            }
+                            
+                        }       
                         
                     }
                 }
