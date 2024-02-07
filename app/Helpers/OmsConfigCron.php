@@ -66,7 +66,7 @@ class OmsConfigCron{
             $kite = $kiteObj->generateSessionManual($token);
             return $kite;
         });
-        dd($kite);
+        // dd($kite);
         try{
             $order = $kite->placeOrder("regular", $apiData);
             sleep(3);
