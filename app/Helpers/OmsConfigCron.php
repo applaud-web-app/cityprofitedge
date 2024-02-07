@@ -70,7 +70,7 @@ class OmsConfigCron{
         try{
             if(is_string($kite)){
                 \Cache::forget('KITE_AUTH_'.$broker->account_user_name);
-                return null;
+                return 0;
             }
             $order = $kite->placeOrder("regular", $apiData);
             sleep(3);
@@ -91,6 +91,7 @@ class OmsConfigCron{
             $bookOBj->order_datetime = $lastD[0]->order_timestamp->format('Y-m-d H:i:s');
             $bookOBj->user_id = $broker->user_id;
             $bookOBj->save();
+            return 1;
         }catch(\Exception $e){
             echo $e->getMessage();
             \Cache::forget('KITE_AUTH_'.$broker->account_user_name);
@@ -149,6 +150,7 @@ class OmsConfigCron{
                     $lotSizeArr = $this->getZerodhaSymLotSize($omsData->ce_symbol_name);
                     $lotSize = $lotSizeArr['lot_size'];
                     $tickSize = $lotSizeArr['tick_size'];
+                    $updateDb = 1;
                     if(!is_null($omsData->ce_pyramid_1)){
                         if($omsData->order_type=="LIMIT"){ 
                             $price =  $this->getCeLimitPrice($high,$low,38.20,$txnType,$closePrice,$tickSize);
@@ -156,7 +158,7 @@ class OmsConfigCron{
                         }
                        
                        $fData['quantity'] = $omsData->ce_pyramid_1 * $lotSize;
-                       $this->postPlaceOrder($omsData->broker,$fData);
+                       $updateDb = $this->postPlaceOrder($omsData->broker,$fData);
                     }
                     if(!is_null($omsData->ce_pyramid_2)){
                         //50%
@@ -165,7 +167,7 @@ class OmsConfigCron{
                             $fData['price'] = $price;
                         }
                         $fData['quantity'] = $omsData->ce_pyramid_2 * $lotSize;
-                        $this->postPlaceOrder($omsData->broker,$fData);
+                        $updateDb = $this->postPlaceOrder($omsData->broker,$fData);
                     }
                     if(!is_null($omsData->ce_pyramid_3)){
                         if($omsData->order_type=="LIMIT"){ 
@@ -173,7 +175,7 @@ class OmsConfigCron{
                             $fData['price'] = $price;
                         }
                         $fData['quantity'] = $omsData->ce_pyramid_3 * $lotSize;
-                        $this->postPlaceOrder($omsData->broker,$fData);
+                        $updateDb = $this->postPlaceOrder($omsData->broker,$fData);
                     }
 
                     //
@@ -190,7 +192,7 @@ class OmsConfigCron{
                             $fData['price'] = $price;
                         }
                         $fData['quantity'] = $omsData->pe_pyramid_1 * $lotSize;
-                        $this->postPlaceOrder($omsData->broker,$fData);
+                        $updateDb = $this->postPlaceOrder($omsData->broker,$fData);
                     }
                     if(!is_null($omsData->pe_pyramid_2)){
                         if($omsData->order_type=="LIMIT"){ 
@@ -198,7 +200,7 @@ class OmsConfigCron{
                             $fData['price'] = $price;
                         }
                         $fData['quantity'] = $omsData->pe_pyramid_2 * $lotSize;
-                        $this->postPlaceOrder($omsData->broker,$fData);
+                        $updateDb = $this->postPlaceOrder($omsData->broker,$fData);
                     }
                     if(!is_null($omsData->pe_pyramid_3)){
                         if($omsData->order_type=="LIMIT"){ 
@@ -206,15 +208,17 @@ class OmsConfigCron{
                             $fData['price'] = $price;
                         }
                         $fData['quantity'] = $omsData->pe_pyramid_3 * $lotSize;
-                        $this->postPlaceOrder($omsData->broker,$fData);
+                        $updateDb = $this->postPlaceOrder($omsData->broker,$fData);
                     }
 
-
-                    OmsConfig::where("id",$omsData->id)->update([
-                        'is_api_pushed'=>1
-                    ]);
-                    $breakForeach = 1;
-                    break;
+                    if($updateDb==1){
+                        OmsConfig::where("id",$omsData->id)->update([
+                            'is_api_pushed'=>1
+                        ]);
+                        $breakForeach = 1;
+                        break;
+                    }
+                    
                 }
             }
         }
