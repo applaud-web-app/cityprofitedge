@@ -62,13 +62,16 @@ class OmsConfigCron{
             // exec($command, $output, $exitCode);
             // $tokenArr =  explode("=",implode("\n", $output));
             // $token =  $tokenArr[1];
-            return rand(1,9999999);
+            // return rand(1,9999999);
             $token = $broker->request_token;
             $kite = $kiteObj->generateSessionManual($token);
             return $kite;
         });
-        dd($kite);
         try{
+            if(is_string($kite)){
+                \Cache::forget('KITE_AUTH_'.$broker->account_user_name);
+                return null;
+            }
             $order = $kite->placeOrder("regular", $apiData);
             sleep(3);
             $orderData = $kite->getOrderHistory($order->order_id);
