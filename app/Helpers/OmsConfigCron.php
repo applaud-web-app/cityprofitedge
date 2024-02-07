@@ -62,6 +62,7 @@ class OmsConfigCron{
             // exec($command, $output, $exitCode);
             // $tokenArr =  explode("=",implode("\n", $output));
             // $token =  $tokenArr[1];
+            return rand(1,9999999);
             $token = $broker->request_token;
             $kite = $kiteObj->generateSessionManual($token);
             return $kite;
