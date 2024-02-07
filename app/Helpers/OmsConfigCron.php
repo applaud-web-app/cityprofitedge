@@ -23,6 +23,7 @@ class OmsConfigCron{
     }
 
     public function getCeLimitPrice($high,$low,$per,$type,$closePrice,$tickSize){
+        // echo $high.'--'.$low.'--'.$per.'--'.$closePrice;die;
         $diff = ($high - $low) * ($per/100);
         if($type=="BUY"){
             $price = $closePrice - $diff;
@@ -56,11 +57,12 @@ class OmsConfigCron{
         // dd($params);
         $kiteObj = new KiteConnectCls($params);
         $kite = \Cache::remember('KITE_AUTH_'.$broker->account_user_name, 18000, function () use($kiteObj,$broker) {
-            $pythonScript = '/home/forge/cityprofitedge.com/public/kite_login/app.py -u '.$broker->account_user_name;
-            $command = 'python3 ' . $pythonScript; 
-            exec($command, $output, $exitCode);
-            $tokenArr =  explode("=",implode("\n", $output));
-            $token =  $tokenArr[1];
+            // $pythonScript = '/home/forge/cityprofitedge.com/public/kite_login/app.py -u '.$broker->account_user_name;
+            // $command = 'python3 ' . $pythonScript; 
+            // exec($command, $output, $exitCode);
+            // $tokenArr =  explode("=",implode("\n", $output));
+            // $token =  $tokenArr[1];
+            $token = $broker->request_token;
             $kite = $kiteObj->generateSessionManual($token);
             return $kite;
         });
