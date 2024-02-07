@@ -105,6 +105,7 @@ class KiteConnectCls{
             $kite->setAccessToken($user->access_token);
             return $kite;
         } catch(\Exception $e) {
+            \Cache::forget('KITE_AUTH_'.$this->accountUserName);
             return 'TOKEN_EXPIRED';
         }
     }

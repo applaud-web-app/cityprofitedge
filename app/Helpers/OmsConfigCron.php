@@ -66,6 +66,7 @@ class OmsConfigCron{
             $kite = $kiteObj->generateSessionManual($token);
             return $kite;
         });
+        // dd($kite);
         try{
             $order = $kite->placeOrder("regular", $apiData);
             sleep(3);
@@ -303,7 +304,7 @@ class OmsConfigCron{
                         $bookOBj->transaction_type = $lastD['transactiontype'];
                         $bookOBj->product = $lastD['producttype'];
                         $bookOBj->price = $apiData['price'];;
-                        $bookOBj->quantity = $lastD['quantity'];
+                        $bookOBj->quantity = $lastD['quantity']/100;
                         $bookOBj->status_message = $lastD['text'];
                         $bookOBj->order_datetime = date("Y-m-d H:i:s",strtotime($lastD['updatetime']));
                         $bookOBj->user_id = $broker->user_id;
