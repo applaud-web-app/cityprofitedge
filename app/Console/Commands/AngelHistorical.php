@@ -446,7 +446,7 @@ class AngelHistorical extends Command
            
         }
         if($strength != NULL){
-            $strength = number_format($strength,2,",",".");
+            $strength = sprintf("%.2f", $strength);
         }
         // dd($heikinAshiData);
         $insert = new AngleOhlcData;
