@@ -267,24 +267,24 @@
                         <input type="number" name="pyramid_freq" id="pyramid_freq" class="form--control">
                     </div>
 
-                    <div class="col-lg-6 form-group">
+                    <div class="col-lg-6 form-group" style="display: none;">
                         <label for="exit_1_qty" class="required">Exit 1 Qty<sup class="text--danger">*</sup></label>
-                        <input type="text" name="exit_1_qty" id="exit_1_qty" class="form--control">
+                        <input type="text" name="exit_1_qty" id="exit_1_qty" class="form--control" value="0">
                     </div>
 
-                    <div class="col-lg-6 form-group">
+                    <div class="col-lg-6 form-group"  style="display: none;">
                         <label for="exit_1_target" class="required">Exit 1 Target<sup class="text--danger">*</sup></label>
-                        <input type="text" name="exit_1_target" id="exit_1_target" class="form--control">
+                        <input type="text" name="exit_1_target" id="exit_1_target" class="form--control" value="0">
                     </div>
 
-                    <div class="col-lg-6 form-group">
+                    <div class="col-lg-6 form-group"  style="display: none;">
                         <label for="exit_2_qty" class="required">Exit 2 Qty<sup class="text--danger">*</sup></label>
-                        <input type="text" name="exit_2_qty" id="exit_2_qty" class="form--control">
+                        <input type="text" name="exit_2_qty" id="exit_2_qty" class="form--control" value="0">
                     </div>
 
-                    <div class="col-lg-6 form-group">
+                    <div class="col-lg-6 form-group"  style="display: none;">
                         <label for="exit_2_target" class="required">Exit 2 Target<sup class="text--danger">*</sup></label>
-                        <input type="text" name="exit_2_target" id="exit_2_target" class="form--control">
+                        <input type="text" name="exit_2_target" id="exit_2_target" class="form--control" value="0">
                     </div>                   
                 </div>
             </div>

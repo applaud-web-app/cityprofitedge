@@ -960,7 +960,7 @@ class UserController extends Controller
         
         $atmData = [];
         foreach($data as $vvl){
-            if(isset($vvl->atm) && ($vvl->atm=="ATM" || $vvl->atm=="ATM-3" || $vvl->atm=="ATM+3")){
+            if(isset($vvl->atm) && ($vvl->atm=="ATM" || $vvl->atm=="ATM-1" || $vvl->atm=="ATM+1")){
                 $atmData[] = $vvl;
             }
         }

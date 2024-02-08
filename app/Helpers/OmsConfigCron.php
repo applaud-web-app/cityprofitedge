@@ -131,24 +131,52 @@ class OmsConfigCron{
                 break;
             }
             $data = json_decode($vvl->data,true);
-            $strategyArr = array_reverse(array_slice($data['Strategy_name'],-1));
-            $highCEArr = array_reverse(array_slice($data['high_CE'],-1));
-            $lowCEArr = array_reverse(array_slice($data['low_CE'],-1));
-            $highPEArr = array_reverse(array_slice($data['high_PE'],-1));
-            $lowPEArr = array_reverse(array_slice($data['low_PE'],-1));
-            $buyActionArr = array_reverse(array_slice($data['BUY_Action'],-1));
-            $sellActionArr = array_reverse(array_slice($data['SELL_Action'],-1));
-            $closeCEArr = array_reverse(array_slice($data['close_CE'],-1));
-            $closePEArr = array_reverse(array_slice($data['close_PE'],-1));
+            $strategyArr = array_slice($data['Strategy_name'],-1);
+            // $highCEArr = array_reverse(array_slice($data['high_CE'],-1));
+            // $lowCEArr = array_reverse(array_slice($data['low_CE'],-1));
+            // $highPEArr = array_reverse(array_slice($data['high_PE'],-1));
+            // $lowPEArr = array_reverse(array_slice($data['low_PE'],-1));
+            $highCEArr = array_reverse($data['high_CE']);
+            $lowCEArr = array_reverse($data['low_CE']);
+            $highPEArr = array_reverse($data['high_PE']);
+            $lowPEArr = array_reverse($data['low_PE']);
+
+            $CEALL  = array_reverse($data['CE']);
+            $PEALL  = array_reverse($data['PE']);
+
+
+            $buyActionArr = array_slice($data['BUY_Action'],-1);
+            $sellActionArr = array_slice($data['SELL_Action'],-1);
+            $closeCEArr = array_reverse($data['close_CE']);
+            $closePEArr = array_reverse($data['close_PE']);
             foreach($strategyArr as $key=>$v){
                 // if(strtolower($v)==strtolower($omsData->strategy_name)){
                 if((strtolower($buyActionArr[$key])==strtolower($omsData->strategy_name)) || (strtolower($sellActionArr[$key])==strtolower($omsData->strategy_name))){
-                    $high = $highCEArr[$key];
-                    $low = $lowCEArr[$key];
-                    $closePrice = $closeCEArr[$key];
+                    // $high = $highCEArr[$key];
+                    // $low = $lowCEArr[$key];
+                    // $closePrice = $closeCEArr[$key];
 
-                    
+                    $high = 0;
+                    $low = 0;
+                    $closePrice = 0;
+
+
                     $fData["tradingsymbol"] = $omsData->ce_symbol_name;
+
+                    if(!is_null($omsData->ce_symbol_name)){
+                        $kky = 0;
+                        foreach($CEALL as $kc=>$cvl){
+                            if($omsData->ce_symbol_name==$cvl){
+                                $kky = $kc;
+                            }
+                        }
+                        $high = $highCEArr[$kky];
+                        $low = $lowCEArr[$kky];
+                        $closePrice = $closeCEArr[$kky];
+
+                    }
+
+
                     $lotSizeArr = $this->getZerodhaSymLotSize($omsData->ce_symbol_name);
                     $lotSize = $lotSizeArr['lot_size'];
                     $tickSize = $lotSizeArr['tick_size'];
@@ -182,12 +210,28 @@ class OmsConfigCron{
 
                     //
                     $fData["tradingsymbol"] = $omsData->pe_symbol_name;
+                    
                     $lotSizeArr = $this->getZerodhaSymLotSize($omsData->pe_symbol_name);
                     $lotSize = $lotSizeArr['lot_size'];
                     $tickSize = $lotSizeArr['tick_size'];
-                    $high = $highPEArr[$key];
-                    $low = $lowPEArr[$key];
-                    $closePrice = $closePEArr[$key];
+
+
+                    $high = 0;
+                    $low = 0;
+                    $closePrice = 0;
+
+                    if(!is_null($omsData->pe_symbol_name)){
+                        $kky = 0;
+                        foreach($PEALL as $kc=>$cvl){
+                            if($omsData->pe_symbol_name==$cvl){
+                                $kky = $kc;
+                            }
+                        }
+                        $high = $highPEArr[$kky];
+                        $low = $lowPEArr[$kky];
+                        $closePrice = $closePEArr[$kky];
+                    }
+
                     if(!is_null($omsData->pe_pyramid_1)){
                         if($omsData->order_type=="LIMIT"){ 
                             $price =  $this->getPeLimitPrice($high,$low,38.20,$txnType,$closePrice,$tickSize);
@@ -372,22 +416,53 @@ class OmsConfigCron{
             }
             $data = json_decode($vvl->data,true);
             $strategyArr = array_slice($data['Strategy_name'],-1);
-            $highCEArr = array_slice($data['high_CE'],-1);
-            $lowCEArr = array_slice($data['low_CE'],-1);
-            $highPEArr = array_slice($data['high_PE'],-1);
-            $lowPEArr = array_slice($data['low_PE'],-1);
+            // $highCEArr = array_slice($data['high_CE'],-1);
+            // $lowCEArr = array_slice($data['low_CE'],-1);
+            // $highPEArr = array_slice($data['high_PE'],-1);
+            // $lowPEArr = array_slice($data['low_PE'],-1);
+
+            $highCEArr = array_reverse($data['high_CE']);
+            $lowCEArr = array_reverse($data['low_CE']);
+            $highPEArr = array_reverse($data['high_PE']);
+            $lowPEArr = array_reverse($data['low_PE']);
+
+            $CEALL  = array_reverse($data['CE']);
+            $PEALL  = array_reverse($data['PE']);
+
             $buyActionArr = array_slice($data['BUY_Action'],-1);
             $sellActionArr = array_slice($data['SELL_Action'],-1);
             $sellActionArr = array_slice($data['SELL_Action'],-1);
             $sellActionArr = array_slice($data['SELL_Action'],-1);
-            $closeCEArr = array_slice($data['close_CE'],-1);
-            $closePEArr = array_slice($data['close_PE'],-1);
+            $closeCEArr = array_reverse($data['close_CE']);
+            $closePEArr = array_reverse($data['close_PE']);
+
             foreach($strategyArr as $key=>$v){
                 // if(strtolower($v)==strtolower($omsData->strategy_name)){
                 if((strtolower($buyActionArr[$key])==strtolower($omsData->strategy_name)) || (strtolower($sellActionArr[$key])==strtolower($omsData->strategy_name))){
-                    $high = $highCEArr[$key];
-                    $low = $lowCEArr[$key];
-                    $closePrice = $closeCEArr[$key];
+                    // $high = $highCEArr[$key];
+                    // $low = $lowCEArr[$key];
+                    // $closePrice = $closeCEArr[$key];
+
+                    $high = 0;
+                    $low = 0;
+                    $closePrice = 0;
+
+
+                    $fData["tradingsymbol"] = $omsData->ce_symbol_name;
+
+                    if(!is_null($omsData->ce_symbol_name)){
+                        $kky = 0;
+                        foreach($CEALL as $kc=>$cvl){
+                            if($omsData->ce_symbol_name==$cvl){
+                                $kky = $kc;
+                            }
+                        }
+                        $high = $highCEArr[$kky];
+                        $low = $lowCEArr[$kky];
+                        $closePrice = $closeCEArr[$kky];
+
+                    }
+
                     $symArr =  $this->getTokenBySymbolName($omsData->ce_symbol_name);
                     
                     $fData["tradingsymbol"] = $symArr['symbol'];
@@ -436,9 +511,25 @@ class OmsConfigCron{
                     $fData["tradingsymbol"] = $symArr['symbol'];
                     $fData['symboltoken'] = $symArr['token'];
                     $tickSize = $symArr['tick_size'];
-                    $high = $highPEArr[$key];
-                    $low = $lowPEArr[$key];
-                    $closePrice = $closePEArr[$key];
+                    // $high = $highPEArr[$key];
+                    // $low = $lowPEArr[$key];
+                    // $closePrice = $closePEArr[$key];
+
+                    $high = 0;
+                    $low = 0;
+                    $closePrice = 0;
+
+                    if(!is_null($omsData->pe_symbol_name)){
+                        $kky = 0;
+                        foreach($PEALL as $kc=>$cvl){
+                            if($omsData->pe_symbol_name==$cvl){
+                                $kky = $kc;
+                            }
+                        }
+                        $high = $highPEArr[$kky];
+                        $low = $lowPEArr[$kky];
+                        $closePrice = $closePEArr[$kky];
+                    }
 
                     // $lotSize = $extType=='MCX' ? ($symArr['lot_size']/100) : $symArr['lot_size'];
                     $lotSize = $symArr['lot_size'];
