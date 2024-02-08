@@ -7,6 +7,7 @@ use App\Models\AngelApiInstrument;
 use App\Models\AngleHistoricalApi;
 use App\Models\ZerodhaInstrument;
 use App\Models\AngleOhlcData;
+use App\Models\LTP_ROUNDOFF;
 use App\Http\Helpers\helpers;
 use App\Traits\AngelApiAuth;
 use Carbon\Carbon;
