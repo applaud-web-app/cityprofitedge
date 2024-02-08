@@ -8,5 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class AngleOhlcData extends Model
 {
     use HasFactory;
-    protected $table = "angle_super_trend_data_2";
+    protected $table = "angle_super_trend_data";
 }
