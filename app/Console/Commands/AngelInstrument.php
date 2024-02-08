@@ -44,7 +44,5 @@ class AngelInstrument extends Command
                 'tick_size'=>$d['tick_size']
            ]);
         });
-
-        // {"token":"12048","symbol":"UTIRAP35P1-MF","name":"UTIRAP35P1","expiry":"","strike":"-1.000000","lotsize":"1","instrumenttype":"","exch_seg":"NSE","tick_size":"1.000000"}
     }
 }
