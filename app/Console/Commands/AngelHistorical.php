@@ -275,6 +275,13 @@ class AngelHistorical extends Command
 
     }
 
+    public function get_rounded_price($price,$symbol_name, $adjustment){
+
+        $ltp_roundoff = LTP_ROUNDOFF::WHERE('name',$symbol_name)->first();
+        return round(($price / $ltp_roundoff->value) + (int)$adjustment) * $ltp_roundoff->value;
+    }
+
+
     public function get_atm_strike_symbol_angel($spt_prc, $symbol_name, $nse_symbol, $exchange_name, $expiry_dates, $ce_adjustment, $pe_adjustment){
 
         $angleData = AngelApiInstrument::Where('name',$symbol_name)->get()->toArray();
