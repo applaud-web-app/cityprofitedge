@@ -572,8 +572,8 @@ class UserController extends Controller
 
     public function tradePositions(Request $request){
         
-        $a =  dispatch(new PlaceOmsOrder([]))->delay(now()->addMinutes(3));
-        dd($a);
+        // $a =  dispatch(new PlaceOmsOrder([]))->delay(now()->addMinutes(3));
+        // dd($a);
 
         $data['pageTitle'] = 'Trade Positions';
         $broker_data = BrokerApi::where('user_id',auth()->user()->id)->get();
