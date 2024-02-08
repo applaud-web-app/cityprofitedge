@@ -157,7 +157,7 @@ class OmsConfigCron{
                             $fData['price'] = $price;
                         }
                        
-                       $fData['quantity'] = $omsData->ce_pyramid_1 * $lotSize;
+                       $fData['quantity'] = $omsData->ce_pyramid_1;
                        $updateDb = $this->postPlaceOrder($omsData->broker,$fData);
                     }
                     if(!is_null($omsData->ce_pyramid_2)){
@@ -166,7 +166,7 @@ class OmsConfigCron{
                             $price =  $this->getCeLimitPrice($high,$low,50,$txnType,$closePrice,$tickSize);
                             $fData['price'] = $price;
                         }
-                        $fData['quantity'] = $omsData->ce_pyramid_2 * $lotSize;
+                        $fData['quantity'] = $omsData->ce_pyramid_2;
                         $updateDb = $this->postPlaceOrder($omsData->broker,$fData);
                     }
                     if(!is_null($omsData->ce_pyramid_3)){
@@ -174,7 +174,7 @@ class OmsConfigCron{
                             $price =  $this->getCeLimitPrice($high,$low,61.80,$txnType,$closePrice,$tickSize);
                             $fData['price'] = $price;
                         }
-                        $fData['quantity'] = $omsData->ce_pyramid_3 * $lotSize;
+                        $fData['quantity'] = $omsData->ce_pyramid_3;
                         $updateDb = $this->postPlaceOrder($omsData->broker,$fData);
                     }
 
@@ -191,7 +191,7 @@ class OmsConfigCron{
                             $price =  $this->getPeLimitPrice($high,$low,38.20,$txnType,$closePrice,$tickSize);
                             $fData['price'] = $price;
                         }
-                        $fData['quantity'] = $omsData->pe_pyramid_1 * $lotSize;
+                        $fData['quantity'] = $omsData->pe_pyramid_1;
                         $updateDb = $this->postPlaceOrder($omsData->broker,$fData);
                     }
                     if(!is_null($omsData->pe_pyramid_2)){
@@ -199,7 +199,7 @@ class OmsConfigCron{
                             $price =  $this->getPeLimitPrice($high,$low,50,$txnType,$closePrice,$tickSize);
                             $fData['price'] = $price;
                         }
-                        $fData['quantity'] = $omsData->pe_pyramid_2 * $lotSize;
+                        $fData['quantity'] = $omsData->pe_pyramid_2;
                         $updateDb = $this->postPlaceOrder($omsData->broker,$fData);
                     }
                     if(!is_null($omsData->pe_pyramid_3)){
@@ -207,7 +207,7 @@ class OmsConfigCron{
                             $price =  $this->getPeLimitPrice($high,$low,61.80,$txnType,$closePrice,$tickSize);
                             $fData['price'] = $price;
                         }
-                        $fData['quantity'] = $omsData->pe_pyramid_3 * $lotSize;
+                        $fData['quantity'] = $omsData->pe_pyramid_3;
                         $updateDb = $this->postPlaceOrder($omsData->broker,$fData);
                     }
 
