@@ -15,11 +15,13 @@ class OmsConfigCron{
 
     public function calculateTickSize($price,$tickSize){
         // echo $price.'--'.$tickSize;die;
-        $mul = $tickSize/100;
-        if($mul > 0){
-            return ceil($price / $mul) * $mul; 
-        }
-        return $price;   
+        // $mul = $tickSize/100;
+        // if($mul > 0){
+        //     return ceil($price / $mul) * $mul; 
+        // }
+        // return $price;  
+        $roundedPrice = round($price / $tickSize) * $tickSize;
+        return $roundedPrice; 
     }
 
     public function getCeLimitPrice($high,$low,$per,$type,$closePrice,$tickSize){
