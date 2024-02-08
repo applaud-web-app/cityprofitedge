@@ -16,7 +16,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('oms-config:command')->everyMinute()->sendOutputTo('command1_output.log');
-        $schedule->command('angel_instrument:daily_update')->dailyAt('14:10')->sendOutputTo('command2_output.log');
+        $schedule->command('angel_instrument:daily_update')->dailyAt('9:00')->sendOutputTo('command2_output.log');
         $schedule->command('angleHistorical:every_minute')->everyMinute()->sendOutputTo('command3_output.log');
         $schedule->command('zerodha_instrument:insert')->dailyAt('08:30')->sendOutputTo('command4_output.log');
     }
