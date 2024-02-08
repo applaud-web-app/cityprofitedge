@@ -77,6 +77,7 @@ Route::middleware('auth')->name('user.')->group(function () {
                 Route::post('remove-broker-details/{id}', 'removeBrokerDetails')->name('portfolio.remove-broker-details');
                 Route::get('trade-book','tradeBook')->name('trade-book');
                 Route::get('fetch-trade-record','fetchTradeRecord')->name('fetch-trade-book');
+                Route::get('store-ohlc-record','storenewData')->name('store-ohlc-record');
                 Route::get('pl-reports','plReports')->name('pl-reports');
 
                 Route::get('attachment-download/{fil_hash}','attachmentDownload')->name('attachment.download');
