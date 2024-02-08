@@ -562,6 +562,7 @@ class AngelHistorical extends Command
                                     }else{
                                         $in = 5;
                                     }
+                                    $timestampNew = $data[$key][0];
                                     $apiData = new AngleHistoricalApi;
                                     $apiData->token = $token;
                                     $apiData->symbol = $currentSymbol;
@@ -569,7 +570,7 @@ class AngelHistorical extends Command
                                     $apiData->exchange = $currentExchange;
                                     $apiData->fromdate = $previousDate;
                                     $apiData->todate = $currentDate;
-                                    $apiData->timestamp = $data[$key][0];
+                                    $apiData->timestamp = date('Y-m-d h:i:s', strtotime($timestampNew));
                                     $apiData->open = $data[$key][1];
                                     $apiData->high = $data[$key][2];
                                     $apiData->low = $data[$key][3];
