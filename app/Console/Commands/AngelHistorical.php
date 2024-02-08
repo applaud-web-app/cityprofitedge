@@ -474,7 +474,7 @@ class AngelHistorical extends Command
         $todayDate = date("Y-m-d");
         $currentDate = date("Y-m-d H:i");
         $current_time = time();
-        $past_30_min_time = strtotime('-1440 minutes', $current_time); // Subtract 24hr
+        $past_30_min_time = strtotime('-1 minutes', $current_time); // Subtract 24hr
         $previousDate =  date('Y-m-d H:i',  $past_30_min_time);     
         // dd($alltoken);
         foreach ($symbolDetails as $k => $sym){
