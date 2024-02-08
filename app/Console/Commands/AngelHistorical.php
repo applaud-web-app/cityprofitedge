@@ -36,7 +36,7 @@ class AngelHistorical extends Command
 
     // For MCX DATA
     function isBetween915AMto1130PM() {
-        date_default_timezone_set("Asia/Calcutta");
+        // date_default_timezone_set("Asia/Calcutta");
         $currentTime = time();
         $startTime = strtotime('9:15 AM');
         $endTime = strtotime('11:30 PM');
@@ -51,6 +51,7 @@ class AngelHistorical extends Command
     // For MCX AND NSE DATA
     function getLTP($exhange , $symbol , $token){
         $jwtToken =  $this->generate_access_token();
+        // dd($jwtToken);
         $errData = [];
         if($jwtToken!=null){
             $curl = curl_init();
@@ -469,7 +470,7 @@ class AngelHistorical extends Command
     // For Both NSE AND MCX
     public function get_historical_api_data($symbolDetails,$alltoken){
         set_time_limit(0);
-        date_default_timezone_set("Asia/Calcutta");
+        // date_default_timezone_set("Asia/Calcutta");
         $jwtToken =  $this->generate_access_token();
         $todayDate = date("Y-m-d");
         $currentDate = date("Y-m-d H:i");
@@ -526,6 +527,7 @@ class AngelHistorical extends Command
                         }
 
                         $response = json_decode($response,true);
+                        // dd($response);die;
                         
                         try {
                             if($response['data'] != NULL && isset($response['data'])){
@@ -539,7 +541,6 @@ class AngelHistorical extends Command
                                     $avgprice = NULL;
                                     $opnInterest = NULL;
                                 }
-                               
                                 foreach($data as $key => $item){
                                     if($interval == 'ONE_MINUTE'){
                                         $in = 1;
@@ -555,7 +556,7 @@ class AngelHistorical extends Command
                                     $apiData->exchange = $currentExchange;
                                     $apiData->fromdate = $previousDate;
                                     $apiData->todate = $currentDate;
-                                    $apiData->timestamp = $data[$key][0];
+                                    $apiData->timestamp = ($data[$key][0])->format('Y-m-d H:i:s');
                                     $apiData->open = $data[$key][1];
                                     $apiData->high = $data[$key][2];
                                     $apiData->low = $data[$key][3];
