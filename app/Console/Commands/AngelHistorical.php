@@ -489,7 +489,6 @@ class AngelHistorical extends Command
         foreach ($symbolDetails as $k => $sym){
             $getDetails = AngelApiInstrument::Where('token',$alltoken[$k])->first();
             $timeFrame = ['ONE_MINUTE','THREE_MINUTE','FIVE_MINUTE'];
-
             if($getDetails != NULL){
                 foreach ($timeFrame as $interval) {
                     $currentSymbol = $sym;
@@ -529,7 +528,8 @@ class AngelHistorical extends Command
                         $response = curl_exec($curl);
                         $err = curl_error($curl);
                         curl_close($curl);
-    
+
+                        // dd($response);
                         if ($err) {
                             return $errData;
                         }
@@ -540,7 +540,10 @@ class AngelHistorical extends Command
                         try {
                             if($response['data'] != NULL && isset($response['data'])){
                                 $data = $response['data'];
+
+                                // check this
                                 $res = $this->get_average_price($currentExchange,$token,$jwtToken);
+                                
                                 if($res['data'] != NULL && isset($res['data'])){
                                     $marketData = $res['data']['fetched'];
                                     $avgprice = $marketData[0]['avgPrice'];
@@ -549,7 +552,9 @@ class AngelHistorical extends Command
                                     $avgprice = NULL;
                                     $opnInterest = NULL;
                                 }
+                                // dd($data);
                                 foreach($data as $key => $item){
+                                    // dd($item);die;
                                     if($interval == 'ONE_MINUTE'){
                                         $in = 1;
                                     }else if($interval == 'THREE_MINUTE'){
@@ -564,7 +569,7 @@ class AngelHistorical extends Command
                                     $apiData->exchange = $currentExchange;
                                     $apiData->fromdate = $previousDate;
                                     $apiData->todate = $currentDate;
-                                    $apiData->timestamp = ($data[$key][0])->format('Y-m-d H:i:s');
+                                    $apiData->timestamp = $data[$key][0];
                                     $apiData->open = $data[$key][1];
                                     $apiData->high = $data[$key][2];
                                     $apiData->low = $data[$key][3];
@@ -577,6 +582,7 @@ class AngelHistorical extends Command
                                     $this->storenewData($apiData->id);
                                    
                                 }
+                                // dd('devansh');
                             }
                         } catch (\Throwable $th) {
                             //throw $th;
@@ -593,7 +599,7 @@ class AngelHistorical extends Command
     {
         set_time_limit(0);
         $symbol_range = 2;
-        $acceptedSymbols = ['CRUDEOIL','NIFTY','BANKNIFTY','GOLD','SILVER'];
+        $acceptedSymbols = ['CRUDEOIL','BANKNIFTY','NIFTY','GOLD','SILVER'];
         $marketHolidays = ["2024-01-22", "2024-01-26", "2024-03-08", "2024-03-25", "2024-03-29", "2024-04-11",
         "2024-04-17", "2024-05-01", "2024-06-17", "2024-07-17", "2024-08-15", "2024-10-02", "2024-11-01", "2024-11-15", "2024-12-25"];
 
@@ -608,7 +614,7 @@ class AngelHistorical extends Command
                     $angleApiInstuments = AngelApiInstrument::Where('name',$symbolName)->where(function ($query) {
                         $query->where('instrumenttype', '=', 'AMXIDX')->orWhere('instrumenttype', '=', 'COMDTY');
                     })->first();
-
+                
                     // For MCX Exch Records
                     if($angleApiInstuments->exch_seg == "MCX"){
                         $allResponse = array();
@@ -619,6 +625,7 @@ class AngelHistorical extends Command
                             $tokenVal = $angleApiInstuments->token;
                             $nameVal = $angleApiInstuments->name;
                             $ltpByApi = $this->getLTP($exchangeVal,$nameVal,$tokenVal);
+                            // dd($ltpByApi);
                             $givenLtp = $ltpByApi['data']['ltp'];
                             $response = $this->getStrickData($nameVal,$exchangeVal,$givenLtp ,$i , $i);
                             array_push($allResponse,$response[0][0]);
@@ -626,6 +633,7 @@ class AngelHistorical extends Command
                             array_push($alltoken,$response[0][1]);
                             array_push($alltoken,$response[1][1]);
                         }
+                        
                         $historicalData = $this->get_historical_api_data($allResponse,$alltoken);
                     }
 
