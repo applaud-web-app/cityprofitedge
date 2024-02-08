@@ -22,6 +22,8 @@ use App\Models\StockPortfolio;
 use App\Models\ThematicPortfolio;
 use App\Models\BrokerApi;
 use App\Models\Transaction;
+use App\Models\AngleOhlcData;
+use App\Models\AngleHistoricalApi;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\OmsConfig;
@@ -30,8 +32,11 @@ use App\Models\ZerodhaInstrument;
 use App\Helpers\KiteConnectCls;
 use App\Helpers\AngelConnectCls;
 use App\Jobs\PlaceOmsOrder;
+use App\Traits\AngelApiAuth;
 class UserController extends Controller
 {
+    use AngelApiAuth;
+
     public function home()
     {
         $user = auth()->user();
@@ -1126,8 +1131,280 @@ class UserController extends Controller
         return view($this->activeTemplate . 'user.option-analysis', compact('pageTitle'));
     }
 
-    public function fetchTradeRecord(Request $request){
-      
+    public function fetchTradeRecord(){
+        // try {
+            return response()->json($this->getTradeDeskData());
+        // } catch (\Throwable $th) {
+        //    return response()->json(
+        //     [ 'data' => ['status'=>false] ]
+        //    );
+        // }
+    }
+
+    // public function calculateSuperTrendWithStrength($high, $low, $close,$period, $index, $multiplier = 3){
+    //     $basicUpperBand = ($high[$period - 1] + $low[$period - 1]) / 2;
+    //     $basicLowerBand = ($high[$period - 1] + $low[$period - 1]) / 2;
+    //     $finalUpperBand = 0;
+    //     $finalLowerBand = 0;
+    //     $trend = "";
+    //     $strength = "";
+        
+    //     // Calculate ATR
+    //     $atr = [];
+    //     $atr[0] = 0;
+    //     for ($i = 1; $i < count($close); $i++) {
+    //         $tr1 = max($high[$i] - $low[$i], abs($high[$i] - $close[$i - 1]), abs($low[$i] - $close[$i - 1]));
+    //         $atr[$i] = ($atr[$i - 1] * ($period - 1) + $tr1) / $period;
+    //     }
+    
+    //     // Calculate Super Trend
+    //     // for ($i = $period; $i < count($close); $i++) {
+    //         if(count($close) > $index){
+    //             $basicUpperBand = ($high[$index] + $low[$index]) / 2 + $multiplier * $atr[$index];
+    //             $basicLowerBand = ($high[$index] + $low[$index]) / 2 - $multiplier * $atr[$index];
+                
+    //             if ($basicUpperBand < $finalUpperBand || $close[$index - 1] > $finalUpperBand) {
+    //                 $finalUpperBand = $basicUpperBand;
+    //             } else {
+    //                 $finalUpperBand = $finalUpperBand;
+    //             }
+                
+    //             if ($basicLowerBand > $finalLowerBand || $close[$index - 1] < $finalLowerBand) {
+    //                 $finalLowerBand = $basicLowerBand;
+    //             } else {
+    //                 $finalLowerBand = $finalLowerBand;
+    //             }
+        
+    //             if ($close[$index] <= $finalUpperBand) {
+    //                 $trend = 'Bullish';
+    //                 $strength = ($finalUpperBand - $close[$index]) / $atr[$index];
+    //             } elseif ($close[$index] >= $finalLowerBand) {
+    //                 $trend = 'Bearish';
+    //                 $strength = ($close[$index] - $finalLowerBand) / $atr[$index];
+    //             }
+    //         }
+            
+    //     // } 
+    
+    //     return ['trend' => $trend, 'strength' => $strength];
+    // }
+
+    // public function calculateHeikinAshi(){
+    //     set_time_limit(0);
+    //     $previousClose = null;
+    //     $period = 21;
+    //     $multiplier = 3;
+    //     $highArr = array();
+    //     $lowArr = array();
+    //     $closeArr = array();
+    //     $historicalData = AngleHistoricalApi::get()->toArray();
+
+    //     foreach ($historicalData as $key => $historical) {
+    //         // dd($historical['timestamp'])->format('');
+         
+    //         $open = ($historical['open'] + $historical['close']) / 2;
+    //         $close = ($historical['open'] + $historical['high'] + $historical['low'] + $historical['close']) / 4;
+
+    //         if ($previousClose !== null) {
+    //             $high = max($historical['high'], $open, $close);
+    //             $low = min($historical['low'], $open, $close);
+    //         } else {
+    //             $high = $historical['high'];
+    //             $low = $historical['low'];
+    //         }           
+
+    //         array_push($highArr,$high);
+    //         array_push($lowArr,$low);
+    //         array_push($closeArr,$close);
+    //         $newData = new AngleOhlcData;
+    //         $newData->historical_id = $historical['id'];
+    //         $newData->date = $historical['timestamp'];
+    //         $newData->new_open = $open;
+    //         $newData->new_high = $high;
+    //         $newData->new_low = $low;
+    //         $newData->new_close = $close;
+           
+    //         $totalRecord = AngleOhlcData::count();
+    //         if($totalRecord >= $period){
+    //             $val = $this->calculateSuperTrendWithStrength($highArr,$lowArr,$closeArr,$period,$key-1);
+    //             $newData->trend = $val['trend'];
+    //             $newData->strength = $val['strength'];
+    //         }
+
+    //         $newData->save();
+    //         $previousClose = $close;
+
+    //        if($key % 100 == 0){
+    //             sleep(4);
+    //        }
+    //     }
+
+    //     return "Completed";die;
+
+    // }
+
+    // function calculateSuperTrendWithStrength($high, $low, $close, $multiplier = 3, $period = 21) {
+    //     $basicUpperBand = ($high[$period - 1] + $low[$period - 1]) / 2;
+    //     $basicLowerBand = ($high[$period - 1] + $low[$period - 1]) / 2;
+    //     $finalUpperBand = 0;
+    //     $finalLowerBand = 0;
+    //     $trend = [];
+    //     $strength = [];
+        
+    //     // Calculate ATR
+    //     $atr = [];
+    //     $atr[0] = 0;
+    //     for ($i = 1; $i < count($close); $i++) {
+    //         $tr1 = max($high[$i] - $low[$i], abs($high[$i] - $close[$i - 1]), abs($low[$i] - $close[$i - 1]));
+    //         $atr[$i] = ($atr[$i - 1] * ($period - 1) + $tr1) / $period;
+    //     }
+    
+    //     // Calculate Super Trend
+    //     for ($i = $period; $i < count($close); $i++) {
+    //         $basicUpperBand = ($high[$i] + $low[$i]) / 2 + $multiplier * $atr[$i];
+    //         $basicLowerBand = ($high[$i] + $low[$i]) / 2 - $multiplier * $atr[$i];
+            
+    //         if ($basicUpperBand < $finalUpperBand or $close[$i - 1] > $finalUpperBand) {
+    //             $finalUpperBand = $basicUpperBand;
+    //         } else {
+    //             $finalUpperBand = $finalUpperBand;
+    //         }
+            
+    //         if ($basicLowerBand > $finalLowerBand or $close[$i - 1] < $finalLowerBand) {
+    //             $finalLowerBand = $basicLowerBand;
+    //         } else {
+    //             $finalLowerBand = $finalLowerBand;
+    //         }
+    
+    //         if ($close[$i] <= $finalUpperBand) {
+    //             $trend[] = 'Bullish';
+    //             $strength[] = ($finalUpperBand - $close[$i]) / $atr[$i];
+    //         } elseif ($close[$i] >= $finalLowerBand) {
+    //             $trend[] = 'Bearish';
+    //             $strength[] = ($close[$i] - $finalLowerBand) / $atr[$i];
+    //         }
+    //     }
+    
+    //     return ['trend' => $trend, 'strength' => $strength];
+    // }
+
+    // Get New high,low,close,etc
+    public function getNewData($ohlcData){
+        $heikinAshiData = [];
+        $previousClose = null;
+    
+        foreach ($ohlcData as $ohlc) {
+            $open = ($ohlc['open'] + $ohlc['close']) / 2;
+            $close = ($ohlc['open'] + $ohlc['high'] + $ohlc['low'] + $ohlc['close']) / 4;
+    
+            if ($previousClose !== null) {
+                $high = max($ohlc['high'], $open, $close);
+                $low = min($ohlc['low'], $open, $close);
+            } else {
+                $high = $ohlc['high'];
+                $low = $ohlc['low'];
+            }
+    
+            $heikinAshiData[] = [
+                'date' => $ohlc['timestamp'],
+                'open' => $open,
+                'high' => $high,
+                'low' => $low,
+                'close' => $close
+            ];
+    
+            $previousClose = $close;
+        }
+    
+        return $heikinAshiData;
+    }
+
+    public function calculateSuperTrendWithStrength2($high, $low, $close, $multiplier = 3, $period = 21){
+        $basicUpperBand = ($high[$period - 1] + $low[$period - 1]) / 2;
+        $basicLowerBand = ($high[$period - 1] + $low[$period - 1]) / 2;
+        $finalUpperBand = 0;
+        $finalLowerBand = 0;
+        $trend = [];
+        $strength = [];
+        
+        // Calculate ATR
+        $atr = [];
+        $atr[0] = 0;
+        for ($i = 1; $i < count($close); $i++) {
+            $tr1 = max($high[$i] - $low[$i], abs($high[$i] - $close[$i - 1]), abs($low[$i] - $close[$i - 1]));
+            $atr[$i] = ($atr[$i - 1] * ($period - 1) + $tr1) / $period;
+        }
+    
+        // Calculate Super Trend
+        for ($i = $period; $i < count($close); $i++) {
+            $basicUpperBand = ($high[$i] + $low[$i]) / 2 + $multiplier * $atr[$i];
+            $basicLowerBand = ($high[$i] + $low[$i]) / 2 - $multiplier * $atr[$i];
+            
+            if ($basicUpperBand < $finalUpperBand or $close[$i - 1] > $finalUpperBand) {
+                $finalUpperBand = $basicUpperBand;
+            } else {
+                $finalUpperBand = $finalUpperBand;
+            }
+            
+            if ($basicLowerBand > $finalLowerBand or $close[$i - 1] < $finalLowerBand) {
+                $finalLowerBand = $basicLowerBand;
+            } else {
+                $finalLowerBand = $finalLowerBand;
+            }
+    
+            if ($close[$i] <= $finalUpperBand) {
+                $trend[$i] = 'Bullish';
+                $strength[$i] = ($finalUpperBand - $close[$i]) / $atr[$i];
+            } elseif ($close[$i] >= $finalLowerBand) {
+                $trend[$i] = 'Bearish';
+                $strength[$i] = ($close[$i] - $finalLowerBand) / $atr[$i];
+            }
+        }
+    
+        return ['trend' => $trend, 'strength' => $strength];
+    }
+
+
+    public function storenewData(){
+        set_time_limit(0);
+        $historicalData = AngleHistoricalApi::get()->toArray();
+        $newData = $this->getNewData($historicalData);
+
+        $high = array_map(function($val){
+            return $val['high'];
+        },$newData);
+
+        $low = array_map(function($val){
+            return $val['low'];
+        },$newData);
+
+        $close = array_map(function($val){
+            return $val['close'];
+        },$newData);
+
+        $open = array_map(function($val){
+            return $val['open'];
+        },$newData);
+        $return =  $this->calculateSuperTrendWithStrength2($high,$low,$close);
+
+        foreach ($historicalData as $key => $value) {
+            $ohlcNew = new AngleOhlcData;
+            $ohlcNew->historical_id = $value['id'];
+            $ohlcNew->symbol = $value['symbol'];
+            $ohlcNew->date = $value['timestamp'];
+            $ohlcNew->new_open = $open[$key];
+            $ohlcNew->new_high = $high[$key];
+            $ohlcNew->new_low = $low[$key];
+            $ohlcNew->new_close = $close[$key];
+            $ohlcNew->trend = $return['trend'][$key] ?? null;  
+            $ohlcNew->strength = number_format($return['strength'][$key],2,",",".") ?? null; 
+            $ohlcNew->save();
+
+            if($key % 100 == 0){
+                sleep(4);
+            }
+        }
+        dd('Completed');die;
     }
     
 }
