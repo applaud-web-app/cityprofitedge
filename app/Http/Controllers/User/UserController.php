@@ -572,8 +572,9 @@ class UserController extends Controller
 
     public function tradePositions(Request $request){
         
-        dispatch(new PlaceOmsOrder([]))->delay(now()->addMinutes(3));
-        
+        $a =  dispatch(new PlaceOmsOrder([]))->delay(now()->addMinutes(3));
+        dd($a);
+
         $data['pageTitle'] = 'Trade Positions';
         $broker_data = BrokerApi::where('user_id',auth()->user()->id)->get();
         $data['broker_data'] = $broker_data;
@@ -965,10 +966,9 @@ class UserController extends Controller
         }
 
         $fData = [];
-
         foreach($atmData as $val){
             $arrData = json_decode($val->data,true);   
-            $CE = $arrData['CE'];
+            $CE = array_unique($arrData['CE']);
             $PE = $arrData['PE'];
             foreach ($CE as $k=>$item){
                 $fData[] = [

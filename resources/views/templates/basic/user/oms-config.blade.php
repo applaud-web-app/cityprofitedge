@@ -365,10 +365,14 @@
                 $(".ce_pe_symbl_2").show();
                 $("#ce_symbol_name").attr('required','required');
                 $("#pe_symbol_name").attr('required','required');
+                $("#ce_quantity").show().removeAttr('readonly');
+                $("#pe_quantity").show().removeAttr('readonly');
                 break;
             case 'Long Straddle':
                 $(".ce_pe_symbl_1").show();
                 $(".ce_pe_symbl_2").show();
+                $("#ce_quantity").show().removeAttr('readonly');
+                $("#pe_quantity").show().removeAttr('readonly');
                 $("#ce_symbol_name").attr('required','required');
                 $("#pe_symbol_name").attr('required','required');
                 break;
@@ -377,24 +381,32 @@
                 $(".ce_pe_symbl_2").hide();
                 $("#ce_symbol_name").attr('required','required');
                 $("#pe_symbol_name").removeAttr('required');
+                $("#ce_quantity").show().removeAttr('readonly');
+                $("#pe_quantity").attr('readonly','readonly').val(0);
                 break;
             case 'Buy PE':
                 $(".ce_pe_symbl_1").hide();
                 $(".ce_pe_symbl_2").show();
                 $("#pe_symbol_name").attr('required','required');
                 $("#ce_symbol_name").removeAttr('required');
+                $("#pe_quantity").show().removeAttr('readonly');
+                $("#ce_quantity").attr('readonly','readonly').val(0);
                 break;
             case 'Sell CE':
                 $(".ce_pe_symbl_1").show();
                 $(".ce_pe_symbl_2").hide();
                 $("#ce_symbol_name").attr('required','required');
                 $("#pe_symbol_name").removeAttr('required');
+                $("#ce_quantity").show().removeAttr('readonly');
+                $("#pe_quantity").attr('readonly','readonly').val(0);
                 break;
             case 'Sell PE':
                 $(".ce_pe_symbl_1").hide();
                 $(".ce_pe_symbl_2").show();
                 $("#pe_symbol_name").attr('required','required');
                 $("#ce_symbol_name").removeAttr('required');
+                $("#pe_quantity").show().removeAttr('readonly');
+                $("#ce_quantity").attr('readonly','readonly').val(0);
                 break;
             default:
                 $(".ce_pe_symbl_1").hide();
