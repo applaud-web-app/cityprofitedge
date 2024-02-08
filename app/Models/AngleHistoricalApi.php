@@ -8,5 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class AngleHistoricalApi extends Model
 {
     use HasFactory;
-    protected $table = "angle_historical_api";
+    protected $table = "angle_historical_api_2";
 }
