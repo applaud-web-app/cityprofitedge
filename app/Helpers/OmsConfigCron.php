@@ -293,6 +293,7 @@ class OmsConfigCron{
 
         if(is_null($angelTokenArr)){
             \Cache::forget('ANGEL_API_TOKEN_'.$broker->account_user_name);
+            return 0;
         }else{
             $tokenA = $angelTokenArr['token'];
             $clientLocalIp = $angelTokenArr['clientLocalIp'];
@@ -327,6 +328,7 @@ class OmsConfigCron{
             curl_close($curl);
             if ($err || $response=="") {
                 \Cache::forget('ANGEL_API_TOKEN_'.$broker->account_user_name);
+                return 0;
             }else{
                 $response = json_decode($response,true);
                 
@@ -366,10 +368,12 @@ class OmsConfigCron{
                         $bookOBj->order_datetime = date("Y-m-d H:i:s",strtotime($lastD['updatetime']));
                         $bookOBj->user_id = $broker->user_id;
                         $bookOBj->save();
+                        return 1;
                     }
 
                 }else{
                     \Cache::forget('ANGEL_API_TOKEN_'.$broker->account_user_name);
+                    return 0;
                 }
             }
             
@@ -477,6 +481,8 @@ class OmsConfigCron{
                         $low = $ceLow;
                         $closePrice = $ceClosePrice;
 
+                        $updateDb = 1;
+
                         if(!is_null($omsData->ce_pyramid_1)){
                             if($omsData->order_type=="LIMIT"){ 
                                 $price =  $this->getCeLimitPrice($high,$low,38.20,$txnType,$closePrice,$tickSize);
@@ -484,7 +490,7 @@ class OmsConfigCron{
                             }
                             //     $fData['quantity'] = $omsData->ce_pyramid_1;
                             $fData['quantity'] = $lotSize * $omsData->ce_pyramid_1;
-                            $this->postPlaceOrderAngel($omsData->broker,$fData);
+                            $updateDb = $this->postPlaceOrderAngel($omsData->broker,$fData);
                         }
                         if(!is_null($omsData->ce_pyramid_2)){
                             //50%
@@ -494,7 +500,7 @@ class OmsConfigCron{
                             }
                             // $fData['quantity'] = $omsData->ce_pyramid_2;
                             $fData['quantity'] = $lotSize * $omsData->ce_pyramid_2;
-                            $this->postPlaceOrderAngel($omsData->broker,$fData);
+                            $updateDb = $this->postPlaceOrderAngel($omsData->broker,$fData);
                         }
                         if(!is_null($omsData->ce_pyramid_3)){
                             if($omsData->order_type=="LIMIT"){ 
@@ -503,7 +509,7 @@ class OmsConfigCron{
                             }
                             // $fData['quantity'] = $omsData->ce_pyramid_3;
                             $fData['quantity'] = $lotSize * $omsData->ce_pyramid_3;
-                            $this->postPlaceOrderAngel($omsData->broker,$fData);
+                            $updateDb = $this->postPlaceOrderAngel($omsData->broker,$fData);
                         }
 
                         //
@@ -531,7 +537,7 @@ class OmsConfigCron{
                             }
                             // $fData['quantity'] = $omsData->pe_pyramid_1;
                             $fData['quantity'] = $lotSize *  $omsData->pe_pyramid_1;
-                            $this->postPlaceOrderAngel($omsData->broker,$fData);
+                            $updateDb = $this->postPlaceOrderAngel($omsData->broker,$fData);
                         }
                         if(!is_null($omsData->pe_pyramid_2)){
                             if($omsData->order_type=="LIMIT"){ 
@@ -540,7 +546,7 @@ class OmsConfigCron{
                             }
                             // $fData['quantity'] = $omsData->pe_pyramid_2;
                             $fData['quantity'] = $lotSize * $omsData->pe_pyramid_2;
-                            $this->postPlaceOrderAngel($omsData->broker,$fData);
+                            $updateDb = $this->postPlaceOrderAngel($omsData->broker,$fData);
                         }
                         if(!is_null($omsData->pe_pyramid_3)){
                             if($omsData->order_type=="LIMIT"){ 
@@ -549,15 +555,16 @@ class OmsConfigCron{
                             }
                             // $fData['quantity'] = $omsData->pe_pyramid_3;
                             $fData['quantity'] = $lotSize * $omsData->pe_pyramid_3;
-                            $this->postPlaceOrderAngel($omsData->broker,$fData);
+                            $updateDb = $this->postPlaceOrderAngel($omsData->broker,$fData);
                         }
 
-
-                        OmsConfig::where("id",$omsData->id)->update([
-                            'is_api_pushed'=>1
-                        ]);
-                        $breakForeach = 1;
-                        break;
+                        if($updateDb==1){
+                            OmsConfig::where("id",$omsData->id)->update([
+                                'is_api_pushed'=>1
+                            ]);
+                            $breakForeach = 1;
+                            break;
+                        }
                     }
                 }
             }
@@ -587,7 +594,7 @@ class OmsConfigCron{
                 $pFreq = "-".$val->pyramid_freq." minutes";
                 $nextRun = strtotime(date("Y-m-d H:i:s",strtotime($pFreq)));
                 $lstRun = strtotime($val->cron_run_at);
-                if($nextRun > $lstRun){
+                // if($nextRun > $lstRun){
                     if(count($signalData)){
                         $fffData = [];
                        
@@ -606,7 +613,7 @@ class OmsConfigCron{
                             }   
                         }
                     }
-                }
+                // }
             }
         });
     }
