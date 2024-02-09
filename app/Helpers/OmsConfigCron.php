@@ -418,7 +418,6 @@ class OmsConfigCron{
                     return 1;
                 }
             }
-            
         }
 
     }
@@ -627,7 +626,7 @@ class OmsConfigCron{
         $omsDt = OmsConfig::select('*')->with('broker')
         ->where('is_api_pushed',0);
         if($currentDateTime > $startDateTime && $currentDateTime < $endDateTime){
-            $omsDt->where('symbol_name','CRUDEOIL');
+            $omsDt->whereIn('symbol_name',['CRUDEOIL','NATURALGAS','GOLD','SILVER']);
         }
         $omsDt->chunk(100, function($omgData) use($todayDate){
             foreach ($omgData as $val) {
