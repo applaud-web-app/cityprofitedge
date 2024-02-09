@@ -87,7 +87,7 @@ class OmsConfigCron{
             $bookOBj->order_type =  $lastD[0]->order_type;
             $bookOBj->transaction_type = $lastD[0]->transaction_type;
             $bookOBj->product = $lastD[0]->product;
-            $bookOBj->price = $apiData['price'];
+            $bookOBj->price = isset($apiData['price']) ? $apiData['price'] : '-';;
             $bookOBj->quantity = $lastD[0]->quantity;
             $bookOBj->status_message = $lastD[0]->status_message;
             $bookOBj->order_datetime = $lastD[0]->order_timestamp->format('Y-m-d H:i:s');
@@ -95,8 +95,22 @@ class OmsConfigCron{
             $bookOBj->save();
             return 1;
         }catch(\Exception $e){
-            echo $e->getMessage();
+            $bookOBj = new OrderBook();
+            $bookOBj->broker_username = $broker->account_user_name;
+            $bookOBj->order_id = '-';
+            $bookOBj->status = 'failed';
+            $bookOBj->trading_symbol = $apiData['tradingsymbol'];
+            $bookOBj->order_type =  '-';
+            $bookOBj->transaction_type = '-';
+            $bookOBj->product = '-';
+            $bookOBj->price = isset($apiData['price']) ? $apiData['price'] : '-';;
+            $bookOBj->quantity = '-';
+            $bookOBj->status_message = $e->getMessage();
+            $bookOBj->order_datetime = date("Y-m-d H:i:s");
+            $bookOBj->user_id = $broker->user_id;
+            $bookOBj->save();
             \Cache::forget('KITE_AUTH_'.$broker->account_user_name);
+            return 1;
         }
     }
 
@@ -328,7 +342,21 @@ class OmsConfigCron{
             curl_close($curl);
             if ($err || $response=="") {
                 \Cache::forget('ANGEL_API_TOKEN_'.$broker->account_user_name);
-                return 0;
+                $bookOBj = new OrderBook();
+                $bookOBj->broker_username = $broker->account_user_name;
+                $bookOBj->order_id = '-';
+                $bookOBj->status = 'failed';
+                $bookOBj->trading_symbol = $apiData['tradingsymbol'];
+                $bookOBj->order_type =  '-';
+                $bookOBj->transaction_type = '-';
+                $bookOBj->product = '-';
+                $bookOBj->price = isset($apiData['price']) ? $apiData['price'] : '-';;
+                $bookOBj->quantity = '-';
+                $bookOBj->status_message = "order failed-".$response;
+                $bookOBj->order_datetime = date("Y-m-d H:i:s");
+                $bookOBj->user_id = $broker->user_id;
+                $bookOBj->save();
+                return 1;
             }else{
                 $response = json_decode($response,true);
                 
@@ -362,7 +390,7 @@ class OmsConfigCron{
                         $bookOBj->order_type =  $lastD['ordertype'];
                         $bookOBj->transaction_type = $lastD['transactiontype'];
                         $bookOBj->product = $lastD['producttype'];
-                        $bookOBj->price = $apiData['price'];
+                        $bookOBj->price = isset($apiData['price']) ? $apiData['price'] : '-';
                         $bookOBj->quantity = $lastD['quantity'];
                         $bookOBj->status_message = $lastD['text'];
                         $bookOBj->order_datetime = date("Y-m-d H:i:s",strtotime($lastD['updatetime']));
@@ -373,7 +401,21 @@ class OmsConfigCron{
 
                 }else{
                     \Cache::forget('ANGEL_API_TOKEN_'.$broker->account_user_name);
-                    return 0;
+                    $bookOBj = new OrderBook();
+                    $bookOBj->broker_username = $broker->account_user_name;
+                    $bookOBj->order_id = '-';
+                    $bookOBj->status = 'failed';
+                    $bookOBj->trading_symbol = $apiData['tradingsymbol'];
+                    $bookOBj->order_type =  '-';
+                    $bookOBj->transaction_type = '-';
+                    $bookOBj->product = '-';
+                    $bookOBj->price = isset($apiData['price']) ? $apiData['price'] : '-';;
+                    $bookOBj->quantity = '-';
+                    $bookOBj->status_message = "order failed-".$response;
+                    $bookOBj->order_datetime = date("Y-m-d H:i:s");
+                    $bookOBj->user_id = $broker->user_id;
+                    $bookOBj->save();
+                    return 1;
                 }
             }
             
