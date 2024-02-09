@@ -752,7 +752,8 @@ class AngelHistorical extends Command
     {
         set_time_limit(0);
         $symbol_range = 1;
-        $acceptedSymbols = ['CRUDEOIL','BANKNIFTY','NIFTY','GOLD','SILVER'];
+        // $acceptedSymbols = ['CRUDEOIL','BANKNIFTY','NIFTY','GOLD','SILVER'];
+        $acceptedSymbols = ['CRUDEOIL'];
         $marketHolidays = ["2024-01-22", "2024-01-26", "2024-03-08", "2024-03-25", "2024-03-29", "2024-04-11",
         "2024-04-17", "2024-05-01", "2024-06-17", "2024-07-17", "2024-08-15", "2024-10-02", "2024-11-01", "2024-11-15", "2024-12-25"];
 
