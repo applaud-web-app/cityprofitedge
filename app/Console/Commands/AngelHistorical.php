@@ -779,6 +779,9 @@ class AngelHistorical extends Command
                             $nameVal = $angleApiInstuments->name;
                             // getLTP by Angle Api
                             $ltpByApi = $this->getLTP($exchangeVal,$nameVal,$tokenVal);
+                            if(!isset($ltpByApi['data'])){
+                                continue;
+                            }
                             $givenLtp = $ltpByApi['data']['ltp'];
                             $response = $this->getStrickData($nameVal,$exchangeVal,$givenLtp ,$i , $i);
                             // dd($response);
