@@ -1124,9 +1124,25 @@ class UserController extends Controller
         return to_route('user.portfolio.oms-config')->withNotify($notify);
     }
 
-    public function OptionAnalysis(){
+    public function OptionAnalysis(Request $request){
         $pageTitle = 'Option Analysis';
-        return view($this->activeTemplate . 'user.option-analysis', compact('pageTitle'));
+        $symbolArr = allTradeSymbols();
+        // For Chart 1
+        $Atmtype1 = $request->atmType1 ?? "ATM";
+        $table1 =  $request->symbol1 ?? "CRUDEOIL";
+        $timeFrame1 = $request->timeframe1 ? : 5;
+        // For Chart 2
+        $Atmtype = $request->atmType ?? "ATM";
+        $table =  $request->symbol ?? "CRUDEOIL";
+        $timeFrame = $request->timeframe ? : 5;
+
+        // For Chart 1
+        $data1 = \DB::connection('mysql_rm')->table($table1)->select('*')->where('timeframe',$timeFrame1)->orderBy('id','DESC')->get();
+        
+        // For Chart 2
+        $data = \DB::connection('mysql_rm')->table($table)->select('*')->where('timeframe',$timeFrame)->orderBy('id','DESC')->get();
+     
+        return view($this->activeTemplate . 'user.option-analysis', compact('pageTitle','symbolArr','data','data1','Atmtype','timeFrame','table'));
     }
 
     public function fetchTradeRecord(){

@@ -2,53 +2,96 @@
 @section('content')
 @push('style')
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<style>
+  .filter_dropdown *{
+    color:black !important;
+  }
+  .filter_dropdown .btn-sm , .filter_dropdown .btn-sm i{
+    color:#fff !important;
+  }
+  .chart2 .apexcharts-legend-series .apexcharts-legend-marker[rel="1"]{
+    background: transparent !important;
+    border: 2px solid rgb(0, 255, 0) !important;
+  }
+  .chart2 .apexcharts-legend-series .apexcharts-legend-marker[rel="2"]{
+    background: transparent !important;
+    border: 2px solid rgb(255, 0, 0) !important;
+  }
+</style>
 @endpush
 <section class="pt-100 pb-100">
     <div class="container-fluid">
-          <div class="row">
-            <div class="col-lg-12 mb-3">
-                <div class="custom--card">
-                    <div class="card-body p-0">
-                        <div class="table-responsive--md">
-                            <table class="table custom--table">
-                                <thead>
-                                    <tr>
-                                        <th>@lang('Stock Name')</th>
-                                        <th>@lang('Expiry')</th>
-                                        <th>@lang('Strick Price')</th>
-                                        <th>@lang('Option Type')</th>
-                                        <th>@lang('Delta')</th>
-                                        <th>@lang('Damma')</th>
-                                        <th>@lang('Implied Volatility')</th>
-                                        <th>@lang('Theta')</th>
-                                        <th>@lang('Trade Volume')</th>
-                                        <th>@lang('Vega')</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="greekData">
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+      {{-- For First Chart --}}
+      @php
+        $atmData = [];
+        foreach($data as $vvl){
+            if(isset($vvl->atm) && $vvl->atm==$Atmtype){
+                $atmData[] = $vvl;
+            }
+        }
+      @endphp
+      @php $i=1; @endphp
+      @forelse($atmData as $val)
+        @php
+            $arrData = json_decode($val->data,true);    
+            $CE = array_slice($arrData['CE'],-1);
+            $PE = array_slice($arrData['PE'],-1);
+            // $Date = array_slice($arrData['Date'],-20);
+            $time = array_slice($arrData['time'],-20);
+            // $BUY_Action = array_slice($arrData['BUY_Action'],-5);
+            // $SELL_Action = array_slice($arrData['SELL_Action'],-5);
+            // $Strategy_name = array_slice($arrData['Strategy_name'],-5);
+            // $vwap_CE_signal = array_slice($arrData['vwap_CE_signal'],-5);
+            // $vwap_PE_signal = array_slice($arrData['vwap_PE_signal'],-5);
+            $CE_consolidated = array_slice($arrData['CE_consolidated'],-20);
+            $PE_consolidated = array_slice($arrData['PE_consolidated'],-20);
+            $close_CE = array_slice($arrData['close_CE'],-20);
+            $close_PE = array_slice($arrData['close_PE'],-20);
+        @endphp
+      @empty
+      @endforelse 
         <div class="row">
             <div class="col-lg-12 mb-3">
                 <div class="custom--card">
                     <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
                         <h5 class="card-title">@lang('Option Analysis 1')</h5>
-                        <div class="transparent-form">
-                        
-                            <select name="Symbol" class="form--control" id="symbol">
-                                <option value="" disabled="" selected>--Select Symbol--</option>
-                                <option value="1">Symbol 1</option>
-                                <option value="2">Symbol 2</option>
-                                <option value="3">Symbol 3</option>
-                                <option value="4">Symbol 4</option>
-                                <option value="5">Symbol 5</option>
-                                <option value="6">Symbol 6</option>
+                        <div class="filter-box d-flex">
+                          <form method="GET" class="d-flex align-items-center flex-wrap filter_dropdown">
+                            <div class="mx-1">
+                              <select name="symbol" class="form-select" id="symbol">
+                                <option value="" disabled="" selected>Symbol Name</option>
+                                @foreach ($symbolArr as $item)
+                                  <option value="{{$item}}" {{$item == $table ? "selected" : ""}}>{{$item}}</option>
+                                @endforeach
+                              </select>
+                            </div>
+                            <div class="mx-1">
+                              <select name="atmRange" class="form-select" id="atmRange">
+                                <option value="" disabled="" selected>Strike</option>
+                                @for ($i = -3; $i <= 3; $i++)
+                                  @if ($i == 0)
+                                    <option value="ATM" {{$Atmtype == "ATM" ? "selected" : ""}} >ATM</option>
+                                  @else
+                                    <option value="ATM{{$i}}" {{$Atmtype == "ATM$i" ? "selected" : ""}} >ATM {{$i}}</option>
+                                  @endif
+                                @endfor
                             </select>
+                           </div>
+                           <div class="mx-1">
+                              <select name="timeframe" class="form-select" id="timeframe">
+                                <option value="" disabled="" selected>Time Frame</option>
+                                <option value="1" {{$timeFrame == 1 ? 'selected' : ''}}>1</option>
+                                <option value="3" {{$timeFrame == 3 ? 'selected' : ''}}>3</option>
+                                <option value="5" {{$timeFrame == 5 ? 'selected' : ''}}>5</option>
+                                </select>
+                            </div>
+                            <div class="mx-1">
+                              <button class="btn btn-sm btn--base w-100 py-2" type="submit"><i class="las la-filter"></i> @lang('Filter')</button>
+                            </div>
+                            <div class="mx-1">
+                              <a href="{{url('/user/option-analysis')}}" class="btn btn-sm btn--base w-100 py-2" ><i class="las la-filter"></i> @lang('Refresh')</a>
+                            </div>
+                          </form>
                         </div>
                     </div>
                     <div class="card-body">
@@ -56,31 +99,122 @@
                     </div>
                 </div>
             </div>
+
+            {{-- For Graph 2 --}}
+            @php
+                $atmData = [];
+                foreach($data as $vvl){
+                    if(isset($vvl->atm) && $vvl->atm==$Atmtype){
+                        $atmData[] = $vvl;
+                    }
+                }
+            @endphp
+            @php $i=1; @endphp
+            @forelse($atmData as $val)
+              @php
+                  $arrData = json_decode($val->data,true);    
+                  $CE = array_slice($arrData['CE'],-1);
+                  $PE = array_slice($arrData['PE'],-1);
+                  // $Date = array_slice($arrData['Date'],-20);
+                  $time = array_slice($arrData['time'],-40);
+                  // $BUY_Action = array_slice($arrData['BUY_Action'],-5);
+                  // $SELL_Action = array_slice($arrData['SELL_Action'],-5);
+                  // $Strategy_name = array_slice($arrData['Strategy_name'],-5);
+                  // $vwap_CE_signal = array_slice($arrData['vwap_CE_signal'],-5);
+                  // $vwap_PE_signal = array_slice($arrData['vwap_PE_signal'],-5);
+                  $CE_consolidated = array_slice($arrData['CE_consolidated'],-40);
+                  $PE_consolidated = array_slice($arrData['PE_consolidated'],-40);
+                  $close_CE = array_slice($arrData['close_CE'],-40);
+                  $close_PE = array_slice($arrData['close_PE'],-40);
+              @endphp
+            @empty
+            @endforelse  
+            @php
+
+              $time = array_map(function ($y) {
+                  return date("g:i a", strtotime($y));
+              }, $time);
+
+              $ceArray = array();
+              $newArr1 = [];
+
+              foreach($time as $i=>$y){
+                if(!in_array($CE_consolidated[$i],$ceArray)){
+                  $ceArray = [];
+                  array_push($ceArray,$CE_consolidated[$i]);
+                  $newArr1[] = [
+                      'time'=>$y,
+                      'price'=>$close_CE[$i],
+                      'text'=>$CE_consolidated[$i],
+                  ];
+                }
+              }
+
+              $PeArray = array();
+              $newArr2 = [];
+
+              foreach($time as $i=>$y){
+                if(!in_array($PE_consolidated[$i],$PeArray)){
+                  $PeArray = [];
+                  array_push($PeArray,$PE_consolidated[$i]);
+                  $newArr2[] = [
+                      'time'=>$y,
+                      'price'=>$close_PE[$i],
+                      'text'=>$PE_consolidated[$i],
+                  ];
+                }
+              }
+              $mergedArray = array_merge($newArr1, $newArr2);
+            @endphp
             <div class="col-lg-12 mb-3">
                 <div class="custom--card">
                     <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
-                        <h5 class="card-title">@lang('Option Analysis 2')</h5>
-                        <div class="transparent-form">
-                        
-                            <select name="Symbol" class="form--control" id="symbol">
-                                <option value="" disabled="" selected>--Select--</option>
-                                <option value="1">Symbol 1</option>
-                                <option value="2">Symbol 2</option>
-                                <option value="3">Symbol 3</option>
-                                <option value="4">Symbol 4</option>
-                                <option value="5">Symbol 5</option>
-                                <option value="6">Symbol 6</option>
+                        <h5 class="card-title">@lang('Option Analysis - CE/PE Pivot Point Signals')</h5>
+                        <div class="filter-box d-flex">
+                          <form method="GET" class="d-flex align-items-center flex-wrap filter_dropdown">
+                            <div class="mx-1">
+                              <select name="symbol" class="form-select" id="symbol">
+                                <option value="" disabled="" selected>Symbol Name</option>
+                                @foreach ($symbolArr as $item)
+                                  <option value="{{$item}}" {{$item == $table ? "selected" : ""}}>{{$item}}</option>
+                                @endforeach
+                              </select>
+                            </div>
+                            <div class="mx-1">
+                              <select name="atmRange" class="form-select" id="atmRange">
+                                <option value="" disabled="" selected>Strike</option>
+                                @for ($i = -3; $i <= 3; $i++)
+                                  @if ($i == 0)
+                                    <option value="ATM" {{$Atmtype == "ATM" ? "selected" : ""}} >ATM</option>
+                                  @else
+                                    <option value="ATM{{$i}}" {{$Atmtype == "ATM$i" ? "selected" : ""}} >ATM {{$i}}</option>
+                                  @endif
+                                @endfor
                             </select>
+                           </div>
+                           <div class="mx-1">
+                              <select name="timeframe" class="form-select" id="timeframe">
+                                <option value="" disabled="" selected>Time Frame</option>
+                                <option value="1" {{$timeFrame == 1 ? 'selected' : ''}}>1</option>
+                                <option value="3" {{$timeFrame == 3 ? 'selected' : ''}}>3</option>
+                                <option value="5" {{$timeFrame == 5 ? 'selected' : ''}}>5</option>
+                                </select>
+                            </div>
+                            <div class="mx-1">
+                              <button class="btn btn-sm btn--base w-100 py-2" type="submit"><i class="las la-filter"></i> @lang('Filter')</button>
+                            </div>
+                            <div class="mx-1">
+                              <a href="{{url('/user/option-analysis')}}" class="btn btn-sm btn--base w-100 py-2" ><i class="las la-filter"></i> @lang('Refresh')</a>
+                            </div>
+                          </form>
                         </div>
-
                     </div>
-                    <div class="card-body">
-                        <div id="apex-analysis-chart2" style="width: 100%;"></div>
+                    <div class="card-body chart2">
+                        <div id="apex-analysis-chart3" style="width: 100%;"></div>
                     </div>
                 </div>
             </div>
         </div>
-        
     </div>
 </section>
 
@@ -128,7 +262,8 @@ var options = {
     colors: ['transparent']
   },
   xaxis: {
-    categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+    type: "category",
+    categories: ['1','2','3','4'],
   },
   yaxis: {
     title: {
@@ -235,62 +370,106 @@ var options = {
         var chart = new ApexCharts(document.querySelector("#apex-analysis-chart2"), options);
         chart.render();
 </script>
+{{-- ce-red.pe-green --}}
+@php
+    $data = [];
+    foreach($mergedArray as $key => $value){
+      if($value['text'] == "Bearish"){
+        $background = "#FF0000";
+        $color = "#fff";
+      }else if($value['text'] == "Bullish"){
+        $background = "#00FF00";
+        $color = "#000";
+      }else{
+        $background = "yellow";
+        $color = "#000";
+      }
+      $data[] = [
+        "x"=>$value['time'],
+        "y"=>$value['price'],
+        "marker"=>[
+          'size'=>6,
+          "fillColor"=> "#FFF",
+          "strokeColor"=> "transparent",
+          "radius"=> 2
+        ],
+        "label"=> [
+            "borderColor"=> $background,
+            "offsetY"=> 0,
+            "style"=> [
+              "color"=> $color,
+              "background"=> $background
+            ],
+            "text"=> $value['text']
+        ]
+      ];
+    }
+    
+@endphp
 
+{{-- Apex Chart 2 --}}
 <script>
-  function fetchGreekData(){
-      $.get('{{route("fetch-option-greek-data")}}',function(response){
-          $symbol = "TCS";
-          $empDate = "25JAN2024";
-
-          if(response['status'] == true){
-            // console.log(response['data']);
-            records = response['data'];
-            if(records.length > 0){
-              var str = "";
-              for (var i in records) {
-                  str += `<tr>
-                      <td class="">${records[i].name}</td>
-                      <td class="">${records[i].expiry}</td>
-                      <td class=""> ${records[i].strikePrice}</td>
-                      <td class=""> ${records[i].optionType}</td>
-                      <td class="">${records[i].delta}</td>
-                      <td class="">${records[i].gamma}</td>
-                      <td class="">${records[i].impliedVolatility}</td>
-                      <td class="">${records[i].theta}
-                        <td class="">${records[i].tradeVolume}
-                          <td class="">${records[i].vega}</td>`;
-              }
-              $("#greekData").html(str);
-            }
-          }else{
-            $("#greekData").html('<tr><td colspan="100%">No Response Please Try Again Later</tr></td>');
-          }
-          // if(data['status'] === true){
-          // data = data['data'];
-          // if(data.length > 0){
-          //     var str = "";
-          //     for (var i in data) {
-          //         if(i>4){
-          //             break;
-          //         } 
-          //         str += `<tr>
-          //             <td class="text-start">${data[i].tradingSymbol}</td>
-          //             <td class="text-start">${data[i].ltp}</td>
-          //             <td class="text-start ${data[i].netChange > 0 ? 'text-success' : 'text-danger'}">${data[i].netChange}</td>
-          //             <td class="text-start ${data[i].percentChange > 0 ? 'text-success' : 'text-danger'}">${data[i].percentChange}</td>
-          //             <td class="text-start">${Math.trunc(data[i].opnInterest)}</td>
-          //             <td class="text-start ${data[i].netChangeOpnInterest > 0 ? 'text-success' : 'text-danger'}">${Math.trunc(data[i].netChangeOpnInterest)}</td>`;
-          //     }
-          //     $("#longBuild").html(str);
-          // }else{
-          //     $("#longBuild").html('');
-          // }
-          // }else{
-          //     
-          // }
-      });
+  var series =
+  {
+    "monthDataSeries1": {
+      "prices": <?= json_encode($close_CE) ?>,
+      "dates": <?= json_encode($time); ?>
+    },
+    "monthDataSeries2": {
+      "prices": <?= json_encode($close_PE) ?>,
+      "dates": <?= json_encode($time); ?>
+    }
   }
-  fetchGreekData();
+  var options = {
+    annotations: {
+      points: {!!json_encode($data)!!}
+    },
+    chart: {
+      height: 400,
+      foreColor: '#E4E4E4',
+      type: "line",
+      id: "areachart-2",
+      zoom: {
+        enabled: false
+      },
+      toolbar: {
+        show: false, 
+      }
+    },
+    dataLabels: {
+      enabled: false
+    },
+    stroke: {
+      curve: "straight",
+      width:2
+    },
+    title : {
+      text : "Y- ClosePrice, X - Time",
+      align : "right"
+    },
+    colors: ['#00FF00','#FF0000'],
+    series: [
+      {
+        name: {!! json_encode($CE[0]) !!},
+        data: series.monthDataSeries1.prices,
+      },
+      {
+        name: {!! json_encode($PE[0]) !!},
+        data: series.monthDataSeries2.prices
+      }
+    ],
+    tooltip: {
+      enabled: true,
+      theme: 'dark',
+    },
+    labels: series.monthDataSeries1.dates,
+    xaxis: {
+        type: "category",
+        categories: <?= json_encode($time); ?>,
+    },
+  };
+  var chart = new ApexCharts(document.querySelector("#apex-analysis-chart3"), options);
+  chart.render();
 </script>
 @endpush
 
