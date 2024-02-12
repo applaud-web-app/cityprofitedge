@@ -115,7 +115,7 @@
                   $arrData = json_decode($val->data,true);    
                   $CE = array_slice($arrData['CE'],-1);
                   $PE = array_slice($arrData['PE'],-1);
-                  // $Date = array_slice($arrData['Date'],-20);
+                  $Date = array_slice($arrData['Date'],-20);
                   $time = array_slice($arrData['time'],-40);
                   // $BUY_Action = array_slice($arrData['BUY_Action'],-5);
                   // $SELL_Action = array_slice($arrData['SELL_Action'],-5);
@@ -130,10 +130,9 @@
             @empty
             @endforelse  
             @php
-
-              $time = array_map(function ($y) {
-                  return date("g:i a", strtotime($y));
-              }, $time);
+              $time = array_map(function ($k , $y) {
+                  return $Date[$k]." ".date("g:i a", strtotime($y));
+              },array_keys($Date), $time);
 
               $ceArray = array();
               $newArr1 = [];
