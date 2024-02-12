@@ -1157,15 +1157,15 @@ class UserController extends Controller
         $pageTitle = 'Option Analysis';
         $symbolArr = allTradeSymbols();
         // For Chart 1
-        $Atmtype1 = $request->atmType1 ?? "ATM";
+        $Atmtype1 = $request->atmRange1 ?? "ATM";
         $table1 =  $request->symbol1 ?? "CRUDEOIL";
         $timeFrame1 = $request->timeframe1 ? : 5;
         // For Chart 2
-        $Atmtype2 = $request->atmType2 ?? "ATM";
+        $Atmtype2 = $request->atmRange2 ?? "ATM";
         $table2 =  $request->symbol2 ?? "CRUDEOIL";
         $timeFrame2 = $request->timeframe2 ? : 5;
         // For Chart 3
-        $Atmtype3 = $request->atmType3 ?? "ATM";
+        $Atmtype3 = $request->atmRange3 ?? "ATM";
         $table3 =  $request->symbol3 ?? "CRUDEOIL";
         $timeFrame3 = $request->timeframe3 ? : 5;
 

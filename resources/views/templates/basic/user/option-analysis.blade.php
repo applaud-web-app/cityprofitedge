@@ -44,7 +44,7 @@
                                   @if ($i == 0)
                                     <option value="ATM" {{$Atmtype1 == "ATM" ? "selected" : ""}} >ATM</option>
                                   @else
-                                    <option value="ATM{{$i}}" {{$Atmtype1 == "ATM$i" ? "selected" : ""}} >ATM {{$i}}</option>
+                                    <option value="ATM{{$i > 0 ? '+'.$i : $i}}" {{$Atmtype1 == "ATM".($i > 0 ? '+'.$i : $i) ? "selected" : ""}} >ATM {{$i > 0 ? '+'.$i : $i}}</option>
                                   @endif
                                 @endfor
                             </select>
@@ -156,7 +156,7 @@
                                   @if ($i == 0)
                                     <option value="ATM" {{$Atmtype2 == "ATM" ? "selected" : ""}} >ATM</option>
                                   @else
-                                    <option value="ATM{{$i}}" {{$Atmtype2 == "ATM$i" ? "selected" : ""}} >ATM {{$i}}</option>
+                                    <option value="ATM{{$i > 0 ? '+'.$i : $i}}" {{$Atmtype2 == "ATM".($i > 0 ? '+'.$i : $i) ? "selected" : ""}} >ATM {{$i > 0 ? '+'.$i : $i}}</option>
                                   @endif
                                 @endfor
                             </select>
@@ -269,7 +269,7 @@
                                   @if ($i == 0)
                                     <option value="ATM" {{$Atmtype3 == "ATM" ? "selected" : ""}} >ATM</option>
                                   @else
-                                    <option value="ATM{{$i}}" {{$Atmtype3 == "ATM$i" ? "selected" : ""}} >ATM {{$i}}</option>
+                                    <option value="ATM{{$i > 0 ? '+'.$i : $i}}" {{$Atmtype3 == "ATM".($i > 0 ? '+'.$i : $i) ? "selected" : ""}} >ATM {{$i > 0 ? '+'.$i : $i}}</option>
                                   @endif
                                 @endfor
                             </select>
@@ -641,8 +641,8 @@ var options = {
     },
     labels: series.monthDataSeries1.dates,
     xaxis: {
-        type: "category",
-        categories: <?= json_encode($time3); ?>,
+      type: "category",
+      categories: <?= json_encode($time3); ?>,
     },
   };
   var chart = new ApexCharts(document.querySelector("#apex-analysis-chart4"), options);
