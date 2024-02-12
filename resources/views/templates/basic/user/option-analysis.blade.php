@@ -130,10 +130,9 @@
             @empty
             @endforelse  
             @php
-
               $time = array_map(function ($y) {
-                  return $Date[$k]." ".date("g:i a", strtotime($y));
-              }, $time);
+                  return date("g:i a", strtotime($y));
+              },$time);
 
               $ceArray = array();
               $newArr1 = [];
