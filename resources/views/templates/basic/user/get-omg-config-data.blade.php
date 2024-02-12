@@ -14,6 +14,7 @@
                         <option value="{{$item}}" {{$omgData->symbol_name==$item ? 'selected' : ''}}>{{$item}}</option>
                     @endforeach
                 </select>
+                <input type="hidden" name="id" value="{{$omgData->id}}">
             </div>
 
             <div class="col-lg-6 form-group">

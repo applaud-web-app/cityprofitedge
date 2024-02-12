@@ -92,6 +92,7 @@
                                         <th>Exit2 Qty</th>
                                         <th>Exit1 Target</th>
                                         <th>Exit2 Target</th>
+                                        <th>Deployed At</th>
                                         <th>Action</th>
                                         
                                     </tr>
@@ -120,6 +121,7 @@
                                             <td>{{$item->exit_2_qty}}</td>
                                             <td>{{$item->exit_1_target}}</td>
                                             <td>{{$item->exit_2_target}}</td>
+                                            <td>{{date("d M Y H:i",strtotime($item->created_at))}}</td>
                                             <td>
                                                 <div>
                                                     <a href="javascript:void(0)" class="btn btn-sm btn-secondary me-2 edit_details" data-id="{{$item->id}}"><i class="las la-pencil-alt"></i></a>
