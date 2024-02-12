@@ -1161,15 +1161,22 @@ class UserController extends Controller
         $table1 =  $request->symbol1 ?? "CRUDEOIL";
         $timeFrame1 = $request->timeframe1 ? : 5;
         // For Chart 2
-        $Atmtype = $request->atmType ?? "ATM";
-        $table =  $request->symbol ?? "CRUDEOIL";
-        $timeFrame = $request->timeframe ? : 5;
+        $Atmtype2 = $request->atmType2 ?? "ATM";
+        $table2 =  $request->symbol2 ?? "CRUDEOIL";
+        $timeFrame2 = $request->timeframe2 ? : 5;
+        // For Chart 3
+        $Atmtype3 = $request->atmType3 ?? "ATM";
+        $table3 =  $request->symbol3 ?? "CRUDEOIL";
+        $timeFrame3 = $request->timeframe3 ? : 5;
 
         // For Chart 1
         $data1 = \DB::connection('mysql_rm')->table($table1)->select('*')->where('timeframe',$timeFrame1)->get();
         // For Chart 2
-        $data = \DB::connection('mysql_rm')->table($table)->select('*')->where('timeframe',$timeFrame)->get();
-        return view($this->activeTemplate . 'user.option-analysis', compact('pageTitle','symbolArr','data','data1','Atmtype','timeFrame','table'));
+        $data2 = \DB::connection('mysql_rm')->table($table2)->select('*')->where('timeframe',$timeFrame2)->get();
+        // For Chart 3
+        $data3 = \DB::connection('mysql_rm')->table($table3)->select('*')->where('timeframe',$timeFrame3)->get();
+
+        return view($this->activeTemplate . 'user.option-analysis', compact('pageTitle','symbolArr','data1','data2','data3','Atmtype1','timeFrame1','table1','Atmtype2','timeFrame2','table2','Atmtype3','timeFrame3','table3'));
     }
 
     public function fetchTradeRecord(){

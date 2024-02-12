@@ -21,36 +21,8 @@
 @endpush
 <section class="pt-100 pb-100">
     <div class="container-fluid">
-      {{-- For First Chart --}}
-      @php
-        $atmData = [];
-        foreach($data as $vvl){
-            if(isset($vvl->atm) && $vvl->atm==$Atmtype){
-                $atmData[] = $vvl;
-            }
-        }
-      @endphp
-      @php $i=1; @endphp
-      @forelse($atmData as $val)
-        @php
-            $arrData = json_decode($val->data,true);    
-            $CE = array_slice($arrData['CE'],-1);
-            $PE = array_slice($arrData['PE'],-1);
-            // $Date = array_slice($arrData['Date'],-20);
-            $time = array_slice($arrData['time'],-20);
-            // $BUY_Action = array_slice($arrData['BUY_Action'],-5);
-            // $SELL_Action = array_slice($arrData['SELL_Action'],-5);
-            // $Strategy_name = array_slice($arrData['Strategy_name'],-5);
-            // $vwap_CE_signal = array_slice($arrData['vwap_CE_signal'],-5);
-            // $vwap_PE_signal = array_slice($arrData['vwap_PE_signal'],-5);
-            $CE_consolidated = array_slice($arrData['CE_consolidated'],-20);
-            $PE_consolidated = array_slice($arrData['PE_consolidated'],-20);
-            $close_CE = array_slice($arrData['close_CE'],-20);
-            $close_PE = array_slice($arrData['close_PE'],-20);
-        @endphp
-      @empty
-      @endforelse 
         <div class="row">
+            {{-- First Graph Start --}}
             <div class="col-lg-12 mb-3">
                 <div class="custom--card">
                     <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
@@ -58,31 +30,31 @@
                         <div class="filter-box d-flex">
                           <form method="GET" class="d-flex align-items-center flex-wrap filter_dropdown">
                             <div class="mx-1">
-                              <select name="symbol" class="form-select" id="symbol">
+                              <select name="symbol1" class="form-select" id="symbol1">
                                 <option value="" disabled="" selected>Symbol Name</option>
                                 @foreach ($symbolArr as $item)
-                                  <option value="{{$item}}" {{$item == $table ? "selected" : ""}}>{{$item}}</option>
+                                  <option value="{{$item}}" {{$item == $table1 ? "selected" : ""}}>{{$item}}</option>
                                 @endforeach
                               </select>
                             </div>
                             <div class="mx-1">
-                              <select name="atmRange" class="form-select" id="atmRange">
+                              <select name="atmRange2" class="form-select" id="atmRange2">
                                 <option value="" disabled="" selected>Strike</option>
                                 @for ($i = -3; $i <= 3; $i++)
                                   @if ($i == 0)
-                                    <option value="ATM" {{$Atmtype == "ATM" ? "selected" : ""}} >ATM</option>
+                                    <option value="ATM" {{$Atmtype1 == "ATM" ? "selected" : ""}} >ATM</option>
                                   @else
-                                    <option value="ATM{{$i}}" {{$Atmtype == "ATM$i" ? "selected" : ""}} >ATM {{$i}}</option>
+                                    <option value="ATM{{$i}}" {{$Atmtype1 == "ATM$i" ? "selected" : ""}} >ATM {{$i}}</option>
                                   @endif
                                 @endfor
                             </select>
                            </div>
                            <div class="mx-1">
-                              <select name="timeframe" class="form-select" id="timeframe">
+                              <select name="timeframe3" class="form-select" id="timeframe3">
                                 <option value="" disabled="" selected>Time Frame</option>
-                                <option value="1" {{$timeFrame == 1 ? 'selected' : ''}}>1</option>
-                                <option value="3" {{$timeFrame == 3 ? 'selected' : ''}}>3</option>
-                                <option value="5" {{$timeFrame == 5 ? 'selected' : ''}}>5</option>
+                                <option value="1" {{$timeFrame1 == 1 ? 'selected' : ''}}>1</option>
+                                <option value="3" {{$timeFrame1 == 3 ? 'selected' : ''}}>3</option>
+                                <option value="5" {{$timeFrame1 == 5 ? 'selected' : ''}}>5</option>
                                 </select>
                             </div>
                             <div class="mx-1">
@@ -99,83 +71,81 @@
                     </div>
                 </div>
             </div>
-
-            {{-- For Graph 2 --}}
+            {{-- First Graph Start --}}
+            {{-- Second Graph Start --}}
             @php
-                $atmData = [];
-                foreach($data as $vvl){
-                    if(isset($vvl->atm) && $vvl->atm==$Atmtype){
-                        $atmData[] = $vvl;
+                $atmData2 = [];
+                foreach($data2 as $vvl){
+                    if(isset($vvl->atm) && $vvl->atm==$Atmtype2){
+                        $atmData2[] = $vvl;
                     }
                 }
             @endphp
             @php $i=1; @endphp
-            @forelse($atmData as $val)
+            @forelse($atmData2 as $val)
               @php
-                  $arrData = json_decode($val->data,true);    
-                  $CE = array_slice($arrData['CE'],-1);
-                  $PE = array_slice($arrData['PE'],-1);
-                  $Date = array_slice($arrData['Date'],-20);
-                  $time = array_slice($arrData['time'],-40);
-                  // $BUY_Action = array_slice($arrData['BUY_Action'],-5);
-                  // $SELL_Action = array_slice($arrData['SELL_Action'],-5);
-                  // $Strategy_name = array_slice($arrData['Strategy_name'],-5);
-                  // $vwap_CE_signal = array_slice($arrData['vwap_CE_signal'],-5);
-                  // $vwap_PE_signal = array_slice($arrData['vwap_PE_signal'],-5);
-                  $CE_consolidated = array_slice($arrData['CE_consolidated'],-40);
-                  $PE_consolidated = array_slice($arrData['PE_consolidated'],-40);
-                  $close_CE = array_slice($arrData['close_CE'],-40);
-                  $close_PE = array_slice($arrData['close_PE'],-40);
+                  $arrData2 = json_decode($val->data,true);    
+                  $CE2 = array_slice($arrData2['CE'],-1);
+                  $PE2 = array_slice($arrData2['PE'],-1);
+                  $Date2 = array_slice($arrData2['Date'],-40);
+                  $time2 = array_slice($arrData2['time'],-40);
+                  $CE_consolidated2 = array_slice($arrData2['CE_consolidated'],-40);
+                  $PE_consolidated2 = array_slice($arrData2['PE_consolidated'],-40);
+                  $close_CE2 = array_slice($arrData2['close_CE'],-40);
+                  $close_PE2 = array_slice($arrData2['close_PE'],-40);
               @endphp
             @empty
             @endforelse  
             @php
-              $time = array_map(function ($y) {
-                  return date("g:i a", strtotime($y));
-              },$time);
+              $time2 = array_map(function ($k , $y) use($Date2){
+                  return date("d-M-Y",($Date2[$k]/1000)).', '.date("g:i a", strtotime($y));
+              },array_keys($Date2) , $time2);
 
-              $ceArray = array();
-              $newArr1 = [];
+              $ceArray2 = array();
+              $newArr12 = [];
 
-              foreach($time as $i=>$y){
-                if(!in_array($CE_consolidated[$i],$ceArray)){
-                  $ceArray = [];
-                  array_push($ceArray,$CE_consolidated[$i]);
-                  $newArr1[] = [
+              foreach($time2 as $i=>$y){
+                if(!in_array($CE_consolidated2[$i],$ceArray2)){
+                  $ceArray2 = [];
+                  array_push($ceArray2,$CE_consolidated2[$i]);
+                  $newArr12[] = [
                       'time'=>$y,
-                      'price'=>$close_CE[$i],
-                      'text'=>$CE_consolidated[$i],
+                      'price'=>$close_CE2[$i],
+                      'text'=>$CE_consolidated2[$i],
                   ];
                 }
               }
 
-              $PeArray = array();
-              $newArr2 = [];
+              $PeArray2 = array();
+              $newArr22 = [];
 
-              foreach($time as $i=>$y){
-                if(!in_array($PE_consolidated[$i],$PeArray)){
-                  $PeArray = [];
-                  array_push($PeArray,$PE_consolidated[$i]);
-                  $newArr2[] = [
+              foreach($time2 as $i=>$y){
+                if(!in_array($PE_consolidated2[$i],$PeArray2)){
+                  $PeArray2 = [];
+                  array_push($PeArray2,$PE_consolidated2[$i]);
+                  $newArr22[] = [
                       'time'=>$y,
-                      'price'=>$close_PE[$i],
-                      'text'=>$PE_consolidated[$i],
+                      'price'=>$close_PE2[$i],
+                      'text'=>$PE_consolidated2[$i],
                   ];
                 }
               }
-              $mergedArray = array_merge($newArr1, $newArr2);
+              $mergedArray2 = array_merge($newArr12, $newArr22);
             @endphp
             <div class="col-lg-12 mb-3">
                 <div class="custom--card">
                     <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
-                        <h5 class="card-title">@lang('Option Analysis - Open Interest CE/PE Signals')</h5>
+                        <div>
+                          <h5 class="card-title mb-0">@lang('Option Analysis - Open Interest CE/PE Signals') </h5>
+                          <small class="text-warning">Y- ClosePrice, X - Time</small>
+                        </div>
                         <div class="filter-box d-flex">
                           <form method="GET" class="d-flex align-items-center flex-wrap filter_dropdown">
                             <div class="mx-1">
-                              <select name="symbol" class="form-select" id="symbol">
+                              <select name="symbol2" class="form-select" id="symbol2">
                                 <option value="" disabled="" selected>Symbol Name</option>
                                 @foreach ($symbolArr as $item)
-                                  <option value="{{$item}}" {{$item == $table ? "selected" : ""}}>{{$item}}</option>
+                                  <option value="{{$item}}" {{$item == $table2 ? "selected" : ""}}>{{$item}}</option>
                                 @endforeach
                               </select>
                             </div>
@@ -184,9 +154,9 @@
                                 <option value="" disabled="" selected>Strike</option>
                                 @for ($i = -3; $i <= 3; $i++)
                                   @if ($i == 0)
-                                    <option value="ATM" {{$Atmtype == "ATM" ? "selected" : ""}} >ATM</option>
+                                    <option value="ATM" {{$Atmtype2 == "ATM" ? "selected" : ""}} >ATM</option>
                                   @else
-                                    <option value="ATM{{$i}}" {{$Atmtype == "ATM$i" ? "selected" : ""}} >ATM {{$i}}</option>
+                                    <option value="ATM{{$i}}" {{$Atmtype2 == "ATM$i" ? "selected" : ""}} >ATM {{$i}}</option>
                                   @endif
                                 @endfor
                             </select>
@@ -194,9 +164,9 @@
                            <div class="mx-1">
                               <select name="timeframe" class="form-select" id="timeframe">
                                 <option value="" disabled="" selected>Time Frame</option>
-                                <option value="1" {{$timeFrame == 1 ? 'selected' : ''}}>1</option>
-                                <option value="3" {{$timeFrame == 3 ? 'selected' : ''}}>3</option>
-                                <option value="5" {{$timeFrame == 5 ? 'selected' : ''}}>5</option>
+                                <option value="1" {{$timeFrame2 == 1 ? 'selected' : ''}}>1</option>
+                                <option value="3" {{$timeFrame2 == 3 ? 'selected' : ''}}>3</option>
+                                <option value="5" {{$timeFrame2 == 5 ? 'selected' : ''}}>5</option>
                                 </select>
                             </div>
                             <div class="mx-1">
@@ -213,6 +183,120 @@
                     </div>
                 </div>
             </div>
+            {{-- Second Graph Start --}}
+
+            {{-- Third Graph Start --}}
+            @php
+                $atmData3 = [];
+                foreach($data3 as $vvl){
+                    if(isset($vvl->atm) && $vvl->atm==$Atmtype3){
+                        $atmData3[] = $vvl;
+                    }
+                }
+            @endphp
+            @php $i=1; @endphp
+            @forelse($atmData3 as $val)
+              @php
+                  $arrData3 = json_decode($val->data,true);    
+                  $CE3 = array_slice($arrData3['CE'],-1);
+                  $PE3 = array_slice($arrData3['PE'],-1);
+                  $Date3 = array_slice($arrData3['Date'],-40);
+                  $time3 = array_slice($arrData3['time'],-40);
+                  $vwap_CE_signal3 = array_slice($arrData3['vwap_CE_signal'],-40);
+                  $vwap_PE_signal3 = array_slice($arrData3['vwap_PE_signal'],-40);
+                  $close_CE3 = array_slice($arrData3['close_CE'],-40);
+                  $close_PE3 = array_slice($arrData3['close_PE'],-40);
+              @endphp
+            @empty
+            @endforelse 
+            @php
+              $time3 = array_map(function ($k , $y) use($Date3){
+                  return date("d-M-Y",($Date3[$k]/1000)).', '.date("g:i a", strtotime($y));
+              },array_keys($Date3) , $time3);
+
+              $ceArray3 = array();
+              $newArr13 = [];
+
+              foreach($time3 as $i=>$y){
+                if(!in_array($vwap_CE_signal3[$i],$ceArray3)){
+                  $ceArray3 = [];
+                  array_push($ceArray3,$vwap_CE_signal3[$i]);
+                  $newArr13[] = [
+                      'time'=>$y,
+                      'price'=>$close_CE3[$i],
+                      'text'=>$vwap_CE_signal3[$i],
+                  ];
+                }
+              }
+
+              $PeArray3 = array();
+              $newArr23 = [];
+
+              foreach($time3 as $i=>$y){
+                if(!in_array($vwap_PE_signal3[$i],$PeArray3)){
+                  $PeArray3 = [];
+                  array_push($PeArray3,$vwap_PE_signal3[$i]);
+                  $newArr23[] = [
+                      'time'=>$y,
+                      'price'=>$close_PE3[$i],
+                      'text'=>$vwap_PE_signal3[$i],
+                  ];
+                }
+              }
+              $mergedArray3 = array_merge($newArr13, $newArr23);
+            @endphp
+            <div class="col-lg-12 mb-3">
+                <div class="custom--card">
+                    <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
+                       <div>
+                          <h5 class="card-title mb-0">@lang('Option Analysis - VWAP CE/PE Signals') </h5>
+                          <small class="text-warning">Y- ClosePrice, X - Time</small>
+                       </div>
+                        <div class="filter-box d-flex">
+                          <form method="GET" class="d-flex align-items-center flex-wrap filter_dropdown">
+                            <div class="mx-1">
+                              <select name="symbol3" class="form-select" id="symbol3">
+                                <option value="" disabled="" selected>Symbol Name</option>
+                                @foreach ($symbolArr as $item)
+                                  <option value="{{$item}}" {{$item == $table3 ? "selected" : ""}}>{{$item}}</option>
+                                @endforeach
+                              </select>
+                            </div>
+                            <div class="mx-1">
+                              <select name="atmRange3" class="form-select" id="atmRange3">
+                                <option value="" disabled="" selected>Strike</option>
+                                @for ($i = -3; $i <= 3; $i++)
+                                  @if ($i == 0)
+                                    <option value="ATM" {{$Atmtype3 == "ATM" ? "selected" : ""}} >ATM</option>
+                                  @else
+                                    <option value="ATM{{$i}}" {{$Atmtype3 == "ATM$i" ? "selected" : ""}} >ATM {{$i}}</option>
+                                  @endif
+                                @endfor
+                            </select>
+                           </div>
+                           <div class="mx-1">
+                              <select name="timeframe3" class="form-select" id="timeframe3">
+                                <option value="" disabled="" selected>Time Frame</option>
+                                <option value="1" {{$timeFrame3 == 1 ? 'selected' : ''}}>1</option>
+                                <option value="3" {{$timeFrame3 == 3 ? 'selected' : ''}}>3</option>
+                                <option value="5" {{$timeFrame3 == 5 ? 'selected' : ''}}>5</option>
+                                </select>
+                            </div>
+                            <div class="mx-1">
+                              <button class="btn btn-sm btn--base w-100 py-2" type="submit"><i class="las la-filter"></i> @lang('Filter')</button>
+                            </div>
+                            <div class="mx-1">
+                              <a href="{{url('/user/option-analysis')}}" class="btn btn-sm btn--base w-100 py-2" ><i class="las la-filter"></i> @lang('Refresh')</a>
+                            </div>
+                          </form>
+                        </div>
+                    </div>
+                    <div class="card-body chart2">
+                        <div id="apex-analysis-chart4" style="width: 100%;"></div>
+                    </div>
+                </div>
+            </div>
+             {{-- Third Graph Start --}}
         </div>
     </div>
 </section>
@@ -371,8 +455,8 @@ var options = {
 </script>
 {{-- ce-red.pe-green --}}
 @php
-    $data = [];
-    foreach($mergedArray as $key => $value){
+    $data2 = [];
+    foreach($mergedArray2 as $key => $value){
       if($value['text'] == "Bearish"){
         $background = "#FF0000";
         $color = "#fff";
@@ -383,7 +467,7 @@ var options = {
         $background = "yellow";
         $color = "#000";
       }
-      $data[] = [
+      $data2[] = [
         "x"=>$value['time'],
         "y"=>$value['price'],
         "marker"=>[
@@ -406,22 +490,60 @@ var options = {
     
 @endphp
 
+
+@php
+    $data3 = [];
+    foreach($mergedArray3 as $key => $value){
+      if($value['text'] == "Bearish"){
+        $background = "#FF0000";
+        $color = "#fff";
+      }else if($value['text'] == "Bullish"){
+        $background = "#00FF00";
+        $color = "#000";
+      }else{
+        $background = "yellow";
+        $color = "#000";
+      }
+      $data3[] = [
+        "x"=>$value['time'],
+        "y"=>$value['price'],
+        "marker"=>[
+          'size'=>6,
+          "fillColor"=> "#FFF",
+          "strokeColor"=> "transparent",
+          "radius"=> 2
+        ],
+        "label"=> [
+            "borderColor"=> $background,
+            "offsetY"=> 0,
+            "style"=> [
+              "color"=> $color,
+              "background"=> $background
+            ],
+            "text"=> $value['text']
+        ]
+      ];
+    }
+    
+@endphp
+
+
 {{-- Apex Chart 2 --}}
 <script>
   var series =
   {
     "monthDataSeries1": {
-      "prices": <?= json_encode($close_CE) ?>,
-      "dates": <?= json_encode($time); ?>
+      "prices": <?= json_encode($close_CE2) ?>,
+      "dates": <?= json_encode($time2); ?>
     },
     "monthDataSeries2": {
-      "prices": <?= json_encode($close_PE) ?>,
-      "dates": <?= json_encode($time); ?>
+      "prices": <?= json_encode($close_PE2) ?>,
+      "dates": <?= json_encode($time2); ?>
     }
   }
   var options = {
     annotations: {
-      points: {!!json_encode($data)!!}
+      points: {!!json_encode($data2)!!}
     },
     chart: {
       height: 400,
@@ -442,18 +564,14 @@ var options = {
       curve: "straight",
       width:2
     },
-    title : {
-      text : "Y- ClosePrice, X - Time",
-      align : "right"
-    },
     colors: ['#00FF00','#FF0000'],
     series: [
       {
-        name: {!! json_encode($CE[0]) !!},
+        name: {!! json_encode($CE2[0]) !!},
         data: series.monthDataSeries1.prices,
       },
       {
-        name: {!! json_encode($PE[0]) !!},
+        name: {!! json_encode($PE2[0]) !!},
         data: series.monthDataSeries2.prices
       }
     ],
@@ -464,10 +582,70 @@ var options = {
     labels: series.monthDataSeries1.dates,
     xaxis: {
         type: "category",
-        categories: <?= json_encode($time); ?>,
+        categories: <?= json_encode($time2); ?>,
     },
   };
   var chart = new ApexCharts(document.querySelector("#apex-analysis-chart3"), options);
+  chart.render();
+</script>
+
+<script>
+  var series =
+  {
+    "monthDataSeries1": {
+      "prices": <?= json_encode($close_CE3) ?>,
+      "dates": <?= json_encode($time3); ?>
+    },
+    "monthDataSeries2": {
+      "prices": <?= json_encode($close_PE3) ?>,
+      "dates": <?= json_encode($time3); ?>
+    }
+  }
+  var options = {
+    annotations: {
+      points: {!!json_encode($data3)!!}
+    },
+    chart: {
+      height: 400,
+      foreColor: '#E4E4E4',
+      type: "line",
+      id: "areachart-2",
+      zoom: {
+        enabled: false
+      },
+      toolbar: {
+        show: false, 
+      }
+    },
+    dataLabels: {
+      enabled: false
+    },
+    stroke: {
+      curve: "straight",
+      width:2
+    },
+    colors: ['#00FF00','#FF0000'],
+    series: [
+      {
+        name: {!! json_encode($CE3[0]) !!},
+        data: series.monthDataSeries1.prices,
+      },
+      {
+        name: {!! json_encode($PE3[0]) !!},
+        data: series.monthDataSeries2.prices
+      }
+    ],
+    tooltip: {
+      enabled: true,
+      theme: 'dark',
+    },
+    labels: series.monthDataSeries1.dates,
+    xaxis: {
+        type: "category",
+        categories: <?= json_encode($time3); ?>,
+    },
+  };
+  var chart = new ApexCharts(document.querySelector("#apex-analysis-chart4"), options);
   chart.render();
 </script>
 @endpush
