@@ -132,7 +132,7 @@
             @php
               $time = array_map(function ($k , $y) {
                   return $Date[$k]." ".date("g:i a", strtotime($y));
-              },array_keys($Date), $time);
+              },array_keys($time), $time);
 
               $ceArray = array();
               $newArr1 = [];
