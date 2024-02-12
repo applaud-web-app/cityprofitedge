@@ -122,7 +122,7 @@
                                             <td>{{$item->exit_2_target}}</td>
                                             <td>
                                                 <div>
-                                                    {{-- <a href="javascript:void(0)" class="btn btn-sm btn-secondary me-2 edit_details" data-id="{{$item->id}}"><i class="las la-pencil-alt"></i></a> --}}
+                                                    <a href="javascript:void(0)" class="btn btn-sm btn-secondary me-2 edit_details" data-id="{{$item->id}}"><i class="las la-pencil-alt"></i></a>
                                                     <a href="#" class="btn btn-sm btn-danger remove_details" data-id="{{$item->id}}"><i class="las la-trash-alt"></i></a>
                                                     
                                                 </div>
@@ -285,7 +285,15 @@
                     <div class="col-lg-6 form-group"  style="display: none;">
                         <label for="exit_2_target" class="required">Exit 2 Target<sup class="text--danger">*</sup></label>
                         <input type="text" name="exit_2_target" id="exit_2_target" class="form--control" value="0">
-                    </div>                   
+                    </div>  
+                    
+                    <div class="col-lg-6 form-group">
+                        <label for="status" class="required">Status<sup class="text--danger">*</sup></label>
+                        <select name="status" id="status" class="form--control">
+                            <option value="1">Active</option>
+                            <option value="0">InActive</option>
+                        </select>
+                    </div>  
                 </div>
             </div>
             <div class="modal-footer">

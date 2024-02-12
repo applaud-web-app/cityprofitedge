@@ -957,6 +957,8 @@ class UserController extends Controller
     public function getPeCeSymbolNames(Request $request){
         $symbol = $request->symbol;
         $signal = $request->signal;
+       
+
         $todayDate = date("Y-m-d");
         // $todayDate = date("2024-01-20");
         $data = \DB::connection('mysql_rm')->table($symbol)->select('*')->where(['date'=>$todayDate,'timeframe'=>$signal])->get(); 
@@ -1103,6 +1105,7 @@ class UserController extends Controller
         $omsObj->exit_2_qty = $request->exit_2_qty;
         $omsObj->exit_2_target = $request->exit_2_target;
         $omsObj->user_id = auth()->user()->id;
+        $omsObj->status = $request->status;
         $omsObj->cron_run_at = date("Y-m-d H:i:s",strtotime('-'.$request->pyramid_freq.' minutes'));
         $omsObj->save();
         
@@ -1114,6 +1117,32 @@ class UserController extends Controller
         $id = $request->id;
         $brokers = BrokerApi::select('client_name','id')->where('user_id',auth()->user()->id)->get();
         $data['brokers'] = $brokers;
+        $data['omgData'] = OmsConfig::where(['id'=>$id,'user_id'=>auth()->user()->id])->first();
+      
+        $symbol = $data['omgData']->symbol_name;
+        $signal = $data['omgData']->signal_tf;
+        $todayDate = date("Y-m-d");
+        $Symdata = \DB::connection('mysql_rm')->table($symbol)->select('*')->where(['date'=>$todayDate,'timeframe'=>$signal])->get(); 
+        $atmData = [];
+        foreach($Symdata as $vvl){
+            if(isset($vvl->atm) && ($vvl->atm=="ATM" || $vvl->atm=="ATM-1" || $vvl->atm=="ATM+1")){
+                $atmData[] = $vvl;
+            }
+        }
+
+        $fData = [];
+        foreach($atmData as $val){
+            $arrData = json_decode($val->data,true);   
+            $CE = array_unique($arrData['CE']);
+            $PE = $arrData['PE'];
+            foreach ($CE as $k=>$item){
+                $fData[] = [
+                    'ce'=>$item,
+                    'pe'=>$PE[$k]
+                ];
+            }
+        }
+        $data['fData'] = $fData;
         return view($this->activeTemplate . 'user.get-omg-config-data',$data);
     }
 
@@ -1417,6 +1446,10 @@ class UserController extends Controller
             }
         }
         dd('Completed');die;
+    }
+
+    public function updateOmsConfig(){
+        
     }
     
 }

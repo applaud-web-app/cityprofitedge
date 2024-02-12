@@ -6,7 +6,7 @@ use App\Helpers\KiteConnectCls;
 use App\Models\OrderBook;
 use App\Models\AngelApiInstrument;
 
-class OmsConfigCron{
+class OmsConfigCronRt{
     
     public function __construct()
     {
@@ -14,12 +14,6 @@ class OmsConfigCron{
     }
 
     public function calculateTickSize($price,$tickSize){
-        // echo $price.'--'.$tickSize;die;
-        // $mul = $tickSize/100;
-        // if($mul > 0){
-        //     return ceil($price / $mul) * $mul; 
-        // }
-        // return $price;  
         $roundedPrice = round($price / $tickSize) * $tickSize;
         return $roundedPrice; 
     }
@@ -183,11 +177,33 @@ class OmsConfigCron{
                 break;
             }
             $data = json_decode($vvl->data,true);
-            $strategyArr = array_slice($data['Strategy_name'],-1);
-            $buyActionArr = array_slice($data['BUY_Action'],-1);
-            $sellActionArr = array_slice($data['SELL_Action'],-1);
-            $timeActArr = array_slice($data['time'],-1);
-            $dateActArr = array_slice($data['Date'],-1);
+            $strategyArr = $data['Strategy_name'];
+            $buyActionArr = $data['BUY_Action'];
+            $sellActionArr = $data['SELL_Action'];
+            $timeActArr = $data['time'];
+            $dateActArr = $data['Date'];
+            $cntLoop = 1;
+            foreach($timeActArr as $kk=>$vv){
+                $dateStr = date("Y-m-d",($dateActArr[$kk]/1000)).' '.$vv;
+                if(strtotime($dateStr) > strtotime($omsData->last_time)){
+                    if($cntLoop==1){
+                        if((strtolower($buyActionArr[$kk])==strtolower($omsData->strategy_name)) || (strtolower($sellActionArr[$kk])==strtolower($omsData->strategy_name))){
+                            $strategyArr = $strategyArr[$kk];
+                            $buyActionArr = $buyActionArr[$kk];
+                            $sellActionArr = $sellActionArr[$kk];
+                            $timeActArr = $timeActArr[$kk];
+                            $dateActArr = $dateActArr[$kk];
+                            break;
+                        }
+                    }else{
+                        if((strtolower($buyActionArr[$kk])==strtolower($omsData->strategy_name)) || (strtolower($sellActionArr[$kk])==strtolower($omsData->strategy_name))){
+                            $cntLoop = 0;
+                        }else{
+                            $cntLoop = 1;
+                        }
+                    }
+                }
+            }
 
             foreach($strategyArr as $key=>$v){
                 // if(strtolower($v)==strtolower($omsData->strategy_name)){
@@ -200,10 +216,9 @@ class OmsConfigCron{
                     $low = $ceLow;
                     $closePrice = $ceClosePrice;
 
-
                     $dateStr = date("Y-m-d",($dateActArr[$key]/1000));
 
-                    $timeFrmTm = $dateStr." ".$timeActArr[$key];
+                        $timeFrmTm = $dateStr." ".$timeActArr[$key];
 
 
                     $fData["tradingsymbol"] = $omsData->ce_symbol_name;
@@ -484,6 +499,9 @@ class OmsConfigCron{
             $dataclose_PE = array_reverse($data['close_PE']);
             $buyAct = array_reverse($data['BUY_Action']);
             $sellAct = array_reverse($data['SELL_Action']);
+
+
+
             if($vvl->ce==$omsData->ce_symbol_name){
                 foreach($sellAct as $k=>$v){
                     if(strtolower($v)==strtolower($omsData->strategy_name) || strtolower($buyAct[$k])==strtolower($omsData->strategy_name)){
@@ -509,12 +527,34 @@ class OmsConfigCron{
                     break;
                 }
                 $data = json_decode($vvl->data,true);
-                $strategyArr = array_slice($data['Strategy_name'],-1);
-                $buyActionArr = array_slice($data['BUY_Action'],-1);
-                $sellActionArr = array_slice($data['SELL_Action'],-1);
-                $timeActArr = array_slice($data['time'],-1);
-                $timeActArr = array_slice($data['time'],-1);
-                $dateActArr = array_slice($data['Date'],-1);
+                $strategyArr = $data['Strategy_name'];
+                $buyActionArr = $data['BUY_Action'];
+                $sellActionArr = $data['SELL_Action'];
+                $timeActArr = $data['time'];
+                $dateActArr = $data['Date'];
+                $cntLoop = 1;
+                foreach($timeActArr as $kk=>$vv){
+                    $dateStr = date("Y-m-d",($dateActArr[$kk]/1000)).' '.$vv;
+                    if(strtotime($dateStr) > strtotime($omsData->last_time)){
+                        if($cntLoop==1){
+                            if((strtolower($buyActionArr[$kk])==strtolower($omsData->strategy_name)) || (strtolower($sellActionArr[$kk])==strtolower($omsData->strategy_name))){
+                                $strategyArr = $strategyArr[$kk];
+                                $buyActionArr = $buyActionArr[$kk];
+                                $sellActionArr = $sellActionArr[$kk];
+                                $timeActArr = $timeActArr[$kk];
+                                $dateActArr = $dateActArr[$kk];
+                                break;
+                            }
+                        }else{
+                            if((strtolower($buyActionArr[$kk])==strtolower($omsData->strategy_name)) || (strtolower($sellActionArr[$kk])==strtolower($omsData->strategy_name))){
+                                $cntLoop = 0;
+                            }else{
+                                $cntLoop = 1;
+                            }
+                        }
+                    }
+                }
+                
 
                 foreach($strategyArr as $key=>$v){
                     // if(strtolower($v)==strtolower($omsData->strategy_name)){
@@ -637,39 +677,33 @@ class OmsConfigCron{
         $startDateTime = strtotime(date("Y-m-d 15:30:00"));
         $endDateTime = strtotime(date("Y-m-d 23:30:00"));
         $currentDateTime = strtotime(date("Y-m-d H:i:s"));
-        // $todayDate="2024-02-09";
+        // $todayDate="2024-02-02";
         $omsDt = OmsConfig::select('*')->with('broker')
-        ->where(['is_api_pushed'=>0,'status'=>1]);
+        ->whereNotNull('last_time')->where('status',1);
         if($currentDateTime > $startDateTime && $currentDateTime < $endDateTime){
             $omsDt->whereIn('symbol_name',['CRUDEOIL','NATURALGAS','GOLD','SILVER']);
         }
         $omsDt->chunk(100, function($omgData) use($todayDate){
             foreach ($omgData as $val) {
                 $signalData = \DB::connection('mysql_rm')->table($val->symbol_name)->select('*')->where(['date'=>$todayDate,'timeframe'=>$val->signal_tf])->get();
-                // dd($signalData);
-                $pFreq = "-".$val->pyramid_freq." minutes";
-                $nextRun = strtotime(date("Y-m-d H:i:s",strtotime($pFreq)));
-                $lstRun = strtotime($val->cron_run_at);
-                // if($nextRun > $lstRun){
-                    if(count($signalData)){
-                        $fffData = [];
-                       
-                        foreach($signalData as $vvvl){
-                            if(isset($vvvl->atm) && ($vvvl->atm=="ATM" || $vvvl->atm=="ATM-1" || $vvvl->atm=="ATM+1")){
-                                $fffData[] = $vvvl;
-                            }
-                        }    
-                        if(count($fffData)){
-                            $omsData = $val;
-                            if($omsData->broker->client_type=="Zerodha"){
-                                $this->callKiteApi($fffData,$omsData);
-                            }     
-                            elseif($omsData->broker->client_type=="Angel"){
-                                $this->callAngelApi($fffData,$omsData);
-                            }   
+               
+                if(count($signalData)){
+                    $fffData = [];
+                    foreach($signalData as $vvvl){
+                        if(isset($vvvl->atm) && ($vvvl->atm=="ATM" || $vvvl->atm=="ATM-1" || $vvvl->atm=="ATM+1")){
+                            $fffData[] = $vvvl;
                         }
+                    }    
+                    if(count($fffData)){
+                        $omsData = $val;
+                        if($omsData->broker->client_type=="Zerodha"){
+                            $this->callKiteApi($fffData,$omsData);
+                        }     
+                        elseif($omsData->broker->client_type=="Angel"){
+                            $this->callAngelApi($fffData,$omsData);
+                        }   
                     }
-                // }
+                }
             }
         });
     }
