@@ -84,6 +84,7 @@ Route::middleware('auth')->name('user.')->group(function () {
 
                 Route::get('oms-config', 'omsConfig')->name('portfolio.oms-config');
                 Route::post('store-oms-config', 'storeOmsConfig')->name('portfolio.store-oms-config');
+                Route::post('update-oms-config', 'updateOmsConfig')->name('portfolio.update-oms-config');
                 Route::post('get-pe-ce-symbol-names', 'getPeCeSymbolNames');
                 Route::post('get-omg-config-data', 'getOmgConfigData');
                 Route::post('remove-oms-config', 'removeOmsConfig')->name('portfolio.remove-oms-config');
