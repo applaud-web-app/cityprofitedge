@@ -48,8 +48,8 @@
                                 <th>Time</th>
                                 <th>CE</th>
                                 <th>PE</th>
-                                <th>VMAP CE Signal</th>
-                                <th>VMAP PE Signal</th>
+                                <th>VWAP CE Signal</th>
+                                <th>VWAP PE Signal</th>
                                 <th>CE_Con Signal</th>
                                 <th>PE_Con Signal</th>
                                 <th>BUY_Action</th>

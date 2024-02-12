@@ -169,7 +169,7 @@
             <div class="col-lg-12 mb-3">
                 <div class="custom--card">
                     <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
-                        <h5 class="card-title">@lang('Option Analysis - CE/PE Pivot Point Signals')</h5>
+                        <h5 class="card-title">@lang('Option Analysis - Open Interest CE/PE Signals')</h5>
                         <div class="filter-box d-flex">
                           <form method="GET" class="d-flex align-items-center flex-wrap filter_dropdown">
                             <div class="mx-1">
