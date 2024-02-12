@@ -130,7 +130,7 @@
             @empty
             @endforelse  
             @php
-              $time = array_map(function ($k , $y) {
+              $time = array_map(function ($k , $y) use($Date) {
                   return $Date[$k]." ".date("g:i a", strtotime($y));
               },array_keys($time), $time);
 
