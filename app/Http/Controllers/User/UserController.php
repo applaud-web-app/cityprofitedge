@@ -1448,8 +1448,8 @@ class UserController extends Controller
         dd('Completed');die;
     }
 
-    public function updateOmsConfig(){
-        
+    public function updateOmsConfig(Request $request){
+            
     }
     
 }

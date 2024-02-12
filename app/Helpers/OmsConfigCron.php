@@ -346,7 +346,7 @@ class OmsConfigCron{
             // echo $response;die;
             $err = curl_error($curl);
             curl_close($curl);
-            if ($err || $response=="") {
+            if ($response=="" || is_null($response)) {
                 \Cache::forget('ANGEL_API_TOKEN_'.$broker->account_user_name);
                 $bookOBj = new OrderBook();
                 $bookOBj->broker_username = $broker->account_user_name;
