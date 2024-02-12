@@ -177,26 +177,35 @@ class OmsConfigCronRt{
                 break;
             }
             $data = json_decode($vvl->data,true);
-            $strategyArr = $data['Strategy_name'];
-            $buyActionArr = $data['BUY_Action'];
-            $sellActionArr = $data['SELL_Action'];
-            $timeActArr = $data['time'];
-            $dateActArr = $data['Date'];
-            $cntLoop = 1;
-            foreach($timeActArr as $kk=>$vv){
-                $dateStr = date("Y-m-d",($dateActArr[$kk]/1000)).' '.$vv;
+            $strategyArrFF = $data['Strategy_name'];
+            $buyActionArrFF = $data['BUY_Action'];
+            $sellActionArrFF = $data['SELL_Action'];
+            $timeActArrFF = $data['time'];
+            $dateActArrFF = $data['Date'];
+            $cntLoop = 0;
+            $placeOrderRept = 0;
+
+            $strategyArr = [];
+            $buyActionArr = [];
+            $sellActionArr = [];
+            $timeActArr = [];
+            $dateActArr = [];
+
+            foreach($timeActArrFF as $kk=>$vv){
+                $dateStr = date("Y-m-d",($dateActArrFF[$kk]/1000)).' '.$vv;
                 if(strtotime($dateStr) > strtotime($omsData->last_time)){
                     if($cntLoop==1){
-                        if((strtolower($buyActionArr[$kk])==strtolower($omsData->strategy_name)) || (strtolower($sellActionArr[$kk])==strtolower($omsData->strategy_name))){
-                            $strategyArr = $strategyArr[$kk];
-                            $buyActionArr = $buyActionArr[$kk];
-                            $sellActionArr = $sellActionArr[$kk];
-                            $timeActArr = $timeActArr[$kk];
-                            $dateActArr = $dateActArr[$kk];
+                        if((strtolower($buyActionArrFF[$kk])==strtolower($omsData->strategy_name)) || (strtolower($sellActionArrFF[$kk])==strtolower($omsData->strategy_name))){
+                            $strategyArr[] = $strategyArrFF[$kk];
+                            $buyActionArr[] = $buyActionArrFF[$kk];
+                            $sellActionArr[] = $sellActionArrFF[$kk];
+                            $timeActArr[] = $timeActArrFF[$kk];
+                            $dateActArr[] = $dateActArrFF[$kk];
+                            $placeOrderRept = 1;
                             break;
                         }
                     }else{
-                        if((strtolower($buyActionArr[$kk])==strtolower($omsData->strategy_name)) || (strtolower($sellActionArr[$kk])==strtolower($omsData->strategy_name))){
+                        if((strtolower($buyActionArrFF[$kk])==strtolower($omsData->strategy_name)) || (strtolower($sellActionArrFF[$kk])==strtolower($omsData->strategy_name))){
                             $cntLoop = 0;
                         }else{
                             $cntLoop = 1;
@@ -204,111 +213,110 @@ class OmsConfigCronRt{
                     }
                 }
             }
+            if($placeOrderRept==1){
+                foreach($strategyArr as $key=>$v){
+                    // if(strtolower($v)==strtolower($omsData->strategy_name)){
+                    if((strtolower($buyActionArr[$key])==strtolower($omsData->strategy_name)) || (strtolower($sellActionArr[$key])==strtolower($omsData->strategy_name))){
+                        // $high = $highCEArr[$key];
+                        // $low = $lowCEArr[$key];
+                        // $closePrice = $closeCEArr[$key];
 
-            foreach($strategyArr as $key=>$v){
-                // if(strtolower($v)==strtolower($omsData->strategy_name)){
-                if((strtolower($buyActionArr[$key])==strtolower($omsData->strategy_name)) || (strtolower($sellActionArr[$key])==strtolower($omsData->strategy_name))){
-                    // $high = $highCEArr[$key];
-                    // $low = $lowCEArr[$key];
-                    // $closePrice = $closeCEArr[$key];
+                        $high =$ceHigh;
+                        $low = $ceLow;
+                        $closePrice = $ceClosePrice;
 
-                    $high =$ceHigh;
-                    $low = $ceLow;
-                    $closePrice = $ceClosePrice;
+                        $dateStr = date("Y-m-d",($dateActArr[$key]/1000));
 
-                    $dateStr = date("Y-m-d",($dateActArr[$key]/1000));
-
-                        $timeFrmTm = $dateStr." ".$timeActArr[$key];
-
-
-                    $fData["tradingsymbol"] = $omsData->ce_symbol_name;
-
-                   
+                            $timeFrmTm = $dateStr." ".$timeActArr[$key];
 
 
-                    $lotSizeArr = $this->getZerodhaSymLotSize($omsData->ce_symbol_name);
-                    $lotSize = $lotSizeArr['lot_size'];
-                    $tickSize = $lotSizeArr['tick_size'];
-                    $updateDb = 1;
-                    if(!is_null($omsData->ce_pyramid_1)){
-                        if($omsData->order_type=="LIMIT"){ 
-                            $price =  $this->getCeLimitPrice($high,$low,38.20,$txnType,$closePrice,$tickSize);
-                            $fData['price'] = $price;
-                        }
-                       
-                       $fData['quantity'] = $omsData->ce_pyramid_1;
-                       $updateDb = $this->postPlaceOrder($omsData->broker,$fData);
-                    }
-                    if(!is_null($omsData->ce_pyramid_2)){
-                        //50%
-                        if($omsData->order_type=="LIMIT"){ 
-                            $price =  $this->getCeLimitPrice($high,$low,50,$txnType,$closePrice,$tickSize);
-                            $fData['price'] = $price;
-                        }
-                        $fData['quantity'] = $omsData->ce_pyramid_2;
-                        $updateDb = $this->postPlaceOrder($omsData->broker,$fData);
-                    }
-                    if(!is_null($omsData->ce_pyramid_3)){
-                        if($omsData->order_type=="LIMIT"){ 
-                            $price =  $this->getCeLimitPrice($high,$low,61.80,$txnType,$closePrice,$tickSize);
-                            $fData['price'] = $price;
-                        }
-                        $fData['quantity'] = $omsData->ce_pyramid_3;
-                        $updateDb = $this->postPlaceOrder($omsData->broker,$fData);
-                    }
+                        $fData["tradingsymbol"] = $omsData->ce_symbol_name;
 
-                    //
-                    $fData["tradingsymbol"] = $omsData->pe_symbol_name;
                     
-                    $lotSizeArr = $this->getZerodhaSymLotSize($omsData->pe_symbol_name);
-                    $lotSize = $lotSizeArr['lot_size'];
-                    $tickSize = $lotSizeArr['tick_size'];
 
 
-                    $high =$peHigh;
-                    $low = $peLow;
-                    $closePrice = $peClosePrice;
-
-                    if(!is_null($omsData->pe_pyramid_1)){
-                        if($omsData->order_type=="LIMIT"){ 
-                            $price =  $this->getPeLimitPrice($high,$low,38.20,$txnType,$closePrice,$tickSize);
-                            $fData['price'] = $price;
-                        }
-                        $fData['quantity'] = $omsData->pe_pyramid_1;
+                        $lotSizeArr = $this->getZerodhaSymLotSize($omsData->ce_symbol_name);
+                        $lotSize = $lotSizeArr['lot_size'];
+                        $tickSize = $lotSizeArr['tick_size'];
+                        $updateDb = 1;
+                        if(!is_null($omsData->ce_pyramid_1)){
+                            if($omsData->order_type=="LIMIT"){ 
+                                $price =  $this->getCeLimitPrice($high,$low,38.20,$txnType,$closePrice,$tickSize);
+                                $fData['price'] = $price;
+                            }
+                        
+                        $fData['quantity'] = $omsData->ce_pyramid_1;
                         $updateDb = $this->postPlaceOrder($omsData->broker,$fData);
-                    }
-                    if(!is_null($omsData->pe_pyramid_2)){
-                        if($omsData->order_type=="LIMIT"){ 
-                            $price =  $this->getPeLimitPrice($high,$low,50,$txnType,$closePrice,$tickSize);
-                            $fData['price'] = $price;
                         }
-                        $fData['quantity'] = $omsData->pe_pyramid_2;
-                        $updateDb = $this->postPlaceOrder($omsData->broker,$fData);
-                    }
-                    if(!is_null($omsData->pe_pyramid_3)){
-                        if($omsData->order_type=="LIMIT"){ 
-                            $price =  $this->getPeLimitPrice($high,$low,61.80,$txnType,$closePrice,$tickSize);
-                            $fData['price'] = $price;
+                        if(!is_null($omsData->ce_pyramid_2)){
+                            //50%
+                            if($omsData->order_type=="LIMIT"){ 
+                                $price =  $this->getCeLimitPrice($high,$low,50,$txnType,$closePrice,$tickSize);
+                                $fData['price'] = $price;
+                            }
+                            $fData['quantity'] = $omsData->ce_pyramid_2;
+                            $updateDb = $this->postPlaceOrder($omsData->broker,$fData);
                         }
-                        $fData['quantity'] = $omsData->pe_pyramid_3;
-                        $updateDb = $this->postPlaceOrder($omsData->broker,$fData);
-                    }
+                        if(!is_null($omsData->ce_pyramid_3)){
+                            if($omsData->order_type=="LIMIT"){ 
+                                $price =  $this->getCeLimitPrice($high,$low,61.80,$txnType,$closePrice,$tickSize);
+                                $fData['price'] = $price;
+                            }
+                            $fData['quantity'] = $omsData->ce_pyramid_3;
+                            $updateDb = $this->postPlaceOrder($omsData->broker,$fData);
+                        }
 
-                    if($updateDb==1){
-                        OmsConfig::where("id",$omsData->id)->update([
-                            'is_api_pushed'=>1,
-                            'last_time'=>$timeFrmTm
-                        ]);
-                        $breakForeach = 1;
-                        break;
+                        //
+                        $fData["tradingsymbol"] = $omsData->pe_symbol_name;
+                        
+                        $lotSizeArr = $this->getZerodhaSymLotSize($omsData->pe_symbol_name);
+                        $lotSize = $lotSizeArr['lot_size'];
+                        $tickSize = $lotSizeArr['tick_size'];
+
+
+                        $high =$peHigh;
+                        $low = $peLow;
+                        $closePrice = $peClosePrice;
+
+                        if(!is_null($omsData->pe_pyramid_1)){
+                            if($omsData->order_type=="LIMIT"){ 
+                                $price =  $this->getPeLimitPrice($high,$low,38.20,$txnType,$closePrice,$tickSize);
+                                $fData['price'] = $price;
+                            }
+                            $fData['quantity'] = $omsData->pe_pyramid_1;
+                            $updateDb = $this->postPlaceOrder($omsData->broker,$fData);
+                        }
+                        if(!is_null($omsData->pe_pyramid_2)){
+                            if($omsData->order_type=="LIMIT"){ 
+                                $price =  $this->getPeLimitPrice($high,$low,50,$txnType,$closePrice,$tickSize);
+                                $fData['price'] = $price;
+                            }
+                            $fData['quantity'] = $omsData->pe_pyramid_2;
+                            $updateDb = $this->postPlaceOrder($omsData->broker,$fData);
+                        }
+                        if(!is_null($omsData->pe_pyramid_3)){
+                            if($omsData->order_type=="LIMIT"){ 
+                                $price =  $this->getPeLimitPrice($high,$low,61.80,$txnType,$closePrice,$tickSize);
+                                $fData['price'] = $price;
+                            }
+                            $fData['quantity'] = $omsData->pe_pyramid_3;
+                            $updateDb = $this->postPlaceOrder($omsData->broker,$fData);
+                        }
+
+                        if($updateDb==1){
+                            OmsConfig::where("id",$omsData->id)->update([
+                                'is_api_pushed'=>1,
+                                'last_time'=>$timeFrmTm
+                            ]);
+                            $breakForeach = 1;
+                            break;
+                        }
+                        
                     }
-                    
                 }
             }
         }
-        OmsConfig::where("id",$omsData->id)->update([
-            'cron_run_at'=>date("Y-m-d H:i:s",strtotime($omsData->cron_run_at.'+ '.$omsData->pyramid_freq.'minutes'))
-        ]);
+       
     }
 
     //angel api start
@@ -361,7 +369,7 @@ class OmsConfigCronRt{
             // echo $response;die;
             $err = curl_error($curl);
             curl_close($curl);
-            if ($err || $response=="") {
+            if ($response=="" || is_null($response)) {
                 \Cache::forget('ANGEL_API_TOKEN_'.$broker->account_user_name);
                 $bookOBj = new OrderBook();
                 $bookOBj->broker_username = $broker->account_user_name;
@@ -527,26 +535,35 @@ class OmsConfigCronRt{
                     break;
                 }
                 $data = json_decode($vvl->data,true);
-                $strategyArr = $data['Strategy_name'];
-                $buyActionArr = $data['BUY_Action'];
-                $sellActionArr = $data['SELL_Action'];
-                $timeActArr = $data['time'];
-                $dateActArr = $data['Date'];
-                $cntLoop = 1;
-                foreach($timeActArr as $kk=>$vv){
-                    $dateStr = date("Y-m-d",($dateActArr[$kk]/1000)).' '.$vv;
+                $strategyArrFF = $data['Strategy_name'];
+                $buyActionArrFF = $data['BUY_Action'];
+                $sellActionArrFF = $data['SELL_Action'];
+                $timeActArrFF = $data['time'];
+                $dateActArrFF = $data['Date'];
+                $cntLoop = 0;
+                $placeOrderRept = 0;
+
+                $strategyArr = [];
+                $buyActionArr = [];
+                $sellActionArr = [];
+                $timeActArr = [];
+                $dateActArr = [];
+
+                foreach($timeActArrFF as $kk=>$vv){
+                    $dateStr = date("Y-m-d",($dateActArrFF[$kk]/1000)).' '.$vv;
                     if(strtotime($dateStr) > strtotime($omsData->last_time)){
                         if($cntLoop==1){
-                            if((strtolower($buyActionArr[$kk])==strtolower($omsData->strategy_name)) || (strtolower($sellActionArr[$kk])==strtolower($omsData->strategy_name))){
-                                $strategyArr = $strategyArr[$kk];
-                                $buyActionArr = $buyActionArr[$kk];
-                                $sellActionArr = $sellActionArr[$kk];
-                                $timeActArr = $timeActArr[$kk];
-                                $dateActArr = $dateActArr[$kk];
+                            if((strtolower($buyActionArrFF[$kk])==strtolower($omsData->strategy_name)) || (strtolower($sellActionArrFF[$kk])==strtolower($omsData->strategy_name))){
+                                $strategyArr[] = $strategyArrFF[$kk];
+                                $buyActionArr[] = $buyActionArrFF[$kk];
+                                $sellActionArr[] = $sellActionArrFF[$kk];
+                                $timeActArr[] = $timeActArrFF[$kk];
+                                $dateActArr[] = $dateActArrFF[$kk];
+                                $placeOrderRept = 1;
                                 break;
                             }
                         }else{
-                            if((strtolower($buyActionArr[$kk])==strtolower($omsData->strategy_name)) || (strtolower($sellActionArr[$kk])==strtolower($omsData->strategy_name))){
+                            if((strtolower($buyActionArrFF[$kk])==strtolower($omsData->strategy_name)) || (strtolower($sellActionArrFF[$kk])==strtolower($omsData->strategy_name))){
                                 $cntLoop = 0;
                             }else{
                                 $cntLoop = 1;
@@ -554,120 +571,120 @@ class OmsConfigCronRt{
                         }
                     }
                 }
-                
 
-                foreach($strategyArr as $key=>$v){
-                    // if(strtolower($v)==strtolower($omsData->strategy_name)){
-                    if((strtolower($buyActionArr[$key])==strtolower($omsData->strategy_name)) || (strtolower($sellActionArr[$key])==strtolower($omsData->strategy_name))){
-                        $fData["tradingsymbol"] = $omsData->ce_symbol_name;
-                        $symArr =  $this->getTokenBySymbolName($omsData->ce_symbol_name);
-                        $fData["tradingsymbol"] = $symArr['symbol'];
-                        $fData['symboltoken'] = $symArr['token'];
-                        $tickSize = $symArr['tick_size'];
 
-                        $dateStr = date("Y-m-d",($dateActArr[$key]/1000));
+               if($placeOrderRept==1){
+                    foreach($strategyArr as $key=>$v){
+                        // if(strtolower($v)==strtolower($omsData->strategy_name)){
+                        if((strtolower($buyActionArr[$key])==strtolower($omsData->strategy_name)) || (strtolower($sellActionArr[$key])==strtolower($omsData->strategy_name))){
+                            $fData["tradingsymbol"] = $omsData->ce_symbol_name;
+                            $symArr =  $this->getTokenBySymbolName($omsData->ce_symbol_name);
+                            $fData["tradingsymbol"] = $symArr['symbol'];
+                            $fData['symboltoken'] = $symArr['token'];
+                            $tickSize = $symArr['tick_size'];
 
-                        $timeFrmTm = $dateStr." ".$timeActArr[$key];
-                        
-                        // $lotSize = $extType=='MCX' ? ($symArr['lot_size']/100) : $symArr['lot_size'];
-                        $lotSize = $symArr['lot_size'];
+                            $dateStr = date("Y-m-d",($dateActArr[$key]/1000));
 
-                        $high = $ceHigh;
-                        $low = $ceLow;
-                        $closePrice = $ceClosePrice;
+                            $timeFrmTm = $dateStr." ".$timeActArr[$key];
+                            
+                            // $lotSize = $extType=='MCX' ? ($symArr['lot_size']/100) : $symArr['lot_size'];
+                            $lotSize = $symArr['lot_size'];
 
-                        $updateDb = 1;
+                            $high = $ceHigh;
+                            $low = $ceLow;
+                            $closePrice = $ceClosePrice;
 
-                        if(!is_null($omsData->ce_pyramid_1)){
-                            if($omsData->order_type=="LIMIT"){ 
-                                $price =  $this->getCeLimitPrice($high,$low,38.20,$txnType,$closePrice,$tickSize);
-                                $fData['price'] = $price;
+                            $updateDb = 1;
+
+                            if(!is_null($omsData->ce_pyramid_1)){
+                                if($omsData->order_type=="LIMIT"){ 
+                                    $price =  $this->getCeLimitPrice($high,$low,38.20,$txnType,$closePrice,$tickSize);
+                                    $fData['price'] = $price;
+                                }
+                                //     $fData['quantity'] = $omsData->ce_pyramid_1;
+                                $fData['quantity'] = $lotSize * $omsData->ce_pyramid_1;
+                                $updateDb = $this->postPlaceOrderAngel($omsData->broker,$fData);
                             }
-                            //     $fData['quantity'] = $omsData->ce_pyramid_1;
-                            $fData['quantity'] = $lotSize * $omsData->ce_pyramid_1;
-                            $updateDb = $this->postPlaceOrderAngel($omsData->broker,$fData);
-                        }
-                        if(!is_null($omsData->ce_pyramid_2)){
-                            //50%
-                            if($omsData->order_type=="LIMIT"){ 
-                                $price =  $this->getCeLimitPrice($high,$low,50,$txnType,$closePrice,$tickSize);
-                                $fData['price'] = $price;
+                            if(!is_null($omsData->ce_pyramid_2)){
+                                //50%
+                                if($omsData->order_type=="LIMIT"){ 
+                                    $price =  $this->getCeLimitPrice($high,$low,50,$txnType,$closePrice,$tickSize);
+                                    $fData['price'] = $price;
+                                }
+                                // $fData['quantity'] = $omsData->ce_pyramid_2;
+                                $fData['quantity'] = $lotSize * $omsData->ce_pyramid_2;
+                                $updateDb = $this->postPlaceOrderAngel($omsData->broker,$fData);
                             }
-                            // $fData['quantity'] = $omsData->ce_pyramid_2;
-                            $fData['quantity'] = $lotSize * $omsData->ce_pyramid_2;
-                            $updateDb = $this->postPlaceOrderAngel($omsData->broker,$fData);
-                        }
-                        if(!is_null($omsData->ce_pyramid_3)){
-                            if($omsData->order_type=="LIMIT"){ 
-                                $price =  $this->getCeLimitPrice($high,$low,61.80,$txnType,$closePrice,$tickSize);
-                                $fData['price'] = $price;
+                            if(!is_null($omsData->ce_pyramid_3)){
+                                if($omsData->order_type=="LIMIT"){ 
+                                    $price =  $this->getCeLimitPrice($high,$low,61.80,$txnType,$closePrice,$tickSize);
+                                    $fData['price'] = $price;
+                                }
+                                // $fData['quantity'] = $omsData->ce_pyramid_3;
+                                $fData['quantity'] = $lotSize * $omsData->ce_pyramid_3;
+                                $updateDb = $this->postPlaceOrderAngel($omsData->broker,$fData);
                             }
-                            // $fData['quantity'] = $omsData->ce_pyramid_3;
-                            $fData['quantity'] = $lotSize * $omsData->ce_pyramid_3;
-                            $updateDb = $this->postPlaceOrderAngel($omsData->broker,$fData);
-                        }
 
-                        //
+                            //
 
-                        $symArr =  $this->getTokenBySymbolName($omsData->pe_symbol_name);
-                        // dd($symArr);
-                        $fData["tradingsymbol"] = $symArr['symbol'];
-                        $fData['symboltoken'] = $symArr['token'];
-                        $tickSize = $symArr['tick_size'];
-                        // $high = $highPEArr[$key];
-                        // $low = $lowPEArr[$key];
-                        // $closePrice = $closePEArr[$key];
+                            $symArr =  $this->getTokenBySymbolName($omsData->pe_symbol_name);
+                            // dd($symArr);
+                            $fData["tradingsymbol"] = $symArr['symbol'];
+                            $fData['symboltoken'] = $symArr['token'];
+                            $tickSize = $symArr['tick_size'];
+                            // $high = $highPEArr[$key];
+                            // $low = $lowPEArr[$key];
+                            // $closePrice = $closePEArr[$key];
 
-                        $high = $peHigh;
-                        $low = $peLow;
-                        $closePrice = $peClosePrice;
+                            $high = $peHigh;
+                            $low = $peLow;
+                            $closePrice = $peClosePrice;
 
-                        // $lotSize = $extType=='MCX' ? ($symArr['lot_size']/100) : $symArr['lot_size'];
-                        $lotSize = $symArr['lot_size'];
+                            // $lotSize = $extType=='MCX' ? ($symArr['lot_size']/100) : $symArr['lot_size'];
+                            $lotSize = $symArr['lot_size'];
 
-                        if(!is_null($omsData->pe_pyramid_1)){
-                            if($omsData->order_type=="LIMIT"){ 
-                                $price =  $this->getPeLimitPrice($high,$low,38.20,$txnType,$closePrice,$tickSize);
-                                $fData['price'] = $price;
+                            if(!is_null($omsData->pe_pyramid_1)){
+                                if($omsData->order_type=="LIMIT"){ 
+                                    $price =  $this->getPeLimitPrice($high,$low,38.20,$txnType,$closePrice,$tickSize);
+                                    $fData['price'] = $price;
+                                }
+                                // $fData['quantity'] = $omsData->pe_pyramid_1;
+                                $fData['quantity'] = $lotSize *  $omsData->pe_pyramid_1;
+                                $updateDb = $this->postPlaceOrderAngel($omsData->broker,$fData);
                             }
-                            // $fData['quantity'] = $omsData->pe_pyramid_1;
-                            $fData['quantity'] = $lotSize *  $omsData->pe_pyramid_1;
-                            $updateDb = $this->postPlaceOrderAngel($omsData->broker,$fData);
-                        }
-                        if(!is_null($omsData->pe_pyramid_2)){
-                            if($omsData->order_type=="LIMIT"){ 
-                                $price =  $this->getPeLimitPrice($high,$low,50,$txnType,$closePrice,$tickSize);
-                                $fData['price'] = $price;
+                            if(!is_null($omsData->pe_pyramid_2)){
+                                if($omsData->order_type=="LIMIT"){ 
+                                    $price =  $this->getPeLimitPrice($high,$low,50,$txnType,$closePrice,$tickSize);
+                                    $fData['price'] = $price;
+                                }
+                                // $fData['quantity'] = $omsData->pe_pyramid_2;
+                                $fData['quantity'] = $lotSize * $omsData->pe_pyramid_2;
+                                $updateDb = $this->postPlaceOrderAngel($omsData->broker,$fData);
                             }
-                            // $fData['quantity'] = $omsData->pe_pyramid_2;
-                            $fData['quantity'] = $lotSize * $omsData->pe_pyramid_2;
-                            $updateDb = $this->postPlaceOrderAngel($omsData->broker,$fData);
-                        }
-                        if(!is_null($omsData->pe_pyramid_3)){
-                            if($omsData->order_type=="LIMIT"){ 
-                                $price =  $this->getPeLimitPrice($high,$low,61.80,$txnType,$closePrice,$tickSize);
-                                $fData['price'] = $price;
+                            if(!is_null($omsData->pe_pyramid_3)){
+                                if($omsData->order_type=="LIMIT"){ 
+                                    $price =  $this->getPeLimitPrice($high,$low,61.80,$txnType,$closePrice,$tickSize);
+                                    $fData['price'] = $price;
+                                }
+                                // $fData['quantity'] = $omsData->pe_pyramid_3;
+                                $fData['quantity'] = $lotSize * $omsData->pe_pyramid_3;
+                                $updateDb = $this->postPlaceOrderAngel($omsData->broker,$fData);
                             }
-                            // $fData['quantity'] = $omsData->pe_pyramid_3;
-                            $fData['quantity'] = $lotSize * $omsData->pe_pyramid_3;
-                            $updateDb = $this->postPlaceOrderAngel($omsData->broker,$fData);
-                        }
 
-                        if($updateDb==1){
-                            OmsConfig::where("id",$omsData->id)->update([
-                                'is_api_pushed'=>1,
-                                'last_time'=>$timeFrmTm
-                            ]);                            
-                            $breakForeach = 1;
-                            break;
+                            if($updateDb==1){
+                                OmsConfig::where("id",$omsData->id)->update([
+                                    'is_api_pushed'=>1,
+                                    'last_time'=>$timeFrmTm
+                                ]);                            
+                                $breakForeach = 1;
+                                break;
+                            }
                         }
                     }
                 }
             }
         }
-        OmsConfig::where("id",$omsData->id)->update([
-            'cron_run_at'=>date("Y-m-d H:i:s",strtotime($omsData->cron_run_at.'+ '.$omsData->pyramid_freq.'minutes'))
-        ]);
+        
     }
 
     // angel api ends
