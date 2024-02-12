@@ -1137,11 +1137,9 @@ class UserController extends Controller
         $timeFrame = $request->timeframe ? : 5;
 
         // For Chart 1
-        $data1 = \DB::connection('mysql_rm')->table($table1)->select('*')->where('timeframe',$timeFrame1)->orderBy('id','DESC')->get();
-        
+        $data1 = \DB::connection('mysql_rm')->table($table1)->select('*')->where('timeframe',$timeFrame1)->get();
         // For Chart 2
-        $data = \DB::connection('mysql_rm')->table($table)->select('*')->where('timeframe',$timeFrame)->orderBy('id','DESC')->get();
-     
+        $data = \DB::connection('mysql_rm')->table($table)->select('*')->where('timeframe',$timeFrame)->get();
         return view($this->activeTemplate . 'user.option-analysis', compact('pageTitle','symbolArr','data','data1','Atmtype','timeFrame','table'));
     }
 
