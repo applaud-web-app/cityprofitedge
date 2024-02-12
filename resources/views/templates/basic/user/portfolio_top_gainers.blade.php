@@ -189,8 +189,8 @@
                                                 <th>TIME</th>
                                                 <th>CE Symbol Name</th>
                                                 <th>PE Symbol Name</th>
-                                                <th>VMAP CE</th>
-                                                <th>VMAP PE</th>
+                                                <th>VWAP CE</th>
+                                                <th>VWAP PE</th>
                                                 <th>OI CE</th>
                                                 <th>OI PE</th>
                                                 <th>CE CLOSE PRICE</th>
