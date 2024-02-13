@@ -84,7 +84,7 @@
             @php $i=1; @endphp
             @forelse($atmData2 as $val)
               @php
-                  $arrData2 = json_decode($val->data,true);    
+                  $arrData2 = json_decode($val->data,true);   
                   $CE2 = array_slice($arrData2['CE'],-1);
                   $PE2 = array_slice($arrData2['PE'],-1);
                   $Date2 = array_slice($arrData2['Date'],-40);
@@ -92,7 +92,7 @@
                   $CE_consolidated2 = array_slice($arrData2['CE_consolidated'],-40);
                   $PE_consolidated2 = array_slice($arrData2['PE_consolidated'],-40);
                   $close_CE2 = array_slice($arrData2['close_CE'],-40);
-                  $close_PE2 = array_slice($arrData2['close_PE'],-40);
+                  $close_PE2 = array_slice($arrData2['close_PE'],-40); 
               @endphp
             @empty
             @endforelse  
@@ -183,7 +183,7 @@
                     </div>
                 </div>
             </div>
-            {{-- Second Graph Start --}}
+            {{-- Second Graph End --}}
 
             {{-- Third Graph Start --}}
             @php
@@ -296,7 +296,175 @@
                     </div>
                 </div>
             </div>
-             {{-- Third Graph Start --}}
+            {{-- Third Graph End --}}
+            
+            {{-- Fourth Graph Start --}}
+            @php
+              $atmData4 = [];
+                foreach($data4 as $vvl){
+                    if(isset($vvl->atm) && $vvl->atm==$Atmtype4){
+                        $atmData4[] = $vvl;
+                    }
+                }
+            @endphp
+            @php $i=1; @endphp
+            @forelse($atmData4 as $val)
+              @php
+                  $arrData4 = json_decode($val->data,true);    
+                  $CE4 = array_slice($arrData4['CE'],-1);
+                  $PE4 = array_slice($arrData4['PE'],-1);
+                  $Date4 = array_slice($arrData4['Date'],-40);
+                  $time4 = array_slice($arrData4['time'],-40);
+                  $vwap_CE_signal4 = array_slice($arrData4['vwap_CE_signal'],-40);
+                  $vwap_PE_signal4 = array_slice($arrData4['vwap_PE_signal'],-40);
+                  $close_CE4 = array_slice($arrData4['close_CE'],-40);
+                  $close_PE4 = array_slice($arrData4['close_PE'],-40);
+                  $OI_CE4 = array_slice([1493500,1480500,1539650,1623700,1667550,1693700,1722450,1718400,1741650,1749000,1756600,1748350,1766850,1777050,1797450,1840500,1908550,1959650,1998650,2026550,2018200,2024050,2008450,2008300,2011900,2005400,2025950,1996100,2010800,2052250,2084850,2102350,2205950,2209950,2271500,2399400,2592850,2803900,2928600,3070650],-40);
+                  $OI_PE4 = array_slice([2266450,2293150,2329300,2399700,2462350,2473700,2500550,2508800,2513400,2466700,2447550,2439100,2427600,2415600,2429100,2389700,2407800,2362400,2413650,2450800,2593600,2632300,2634600,2660050,2718550,2781050,2765050,2823400,2794550,2813550,2803150,2826700,2846400,2907450,2913550,2953050,3024900,3292200,3468450,3586400,3679100],-40);
+              @endphp
+            @empty
+            @endforelse 
+            @php
+            $time4 = array_map(function ($k , $y) use($Date4){
+                return date("d-M-Y",($Date4[$k]/1000)).', '.date("g:i a", strtotime($y));
+            },array_keys($Date4) , $time4);
+          @endphp
+        <div class="col-lg-12 mb-3">
+            <div class="custom--card">
+                <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
+                   <div>
+                      <h5 class="card-title mb-0">@lang('Open Interest CE/PE Crossovers') </h5>
+                      <small class="text-warning">Y- ClosePrice, X - Time</small>
+                   </div>
+                    <div class="filter-box d-flex">
+                      <form method="GET" class="d-flex align-items-center flex-wrap filter_dropdown">
+                        <div class="mx-1">
+                          <select name="symbol4" class="form-select" id="symbol4">
+                            <option value="" disabled="" selected>Symbol Name</option>
+                            @foreach ($symbolArr as $item)
+                              <option value="{{$item}}" {{$item == $table4 ? "selected" : ""}}>{{$item}}</option>
+                            @endforeach
+                          </select>
+                        </div>
+                        <div class="mx-1">
+                          <select name="atmRange4" class="form-select" id="atmRange4">
+                            <option value="" disabled="" selected>Strike</option>
+                            @for ($i = -3; $i <= 3; $i++)
+                              @if ($i == 0)
+                                <option value="ATM" {{$Atmtype4 == "ATM" ? "selected" : ""}} >ATM</option>
+                              @else
+                                <option value="ATM{{$i > 0 ? '+'.$i : $i}}" {{$Atmtype4 == "ATM".($i > 0 ? '+'.$i : $i) ? "selected" : ""}} >ATM {{$i > 0 ? '+'.$i : $i}}</option>
+                              @endif
+                            @endfor
+                        </select>
+                       </div>
+                       <div class="mx-1">
+                          <select name="timeframe4" class="form-select" id="timeframe4">
+                            <option value="" disabled="" selected>Time Frame</option>
+                            <option value="1" {{$timeFrame4 == 1 ? 'selected' : ''}}>1</option>
+                            <option value="3" {{$timeFrame4 == 3 ? 'selected' : ''}}>3</option>
+                            <option value="5" {{$timeFrame4 == 5 ? 'selected' : ''}}>5</option>
+                            </select>
+                        </div>
+                        <div class="mx-1">
+                          <button class="btn btn-sm btn--base w-100 py-2" type="submit"><i class="las la-filter"></i> @lang('Filter')</button>
+                        </div>
+                        <div class="mx-1">
+                          <a href="{{url('/user/option-analysis')}}" class="btn btn-sm btn--base w-100 py-2" ><i class="las la-filter"></i> @lang('Refresh')</a>
+                        </div>
+                      </form>
+                    </div>
+                </div>
+                <div class="card-body chart2">
+                    <div id="apex-analysis-chart5" style="width: 100%;"></div>
+                </div>
+            </div>
+        </div>
+         {{-- Fourth Graph End --}}
+
+         {{-- Fifth Graph Start --}}
+              @php
+              $atmData5 = [];
+                foreach($data5 as $vvl){
+                    if(isset($vvl->atm) && $vvl->atm==$Atmtype5){
+                        $atmData5[] = $vvl;
+                    }
+                }
+            @endphp
+            @php $i=1; @endphp
+            @forelse($atmData5 as $val)
+              @php
+                  $arrData5 = json_decode($val->data,true);    
+                  $CE5 = array_slice($arrData5['CE'],-1);
+                  $PE5 = array_slice($arrData5['PE'],-1);
+                  $Date5 = array_slice($arrData5['Date'],-40);
+                  $time5 = array_slice($arrData5['time'],-40);
+                  $vwap_CE_signal5 = array_slice($arrData5['vwap_CE_signal'],-40);
+                  $vwap_PE_signal5 = array_slice($arrData5['vwap_PE_signal'],-40);
+                  $close_CE5 = array_slice($arrData5['close_CE'],-40);
+                  $close_PE5 = array_slice($arrData5['close_PE'],-40);
+                  $CE_NETCHANGE_5 = array_slice([22450, 28900, 21500, -5000, -1700, 5250, 17300, 18750, 1300, -3450, 8550, 0, -4950, 16100, 2700, -14650, 7300, 27650, 13900, 5500, -1650, -11500, -950, 350, 4450, -900, -11700, -9050, 9700, -3750, 11150, 9750, -550, -23750, -6900, -4250, -32750, -3500, 16100, 11050, -1150, 17850, 21950, -1800, 8650, 43700, 3250, 2250, 6150, -9550, -500, 1800, 4950, -6450, -1700, 2350, -2200, 10300, 6600, 7700, 3100],-40);
+                  $PE_NETCHANGE_5 = array_slice([11600, 9400, 3850, 29650, 58000, 16600, 25250, 14450, -7550, 44200, 58200, -3200, 43900, 27950, 33350, 105300, 112950, 86650, 18500, 119950, 92700, 17000, 48600, 10600, 58150, 48550, 23600, 10500, 4300, 28900, 62250, 18050, 4700, -75350, -6550, 48150, 39600, 93000, 24000, 34350, 79600, -6850, 12500, 56600, 26700],-40);;
+              @endphp
+            @empty
+            @endforelse 
+            @php
+            $time5 = array_map(function ($y) {
+                return date("g:i a", strtotime($y));
+            },$time5);
+          @endphp
+        <div class="col-lg-12 mb-3">
+            <div class="custom--card">
+                <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
+                    <div>
+                      <h5 class="card-title mb-0">@lang('Open Interest CE/PE Net Change') </h5>
+                      <small class="text-warning">Y- ClosePrice, X - Time</small>
+                    </div>
+                    <div class="filter-box d-flex">
+                      <form method="GET" class="d-flex align-items-center flex-wrap filter_dropdown">
+                        <div class="mx-1">
+                          <select name="symbol5" class="form-select" id="symbol5">
+                            <option value="" disabled="" selected>Symbol Name</option>
+                            @foreach ($symbolArr as $item)
+                              <option value="{{$item}}" {{$item == $table5 ? "selected" : ""}}>{{$item}}</option>
+                            @endforeach
+                          </select>
+                        </div>
+                        <div class="mx-1">
+                          <select name="atmRange5" class="form-select" id="atmRange5">
+                            <option value="" disabled="" selected>Strike</option>
+                            @for ($i = -3; $i <= 3; $i++)
+                              @if ($i == 0)
+                                <option value="ATM" {{$Atmtype5 == "ATM" ? "selected" : ""}} >ATM</option>
+                              @else
+                                <option value="ATM{{$i > 0 ? '+'.$i : $i}}" {{$Atmtype5 == "ATM".($i > 0 ? '+'.$i : $i) ? "selected" : ""}} >ATM {{$i > 0 ? '+'.$i : $i}}</option>
+                              @endif
+                            @endfor
+                        </select>
+                        </div>
+                        <div class="mx-1">
+                          <select name="timeframe5" class="form-select" id="timeframe5">
+                            <option value="" disabled="" selected>Time Frame</option>
+                            <option value="1" {{$timeFrame5 == 1 ? 'selected' : ''}}>1</option>
+                            <option value="3" {{$timeFrame5 == 3 ? 'selected' : ''}}>3</option>
+                            <option value="5" {{$timeFrame5 == 5 ? 'selected' : ''}}>5</option>
+                            </select>
+                        </div>
+                        <div class="mx-1">
+                          <button class="btn btn-sm btn--base w-100 py-2" type="submit"><i class="las la-filter"></i> @lang('Filter')</button>
+                        </div>
+                        <div class="mx-1">
+                          <a href="{{url('/user/option-analysis')}}" class="btn btn-sm btn--base w-100 py-2" ><i class="las la-filter"></i> @lang('Refresh')</a>
+                        </div>
+                      </form>
+                    </div>
+                </div>
+                <div class="card-body chart2">
+                    <div id="apex-analysis-chart6" style="width: 100%;"></div>
+                </div>
+            </div>
+        </div>
+          {{-- Fifth Graph End --}}
         </div>
     </div>
 </section>
@@ -648,5 +816,130 @@ var options = {
   var chart = new ApexCharts(document.querySelector("#apex-analysis-chart4"), options);
   chart.render();
 </script>
+
+
+
+<script>
+  var series =
+  {
+    "monthDataSeries1": {
+      "prices": <?= json_encode($OI_CE4) ?>,
+      "dates": <?= json_encode($time4); ?>
+    },
+    "monthDataSeries2": {
+      "prices": <?= json_encode($OI_PE4) ?>,
+      "dates": <?= json_encode($time4); ?>
+    }
+  }
+  var options = {
+    chart: {
+      height: 400,
+      foreColor: '#E4E4E4',
+      type: "line",
+      id: "areachart-2",
+      zoom: {
+        enabled: false
+      },
+      toolbar: {
+        show: false, 
+      }
+    },
+    dataLabels: {
+      enabled: false
+    },
+    stroke: {
+      curve: "straight",
+      width:2
+    },
+    colors: ['#00FF00','#FF0000'],
+    series: [
+      {
+        name: {!! json_encode($CE4[0]) !!},
+        data: series.monthDataSeries1.prices,
+      },
+      {
+        name: {!! json_encode($PE4[0]) !!},
+        data: series.monthDataSeries2.prices
+      }
+    ],
+    tooltip: {
+      enabled: true,
+      theme: 'dark',
+    },
+    labels: series.monthDataSeries1.dates,
+    xaxis: {
+      type: "category",
+      categories: <?= json_encode($time4); ?>,
+    },
+  };
+  var chart = new ApexCharts(document.querySelector("#apex-analysis-chart5"), options);
+  chart.render();
+</script>
+
+
+<script>
+  var series =
+  {
+    "monthDataSeries1": {
+      "prices": <?= json_encode($CE_NETCHANGE_5) ?>,
+      "dates": <?= json_encode($time5); ?>
+    },
+    "monthDataSeries2": {
+      "prices": <?= json_encode($PE_NETCHANGE_5) ?>,
+      "dates": <?= json_encode($time5); ?>
+    }
+  }
+  var options = {
+    chart: {
+      height: 400,
+      foreColor: '#E4E4E4',
+      type: "bar",
+      id: "areachart-2",
+      zoom: {
+        enabled: false
+      },
+      toolbar: {
+        show: false, 
+      },
+    },plotOptions: {
+      bar: {
+        columnWidth: '50%',
+      },
+    },
+    dataLabels: {
+      enabled: false
+    },
+    stroke: {
+      curve: "straight",
+      width:2
+    },
+    colors: ['#00FF00','#FF0000'],
+    series: [
+      {
+        name: {!! json_encode($CE5[0]) !!},
+        data: series.monthDataSeries1.prices,
+      },
+      {
+        name: {!! json_encode($PE5[0]) !!},
+        data: series.monthDataSeries2.prices
+      }
+    ],
+    tooltip: {
+      enabled: true,
+      theme: 'dark',
+    },
+    labels: series.monthDataSeries1.dates,
+    xaxis: {
+      type: "category",
+      categories: <?= json_encode($time5); ?>,
+    },
+  };
+  var chart = new ApexCharts(document.querySelector("#apex-analysis-chart6"), options);
+  chart.render();
+</script>
+
+
+
 @endpush
+
 

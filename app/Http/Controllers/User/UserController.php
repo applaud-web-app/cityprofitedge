@@ -1169,14 +1169,28 @@ class UserController extends Controller
         $table3 =  $request->symbol3 ?? "CRUDEOIL";
         $timeFrame3 = $request->timeframe3 ? : 5;
 
+        // For Chart 4
+        $Atmtype4 = $request->atmRange4 ?? "ATM";
+        $table4 =  $request->symbol4 ?? "CRUDEOIL";
+        $timeFrame4 = $request->timeframe4 ? : 5;
+
+        // For Chart 5
+        $Atmtype5 = $request->atmRange5 ?? "ATM";
+        $table5 =  $request->symbol5 ?? "CRUDEOIL";
+        $timeFrame5 = $request->timeframe5 ? : 5;
+
         // For Chart 1
         $data1 = \DB::connection('mysql_rm')->table($table1)->select('*')->where('timeframe',$timeFrame1)->get();
         // For Chart 2
         $data2 = \DB::connection('mysql_rm')->table($table2)->select('*')->where('timeframe',$timeFrame2)->get();
         // For Chart 3
         $data3 = \DB::connection('mysql_rm')->table($table3)->select('*')->where('timeframe',$timeFrame3)->get();
+        // For Chart 4
+        $data4 = \DB::connection('mysql_rm')->table($table4)->select('*')->where('timeframe',$timeFrame4)->get();
+        // For Chart 5
+        $data5 = \DB::connection('mysql_rm')->table($table5)->select('*')->where('timeframe',$timeFrame5)->get();
 
-        return view($this->activeTemplate . 'user.option-analysis', compact('pageTitle','symbolArr','data1','data2','data3','Atmtype1','timeFrame1','table1','Atmtype2','timeFrame2','table2','Atmtype3','timeFrame3','table3'));
+        return view($this->activeTemplate . 'user.option-analysis', compact('pageTitle','symbolArr','data1','data2','data3','data4','data5','Atmtype1','timeFrame1','table1','Atmtype2','timeFrame2','table2','Atmtype3','timeFrame3','table3','Atmtype4','timeFrame4','table4','Atmtype5','timeFrame5','table5'));
     }
 
     public function fetchTradeRecord(){
