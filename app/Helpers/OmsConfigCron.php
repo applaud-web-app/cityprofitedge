@@ -164,6 +164,7 @@ class OmsConfigCron{
                         $ceHigh = $datahigh_CE[$k];
                         $ceLow = $datalow_CE[$k];
                         $ceClosePrice = $dataclose_CE[$k];
+                        break;
                     }
                 }
             }
@@ -173,6 +174,7 @@ class OmsConfigCron{
                         $peHigh = $datahigh_PE[$k];
                         $peLow = $datalow_PE[$k];
                         $peClosePrice = $dataclose_PE[$k];
+                        break;
                     }
                 }
             }
@@ -473,6 +475,7 @@ class OmsConfigCron{
         $peLow = 0;
         $peClosePrice = 0;
         
+        // dd($signalData);
         foreach($signalData as $vvl){
             $data = json_decode($vvl->data,true);
             $datahigh_CE = array_reverse($data['high_CE']);
@@ -481,28 +484,33 @@ class OmsConfigCron{
             $datalow_PE = array_reverse($data['low_PE']);
 
             $dataclose_CE = array_reverse($data['close_CE']);
+            // dd($dataclose_CE);
             $dataclose_PE = array_reverse($data['close_PE']);
             $buyAct = array_reverse($data['BUY_Action']);
             $sellAct = array_reverse($data['SELL_Action']);
             if($vvl->ce==$omsData->ce_symbol_name){
                 foreach($sellAct as $k=>$v){
                     if(strtolower($v)==strtolower($omsData->strategy_name) || strtolower($buyAct[$k])==strtolower($omsData->strategy_name)){
+                        // dd($dataclose_CE);
                         $ceHigh = $datahigh_CE[$k];
                         $ceLow = $datalow_CE[$k];
                         $ceClosePrice = $dataclose_CE[$k];
+                        break;
                     }
                 }
             }
-            if($vvl->pe==$omsData->pe_symbol_name){
+            if(($vvl->pe==$omsData->pe_symbol_name) && !is_null($omsData->pe_symbol_name)){
                 foreach($sellAct as $k=>$v){
                     if(strtolower($v)==strtolower($omsData->strategy_name) || strtolower($buyAct[$k])==strtolower($omsData->strategy_name)){
                         $peHigh = $datahigh_PE[$k];
                         $peLow = $datalow_PE[$k];
                         $peClosePrice = $dataclose_PE[$k];
+                        break;
                     }
                 }
             }
         }
+        
         foreach($signalData as $vvl){
            if(isset($vvl->atm) && $vvl->atm=="ATM"){
                 if($breakForeach == 1){

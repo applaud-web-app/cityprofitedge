@@ -158,6 +158,7 @@ class OmsConfigCronRt{
                         $ceHigh = $datahigh_CE[$k];
                         $ceLow = $datalow_CE[$k];
                         $ceClosePrice = $dataclose_CE[$k];
+                        break;
                     }
                 }
             }
@@ -167,6 +168,7 @@ class OmsConfigCronRt{
                         $peHigh = $datahigh_PE[$k];
                         $peLow = $datalow_PE[$k];
                         $peClosePrice = $dataclose_PE[$k];
+                        break;
                     }
                 }
             }
@@ -516,6 +518,7 @@ class OmsConfigCronRt{
                         $ceHigh = $datahigh_CE[$k];
                         $ceLow = $datalow_CE[$k];
                         $ceClosePrice = $dataclose_CE[$k];
+                        break;
                     }
                 }
             }
@@ -525,6 +528,7 @@ class OmsConfigCronRt{
                         $peHigh = $datahigh_PE[$k];
                         $peLow = $datalow_PE[$k];
                         $peClosePrice = $dataclose_PE[$k];
+                        break;
                     }
                 }
             }
