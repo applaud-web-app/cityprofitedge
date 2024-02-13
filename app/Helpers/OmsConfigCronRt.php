@@ -158,6 +158,7 @@ class OmsConfigCronRt{
                         $ceHigh = $datahigh_CE[$k];
                         $ceLow = $datalow_CE[$k];
                         $ceClosePrice = $dataclose_CE[$k];
+                        break;
                     }
                 }
             }
@@ -167,6 +168,7 @@ class OmsConfigCronRt{
                         $peHigh = $datahigh_PE[$k];
                         $peLow = $datalow_PE[$k];
                         $peClosePrice = $dataclose_PE[$k];
+                        break;
                     }
                 }
             }
@@ -306,7 +308,8 @@ class OmsConfigCronRt{
                         if($updateDb==1){
                             OmsConfig::where("id",$omsData->id)->update([
                                 'is_api_pushed'=>1,
-                                'last_time'=>$timeFrmTm
+                                // 'last_time'=>$timeFrmTm
+                                'last_time'=>date("Y-m-d H:i",strtotime($timeFrmTm.' +5 minutes'))
                             ]);
                             $breakForeach = 1;
                             break;
@@ -516,6 +519,7 @@ class OmsConfigCronRt{
                         $ceHigh = $datahigh_CE[$k];
                         $ceLow = $datalow_CE[$k];
                         $ceClosePrice = $dataclose_CE[$k];
+                        break;
                     }
                 }
             }
@@ -525,6 +529,7 @@ class OmsConfigCronRt{
                         $peHigh = $datahigh_PE[$k];
                         $peLow = $datalow_PE[$k];
                         $peClosePrice = $dataclose_PE[$k];
+                        break;
                     }
                 }
             }
@@ -674,7 +679,8 @@ class OmsConfigCronRt{
                             if($updateDb==1){
                                 OmsConfig::where("id",$omsData->id)->update([
                                     'is_api_pushed'=>1,
-                                    'last_time'=>$timeFrmTm
+                                    // 'last_time'=>$timeFrmTm
+                                    'last_time'=>date("Y-m-d H:i",strtotime($timeFrmTm.' +5 minutes'))
                                 ]);                            
                                 $breakForeach = 1;
                                 break;

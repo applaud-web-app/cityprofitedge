@@ -1011,6 +1011,10 @@ class UserController extends Controller
             return to_route('user.portfolio.oms-config')->withNotify($notify);
         }
 
+        $ce_symbol_name = $request->ce_symbol_name;
+        $pe_symbol_name = $request->pe_symbol_name;
+
+
         switch($request->strategy_name){
             case 'Short Straddle':
                 $txnType = 'SELL';
@@ -1020,15 +1024,19 @@ class UserController extends Controller
             break;
             case 'Buy CE':
                 $txnType = 'BUY';
+                $pe_symbol_name = null;
             break;
             case 'Buy PE':
                 $txnType = 'BUY';
+                $ce_symbol_name = null;
             break;
             case 'Sell CE':
                 $txnType = 'SELL';
+                $pe_symbol_name = null;
             break;
             case 'Sell PE':
                 $txnType = 'SELL';
+                $ce_symbol_name = null;
             break;
         }
 
@@ -1082,8 +1090,8 @@ class UserController extends Controller
         $omsObj = new OmsConfig();
         $omsObj->symbol_name = $request->symbol_name;
         $omsObj->signal_tf = $request->signal_tf;
-        $omsObj->ce_symbol_name = $request->ce_symbol_name;
-        $omsObj->pe_symbol_name = $request->pe_symbol_name;
+        $omsObj->ce_symbol_name = $ce_symbol_name;
+        $omsObj->pe_symbol_name = $pe_symbol_name;
         $omsObj->broker_api_id = $request->client_name;
         $omsObj->entry_point = $request->entry_point;
         $omsObj->strategy_name = $request->strategy_name;
@@ -1483,7 +1491,11 @@ class UserController extends Controller
             return to_route('user.portfolio.oms-config')->withNotify($notify);
         }
 
-        switch($request->strategy_name_up){
+        $ce_symbol_name = $request->ce_symbol_name_up;
+        $pe_symbol_name = $request->pe_symbol_name_up;
+
+
+        switch($request->strategy_name){
             case 'Short Straddle':
                 $txnType = 'SELL';
             break;
@@ -1492,15 +1504,19 @@ class UserController extends Controller
             break;
             case 'Buy CE':
                 $txnType = 'BUY';
+                $pe_symbol_name = null;
             break;
             case 'Buy PE':
                 $txnType = 'BUY';
+                $ce_symbol_name = null;
             break;
             case 'Sell CE':
                 $txnType = 'SELL';
+                $pe_symbol_name = null;
             break;
             case 'Sell PE':
                 $txnType = 'SELL';
+                $ce_symbol_name = null;
             break;
         }
 
@@ -1554,8 +1570,8 @@ class UserController extends Controller
         $omsObj = OmsConfig::find($request->id);
         $omsObj->symbol_name = $request->symbol_name_up;
         $omsObj->signal_tf = $request->signal_tf_up;
-        $omsObj->ce_symbol_name = $request->ce_symbol_name_up;
-        $omsObj->pe_symbol_name = $request->pe_symbol_name_up;
+        $omsObj->ce_symbol_name = $pe_symbol_name;
+        $omsObj->pe_symbol_name = $pe_symbol_name;
         $omsObj->broker_api_id = $request->client_name_up;
         $omsObj->entry_point = $request->entry_point_up;
         $omsObj->strategy_name = $request->strategy_name_up;
