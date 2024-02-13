@@ -284,7 +284,7 @@ class OmsConfigCron{
                     if($updateDb==1){
                         OmsConfig::where("id",$omsData->id)->update([
                             'is_api_pushed'=>1,
-                            'last_time'=>$timeFrmTm
+                            'last_time'=>date("Y-m-d H:i",strtotime($timeFrmTm.' +5 minutes'))
                         ]);
                         $breakForeach = 1;
                         break;
@@ -624,7 +624,8 @@ class OmsConfigCron{
                         if($updateDb==1){
                             OmsConfig::where("id",$omsData->id)->update([
                                 'is_api_pushed'=>1,
-                                'last_time'=>$timeFrmTm
+                                // 'last_time'=>$timeFrmTm
+                                'last_time'=>date("Y-m-d H:i",strtotime($timeFrmTm.' +5 minutes'))
                             ]);                            
                             $breakForeach = 1;
                             break;
