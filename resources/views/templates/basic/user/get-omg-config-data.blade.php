@@ -32,7 +32,16 @@
                 <select name="strategy_name_up" class="form--control" required="" id="strategy_name_up">
                     <option value="">Select Strategy</option>
                     @foreach (strategyNames() as $item=>$val)
-                        <option value="{{$item}}" {{$omgData->strategy_name==$item ? 'selected':''}}>{{$val}}</option>    
+                        @php
+                            $selVl = $item;
+                            if($omgData->strategy_name=="Bullish"){
+                                $selVl = $omgData->pe_symbol_name!=null ? 'Bullish PE': 'Bullish CE';
+                            }
+                            if($omgData->strategy_name=="Bearish"){
+                                $selVl = $omgData->pe_symbol_name!=null ? 'Bearish PE': 'Bearish CE';
+                            }
+                        @endphp
+                        <option value="{{$item}}" {{$omgData->strategy_name==$selVl ? 'selected':''}}>{{$val}}</option>    
                     @endforeach
                 </select>
             </div>
