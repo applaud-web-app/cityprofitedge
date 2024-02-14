@@ -474,6 +474,7 @@ class OmsConfigCronRt{
     }
 
     public function callAngelApi($signalData,object $omsData){
+        // dd($signalData);
         $mcxSymArr = ['CRUDEOIL','NATURALGAS','GOLD','SILVER'];
         $txnType = $omsData->txn_type;
         $extType = in_array($omsData->symbol_name,$mcxSymArr) ? "MCX" : "NFO";
@@ -539,7 +540,6 @@ class OmsConfigCronRt{
                 }
             }
 
-            // echo $ceHigh.''.$ceLow.''.$ceClosePrice;die;
 
 
             if(($vvl->pe==$omsData->pe_symbol_name) && !is_null($omsData->pe_symbol_name)){
@@ -567,6 +567,9 @@ class OmsConfigCronRt{
                 }
             }
         }
+
+        
+        // echo $ceHigh.''.$ceLow.''.$ceClosePrice;die;
         foreach($signalData as $vvl){
            if(isset($vvl->atm) && $vvl->atm=="ATM"){
                 if($breakForeach == 1){
@@ -594,6 +597,7 @@ class OmsConfigCronRt{
                     $dateStr = date("Y-m-d",($dateActArrFF[$kk]/1000)).' '.$vv;
                     $strtgName = strtolower($omsData->strategy_name);
                     if(strtotime($dateStr) > strtotime($omsData->last_time)){
+                        
                         if($cntLoop==1){
                             $isPlaceOrderB = 0;
                             if(in_array($strtgName,['bullish','bearish'])){
@@ -643,11 +647,14 @@ class OmsConfigCronRt{
                     }
                 }
 
+                // dd($placeOrderRept);
+
+                // $orderPlace = 1;
 
                if($placeOrderRept==1){
                     foreach($strategyArr as $key=>$v){
                         // if(strtolower($v)==strtolower($omsData->strategy_name)){
-                        if((strtolower($buyActionArr[$key])==strtolower($omsData->strategy_name)) || (strtolower($sellActionArr[$key])==strtolower($omsData->strategy_name))){
+                        if((strtolower($buyActionArr[$key])==strtolower($omsData->strategy_name)) || (strtolower($sellActionArr[$key])==strtolower($omsData->strategy_name)) || $placeOrderRept==1){
                             $fData["tradingsymbol"] = $omsData->ce_symbol_name;
                             $symArr =  $this->getTokenBySymbolName($omsData->ce_symbol_name);
                             $fData["tradingsymbol"] = $symArr['symbol'];
