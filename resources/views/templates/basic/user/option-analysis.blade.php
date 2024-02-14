@@ -18,11 +18,18 @@
     border: 2px solid rgb(255, 0, 0) !important;
   }
 
-  @media (min-width: 768px) {
+
     .tooltip-inner {
-       max-width: 320px !important;
+    
+       font-size: 12px;
       }
-  }
+ 
+      @media (min-width: 768px) {
+        .tooltip-inner {
+          max-width: 420px !important;
+         
+        }
+      }
 
 </style>
 @endpush
