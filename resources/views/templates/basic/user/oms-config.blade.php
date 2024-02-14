@@ -184,8 +184,8 @@
                         <label for="strategy_name" class="required">Strategy Name<sup class="text--danger">*</sup></label>
                         <select name="strategy_name" class="form--control" required="" id="strategy_name">
                             <option value="">Select Strategy</option>
-                            @foreach (strategyNames() as $item)
-                                <option value="{{$item}}">{{$item}}</option>    
+                            @foreach (strategyNames() as $item=>$val)
+                                <option value="{{$item}}">{{$val}}</option>    
                             @endforeach
                         </select>
                     </div>
@@ -387,6 +387,7 @@
                 $("#pe_symbol_name").attr('required','required');
                 break;
             case 'Buy CE':
+                case 'Bullish CE':
                 $(".ce_pe_symbl_1").show();
                 $(".ce_pe_symbl_2").hide();
                 $("#ce_symbol_name").attr('required','required');
@@ -395,6 +396,7 @@
                 $("#pe_quantity").attr('readonly','readonly').val(0);
                 break;
             case 'Buy PE':
+            case 'Bullish PE':
                 $(".ce_pe_symbl_1").hide();
                 $(".ce_pe_symbl_2").show();
                 $("#pe_symbol_name").attr('required','required');
@@ -403,6 +405,7 @@
                 $("#ce_quantity").attr('readonly','readonly').val(0);
                 break;
             case 'Sell CE':
+            case 'Bearish CE':
                 $(".ce_pe_symbl_1").show();
                 $(".ce_pe_symbl_2").hide();
                 $("#ce_symbol_name").attr('required','required');
@@ -411,6 +414,7 @@
                 $("#pe_quantity").attr('readonly','readonly').val(0);
                 break;
             case 'Sell PE':
+            case 'Bearish PE':
                 $(".ce_pe_symbl_1").hide();
                 $(".ce_pe_symbl_2").show();
                 $("#pe_symbol_name").attr('required','required');

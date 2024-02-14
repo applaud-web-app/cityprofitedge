@@ -491,7 +491,7 @@ function allTradeTimeFrames(){
 }
 
 function strategyNames(){
-    return ["Short Straddle","Long Straddle","Buy CE","Buy PE","Sell CE","Sell PE"];
+    return ["Buy CE"=>"PP Buy CE","Buy PE"=>"PP Buy PE","Sell CE"=>"PP Sell CE","Sell PE"=>"PP Sell PE","Bullish CE"=>"VWAP CE Buy","Bullish PE"=>"VWAP PE Buy","Bearish CE"=>"VWAP CE Sell","Bearish PE"=>"VWAP PE Sell"];
 }
 
 function clientList(){

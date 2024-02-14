@@ -31,8 +31,8 @@
                 <label for="strategy_name_up" class="required">Strategy Name<sup class="text--danger">*</sup></label>
                 <select name="strategy_name_up" class="form--control" required="" id="strategy_name_up">
                     <option value="">Select Strategy</option>
-                    @foreach (strategyNames() as $item)
-                        <option value="{{$item}}" {{$omgData->strategy_name==$item ? 'selected':''}}>{{$item}}</option>    
+                    @foreach (strategyNames() as $item=>$val)
+                        <option value="{{$item}}" {{$omgData->strategy_name==$item ? 'selected':''}}>{{$val}}</option>    
                     @endforeach
                 </select>
             </div>
@@ -233,6 +233,7 @@
                 $("#pe_symbol_name_up").attr('required','required');
                 break;
             case 'Buy CE':
+            case 'Bullish CE':
                 $(".ce_pe_symbl_1").show();
                 $(".ce_pe_symbl_2").hide();
                 $("#ce_symbol_name_up").attr('required','required');
@@ -241,6 +242,7 @@
                 $("#pe_quantity_up").attr('readonly','readonly').val(0);
                 break;
             case 'Buy PE':
+            case 'Bullish PE':
                 $(".ce_pe_symbl_1").hide();
                 $(".ce_pe_symbl_2").show();
                 $("#pe_symbol_name_up").attr('required','required');
@@ -249,6 +251,7 @@
                 $("#ce_quantity_up").attr('readonly','readonly').val(0);
                 break;
             case 'Sell CE':
+            case 'Bearish CE':
                 $(".ce_pe_symbl_1").show();
                 $(".ce_pe_symbl_2").hide();
                 $("#ce_symbol_name_up").attr('required','required');
@@ -257,6 +260,7 @@
                 $("#pe_quantity_up").attr('readonly','readonly').val(0);
                 break;
             case 'Sell PE':
+            case 'Bearish PE':
                 $(".ce_pe_symbl_1").hide();
                 $(".ce_pe_symbl_2").show();
                 $("#pe_symbol_name_up").attr('required','required');
