@@ -12,7 +12,7 @@
                         <label>@lang('Broker')</label>
                         <select name="broker_name" class="form--control" id="broker_name">
                             @foreach ($broker_data as $item)
-                                <option value="{{$item->id}}">{{$item->broker_name.' ('.$item->account_user_name.')'}}</option>
+                                <option value="{{$item->id}}" {{$item->id==$brokerId ? 'selected':''}}>{{$item->broker_name.' ('.$item->account_user_name.')'}}</option>
                             @endforeach
                         </select>
                     </div>
