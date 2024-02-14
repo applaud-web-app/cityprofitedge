@@ -18,12 +18,18 @@
     border: 2px solid rgb(255, 0, 0) !important;
   }
 
-  @media (min-width: 768px) {
+
     .tooltip-inner {
-       max-width: 60% !important;
-       margin-left: 15px;
+    
+       font-size: 12px;
       }
-  }
+ 
+      @media (min-width: 768px) {
+        .tooltip-inner {
+          max-width: 500px !important;
+         
+        }
+      }
 
 </style>
 @endpush
@@ -144,7 +150,7 @@
                 <div class="custom--card">
                     <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
                         <div>
-                          <h5 class="card-title mb-0">@lang('Option Analysis - Open Interest CE/PE Signals') </h5>
+                          <h5 class="card-title mb-0"  data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="right"  title="Open Interest CE/PE Signals indicate trading opportunities based on the open interest of Call Options (CE) and Put Options (PE) contracts. When there's a significant divergence between the open interest of CE and PE, it can signal a potential trading opportunity. A valid trading signal occurs when Call Options (CE) indicate bullish sentiment while Put Options (PE) suggest bearish sentiment. It is opportune to enter a trade when these signals align in this manner.">@lang('Option Analysis - Open Interest CE/PE Signals') </h5>
                           <small class="text-warning">Y- ClosePrice, X - Time</small>
                         </div>
                         <div class="filter-box d-flex">
@@ -257,7 +263,7 @@
                 <div class="custom--card">
                     <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
                        <div>
-                          <h5 class="card-title mb-0">@lang('Option Analysis - VWAP CE/PE Signals') </h5>
+                          <h5 class="card-title mb-0"  data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="right"  title="VWAP CE/PE Signals refer to trading signals derived from the Volume Weighted Average Price (VWAP) specifically for Call Options (CE) and Put Options (PE) contracts in a given market. VWAP is a technical analysis tool that calculates the average price of a security over a specified period, weighted by trading volume. Traders often use VWAP to identify trends, support, and resistance levels in the market. A valid trading signal occurs when Call Options (CE) indicate bullish sentiment while Put Options (PE) suggest bearish sentiment. It is opportune to enter a trade when these signals align in this manner.">@lang('Option Analysis - VWAP CE/PE Signals') </h5>
                           <small class="text-warning">Y- ClosePrice, X - Time</small>
                        </div>
                         <div class="filter-box d-flex">
@@ -341,22 +347,9 @@
             <div class="custom--card">
                 <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
                    <div>
-                      <h5 class="card-title mb-0" data-container="body" data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="bottom"  title="Open Interest CE/PE Crossovers” refer to instances where the open interest of 
-                      Call Options (CE) crosses above or below the open interest of Put Options (PE) for
-                      a particular underlying asset. This phenomenon can provide insights into shifting 
-                      sentiment and potential changes in market direction.
-                      Interpretation of Open Interest CE/PE Crossovers:
-                      1. Bullish Interpretation: A crossover where the open interest of Call Options (CE) 
-                      crosses above that of Put Options (PE) indicates a shift towards bullish se
-                      2. Bearish Interpretation: Conversely, a crossover where the open interest of Put 
-                      Options (PE) surpasses that of Call Options (CE) suggests a turn towards bearish 
-                      sentiment.
-                      3. Confirmation and Caution: It's important to note that while CE/PE crossovers 
-                      can offer valuable insights, they should be considered alongside other factors 
-                      such as volume, price trends, and broader market sentiment.
-                      CE/PE crossovers can serve as potential entry or exit signals for traders, helping 
-                      them gauge sentiment shifts and anticipate possible changes in market direction.
-                      However, like any single indicator, they are most effective when used in ">@lang('Open Interest CE/PE Crossovers') </h5>
+                      <h5 class="card-title mb-0"  data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="right" title="Open Interest CE/PE Crossovers occur when CE surpasses or falls below PE's open interest. It signals shifting sentiment.
+                      Interpretation: Bullish: CE crossing above PE indicates bullish sentiment. Bearish: PE surpassing CE suggests bearish sentiment. Confirm with volume, price trends, and market sentiment.
+                      A valid trading signal occurs when Call Options (CE) indicate bullish sentiment while Put Options (PE) suggest bearish sentiment. It is opportune to enter a trade when these signals align in this manner.">@lang('Open Interest CE/PE Crossovers') </h5>
                       <small class="text-warning" >Y- Open Interest, X - Time</small>
                    </div>
                     <div class="filter-box d-flex">
@@ -441,17 +434,7 @@
                 <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
                     <div>
                     
-                      <h5 class="card-title mb-0"  data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="bottom" title="Open interest represents the total number of active options contracts that are 
-                      held by market participants and have not yet been closed or exercised. The net 
-                      change in open interest is calculated by subtracting the previous open interest 
-                      from the current open interest.
-                      Bullish Interpretation: A significant increase in the net change of open interest for
-                      Call Options (CE) compared to Put Options (PE) suggests growing optimism 
-                      among traders regarding the asset's upward movement, signaling a bullish 
-                      sentiment.
-                      Bearish Interpretation: A substantial increase in the net change of open interest 
-                      for Put Options (PE) relative to Call Options (CE) indicates heightened pessimism 
-                      among traders, signaling a bearish outlook for the asset.">@lang('Open Interest CE/PE Net Change') </h5>
+                      <h5 class="card-title mb-0"  data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="right" title="Open interest reflects active options contracts. The net change is the current minus previous open interest. Bullish: CE's net increase over PE indicates optimism for asset's rise. Bearish: PE's significant increase over CE signals pessimism for asset's decline.">@lang('Open Interest CE/PE Net Change') </h5>
                       <small class="text-warning">Y- Open Interest, X - Time</small>
                     </div>
                     <div class="filter-box d-flex">
