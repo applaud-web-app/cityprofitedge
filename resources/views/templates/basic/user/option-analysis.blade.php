@@ -38,7 +38,7 @@
                               </select>
                             </div>
                             <div class="mx-1">
-                              <select name="atmRange2" class="form-select" id="atmRange2">
+                              <select name="atmRange1" class="form-select" id="atmRange1">
                                 <option value="" disabled="" selected>Strike</option>
                                 @for ($i = -3; $i <= 3; $i++)
                                   @if ($i == 0)
@@ -50,7 +50,7 @@
                             </select>
                            </div>
                            <div class="mx-1">
-                              <select name="timeframe3" class="form-select" id="timeframe3">
+                              <select name="timeframe1" class="form-select" id="timeframe1">
                                 <option value="" disabled="" selected>Time Frame</option>
                                 <option value="1" {{$timeFrame1 == 1 ? 'selected' : ''}}>1</option>
                                 <option value="3" {{$timeFrame1 == 3 ? 'selected' : ''}}>3</option>
@@ -150,7 +150,7 @@
                               </select>
                             </div>
                             <div class="mx-1">
-                              <select name="atmRange" class="form-select" id="atmRange">
+                              <select name="atmRange2" class="form-select" id="atmRange2">
                                 <option value="" disabled="" selected>Strike</option>
                                 @for ($i = -3; $i <= 3; $i++)
                                   @if ($i == 0)
@@ -162,7 +162,7 @@
                             </select>
                            </div>
                            <div class="mx-1">
-                              <select name="timeframe" class="form-select" id="timeframe">
+                              <select name="timeframe2" class="form-select" id="timeframe2">
                                 <option value="" disabled="" selected>Time Frame</option>
                                 <option value="1" {{$timeFrame2 == 1 ? 'selected' : ''}}>1</option>
                                 <option value="3" {{$timeFrame2 == 3 ? 'selected' : ''}}>3</option>
@@ -334,7 +334,7 @@
                 <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
                    <div>
                       <h5 class="card-title mb-0">@lang('Open Interest CE/PE Crossovers') </h5>
-                      <small class="text-warning">Y- ClosePrice, X - Time</small>
+                      <small class="text-warning">Y- Open Interest, X - Time</small>
                    </div>
                     <div class="filter-box d-flex">
                       <form method="GET" class="d-flex align-items-center flex-wrap filter_dropdown">
@@ -418,7 +418,7 @@
                 <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
                     <div>
                       <h5 class="card-title mb-0">@lang('Open Interest CE/PE Net Change') </h5>
-                      <small class="text-warning">Y- ClosePrice, X - Time</small>
+                      <small class="text-warning">Y- Open Interest, X - Time</small>
                     </div>
                     <div class="filter-box d-flex">
                       <form method="GET" class="d-flex align-items-center flex-wrap filter_dropdown">
