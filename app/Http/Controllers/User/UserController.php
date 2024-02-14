@@ -1518,8 +1518,8 @@ class UserController extends Controller
             return to_route('user.portfolio.oms-config')->withNotify($notify);
         }
 
-        $ce_symbol_name = $request->ce_symbol_name;
-        $pe_symbol_name = $request->pe_symbol_name;
+        $ce_symbol_name = $request->ce_symbol_name_up;
+        $pe_symbol_name = $request->pe_symbol_name_up;
 
         $strategyName = $request->strategy_name_up;
 
