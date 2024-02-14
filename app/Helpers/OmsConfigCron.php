@@ -158,24 +158,56 @@ class OmsConfigCron{
             $dataclose_PE = array_reverse($data['close_PE']);
             $buyAct = array_reverse($data['BUY_Action']);
             $sellAct = array_reverse($data['SELL_Action']);
+
+            $vwap_CE_signal = array_reverse($data['vwap_CE_signal']);
+            $vwap_PE_signal = array_reverse($data['vwap_PE_signal']);
+
+
             if($vvl->ce==$omsData->ce_symbol_name){
                 foreach($sellAct as $k=>$v){
-                    if(strtolower($v)==strtolower($omsData->strategy_name) || strtolower($buyAct[$k])==strtolower($omsData->strategy_name)){
-                        $ceHigh = $datahigh_CE[$k];
-                        $ceLow = $datalow_CE[$k];
-                        $ceClosePrice = $dataclose_CE[$k];
-                        break;
+                    $strtgName = strtolower($omsData->strategy_name);
+                    if(in_array($strtgName,['bullish','bearish'])){
+                        if((strtolower($vwap_CE_signal[$k])==$strtgName || strtolower($vwap_PE_signal[$k])==$strtgName)){
+                            // dd('matched');
+                            if((strtolower($vwap_CE_signal[$k])=='bullish' && strtolower($vwap_PE_signal[$k])=='bearish') || (strtolower($vwap_CE_signal[$k])=='bearish' && strtolower($vwap_PE_signal[$k])=='bullish')){
+                                $ceHigh = $datahigh_CE[$k];
+                                $ceLow = $datalow_CE[$k];
+                                $ceClosePrice = $dataclose_CE[$k];
+                                break;
+                            }
+                        }
+                    }else{
+                        if((strtolower($v)==$strtgName || strtolower($buyAct[$k])==$strtgName)){
+                            $ceHigh = $datahigh_CE[$k];
+                            $ceLow = $datalow_CE[$k];
+                            $ceClosePrice = $dataclose_CE[$k];
+                            break;
+                        }
                     }
                 }
             }
             if($vvl->pe==$omsData->pe_symbol_name){
                 foreach($sellAct as $k=>$v){
-                    if(strtolower($v)==strtolower($omsData->strategy_name) || strtolower($buyAct[$k])==strtolower($omsData->strategy_name)){
-                        $peHigh = $datahigh_PE[$k];
-                        $peLow = $datalow_PE[$k];
-                        $peClosePrice = $dataclose_PE[$k];
-                        break;
+                    $strtgName = strtolower($omsData->strategy_name);
+                    if(in_array($strtgName,['bullish','bearish'])){
+                        if((strtolower($vwap_CE_signal[$k])==$strtgName || strtolower($vwap_PE_signal[$k])==$strtgName)){
+                            if((strtolower($vwap_CE_signal[$k])=='bullish' && strtolower($vwap_PE_signal[$k])=='bearish') || (strtolower($vwap_CE_signal[$k])=='bearish' && strtolower($vwap_PE_signal[$k])=='bullish')){
+                                $peHigh = $datahigh_PE[$k];
+                                $peLow = $datalow_PE[$k];
+                                $peClosePrice = $dataclose_PE[$k];
+                                break;
+
+                            }
+                        }
+                    }else{
+                        if(strtolower($v)==strtolower($omsData->strategy_name) || strtolower($buyAct[$k])==strtolower($omsData->strategy_name)){
+                            $peHigh = $datahigh_PE[$k];
+                            $peLow = $datalow_PE[$k];
+                            $peClosePrice = $dataclose_PE[$k];
+                            break;
+                        }
                     }
+
                 }
             }
         }
@@ -191,9 +223,24 @@ class OmsConfigCron{
             $timeActArr = array_slice($data['time'],-1);
             $dateActArr = array_slice($data['Date'],-1);
 
+            $vwap_CE_signal = array_slice($data['vwap_CE_signal'],-1);
+                $vwap_PE_signal = array_slice($data['vwap_PE_signal'],-1);
+
             foreach($strategyArr as $key=>$v){
                 // if(strtolower($v)==strtolower($omsData->strategy_name)){
-                if((strtolower($buyActionArr[$key])==strtolower($omsData->strategy_name)) || (strtolower($sellActionArr[$key])==strtolower($omsData->strategy_name))){
+
+                $isPlaceOrderB = 0;
+                $strtgName = strtolower($omsData->strategy_name);
+                if(in_array($strtgName,['bullish','bearish'])){
+                    // dd(strtolower($vwap_PE_signal[$key]));
+                    if((strtolower($vwap_CE_signal[$key])=='bullish' && strtolower($vwap_PE_signal[$key])=='bearish') || (strtolower($vwap_CE_signal[$key])=='bearish' && strtolower($vwap_PE_signal[$key])=='bullish')){
+                        $isPlaceOrderB = 1;
+                    }
+                    if($isPlaceOrderB!=1){
+                        continue;
+                    }
+                }
+                if((strtolower($buyActionArr[$key])==strtolower($omsData->strategy_name)) || (strtolower($sellActionArr[$key])==strtolower($omsData->strategy_name)) || $isPlaceOrderB==1){
                     // $high = $highCEArr[$key];
                     // $low = $lowCEArr[$key];
                     // $closePrice = $closeCEArr[$key];
