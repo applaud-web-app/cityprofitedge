@@ -26,7 +26,7 @@
  
       @media (min-width: 768px) {
         .tooltip-inner {
-          max-width: 420px !important;
+          max-width: 500px !important;
          
         }
       }
