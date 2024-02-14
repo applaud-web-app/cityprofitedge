@@ -18,9 +18,13 @@
     border: 2px solid rgb(255, 0, 0) !important;
   }
 
-  .tooltip-inner {
-    max-width: 320px !important;
-}
+  @media (min-width: 768px) {
+    .tooltip-inner {
+       max-width: 60% !important;
+       margin-left: 15px;
+      }
+  }
+
 </style>
 @endpush
 <section class="pt-100 pb-100">
