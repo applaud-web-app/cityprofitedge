@@ -17,6 +17,10 @@
     background: transparent !important;
     border: 2px solid rgb(255, 0, 0) !important;
   }
+
+  .tooltip-inner {
+    max-width: 320px !important;
+}
 </style>
 @endpush
 <section class="pt-100 pb-100">
@@ -333,8 +337,23 @@
             <div class="custom--card">
                 <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
                    <div>
-                      <h5 class="card-title mb-0">@lang('Open Interest CE/PE Crossovers') </h5>
-                      <small class="text-warning">Y- Open Interest, X - Time</small>
+                      <h5 class="card-title mb-0" data-container="body" data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="bottom"  title="Open Interest CE/PE Crossovers” refer to instances where the open interest of 
+                      Call Options (CE) crosses above or below the open interest of Put Options (PE) for
+                      a particular underlying asset. This phenomenon can provide insights into shifting 
+                      sentiment and potential changes in market direction.
+                      Interpretation of Open Interest CE/PE Crossovers:
+                      1. Bullish Interpretation: A crossover where the open interest of Call Options (CE) 
+                      crosses above that of Put Options (PE) indicates a shift towards bullish se
+                      2. Bearish Interpretation: Conversely, a crossover where the open interest of Put 
+                      Options (PE) surpasses that of Call Options (CE) suggests a turn towards bearish 
+                      sentiment.
+                      3. Confirmation and Caution: It's important to note that while CE/PE crossovers 
+                      can offer valuable insights, they should be considered alongside other factors 
+                      such as volume, price trends, and broader market sentiment.
+                      CE/PE crossovers can serve as potential entry or exit signals for traders, helping 
+                      them gauge sentiment shifts and anticipate possible changes in market direction.
+                      However, like any single indicator, they are most effective when used in ">@lang('Open Interest CE/PE Crossovers') </h5>
+                      <small class="text-warning" >Y- Open Interest, X - Time</small>
                    </div>
                     <div class="filter-box d-flex">
                       <form method="GET" class="d-flex align-items-center flex-wrap filter_dropdown">
@@ -417,7 +436,18 @@
             <div class="custom--card">
                 <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
                     <div>
-                      <h5 class="card-title mb-0">@lang('Open Interest CE/PE Net Change') </h5>
+                    
+                      <h5 class="card-title mb-0"  data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="bottom" title="Open interest represents the total number of active options contracts that are 
+                      held by market participants and have not yet been closed or exercised. The net 
+                      change in open interest is calculated by subtracting the previous open interest 
+                      from the current open interest.
+                      Bullish Interpretation: A significant increase in the net change of open interest for
+                      Call Options (CE) compared to Put Options (PE) suggests growing optimism 
+                      among traders regarding the asset's upward movement, signaling a bullish 
+                      sentiment.
+                      Bearish Interpretation: A substantial increase in the net change of open interest 
+                      for Put Options (PE) relative to Call Options (CE) indicates heightened pessimism 
+                      among traders, signaling a bearish outlook for the asset.">@lang('Open Interest CE/PE Net Change') </h5>
                       <small class="text-warning">Y- Open Interest, X - Time</small>
                     </div>
                     <div class="filter-box d-flex">
