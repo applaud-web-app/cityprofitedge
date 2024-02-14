@@ -117,4 +117,9 @@ class TradeController extends Controller
            
         }
     }
+
+    // Upload Zerodha Instuments Data 
+    function uploadZerodhaInstruments(){
+        
+    }
 }

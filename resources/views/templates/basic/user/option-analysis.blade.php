@@ -17,6 +17,14 @@
     background: transparent !important;
     border: 2px solid rgb(255, 0, 0) !important;
   }
+
+  @media (min-width: 768px) {
+    .tooltip-inner {
+       max-width: 60% !important;
+       margin-left: 15px;
+      }
+  }
+
 </style>
 @endpush
 <section class="pt-100 pb-100">
@@ -38,7 +46,7 @@
                               </select>
                             </div>
                             <div class="mx-1">
-                              <select name="atmRange2" class="form-select" id="atmRange2">
+                              <select name="atmRange1" class="form-select" id="atmRange1">
                                 <option value="" disabled="" selected>Strike</option>
                                 @for ($i = -3; $i <= 3; $i++)
                                   @if ($i == 0)
@@ -50,7 +58,7 @@
                             </select>
                            </div>
                            <div class="mx-1">
-                              <select name="timeframe3" class="form-select" id="timeframe3">
+                              <select name="timeframe1" class="form-select" id="timeframe1">
                                 <option value="" disabled="" selected>Time Frame</option>
                                 <option value="1" {{$timeFrame1 == 1 ? 'selected' : ''}}>1</option>
                                 <option value="3" {{$timeFrame1 == 3 ? 'selected' : ''}}>3</option>
@@ -150,7 +158,7 @@
                               </select>
                             </div>
                             <div class="mx-1">
-                              <select name="atmRange" class="form-select" id="atmRange">
+                              <select name="atmRange2" class="form-select" id="atmRange2">
                                 <option value="" disabled="" selected>Strike</option>
                                 @for ($i = -3; $i <= 3; $i++)
                                   @if ($i == 0)
@@ -162,7 +170,7 @@
                             </select>
                            </div>
                            <div class="mx-1">
-                              <select name="timeframe" class="form-select" id="timeframe">
+                              <select name="timeframe2" class="form-select" id="timeframe2">
                                 <option value="" disabled="" selected>Time Frame</option>
                                 <option value="1" {{$timeFrame2 == 1 ? 'selected' : ''}}>1</option>
                                 <option value="3" {{$timeFrame2 == 3 ? 'selected' : ''}}>3</option>
@@ -333,8 +341,23 @@
             <div class="custom--card">
                 <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
                    <div>
-                      <h5 class="card-title mb-0">@lang('Open Interest CE/PE Crossovers') </h5>
-                      <small class="text-warning">Y- ClosePrice, X - Time</small>
+                      <h5 class="card-title mb-0" data-container="body" data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="bottom"  title="Open Interest CE/PE Crossovers” refer to instances where the open interest of 
+                      Call Options (CE) crosses above or below the open interest of Put Options (PE) for
+                      a particular underlying asset. This phenomenon can provide insights into shifting 
+                      sentiment and potential changes in market direction.
+                      Interpretation of Open Interest CE/PE Crossovers:
+                      1. Bullish Interpretation: A crossover where the open interest of Call Options (CE) 
+                      crosses above that of Put Options (PE) indicates a shift towards bullish se
+                      2. Bearish Interpretation: Conversely, a crossover where the open interest of Put 
+                      Options (PE) surpasses that of Call Options (CE) suggests a turn towards bearish 
+                      sentiment.
+                      3. Confirmation and Caution: It's important to note that while CE/PE crossovers 
+                      can offer valuable insights, they should be considered alongside other factors 
+                      such as volume, price trends, and broader market sentiment.
+                      CE/PE crossovers can serve as potential entry or exit signals for traders, helping 
+                      them gauge sentiment shifts and anticipate possible changes in market direction.
+                      However, like any single indicator, they are most effective when used in ">@lang('Open Interest CE/PE Crossovers') </h5>
+                      <small class="text-warning" >Y- Open Interest, X - Time</small>
                    </div>
                     <div class="filter-box d-flex">
                       <form method="GET" class="d-flex align-items-center flex-wrap filter_dropdown">
@@ -417,8 +440,19 @@
             <div class="custom--card">
                 <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
                     <div>
-                      <h5 class="card-title mb-0">@lang('Open Interest CE/PE Net Change') </h5>
-                      <small class="text-warning">Y- ClosePrice, X - Time</small>
+                    
+                      <h5 class="card-title mb-0"  data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="bottom" title="Open interest represents the total number of active options contracts that are 
+                      held by market participants and have not yet been closed or exercised. The net 
+                      change in open interest is calculated by subtracting the previous open interest 
+                      from the current open interest.
+                      Bullish Interpretation: A significant increase in the net change of open interest for
+                      Call Options (CE) compared to Put Options (PE) suggests growing optimism 
+                      among traders regarding the asset's upward movement, signaling a bullish 
+                      sentiment.
+                      Bearish Interpretation: A substantial increase in the net change of open interest 
+                      for Put Options (PE) relative to Call Options (CE) indicates heightened pessimism 
+                      among traders, signaling a bearish outlook for the asset.">@lang('Open Interest CE/PE Net Change') </h5>
+                      <small class="text-warning">Y- Open Interest, X - Time</small>
                     </div>
                     <div class="filter-box d-flex">
                       <form method="GET" class="d-flex align-items-center flex-wrap filter_dropdown">
