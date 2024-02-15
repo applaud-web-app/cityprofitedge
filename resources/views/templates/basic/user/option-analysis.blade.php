@@ -12,10 +12,12 @@
   .chart2 .apexcharts-legend-series .apexcharts-legend-marker[rel="1"]{
     background: transparent !important;
     border: 2px solid rgb(0, 255, 0) !important;
+    border-radius: 50% !important;
   }
   .chart2 .apexcharts-legend-series .apexcharts-legend-marker[rel="2"]{
     background: transparent !important;
     border: 2px solid rgb(255, 0, 0) !important;
+    border-radius: 50% !important;
   }
 
 
@@ -471,6 +473,7 @@
                     'time'=>$y,
                     'price'=>$CE_NETCHANGE_5[$i],
                     'text'=>$vwap_CE_signal5[$i],
+                    'color'=>'#00FF00'
                 ];
               }
             }
@@ -486,6 +489,7 @@
                     'time'=>$y,
                     'price'=>$PE_NETCHANGE_5[$i],
                     'text'=>$vwap_PE_signal5[$i],
+                    'color'=>'#FF0000'
                 ];
               }
             }
@@ -812,18 +816,15 @@ var options = {
 @php
     $data5 = [];
     foreach($mergedArray5 as $key => $value){
-      if($value['text'] == "Bearish"){
-        $background = "#FF0000";
-        $color = "#fff";
-
+      if($value['color'] == "#00FF00"){ // CE
         $data5[] = [
           "x"=>$value['time'],
-          "borderColor"=>$background,
+          "borderColor"=>$value['color'],
           "label"=>[
             "borderColor"=>"transparent",
             "style"=>[
-              "color"=>$color,
-              "background"=>$background,
+              "color"=>'#000',
+              "background"=>$value['color'],
             ],
             "orientation"=>"horizontal",
             "text"=>$value['text']
@@ -831,18 +832,15 @@ var options = {
         ];
 
         
-      }else if($value['text'] == "Bullish"){
-        $background = "#00FF00";
-        $color = "#000";
-
+      }else if($value['color'] == "#FF0000"){ // PE
         $data5[] = [
           "x"=>$value['time'],
-          "borderColor"=>$background,
+          "borderColor"=>$value['color'],
           "label"=>[
             "borderColor"=>"transparent",
             "style"=>[
-              "color"=>$color,
-              "background"=>$background,
+              "color"=>'#fff',
+              "background"=>$value['color'],
             ],
             "text"=>$value['text']
           ]

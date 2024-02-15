@@ -401,7 +401,7 @@ class UserController extends Controller
         }
 
         $user->validity = Carbon::parse($user->validity)->addDay($package->validity);
-        $user->balance = $package->price;
+        $user->balance -= $package->price;
         $user->save();
 
         $transaction = new Transaction();
@@ -582,7 +582,6 @@ class UserController extends Controller
         $broker_data = BrokerApi::where('user_id',auth()->user()->id)->get();
         $data['broker_data'] = $broker_data;
         $data['trade_book_data'] = [];
-        $brokerId = 0;
         if($broker_data){
             $brokerId = !empty($request->broker_name) ? $request->broker_name : $broker_data[0]->id;
             $userData = null;
@@ -654,9 +653,6 @@ class UserController extends Controller
                         'Content-Type: application/json',
                         'Authorization: Bearer '.$tokenA
                     );
-
-                    dd($httpHeaders);
-                    
                     $fDada = [];
 
                     $curl = curl_init();
@@ -674,7 +670,6 @@ class UserController extends Controller
                     $response = curl_exec($curl);
                     curl_close($curl);
                     $dataArr = json_decode($response);
-                    // dd($dataArr);
                     if($dataArr->status==true){
                         if(!is_null($dataArr->data)){
                             foreach($dataArr->data as $vl){
@@ -696,7 +691,6 @@ class UserController extends Controller
                 }
             }
         }
-        $data['brokerId'] = $brokerId;
         return view($this->activeTemplate . 'user.trade_positions',$data);
     }
 
@@ -1020,7 +1014,6 @@ class UserController extends Controller
         $ce_symbol_name = $request->ce_symbol_name;
         $pe_symbol_name = $request->pe_symbol_name;
 
-        $strategyName = $request->strategy_name;
 
         switch($request->strategy_name){
             case 'Short Straddle':
@@ -1044,26 +1037,6 @@ class UserController extends Controller
             case 'Sell PE':
                 $txnType = 'SELL';
                 $ce_symbol_name = null;
-            break;
-            case 'Bullish CE':
-                $txnType = 'BUY';
-                $pe_symbol_name = null;
-                $strategyName = 'Bullish';
-            break;
-            case 'Bullish PE':
-                $txnType = 'BUY';
-                $ce_symbol_name = null;
-                $strategyName = 'Bullish';
-            break;
-            case 'Bearish CE':
-                $txnType = 'SELL';
-                $pe_symbol_name = null;
-                $strategyName = 'Bearish';
-            break;
-            case 'Bearish PE':
-                $txnType = 'SELL';
-                $ce_symbol_name = null;
-                $strategyName = 'Bearish';
             break;
         }
 
@@ -1121,7 +1094,7 @@ class UserController extends Controller
         $omsObj->pe_symbol_name = $pe_symbol_name;
         $omsObj->broker_api_id = $request->client_name;
         $omsObj->entry_point = $request->entry_point;
-        $omsObj->strategy_name = $strategyName;
+        $omsObj->strategy_name = $request->strategy_name;
         $omsObj->product = $request->product;
         $omsObj->order_type = $request->order_type;
         $omsObj->pyramid_percent = $request->pyramid_percent;
@@ -1213,7 +1186,7 @@ class UserController extends Controller
         $Atmtype5 = $request->atmRange5 ?? "ATM";
         $table5 =  $request->symbol5 ?? "CRUDEOIL";
         $timeFrame5 = $request->timeframe5 ? : 5;
-        
+
         // For Chart 1
         $data1 = \DB::connection('mysql_rm')->table($table1)->select('*')->where('timeframe',$timeFrame1)->get();
         // For Chart 2
@@ -1521,9 +1494,8 @@ class UserController extends Controller
         $ce_symbol_name = $request->ce_symbol_name_up;
         $pe_symbol_name = $request->pe_symbol_name_up;
 
-        $strategyName = $request->strategy_name_up;
 
-        switch($request->strategy_name_up){
+        switch($request->strategy_name){
             case 'Short Straddle':
                 $txnType = 'SELL';
             break;
@@ -1545,26 +1517,6 @@ class UserController extends Controller
             case 'Sell PE':
                 $txnType = 'SELL';
                 $ce_symbol_name = null;
-            break;
-            case 'Bullish CE':
-                $txnType = 'BUY';
-                $pe_symbol_name = null;
-                $strategyName = 'Bullish';
-            break;
-            case 'Bullish PE':
-                $txnType = 'BUY';
-                $ce_symbol_name = null;
-                $strategyName = 'Bullish';
-            break;
-            case 'Bearish CE':
-                $txnType = 'SELL';
-                $pe_symbol_name = null;
-                $strategyName = 'Bearish';
-            break;
-            case 'Bearish PE':
-                $txnType = 'SELL';
-                $ce_symbol_name = null;
-                $strategyName = 'Bearish';
             break;
         }
 
@@ -1618,11 +1570,11 @@ class UserController extends Controller
         $omsObj = OmsConfig::find($request->id);
         $omsObj->symbol_name = $request->symbol_name_up;
         $omsObj->signal_tf = $request->signal_tf_up;
-        $omsObj->ce_symbol_name = $ce_symbol_name;
+        $omsObj->ce_symbol_name = $pe_symbol_name;
         $omsObj->pe_symbol_name = $pe_symbol_name;
         $omsObj->broker_api_id = $request->client_name_up;
         $omsObj->entry_point = $request->entry_point_up;
-        $omsObj->strategy_name = $strategyName;
+        $omsObj->strategy_name = $request->strategy_name_up;
         $omsObj->product = $request->product_up;
         $omsObj->order_type = $request->order_type_up;
         $omsObj->pyramid_percent = $request->pyramid_percent_up;
