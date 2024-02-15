@@ -11,7 +11,7 @@
   }
   .chart2 .apexcharts-legend-series .apexcharts-legend-marker[rel="1"]{
     background: transparent !important;
-    border: 2px solid rgb(0, 255, 0) !important;
+    border: 2px solid #00bf63 !important;
     border-radius: 50% !important;
   }
   .chart2 .apexcharts-legend-series .apexcharts-legend-marker[rel="2"]{
