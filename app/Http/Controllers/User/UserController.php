@@ -1213,7 +1213,7 @@ class UserController extends Controller
         $Atmtype5 = $request->atmRange5 ?? "ATM";
         $table5 =  $request->symbol5 ?? "CRUDEOIL";
         $timeFrame5 = $request->timeframe5 ? : 5;
-
+        
         // For Chart 1
         $data1 = \DB::connection('mysql_rm')->table($table1)->select('*')->where('timeframe',$timeFrame1)->get();
         // For Chart 2
