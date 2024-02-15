@@ -576,6 +576,7 @@ class UserController extends Controller
         $data['order_data'] = OrderBook::select('*')->where('user_id',auth()->user()->id)->paginate(50);
         $data['fullUrl'] = $fullUrl;
         if($request->ajax()){
+            
             return view($this->activeTemplate . 'user.order_books_ajax',$data);
         }
         return view($this->activeTemplate . 'user.order_books',$data);

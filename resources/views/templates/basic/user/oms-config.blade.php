@@ -175,7 +175,7 @@
                         <select name="signal_tf" class="form--control" required="" id="signal_tf">
                             <option value="">Select Signal TF</option>
                             @foreach (allTradeTimeFrames() as $item)
-                                <option value="{{$item}}">{{$item}}</option>
+                                <option value="{{$item}}" {{$item==5 ? 'selected':''}}>{{$item}}</option>
                             @endforeach
                         </select>
                     </div>
@@ -230,7 +230,7 @@
                         <label for="order_type" class="required">Order Type<sup class="text--danger">*</sup></label>
                         <select name="order_type" class="form--control" required="" id="order_type">
                             <option value="">Select Order Type</option>
-                            <option value="LIMIT">LIMIT</option>
+                            <option value="LIMIT" selected>LIMIT</option>
                             <option value="MARKET">MARKET</option>  
                         </select>
                     </div>
@@ -240,7 +240,7 @@
                         <select name="pyramid_percent" class="form--control" id="pyramid_percent">
                             <option value="">Select Pyramid</option>
                             <option value="33">33</option>
-                            <option value="50">50</option>  
+                            <option value="50" selected>50</option>  
                             <option value="100">100</option>  
                         </select>
                     </div>
@@ -249,7 +249,7 @@
                         <label for="product" class="required">Product<sup class="text--danger">*</sup></label>
                         <select name="product" class="form--control" id="product" required>
                             <option value="">Select Product</option>
-                            <option value="NRML">NRML</option>
+                            <option value="NRML" selected>NRML</option>
                             <option value="MIS">MIS</option>  
                         </select>
                     </div>
