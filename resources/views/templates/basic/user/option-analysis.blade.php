@@ -342,7 +342,38 @@
             $time4 = array_map(function ($k , $y) use($Date4){
                 return date("d-M-Y",($Date4[$k]/1000)).', '.date("g:i a", strtotime($y));
             },array_keys($Date4) , $time4);
-          @endphp
+
+            $ceArray4 = array();
+            $newArr14 = [];
+
+            foreach($time4 as $i=>$y){
+              if(!in_array($vwap_CE_signal4[$i],$ceArray4)){
+                $ceArray4 = [];
+                array_push($ceArray4,$vwap_CE_signal4[$i]);
+                $newArr14[] = [
+                    'time'=>$y,
+                    'price'=>$OI_CE4[$i],
+                    'text'=>$vwap_CE_signal4[$i],
+                ];
+              }
+            }
+
+            $PeArray4 = array();
+            $newArr24 = [];
+
+            foreach($time4 as $i=>$y){
+              if(!in_array($vwap_PE_signal4[$i],$PeArray4)){
+                $PeArray4 = [];
+                array_push($PeArray4,$vwap_PE_signal4[$i]);
+                $newArr24[] = [
+                    'time'=>$y,
+                    'price'=>$OI_PE4[$i],
+                    'text'=>$vwap_PE_signal4[$i],
+                ];
+              }
+            }
+            $mergedArray4 = array_merge($newArr14, $newArr24);
+            @endphp
         <div class="col-lg-12 mb-3">
             <div class="custom--card">
                 <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
@@ -428,6 +459,37 @@
             $time5 = array_map(function ($y) {
                 return date("g:i a", strtotime($y));
             },$time5);
+
+            $ceArray5 = array();
+            $newArr15 = [];
+
+            foreach($time5 as $i=>$y){
+              if(!in_array($vwap_CE_signal5[$i],$ceArray5)){
+                $ceArray5 = [];
+                array_push($ceArray5,$vwap_CE_signal5[$i]);
+                $newArr15[] = [
+                    'time'=>$y,
+                    'price'=>$CE_NETCHANGE_5[$i],
+                    'text'=>$vwap_CE_signal5[$i],
+                ];
+              }
+            }
+
+            $PeArray5 = array();
+            $newArr25 = [];
+
+            foreach($time5 as $i=>$y){
+              if(!in_array($vwap_PE_signal5[$i],$PeArray5)){
+                $PeArray5 = [];
+                array_push($PeArray5,$vwap_PE_signal5[$i]);
+                $newArr25[] = [
+                    'time'=>$y,
+                    'price'=>$PE_NETCHANGE_5[$i],
+                    'text'=>$vwap_PE_signal5[$i],
+                ];
+              }
+            }
+            $mergedArray5 = array_merge($newArr15, $newArr25);
           @endphp
         <div class="col-lg-12 mb-3">
             <div class="custom--card">
@@ -709,9 +771,92 @@ var options = {
         ]
       ];
     }
-    
 @endphp
 
+@php
+    $data4 = [];
+    foreach($mergedArray4 as $key => $value){
+      if($value['text'] == "Bearish"){
+        $background = "#FF0000";
+        $color = "#fff";
+      }else if($value['text'] == "Bullish"){
+        $background = "#00FF00";
+        $color = "#000";
+      }else{
+        $background = "yellow";
+        $color = "#000";
+      }
+      $data4[] = [
+        "x"=>$value['time'],
+        "y"=>$value['price'],
+        "marker"=>[
+          'size'=>6,
+          "fillColor"=> "#FFF",
+          "strokeColor"=> "transparent",
+          "radius"=> 2
+        ],
+        "label"=> [
+            "borderColor"=> $background,
+            "offsetY"=> 0,
+            "style"=> [
+              "color"=> $color,
+              "background"=> $background
+            ],
+            "text"=> $value['text']
+        ]
+      ];
+    }
+@endphp
+
+
+@php
+    $data5 = [];
+    foreach($mergedArray5 as $key => $value){
+      if($value['text'] == "Bearish"){
+        $background = "#FF0000";
+        $color = "#fff";
+
+        $data5[] = [
+          "x"=>$value['time'],
+          "borderColor"=>$background,
+          "label"=>[
+            "borderColor"=>"transparent",
+            "style"=>[
+              "color"=>$color,
+              "background"=>$background,
+            ],
+            "orientation"=>"horizontal",
+            "text"=>$value['text']
+          ]
+        ];
+
+        
+      }else if($value['text'] == "Bullish"){
+        $background = "#00FF00";
+        $color = "#000";
+
+        $data5[] = [
+          "x"=>$value['time'],
+          "borderColor"=>$background,
+          "label"=>[
+            "borderColor"=>"transparent",
+            "style"=>[
+              "color"=>$color,
+              "background"=>$background,
+            ],
+            "text"=>$value['text']
+          ]
+        ];
+
+      }else{
+        $background = "yellow";
+        $color = "#000";
+      }      
+
+    }
+
+    
+@endphp
 
 {{-- Apex Chart 2 --}}
 <script>
@@ -849,6 +994,9 @@ var options = {
     }
   }
   var options = {
+    annotations: {
+      points: {!!json_encode($data4)!!}
+    },
     chart: {
       height: 400,
       foreColor: '#E4E4E4',
@@ -907,6 +1055,9 @@ var options = {
     }
   }
   var options = {
+    annotations: {
+      xaxis: {!!json_encode($data5)!!}
+    },
     chart: {
       height: 400,
       foreColor: '#E4E4E4',
