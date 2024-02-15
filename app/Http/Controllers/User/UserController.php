@@ -557,10 +557,11 @@ class UserController extends Controller
         $todayDate = date("Y-m-d");
         $stockName = $request->stock_name;
         $timeFrame = $request->time_frame ? : 5;
-        if($request->ajax()){
-            return view($this->activeTemplate . 'user.portfolio_top_gainers_ajax', compact('pageTitle', 'portfolioTopGainers','todayDate','timeFrame','stockName','fullUrl'));
-        }
         $symbolArr = allTradeSymbols();
+        if($request->ajax()){
+            return view($this->activeTemplate . 'user.portfolio_top_gainers_ajax', compact('pageTitle', 'portfolioTopGainers','todayDate','timeFrame','stockName','fullUrl','symbolArr'));
+        }
+        
         return view($this->activeTemplate . 'user.portfolio_top_gainers', compact('pageTitle', 'portfolioTopGainers','symbolArr','todayDate','timeFrame','stockName','fullUrl'));
     }
 
