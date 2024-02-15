@@ -658,11 +658,11 @@ class OmsConfigCron{
 
                         if($omsData->pe_symbol_name!=null){
                             if($strtgName=='bullish'){
-                                if((strtolower($vwap_CE_signal[$key])=='bullish' && strtolower($vwap_PE_signal[$key])=='bearish')){
+                                if((strtolower($vwap_CE_signal[$key])=='bearish' && strtolower($vwap_PE_signal[$key])=='bullish')){
                                     $isPlaceOrderB = 1;
                                 }
                             }else{
-                                if((strtolower($vwap_CE_signal[$key])=='bearish' && strtolower($vwap_PE_signal[$key])=='bullish')){
+                                if((strtolower($vwap_CE_signal[$key])=='bullish' && strtolower($vwap_PE_signal[$key])=='bearish')){
                                     $isPlaceOrderB = 1;
                                 }
                             }
