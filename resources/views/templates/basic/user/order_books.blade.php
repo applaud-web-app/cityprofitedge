@@ -4,7 +4,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 @endpush
 <section class="pt-100 pb-100">
-    <div class="container content-container">
+    <div class="container content-container" id="pst_hre">
         <div class="text-end">
            
         </div>
@@ -60,5 +60,20 @@
 </section>
 
 @endsection
+
+@push('script')
+<script>
+    function reloadData(){
+        $.get('{!!$fullUrl!!}',function(data){
+            $("#pst_hre").html(data);
+        });
+    }
+
+    setInterval(() => {
+        reloadData();
+    }, 30000);//call every 1/2 minute
+    
+</script>
+@endpush
 
 

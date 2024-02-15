@@ -1,45 +1,4 @@
-@extends($activeTemplate.'layouts.master')
-@section('content')
-
-@push('style')
-{{-- <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" /> --}}
-@endpush
-
-
-<section class="pt-100 pb-100">
-    <div class="container content-container">
-        <form action="" class="transparent-form mb-3">
-            <div class="row">
-                <div class="col-lg-3 form-group">
-                    <label>@lang('Symbol Name')</label>
-                    <select name="stock_name" class="form--control" id="">
-                        <option value="">Select Symbol  Name</option>
-                        @foreach ($symbolArr as $v)
-                            <option value="{{$v}}" {{$v==$stockName ? 'selected':''}}>{{$v}}</option>
-                        @endforeach
-                    </select>
-                    {{-- <input type="text" name="search" value="" class="form--control" placeholder="@lang('Stock Name')"> --}}
-                </div>
-                <div class="col-lg-3 form-group">
-                    <label>@lang('TimeFrame')</label>
-                    <select name="time_frame" class="form--control">
-                       @foreach (allTradeTimeFrames() as $item)
-                           <option value="{{$item}}" {{$item==$timeFrame ? 'selected':''}}>{{$item}}</option>
-                       @endforeach
-                    </select>
-                </div>
-                <div class="col-lg-3 form-group mt-auto">
-                    <button class="btn btn--base w-100" type="submit"><i class="las la-filter"></i> @lang('Filter')</button>
-                </div>
-                <div class="col-lg-3 col-md-3 col-6 form-group mt-auto">
-                    <a href="{{url('/user/portfolio-top-gainers')}}" class="btn btn--base w-100"><i class="las la-redo-alt"></i> @lang('Refresh')</a>
-                </div>
-            </div>
-        </form>
-
-        <div id="pst_hre">
-           
-            @if ($stockName != "")
+@if ($stockName != "")
                 @php
                     $data = \DB::connection('mysql_rm')->table($stockName)->select('*')->where(['date'=>$todayDate,'timeframe'=>$timeFrame])->get();
                 @endphp
@@ -263,24 +222,3 @@
                     </div>
                 @endforeach
             @endif
-        </div>        
-
-    </div>
-</section>
-@endsection
-
-
-@push('script')
-<script>
-    function reloadData(){
-        $.get('{!!$fullUrl!!}',function(data){
-            $("#pst_hre").html(data);
-        });
-    }
-
-    setInterval(() => {
-        reloadData();
-    }, 30000);//call every 1/2 minute
-    
-</script>
-@endpush
