@@ -11,7 +11,7 @@
   }
   .chart2 .apexcharts-legend-series .apexcharts-legend-marker[rel="1"]{
     background: transparent !important;
-    border: 2px solid rgb(0, 255, 0) !important;
+    border: 2px solid #00bf63 !important;
     border-radius: 50% !important;
   }
   .chart2 .apexcharts-legend-series .apexcharts-legend-marker[rel="2"]{
@@ -473,7 +473,7 @@
                     'time'=>$y,
                     'price'=>$CE_NETCHANGE_5[$i],
                     'text'=>$vwap_CE_signal5[$i],
-                    'color'=>'#00FF00'
+                    'color'=>'#00bf63'
                 ];
               }
             }
@@ -712,7 +712,7 @@ var options = {
         $background = "#FF0000";
         $color = "#fff";
       }else if($value['text'] == "Bullish"){
-        $background = "#00FF00";
+        $background = "#00bf63";
         $color = "#000";
       }else{
         $background = "yellow";
@@ -749,7 +749,7 @@ var options = {
         $background = "#FF0000";
         $color = "#fff";
       }else if($value['text'] == "Bullish"){
-        $background = "#00FF00";
+        $background = "#00bf63";
         $color = "#000";
       }else{
         $background = "yellow";
@@ -784,7 +784,7 @@ var options = {
         $background = "#FF0000";
         $color = "#fff";
       }else if($value['text'] == "Bullish"){
-        $background = "#00FF00";
+        $background = "#00bf63";
         $color = "#000";
       }else{
         $background = "yellow";
@@ -816,34 +816,44 @@ var options = {
 @php
     $data5 = [];
     foreach($mergedArray5 as $key => $value){
-      if($value['color'] == "#00FF00"){ // CE
+      if($value['color'] == "#00bf63"){ // CE  // Green
+        $color = "#000";
+        if($value['text'] == "Bearish"){
+          $color = "#fff";
+        }
         $data5[] = [
-          "x"=>$value['time'],
-          "borderColor"=>$value['color'],
-          "label"=>[
-            "borderColor"=>"transparent",
-            "style"=>[
-              "color"=>'#000',
-              "background"=>$value['color'],
-            ],
-            "orientation"=>"horizontal",
-            "text"=>$value['text']
-          ]
+            "x"=>$value['time'],
+            "borderColor"=>$value['color'],
+            "label"=>[
+              "borderColor"=>"transparent",
+              "style"=>[
+                "color"=>$color,
+                "background"=>$value['color'],
+              ],
+              "orientation"=>"horizontal",
+              "text"=>$value['text']
+            ]
         ];
 
         
       }else if($value['color'] == "#FF0000"){ // PE
+
+        $color = "#000";
+        if($value['text'] == "Bearish"){
+          $color = "#fff";
+        }
+
         $data5[] = [
-          "x"=>$value['time'],
-          "borderColor"=>$value['color'],
-          "label"=>[
-            "borderColor"=>"transparent",
-            "style"=>[
-              "color"=>'#fff',
-              "background"=>$value['color'],
-            ],
-            "text"=>$value['text']
-          ]
+            "x"=>$value['time'],
+            "borderColor"=>$value['color'],
+            "label"=>[
+              "borderColor"=>"transparent",
+              "style"=>[
+                "color"=>$color,
+                "background"=>$value['color'],
+              ],
+              "text"=>$value['text']
+            ]
         ];
 
       }else{
@@ -892,7 +902,7 @@ var options = {
       curve: "straight",
       width:2
     },
-    colors: ['#00FF00','#FF0000'],
+    colors: ['#00bf63','#FF0000'],
     series: [
       {
         name: {!! json_encode($CE2[0]) !!},
@@ -952,7 +962,7 @@ var options = {
       curve: "straight",
       width:2
     },
-    colors: ['#00FF00','#FF0000'],
+    colors: ['#00bf63','#FF0000'],
     series: [
       {
         name: {!! json_encode($CE3[0]) !!},
@@ -1014,7 +1024,7 @@ var options = {
       curve: "straight",
       width:2
     },
-    colors: ['#00FF00','#FF0000'],
+    colors: ['#00bf63','#FF0000'],
     series: [
       {
         name: {!! json_encode($CE4[0]) !!},
@@ -1079,7 +1089,7 @@ var options = {
       curve: "straight",
       width:2
     },
-    colors: ['#00FF00','#FF0000'],
+    colors: ['#00bf63','#FF0000'],
     series: [
       {
         name: {!! json_encode($CE5[0]) !!},
