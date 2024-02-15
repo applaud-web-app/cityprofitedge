@@ -1000,7 +1000,6 @@ class UserController extends Controller
 
     public function storeOmsConfig(Request $request){
         $txnType = '';
-
         // ce symbol
         if(!$this->checkTradingSymbolExists($request->ce_symbol_name)){
             $notify[] = ['error', 'Enter valid trading symbol'];
@@ -1010,11 +1009,9 @@ class UserController extends Controller
             $notify[] = ['error', 'Enter valid trading symbol'];
             return to_route('user.portfolio.oms-config')->withNotify($notify);
         }
-
         $ce_symbol_name = $request->ce_symbol_name;
         $pe_symbol_name = $request->pe_symbol_name;
-
-
+        $strategyName = $request->strategy_name;
         switch($request->strategy_name){
             case 'Short Straddle':
                 $txnType = 'SELL';
@@ -1038,15 +1035,33 @@ class UserController extends Controller
                 $txnType = 'SELL';
                 $ce_symbol_name = null;
             break;
+            case 'Bullish CE':
+                $txnType = 'BUY';
+                $pe_symbol_name = null;
+                $strategyName = 'Bullish';
+            break;
+            case 'Bullish PE':
+                $txnType = 'BUY';
+                $ce_symbol_name = null;
+                $strategyName = 'Bullish';
+            break;
+            case 'Bearish CE':
+                $txnType = 'SELL';
+                $pe_symbol_name = null;
+                $strategyName = 'Bearish';
+            break;
+            case 'Bearish PE':
+                $txnType = 'SELL';
+                $ce_symbol_name = null;
+                $strategyName = 'Bearish';
+            break;
         }
-
         $ce_pyramid_1 = null;
         $ce_pyramid_2 = null;
         $ce_pyramid_3 = null;
         $pe_pyramid_1 = null;
         $pe_pyramid_2 = null;
         $pe_pyramid_3 = null;
-
         // if($request->order_type=="LIMIT"){
             $ce_quantity = $request->ce_quantity > 0 ? $request->ce_quantity : 0;
             $numbertodivise = $ce_quantity;
@@ -1086,7 +1101,6 @@ class UserController extends Controller
                 $pe_pyramid_1 = $pData[0];
             }
         // }
-
         $omsObj = new OmsConfig();
         $omsObj->symbol_name = $request->symbol_name;
         $omsObj->signal_tf = $request->signal_tf;
@@ -1094,7 +1108,7 @@ class UserController extends Controller
         $omsObj->pe_symbol_name = $pe_symbol_name;
         $omsObj->broker_api_id = $request->client_name;
         $omsObj->entry_point = $request->entry_point;
-        $omsObj->strategy_name = $request->strategy_name;
+        $omsObj->strategy_name = $strategyName;
         $omsObj->product = $request->product;
         $omsObj->order_type = $request->order_type;
         $omsObj->pyramid_percent = $request->pyramid_percent;
@@ -1116,7 +1130,6 @@ class UserController extends Controller
         $omsObj->status = $request->status;
         $omsObj->cron_run_at = date("Y-m-d H:i:s",strtotime('-'.$request->pyramid_freq.' minutes'));
         $omsObj->save();
-        
         $notify[] = ['success', 'Data added Successfully...'];
         return to_route('user.portfolio.oms-config')->withNotify($notify);
     }
@@ -1478,9 +1491,7 @@ class UserController extends Controller
     }
 
     public function updateOmsConfig(Request $request){
-       
         $txnType = '';
-
         // ce symbol
         if(!$this->checkTradingSymbolExists($request->ce_symbol_name_up)){
             $notify[] = ['error', 'Enter valid trading symbol'];
@@ -1490,12 +1501,10 @@ class UserController extends Controller
             $notify[] = ['error', 'Enter valid trading symbol'];
             return to_route('user.portfolio.oms-config')->withNotify($notify);
         }
-
         $ce_symbol_name = $request->ce_symbol_name_up;
         $pe_symbol_name = $request->pe_symbol_name_up;
-
-
-        switch($request->strategy_name){
+        $strategyName = $request->strategy_name_up;
+        switch($request->strategy_name_up){
             case 'Short Straddle':
                 $txnType = 'SELL';
             break;
@@ -1518,15 +1527,33 @@ class UserController extends Controller
                 $txnType = 'SELL';
                 $ce_symbol_name = null;
             break;
+            case 'Bullish CE':
+                $txnType = 'BUY';
+                $pe_symbol_name = null;
+                $strategyName = 'Bullish';
+            break;
+            case 'Bullish PE':
+                $txnType = 'BUY';
+                $ce_symbol_name = null;
+                $strategyName = 'Bullish';
+            break;
+            case 'Bearish CE':
+                $txnType = 'SELL';
+                $pe_symbol_name = null;
+                $strategyName = 'Bearish';
+            break;
+            case 'Bearish PE':
+                $txnType = 'SELL';
+                $ce_symbol_name = null;
+                $strategyName = 'Bearish';
+            break;
         }
-
         $ce_pyramid_1 = null;
         $ce_pyramid_2 = null;
         $ce_pyramid_3 = null;
         $pe_pyramid_1 = null;
         $pe_pyramid_2 = null;
         $pe_pyramid_3 = null;
-
         // if($request->order_type=="LIMIT"){
             $ce_quantity = $request->ce_quantity_up > 0 ? $request->ce_quantity_up : 0;
             $numbertodivise = $ce_quantity;
@@ -1566,15 +1593,14 @@ class UserController extends Controller
                 $pe_pyramid_1 = $pData[0];
             }
         // }
-
         $omsObj = OmsConfig::find($request->id);
         $omsObj->symbol_name = $request->symbol_name_up;
         $omsObj->signal_tf = $request->signal_tf_up;
-        $omsObj->ce_symbol_name = $pe_symbol_name;
+        $omsObj->ce_symbol_name = $ce_symbol_name;
         $omsObj->pe_symbol_name = $pe_symbol_name;
         $omsObj->broker_api_id = $request->client_name_up;
         $omsObj->entry_point = $request->entry_point_up;
-        $omsObj->strategy_name = $request->strategy_name_up;
+        $omsObj->strategy_name = $strategyName;
         $omsObj->product = $request->product_up;
         $omsObj->order_type = $request->order_type_up;
         $omsObj->pyramid_percent = $request->pyramid_percent_up;
@@ -1594,7 +1620,6 @@ class UserController extends Controller
         $omsObj->last_time = null;
         $omsObj->cron_run_at = date("Y-m-d H:i:s",strtotime('-'.$request->pyramid_freq_up.' minutes'));
         $omsObj->save();
-        
         $notify[] = ['success', 'Data updated Successfully...'];
         return to_route('user.portfolio.oms-config')->withNotify($notify);
     }
