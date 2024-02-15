@@ -596,8 +596,9 @@ class OmsConfigCronRt{
                 foreach($timeActArrFF as $kk=>$vv){
                     $dateStr = date("Y-m-d",($dateActArrFF[$kk]/1000)).' '.$vv;
                     $strtgName = strtolower($omsData->strategy_name);
+                    // echo $dateStr.'---'.$omsData->last_time;die;
                     if(strtotime($dateStr) > strtotime($omsData->last_time)){
-                        
+                        // dd('asdf');
                         if($cntLoop==1){
                             $isPlaceOrderB = 0;
                             if(in_array($strtgName,['bullish','bearish'])){
