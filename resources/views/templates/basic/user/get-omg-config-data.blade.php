@@ -41,13 +41,13 @@
                                 $selVl = $omgData->pe_symbol_name!=null ? 'Bearish PE': 'Bearish CE';
                             }
                         @endphp
-                        <option value="{{$item}}" {{$omgData->strategy_name==$selVl ? 'selected':''}}>{{$val}}</option>    
+                        <option value="{{$item}}" {{$item==$selVl ? 'selected':''}}>{{$val}}</option>    
                     @endforeach
                 </select>
             </div>
 
 
-            <div class="col-lg-6 form-group ce_pe_symbl_1" style="display: {{in_array($omgData->strategy_name,['Short Straddle','Long Straddle','Buy CE','Sell CE']) ? 'block':'none'}};">
+            <div class="col-lg-6 form-group ce_pe_symbl_1" style="display: {{$omgData->ce_symbol_name!=null ? 'block':'none'}};">
                 <label for="ce_symbol_name_up" class="required">CE Symbol Name</label>
                 <select name="ce_symbol_name_up" class="form--control select2" id="ce_symbol_name_up">
                     @if($omgData->ce_symbol_name!=null)
@@ -60,7 +60,7 @@
                 </select>
             </div>
 
-            <div class="col-lg-6 form-group ce_pe_symbl_2" style="display: {{in_array($omgData->strategy_name,['Short Straddle','Long Straddle','Buy PE','Sell PE']) ? 'block':'none'}};">
+            <div class="col-lg-6 form-group ce_pe_symbl_2" style="display: {{$omgData->pe_symbol_name!=null ? 'block':'none'}};">
                 <label for="pe_symbol_name_up" class="required">PE Symbol Name</label>
                 <select name="pe_symbol_name_up" class="form--control select2" id="pe_symbol_name_up">
                     @if($omgData->pe_symbol_name!=null)
