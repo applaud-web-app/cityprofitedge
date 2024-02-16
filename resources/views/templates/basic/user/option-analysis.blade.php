@@ -515,7 +515,7 @@
             @php $i=1; @endphp
             @forelse($atmData5 as $val)
               @php
-                  $arrData5 = json_decode($val->data,true);    
+                  $arrData5 = json_decode($val->data,true);   
                   $CE5 = array_slice($arrData5['CE'],-1);
                   $PE5 = array_slice($arrData5['PE'],-1);
                   $Date5 = array_slice($arrData5['Date'],-40);
@@ -526,27 +526,50 @@
                   $close_PE5 = array_slice($arrData5['close_PE'],-40);
                   $OI_CE5 = array_slice($arrData5['oi_CE'],-40);
                   $OI_PE5 = array_slice($arrData5['oi_PE'],-40);
+                  
+                  
                   $CE_PRE = 0;
-                  $CE_NETCHANGE_5 = array_map(function ($key , $y) use($CE_PRE) {
-                    if ($key == 1) {
+                  // $CE_NETCHANGE_5 = array_map(function ($key , $y) use($CE_PRE) {
+                  //   if ($key == 0) {
+                  //     $CE_PRE = $y;
+                  //     return $y;
+                  //   }
+                  //   $res = $y - $CE_PRE;
+                  //   $CE_PRE = $y;
+                  //   return $res;
+                  // },array_keys($OI_CE5) ,  $OI_CE5);
+
+                  $CE_NETCHANGE_5 = [];
+                  foreach ($OI_CE5 as $key => $y) {
+                    if ($key == 0) {
                       $CE_PRE = $y;
-                      return 0;
+                      array_push($CE_NETCHANGE_5 , 0);
                     }
                     $res = $y - $CE_PRE;
                     $CE_PRE = $y;
-                    return $res;
-                  },array_keys($OI_CE5) ,  $OI_CE5);
+                    array_push($CE_NETCHANGE_5 , $res);
+                  }
 
-                  $PE_PRE = 0;
-                  $PE_NETCHANGE_5 = array_map(function ($key , $y) use($PE_PRE) {
-                    if ($key == 1) {
+                 $PE_PRE = 0;
+                 $PE_NETCHANGE_5 = [];
+                  foreach ($OI_PE5 as $key => $y) {
+                    if ($key == 0) {
                       $PE_PRE = $y;
-                      return 0;
+                      array_push($PE_NETCHANGE_5 ,0);
                     }
                     $res = $y - $PE_PRE;
                     $PE_PRE = $y;
-                    return $res;
-                  },array_keys($OI_PE5) ,  $OI_PE5);
+                    array_push($PE_NETCHANGE_5 , $res);
+                  }
+                  // $PE_NETCHANGE_5 = array_map(function ($key , $y) use($PE_PRE) {
+                  //   if ($key == 1) {
+                  //     $PE_PRE = $y;
+                  //     return 0;
+                  //   }
+                  //   $res = $y - $PE_PRE;
+                  //   $PE_PRE = $y;
+                  //   return $res;
+                  // },array_keys($OI_PE5) ,  $OI_PE5);
               @endphp
             @empty
             @endforelse 
