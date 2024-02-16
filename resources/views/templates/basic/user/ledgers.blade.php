@@ -23,21 +23,7 @@
         </form>
         <div class="row">
             <div class="col-lg-12">
-                <div class="custom--nav-tabs mb-3">
-                    <ul class="nav ">
-                        <li class="nav-item">
-                          <a class="nav-link active" aria-current="page" href="#">Watchlist</a>
-                        </li>
-                        <li class="nav-item">
-                          <a class="nav-link" href="#">Order Book</a>
-                        </li>
-                        <li class="nav-item">
-                          <a class="nav-link" href="#">Trade Position</a>
-                        </li>
-                      
-                      </ul>
-                </div>
-               
+                        
                 <div class="custom--card">
                     <div class="card-body p-0">
                         <div class="table-responsive--md">
