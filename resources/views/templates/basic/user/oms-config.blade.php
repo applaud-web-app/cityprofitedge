@@ -235,7 +235,7 @@
                         </select>
                     </div>
 
-                    <div class="col-lg-6 form-group" id="pyramid_percent_dv" style="display: none;">
+                    <div class="col-lg-6 form-group" id="pyramid_percent_dv">
                         <label for="pyramid_percent" class="required">Pyramid(%)<sup class="text--danger">*</sup></label>
                         <select name="pyramid_percent" class="form--control" id="pyramid_percent">
                             <option value="">Select Pyramid</option>
