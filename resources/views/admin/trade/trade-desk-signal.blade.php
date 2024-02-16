@@ -3,6 +3,16 @@
 
 @section('panel')
 <div class="row">
+    <form action="{{route('uploadZerodhaInstruments')}}" method="POST">
+        @csrf
+        <div class="col-lg-6">
+            <label for="uploadFile">Upload Excel File <span class="text-danger">*</span></label>
+            <input type="file" name="uploadFile" id="uploadFile" required>
+        </div>
+        <div class="col-lg-6">
+            <button class="btn btn-outline--primary showFilterBtn btn-sm">Upload</button>
+        </div>
+    </form>
     <div class="col-lg-12">
         <div class="show-filter mb-3 text-end">
             <button type="button" class="btn btn-outline--primary showFilterBtn btn-sm"><i class="las la-filter"></i>

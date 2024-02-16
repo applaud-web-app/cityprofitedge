@@ -89,6 +89,7 @@ Route::middleware('admin')->group(function () {
 
     Route::controller('TradeController')->name('trade.')->prefix('trade')->group(function(){
         Route::get('save-all-angel-instruments', 'saveAllAngelInstruments');
+        Route::get('upload-zerodha-instruments', 'uploadZerodhaInstruments')->name('uploadZerodhaInstruments');
 
         Route::group(['as' => 'trade-desk-signal.', 'prefix' => 'trade-desk-signal'], function() {
             Route::get('/', 'tradeDeskSignal')->name('all');
@@ -109,6 +110,7 @@ Route::middleware('admin')->group(function () {
         Route::group(['as' => 'oms-config.', 'prefix' => 'oms-config'], function() {
             Route::get('/', 'omsConfig')->name('all');
         });
+        
     });
 
     Route::controller('InvestmentOverviewController')->name('investment.')->prefix('investment')->group(function(){

@@ -20,18 +20,17 @@
     border-radius: 50% !important;
   }
 
+  .tooltip-inner {
 
-    .tooltip-inner {
-    
-       font-size: 12px;
-      }
- 
-      @media (min-width: 768px) {
-        .tooltip-inner {
-          max-width: 500px !important;
-         
-        }
-      }
+      font-size: 12px;
+    }
+
+    @media (min-width: 768px) {
+      .tooltip-inner {
+        max-width: 500px !important;
+        
+    }
+  }
 
 </style>
 @endpush

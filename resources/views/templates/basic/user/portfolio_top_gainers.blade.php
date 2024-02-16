@@ -259,7 +259,6 @@
                 </div>
             @endforeach
         @endif
-
     </div>
 </section>
 @endsection
