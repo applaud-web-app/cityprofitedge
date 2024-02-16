@@ -407,7 +407,7 @@ class OmsConfigCron{
                 $bookOBj->product = '-';
                 $bookOBj->price = isset($apiData['price']) ? $apiData['price'] : '-';;
                 $bookOBj->quantity = '-';
-                $bookOBj->status_message = "order failed-".$response;
+                $bookOBj->status_message = "order failed-".$response.'-'.json_encode($apiData);
                 $bookOBj->order_datetime = date("Y-m-d H:i:s");
                 $bookOBj->user_id = $broker->user_id;
                 $bookOBj->save();
@@ -467,7 +467,7 @@ class OmsConfigCron{
                     $bookOBj->product = '-';
                     $bookOBj->price = isset($apiData['price']) ? $apiData['price'] : '-';;
                     $bookOBj->quantity = '-';
-                    $bookOBj->status_message = "order failed-".$response['message'];
+                    $bookOBj->status_message = "order failed-".$response['message'].'-'.json_encode($apiData);
                     $bookOBj->order_datetime = date("Y-m-d H:i:s");
                     $bookOBj->user_id = $broker->user_id;
                     $bookOBj->save();
