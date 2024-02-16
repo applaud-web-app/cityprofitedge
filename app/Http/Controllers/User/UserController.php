@@ -550,16 +550,20 @@ class UserController extends Controller
 
     public function portfolioTopGainers(Request $request)
     {
-        $pageTitle = 'Trade Desk Signal';
 
-        // TODO:: modify commented code to implement searchable and filterable.
-        // $portfolioTopGainers = PortfolioTopGainer::searchable(['stock_name'])/* ->filter(['trx_type', 'remark']) */->orderBy('id', 'desc')->paginate(getPaginate());
+        $fullUrl =  $request->fullUrl();
+        $pageTitle = 'Trade Desk Signal';
         $portfolioTopGainers = [];
-        $symbolArr = allTradeSymbols();
+       
         $todayDate = date("Y-m-d");
         $stockName = $request->stock_name;
         $timeFrame = $request->time_frame ? : 5;
-        return view($this->activeTemplate . 'user.portfolio_top_gainers', compact('pageTitle', 'portfolioTopGainers','symbolArr','todayDate','timeFrame','stockName'));
+        $symbolArr = allTradeSymbols();
+        if($request->ajax()){
+            return view($this->activeTemplate . 'user.portfolio_top_gainers_ajax', compact('pageTitle', 'portfolioTopGainers','todayDate','timeFrame','stockName','fullUrl','symbolArr'));
+        }
+        
+        return view($this->activeTemplate . 'user.portfolio_top_gainers', compact('pageTitle', 'portfolioTopGainers','symbolArr','todayDate','timeFrame','stockName','fullUrl'));
     }
 
     public function brokerDetails(){
@@ -568,9 +572,15 @@ class UserController extends Controller
         return view($this->activeTemplate . 'user.broker_details',$data);
     }
 
-    public function orderBooks(){
+    public function orderBooks(Request $request){
+        $fullUrl =  $request->fullUrl();
         $data['pageTitle'] = 'Order Boook';
         $data['order_data'] = OrderBook::select('*')->where('user_id',auth()->user()->id)->paginate(50);
+        $data['fullUrl'] = $fullUrl;
+        if($request->ajax()){
+            
+            return view($this->activeTemplate . 'user.order_books_ajax',$data);
+        }
         return view($this->activeTemplate . 'user.order_books',$data);
     }
 
