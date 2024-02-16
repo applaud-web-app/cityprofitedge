@@ -38,6 +38,78 @@
     <div class="container-fluid">
         <div class="row">
             {{-- First Graph Start --}}
+            @php
+            // dd($data1);
+                $atmData1 = [];
+                foreach($data1 as $vvl){
+                    if(isset($vvl->atm) && $vvl->atm == "ATM"){
+                        $atmData1[] = $vvl;
+                    }
+                }
+            @endphp
+            @php $i=1; @endphp
+            @forelse($atmData1 as $val)
+              @php
+                  $arrData1 = json_decode($val->data,true);   
+                  // dd($arrData1['ATM']);
+                  $CE1 = array_slice($arrData1['CE'],-20);
+                  $PE1 = array_slice($arrData1['PE'],-20);
+                  $Date1 = array_slice($arrData1['Date'],-40);
+                  $time1 = array_slice($arrData1['time'],-40);
+                  $CE_consolidated1 = array_slice($arrData1['CE_consolidated'],-40);
+                  $PE_consolidated1 = array_slice($arrData1['PE_consolidated'],-40);
+                  $close_CE1 = array_slice($arrData1['close_CE'],-40);
+                  $close_PE1 = array_slice($arrData1['close_PE'],-40);
+              @endphp
+            @empty
+            @endforelse  
+
+            @php
+              $chart1Data = [];
+              foreach ($CE1 as $k => $y) {
+                array_push($chart1Data,$y);
+                array_push($chart1Data,$PE1[$k]);
+              }               
+            @endphp
+
+
+
+            @php
+              $time1 = array_map(function ($k , $y) use($Date1){
+                  return date("d-M-Y",($Date1[$k]/1000)).', '.date("g:i a", strtotime($y));
+              },array_keys($Date1) , $time1);
+
+              $ceArray1 = array();
+              $newArr11 = [];
+
+              foreach($time1 as $i=>$y){
+                if(!in_array($CE_consolidated1[$i],$ceArray1)){
+                  $ceArray1 = [];
+                  array_push($ceArray1,$CE_consolidated1[$i]);
+                  $newArr11[] = [
+                      'time'=>$y,
+                      'price'=>$close_CE1[$i],
+                      'text'=>$CE_consolidated1[$i],
+                  ];
+                }
+              }
+
+              $PeArray1 = array();
+              $newArr21 = [];
+
+              foreach($time1 as $i=>$y){
+                if(!in_array($PE_consolidated1[$i],$PeArray1)){
+                  $PeArray1 = [];
+                  array_push($PeArray1,$PE_consolidated1[$i]);
+                  $newArr21[] = [
+                      'time'=>$y,
+                      'price'=>$close_PE1[$i],
+                      'text'=>$PE_consolidated1[$i],
+                  ];
+                }
+              }
+              $mergedArray2 = array_merge($newArr11, $newArr21);
+            @endphp
             <div class="col-lg-12 mb-3">
                 <div class="custom--card">
                     <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
@@ -326,6 +398,7 @@
             @forelse($atmData4 as $val)
               @php
                   $arrData4 = json_decode($val->data,true);    
+                  // dd($arrData4);
                   $CE4 = array_slice($arrData4['CE'],-1);
                   $PE4 = array_slice($arrData4['PE'],-1);
                   $Date4 = array_slice($arrData4['Date'],-40);
@@ -334,8 +407,8 @@
                   $vwap_PE_signal4 = array_slice($arrData4['vwap_PE_signal'],-40);
                   $close_CE4 = array_slice($arrData4['close_CE'],-40);
                   $close_PE4 = array_slice($arrData4['close_PE'],-40);
-                  $OI_CE4 = array_slice([1493500,1480500,1539650,1623700,1667550,1693700,1722450,1718400,1741650,1749000,1756600,1748350,1766850,1777050,1797450,1840500,1908550,1959650,1998650,2026550,2018200,2024050,2008450,2008300,2011900,2005400,2025950,1996100,2010800,2052250,2084850,2102350,2205950,2209950,2271500,2399400,2592850,2803900,2928600,3070650],-40);
-                  $OI_PE4 = array_slice([2266450,2293150,2329300,2399700,2462350,2473700,2500550,2508800,2513400,2466700,2447550,2439100,2427600,2415600,2429100,2389700,2407800,2362400,2413650,2450800,2593600,2632300,2634600,2660050,2718550,2781050,2765050,2823400,2794550,2813550,2803150,2826700,2846400,2907450,2913550,2953050,3024900,3292200,3468450,3586400,3679100],-40);
+                  $OI_CE4 = array_slice($arrData4['oi_CE'],-40);
+                  $OI_PE4 = array_slice($arrData4['oi_PE'],-40);
               @endphp
             @empty
             @endforelse 
@@ -451,8 +524,29 @@
                   $vwap_PE_signal5 = array_slice($arrData5['vwap_PE_signal'],-40);
                   $close_CE5 = array_slice($arrData5['close_CE'],-40);
                   $close_PE5 = array_slice($arrData5['close_PE'],-40);
-                  $CE_NETCHANGE_5 = array_slice([22450, 28900, 21500, -5000, -1700, 5250, 17300, 18750, 1300, -3450, 8550, 0, -4950, 16100, 2700, -14650, 7300, 27650, 13900, 5500, -1650, -11500, -950, 350, 4450, -900, -11700, -9050, 9700, -3750, 11150, 9750, -550, -23750, -6900, -4250, -32750, -3500, 16100, 11050, -1150, 17850, 21950, -1800, 8650, 43700, 3250, 2250, 6150, -9550, -500, 1800, 4950, -6450, -1700, 2350, -2200, 10300, 6600, 7700, 3100],-40);
-                  $PE_NETCHANGE_5 = array_slice([11600, 9400, 3850, 29650, 58000, 16600, 25250, 14450, -7550, 44200, 58200, -3200, 43900, 27950, 33350, 105300, 112950, 86650, 18500, 119950, 92700, 17000, 48600, 10600, 58150, 48550, 23600, 10500, 4300, 28900, 62250, 18050, 4700, -75350, -6550, 48150, 39600, 93000, 24000, 34350, 79600, -6850, 12500, 56600, 26700],-40);;
+                  $OI_CE5 = array_slice($arrData5['oi_CE'],-40);
+                  $OI_PE5 = array_slice($arrData5['oi_PE'],-40);
+                  $CE_PRE = 0;
+                  $CE_NETCHANGE_5 = array_map(function ($key , $y) use($CE_PRE) {
+                    if ($key == 1) {
+                      $CE_PRE = $y;
+                      return 0;
+                    }
+                    $res = $y - $CE_PRE;
+                    $CE_PRE = $y;
+                    return $res;
+                  },array_keys($OI_CE5) ,  $OI_CE5);
+
+                  $PE_PRE = 0;
+                  $PE_NETCHANGE_5 = array_map(function ($key , $y) use($PE_PRE) {
+                    if ($key == 1) {
+                      $PE_PRE = $y;
+                      return 0;
+                    }
+                    $res = $y - $PE_PRE;
+                    $PE_PRE = $y;
+                    return $res;
+                  },array_keys($OI_PE5) ,  $OI_PE5);
               @endphp
             @empty
             @endforelse 
@@ -561,13 +655,13 @@
 var options = {
     
     series: [{
-    name: 'Net Profit',
+    name: 'ATM-1',
     data: [44, 55, 57, 56, 61, 58, 63, 60, 66,85,45,25]
   }, {
-    name: 'Revenue',
+    name: 'ATM',
     data: [76, 85, 101, 98, 87, 105, 91, 114,58,98,15, 94]
   }, {
-    name: 'Free Cash Flow',
+    name: 'ATM+1',
     data: [35, 41, 36, 26, 45, 48, 52, 53,36,56,92, 41]
   }],
     chart: {
@@ -596,7 +690,7 @@ var options = {
   },
   xaxis: {
     type: "category",
-    categories: ['1','2','3','4'],
+    categories: {!! json_encode($chart1Data) !!},
   },
   yaxis: {
     title: {
@@ -1116,5 +1210,4 @@ var options = {
 
 
 @endpush
-
 

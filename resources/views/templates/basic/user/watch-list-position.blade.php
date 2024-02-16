@@ -14,14 +14,20 @@
         <div class="container content-container">
             <div class="row mb-5">
                 <div class="col-lg-12">
+                    <div class="custom--nav-tabs mb-3">
+                        <ul class="nav ">
+                            <li class="nav-item">
+                                <a class="nav-link" aria-current="page" href="{{route('user.watchList')}}">Watchlist</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link " href="{{route('user.watchListOrder')}}">Order Book</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" href="{{route('user.watchListPosition')}}">Trade Position</a>
+                            </li>
+                        </ul>
+                    </div>
                     <div class="custom--card card">
-                        <div class="card-header">
-                            <div class="btn-group col-12">
-                                <a href="{{route('user.watchList')}}" class="btn btn-light text-danger">Watch List</a>
-                                <a href="{{route('user.watchListOrder')}}" class="btn btn-light text-danger mx-3">Order Book</a>
-                                <a href="{{route('user.watchListPosition')}}" class="btn btn-primary">Trade Position</a>
-                            </div>
-                        </div>
                         <div class="card-body p-0">
                             <div class="table-responsive--md table-responsive">
                                 <table class="table custom--table text-nowrap">

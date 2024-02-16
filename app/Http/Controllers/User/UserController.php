@@ -21,7 +21,7 @@ use App\Models\SignalHistory;
 use App\Models\StockPortfolio;
 use App\Models\ThematicPortfolio;
 use App\Models\BrokerApi;
-use App\Models\WishList;
+use App\Models\WatchList;
 use App\Models\Transaction;
 use App\Models\AngleOhlcData;
 use App\Models\AngleHistoricalApi;
@@ -1215,15 +1215,15 @@ class UserController extends Controller
         // $Symdata = \DB::connection('mysql_rm')->table($symbol)->select('*')->where(['date'=>
 
         // For Chart 1
-        $data1 = \DB::connection('mysql_rm')->table($table1)->select('*')->where('timeframe',$timeFrame1)->get();
+        $data1 = \DB::connection('mysql_rm')->table($table1)->select('*')->where('timeframe',$timeFrame1)->where('date',$todayDate)->get();
         // For Chart 2
-        $data2 = \DB::connection('mysql_rm')->table($table2)->select('*')->where('timeframe',$timeFrame2)->get();
+        $data2 = \DB::connection('mysql_rm')->table($table2)->select('*')->where('timeframe',$timeFrame2)->where('date',$todayDate)->get();
         // For Chart 3
-        $data3 = \DB::connection('mysql_rm')->table($table3)->select('*')->where('timeframe',$timeFrame3)->get();
+        $data3 = \DB::connection('mysql_rm')->table($table3)->select('*')->where('timeframe',$timeFrame3)->where('date',$todayDate)->get();
         // For Chart 4
-        $data4 = \DB::connection('mysql_rm')->table($table4)->select('*')->where('timeframe',$timeFrame4)->get();
+        $data4 = \DB::connection('mysql_rm')->table($table4)->select('*')->where('timeframe',$timeFrame4)->where('date',$todayDate)->get();
         // For Chart 5
-        $data5 = \DB::connection('mysql_rm')->table($table5)->select('*')->where('timeframe',$timeFrame5)->get();
+        $data5 = \DB::connection('mysql_rm')->table($table5)->select('*')->where('timeframe',$timeFrame5)->where('date',$todayDate)->get();
 
         return view($this->activeTemplate . 'user.option-analysis', compact('pageTitle','symbolArr','data1','data2','data3','data4','data5','Atmtype1','timeFrame1','table1','Atmtype2','timeFrame2','table2','Atmtype3','timeFrame3','table3','Atmtype4','timeFrame4','table4','Atmtype5','timeFrame5','table5'));
     }
@@ -1732,7 +1732,7 @@ class UserController extends Controller
         $orderId = "WL".strtotime('d-m-y h:i:s').rand(100,10000000).rand(100,10000000);
         $userId = \Auth::id();
         $status = "executed";
-        $order = new WishList;
+        $order = new WatchList;
         $order->order_id = $orderId;
         $order->user_id =  $userId;
         $order->avg_price = $request->price;
@@ -1757,14 +1757,14 @@ class UserController extends Controller
     public function watchListOrder(){
         $pageTitle = "Watch List Order";
         $userId = \Auth::id();
-        $wishlistorder = WishList::where('user_id',$userId)->orderBy('id','DESC')->get();
+        $wishlistorder = WatchList::where('user_id',$userId)->orderBy('id','DESC')->get();
         return view($this->activeTemplate . 'user.watch-list-order',compact('pageTitle','wishlistorder'));
     }
 
     public function watchListPosition(){
         $pageTitle = "Watch List Position";
         $userId = \Auth::id();
-        $wishlistorder = WishList::where('user_id',$userId)->orderBy('id','DESC')->get();
+        $wishlistorder = WatchList::where('user_id',$userId)->orderBy('id','DESC')->get();
 
         $MCXpayload = [];
         $NFOpayload = [];
