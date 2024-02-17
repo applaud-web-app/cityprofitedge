@@ -38,79 +38,35 @@
     <div class="container-fluid">
         <div class="row">
             {{-- First Graph Start --}}
-            @php
-            // dd($data1);
-                $atmData1 = [];
-                foreach($data1 as $vvl){
-                    if(isset($vvl->atm) && $vvl->atm == "ATM"){
-                        $atmData1[] = $vvl;
-                    }
+            {{-- @php
+              $atmData1 = [];
+              foreach($data1 as $vvl){
+                if(isset($vvl->atm) && $vvl->atm==$Atmtype1){
+                    $atmData1[] = $vvl;
                 }
+              }
             @endphp
             @php $i=1; @endphp
             @forelse($atmData1 as $val)
               @php
                   $arrData1 = json_decode($val->data,true);   
-                  // dd($arrData1['ATM']);
-                  $CE1 = array_slice($arrData1['CE'],-20);
-                  $PE1 = array_slice($arrData1['PE'],-20);
+                  $CE1 = array_slice($arrData1['CE'],-1);
+                  $PE1 = array_slice($arrData1['PE'],-1);
                   $Date1 = array_slice($arrData1['Date'],-40);
                   $time1 = array_slice($arrData1['time'],-40);
                   $CE_consolidated1 = array_slice($arrData1['CE_consolidated'],-40);
                   $PE_consolidated1 = array_slice($arrData1['PE_consolidated'],-40);
                   $close_CE1 = array_slice($arrData1['close_CE'],-40);
-                  $close_PE1 = array_slice($arrData1['close_PE'],-40);
+                  $close_PE1 = array_slice($arrData1['close_PE'],-40); 
               @endphp
             @empty
             @endforelse  
-
-            @php
-              $chart1Data = [];
-              foreach ($CE1 as $k => $y) {
-                array_push($chart1Data,$y);
-                array_push($chart1Data,$PE1[$k]);
-              }               
-            @endphp
-
-
-
             @php
               $time1 = array_map(function ($k , $y) use($Date1){
                   return date("d-M-Y",($Date1[$k]/1000)).', '.date("g:i a", strtotime($y));
               },array_keys($Date1) , $time1);
-
-              $ceArray1 = array();
-              $newArr11 = [];
-
-              foreach($time1 as $i=>$y){
-                if(!in_array($CE_consolidated1[$i],$ceArray1)){
-                  $ceArray1 = [];
-                  array_push($ceArray1,$CE_consolidated1[$i]);
-                  $newArr11[] = [
-                      'time'=>$y,
-                      'price'=>$close_CE1[$i],
-                      'text'=>$CE_consolidated1[$i],
-                  ];
-                }
-              }
-
-              $PeArray1 = array();
-              $newArr21 = [];
-
-              foreach($time1 as $i=>$y){
-                if(!in_array($PE_consolidated1[$i],$PeArray1)){
-                  $PeArray1 = [];
-                  array_push($PeArray1,$PE_consolidated1[$i]);
-                  $newArr21[] = [
-                      'time'=>$y,
-                      'price'=>$close_PE1[$i],
-                      'text'=>$PE_consolidated1[$i],
-                  ];
-                }
-              }
-              $mergedArray2 = array_merge($newArr11, $newArr21);
-            @endphp
-            <div class="col-lg-12 mb-3">
+            @endphp --}}
+            {{-- <div class="col-lg-12 mb-3">
                 <div class="custom--card">
                     <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
                         <h5 class="card-title">@lang('Option Analysis 1')</h5>
@@ -157,7 +113,7 @@
                         <div id="apex-analysis-chart" style="width: 100%;"></div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
             {{-- First Graph Start --}}
             {{-- Second Graph Start --}}
             @php
@@ -667,76 +623,74 @@
         </div>
     </div>
 </section>
-
 @endsection
 @push('script')
 
 <script src="{{ asset('assets/admin/js/vendor/apexcharts.min.js') }}"></script>
 <script src="{{ asset('assets/admin/js/vendor/chart.js.2.8.0.js') }}"></script>
-
 <script>
-var options = {
+// var options = {
     
-    series: [{
-    name: 'ATM-1',
-    data: [44, 55, 57, 56, 61, 58, 63, 60, 66,85,45,25]
-  }, {
-    name: 'ATM',
-    data: [76, 85, 101, 98, 87, 105, 91, 114,58,98,15, 94]
-  }, {
-    name: 'ATM+1',
-    data: [35, 41, 36, 26, 45, 48, 52, 53,36,56,92, 41]
-  }],
-    chart: {
-    type: 'bar',
-    foreColor: '#e4e4e4',
-    height: 400,
-    toolbar: {
-        show: false,
+//     series: [{
+//     name: 'ATM-1',
+//     data: []
+//   }, {
+//     name: 'ATM',
+//     data: []
+//   }, {
+//     name: 'ATM+1',
+//     data: []
+//   }],
+//     chart: {
+//     type: 'bar',
+//     foreColor: '#e4e4e4',
+//     height: 400,
+//     toolbar: {
+//         show: false,
        
-    }
-  },
-  plotOptions: {
-    bar: {
-      horizontal: false,
-      columnWidth: '40%',
-      endingShape: 'rounded'
-    },
-  },
-  dataLabels: {
-    enabled: false
-  },
-  stroke: {
-    show: true,
-    width: 2,
-    colors: ['transparent']
-  },
-  xaxis: {
-    type: "category",
-    categories: {!! json_encode($chart1Data) !!},
-  },
-  yaxis: {
-    title: {
-      text: '$ (thousands)'
-    }
-  },
-  fill: {
-    opacity: 1
-  },
-  tooltip: {
-    enabled: true,
-    theme: 'dark',
+//     }
+//   },
+//   plotOptions: {
+//     bar: {
+//       horizontal: false,
+//       columnWidth: '40%',
+//       endingShape: 'rounded'
+//     },
+//   },
+//   dataLabels: {
+//     enabled: false
+//   },
+//   stroke: {
+//     show: true,
+//     width: 2,
+//     colors: ['transparent']
+//   },
+//   xaxis: {
+//     type: "category",
+//     categories: [],
+//   },
+//   yaxis: {
+//     title: {
+//       text: '$ (thousands)'
+//     }
+//   },
+//   fill: {
+//     opacity: 1
+//   },
+//   tooltip: {
+//     enabled: true,
+//     theme: 'dark',
           
-    y: {
-      formatter: function (val) {
-        return "$ " + val + " thousands"
-      }
-    }
-  }
-  };
+//     y: {
+//       formatter: function (val) {
+//         return "$ " + val + " thousands"
+//       }
+//     }
+//   }
+//   };
 
-  var chart = new ApexCharts(document.querySelector("#apex-analysis-chart"), options);
-  chart.render();
+//   var chart = new ApexCharts(document.querySelector("#apex-analysis-chart"), options);
+//   chart.render();
 
 //   apex charts 2
 

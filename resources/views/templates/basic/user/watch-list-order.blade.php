@@ -51,7 +51,7 @@
                                                     <td>{{$item->type}}</td>
                                                     <td>{{$item->symbol}}</td>
                                                     <td>{{$item->quantity}}</td>
-                                                    <td>{{$item->avg_price}}</td>
+                                                    <td>{{$item->buy_price}}</td>
                                                     <td>{{ucfirst($item->status)}}</td>
                                                     <td>{{($item->created_at)->format('d-M, Y H:m:s')}}</td>
                                                 </tr>

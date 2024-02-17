@@ -25,6 +25,7 @@ use App\Models\WatchList;
 use App\Models\Transaction;
 use App\Models\AngleOhlcData;
 use App\Models\AngleHistoricalApi;
+use App\Models\WatchTradePosition;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\OmsConfig;
@@ -1234,15 +1235,15 @@ class UserController extends Controller
         // $Symdata = \DB::connection('mysql_rm')->table($symbol)->select('*')->where(['date'=>
 
         // For Chart 1
-        $data1 = \DB::connection('mysql_rm')->table($table1)->select('*')->where('timeframe',$timeFrame1)->where('date',$todayDate)->get();
+        $data1 = \DB::connection('mysql_rm')->table($table1)->select('*')->where('timeframe',$timeFrame1)->get();
         // For Chart 2
-        $data2 = \DB::connection('mysql_rm')->table($table2)->select('*')->where('timeframe',$timeFrame2)->where('date',$todayDate)->get();
+        $data2 = \DB::connection('mysql_rm')->table($table2)->select('*')->where('timeframe',$timeFrame2)->get();
         // For Chart 3
-        $data3 = \DB::connection('mysql_rm')->table($table3)->select('*')->where('timeframe',$timeFrame3)->where('date',$todayDate)->get();
+        $data3 = \DB::connection('mysql_rm')->table($table3)->select('*')->where('timeframe',$timeFrame3)->get();
         // For Chart 4
-        $data4 = \DB::connection('mysql_rm')->table($table4)->select('*')->where('timeframe',$timeFrame4)->where('date',$todayDate)->get();
+        $data4 = \DB::connection('mysql_rm')->table($table4)->select('*')->where('timeframe',$timeFrame4)->get();
         // For Chart 5
-        $data5 = \DB::connection('mysql_rm')->table($table5)->select('*')->where('timeframe',$timeFrame5)->where('date',$todayDate)->get();
+        $data5 = \DB::connection('mysql_rm')->table($table5)->select('*')->where('timeframe',$timeFrame5)->get();
 
         return view($this->activeTemplate . 'user.option-analysis', compact('pageTitle','symbolArr','data1','data2','data3','data4','data5','Atmtype1','timeFrame1','table1','Atmtype2','timeFrame2','table2','Atmtype3','timeFrame3','table3','Atmtype4','timeFrame4','table4','Atmtype5','timeFrame5','table5'));
     }
@@ -1748,13 +1749,49 @@ class UserController extends Controller
             'order_type'=>'required'
         ]);
 
-        $orderId = "WL".strtotime('d-m-y h:i:s').rand(100,10000000).rand(100,10000000);
         $userId = \Auth::id();
+        $makeAvgPrice = WatchList::WHERE('status','executed')->Where('token',$request->token)->WHERE('user_id',$userId)->get();
+        if(count($makeAvgPrice)){
+            $totalPrice = 0;
+            $totalQuantity = 0;
+            foreach ($makeAvgPrice as $key => $value) {
+
+                if($value->order_type == "BUY"){
+                    $totalPrice += ($value->quantity * $value->buy_price);
+                    $totalQuantity += $value->quantity;
+                }else{
+                    $totalPrice -= ($value->quantity * $value->buy_price);
+                    $totalQuantity -= $value->quantity;
+                    // ($this->buyQty * $this->buyPrice) - ($this->sellQty * $this->sellPrice)
+                }
+            }
+            
+            if ($request->order_type == "BUY") {
+                $totalPrice += ($request->quantity * $request->price);
+                $totalQuantity += $request->quantity;
+            }else{
+                $totalPrice -= ($request->quantity * $request->price);
+                $totalQuantity -= $request->quantity;
+            }
+            $avgPrice = round($totalPrice / $totalQuantity,2);
+        }else{
+            if ($request->order_type == "BUY") {
+                $totalPrice = ($request->quantity * $request->price);
+                $totalQuantity = $request->quantity;
+            }else{
+                $totalPrice = ($request->quantity * $request->price);
+                $totalQuantity = $request->quantity;
+            }
+           
+            $avgPrice = $totalPrice / $totalQuantity;
+        }
+        
+        $orderId = "WL".strtotime('d-m-y h:i:s').rand(100,10000000).rand(100,10000000);
         $status = "executed";
         $order = new WatchList;
         $order->order_id = $orderId;
         $order->user_id =  $userId;
-        $order->avg_price = $request->price;
+        $order->buy_price = $request->price;
         $order->exchange = $request->exchange;
         $order->quantity = $request->quantity;
         $order->token = $request->token;
@@ -1768,6 +1805,27 @@ class UserController extends Controller
         $order->status = $status;
         $order->save();
 
+        // Watch Trade Position
+        if($request->type == "executed"){
+            $watchTradePosition = WatchTradePosition::Where('token',$request->token)->WHERE('user_id',$userId)->first();
+            if($watchTradePosition != NULL){
+                $watchTradePosition->quantity = $totalQuantity;
+                $watchTradePosition->buy_price = $totalPrice;
+                $watchTradePosition->avg_price = $avgPrice;
+                $watchTradePosition->save();
+            }else{
+                $tradePostion = new WatchTradePosition;
+                $tradePostion->user_id = $userId;
+                $tradePostion->token = $request->token;
+                $tradePostion->symbol = $request->symbol;
+                $tradePostion->exchange = $request->exchange;
+                $tradePostion->quantity = $request->quantity;
+                $tradePostion->buy_price = $request->price;
+                $tradePostion->avg_price = $avgPrice;
+                $tradePostion->save();
+            }
+        }
+
         $notify[] = ['success', 'Order Placed Successfully'];
         return back()->withNotify($notify);
 
@@ -1776,14 +1834,14 @@ class UserController extends Controller
     public function watchListOrder(){
         $pageTitle = "Watch List Order";
         $userId = \Auth::id();
-        $wishlistorder = WatchList::where('user_id',$userId)->orderBy('id','DESC')->get();
+        $wishlistorder = WatchList::where('user_id',$userId)->WHERE('status','!=','executed')->orderBy('id','DESC')->get();
         return view($this->activeTemplate . 'user.watch-list-order',compact('pageTitle','wishlistorder'));
     }
 
     public function watchListPosition(){
         $pageTitle = "Watch List Position";
         $userId = \Auth::id();
-        $wishlistorder = WatchList::where('user_id',$userId)->orderBy('id','DESC')->get();
+        $wishlistorder = WatchTradePosition::where('user_id',$userId)->orderBy('id','DESC')->get();
 
         $MCXpayload = [];
         $NFOpayload = [];
