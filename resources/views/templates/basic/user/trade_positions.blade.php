@@ -31,28 +31,59 @@
                                 <thead>
                                     <tr>
                                         <th>Product Type</th>
-                                        <th>Entry time</th>
-                                        <th>TXN Type</th>
-                                        <th>Symbol Name</th>
-                                        <th>Qty</th>
-                                        <th>Entry Price</th>
-                                        <th>Exit Price</th>
-                                        <th>SL Price</th>
-                                        <th>Profit&Loss</th>                                        
+                                        <th>cfbuyqty</th>
+                                        <th>cfsellqty</th>
+                                        <th>buyavgprice</th>
+                                        <th>sellavgprice</th>
+                                        <th>avgnetprice</th>
+                                        <th>netvalue</th>
+                                        <th>netqty</th>
+                                        <th>totalbuyvalue</th>                                        
+                                        <th>totalsellvalue</th>                                        
+                                        <th>cfbuyavgprice</th>                                        
+                                        <th>cfsellavgprice</th>                                        
+                                        <th>totalbuyavgprice</th>                                        
+                                        <th>totalsellavgprice</th>                                        
+                                        <th>netprice</th>                                        
+                                        <th>buyqty</th>                                        
+                                        <th>sellqty</th>                                        
+                                        <th>buyamount</th>                                        
+                                        <th>sellamount</th>                                        
+                                        <th>pnl</th>                                        
+                                        <th>realised</th>                                        
+                                        <th>unrealised</th>                                        
+                                        <th>ltp</th>                                        
+                                        <th>close</th>                                        
                                     </tr>
                                 </thead>
                                 <tbody>
-                                @forelse ($trade_book_data as $item)
+                                @forelse ($trade_book_data as $vl)
                                     <tr>
-                                        <td>{{$item->product_type}}</td>
-                                        <td>{{$item->entry_time}}</td>
-                                        <td>{{$item->txn_type}}</td>
-                                        <td>{{$item->symbol_name}}</td>
-                                        <td>{{$item->qty}}</td>
-                                        <td>{{$item->entry_price}}</td>
-                                        <td>{{$item->exit_price}}</td>
-                                        <td>{{$item->sl_price}}</td>
-                                        <td>{{$item->profile_loss}}</td>
+                                        <td>{{$vl->producttype}}</td>
+                                        <td>{{$vl->cfbuyqty}}</td>
+                                        <td>{{$vl->cfsellqty}}</td>
+                                        <td>{{$vl->buyavgprice}}</td>
+                                        <td>{{$vl->sellavgprice}}</td>
+                                        <td>{{$vl->avgnetprice}}</td>
+                                        <td>{{$vl->netvalue}}</td>
+                                        <td>{{$vl->netqty}}</td>
+                                        <td>{{$vl->totalbuyvalue}}</td>
+                                        <td>{{$vl->totalsellvalue}}</td>
+                                        <td>{{$vl->cfbuyavgprice}}</td>
+                                        <td>{{$vl->cfsellavgprice}}</td>
+                                        <td>{{$vl->totalbuyavgprice}}</td>
+                                        <td>{{$vl->totalsellavgprice}}</td>
+                                        <td>{{$vl->netprice}}</td>
+                                        <td>{{$vl->buyqty}}</td>
+                                        <td>{{$vl->sellqty}}</td>
+                                        <td>{{$vl->buyamount}}</td>
+                                        <td>{{$vl->sellamount}}</td>
+                                        <td>{{$vl->pnl}}</td>
+                                        <td>{{$vl->realised}}</td>
+                                        <td>{{$vl->unrealised}}</td>
+                                        <td>{{$vl->ltp}}</td>
+                                        <td>{{$vl->close}}</td>
+                                        
                                     </tr>
                                 @empty
                                     <tr>

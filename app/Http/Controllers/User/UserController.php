@@ -592,6 +592,7 @@ class UserController extends Controller
         $broker_data = BrokerApi::where('user_id',auth()->user()->id)->get();
         $data['broker_data'] = $broker_data;
         $data['trade_book_data'] = [];
+        $brokerId = 0;
         if($broker_data){
             $brokerId = !empty($request->broker_name) ? $request->broker_name : $broker_data[0]->id;
             $userData = null;
@@ -602,43 +603,43 @@ class UserController extends Controller
             }
             if(!is_null($userData)){
                 if($userData->client_type=='Zerodha'){
-                    $params = [
-                        'accountUserName'=>$userData->account_user_name,
-                        'accountPassword'=>$userData->account_password,
-                        'totpSecret'=>$userData->totp,
-                        'apiKey'=>$userData->api_key,
-                        'apiSecret'=>$userData->api_secret_key
-                    ];
+                    // $params = [
+                    //     'accountUserName'=>$userData->account_user_name,
+                    //     'accountPassword'=>$userData->account_password,
+                    //     'totpSecret'=>$userData->totp,
+                    //     'apiKey'=>$userData->api_key,
+                    //     'apiSecret'=>$userData->api_secret_key
+                    // ];
 
-                    $kiteObj = new KiteConnectCls($params);
-                    $kite = \Cache::remember('KITE_AUTH_'.$userData->account_user_name, 18000, function () use($kiteObj,$userData) {
-                        $pythonScript = '/home/forge/cityprofitedge.com/public/kite_login/app.py -u '.$userData->account_user_name;
-                        $command = 'python3 ' . $pythonScript; 
-                        exec($command, $output, $exitCode);
-                        $tokenArr =  explode("=",implode("\n", $output));
-                        $token =  $tokenArr[1];
-                        $kite = $kiteObj->generateSessionManual($token);
-                        return $kite;
-                    });
-                    $positionData = $kite->getPositions();
-                    // dd($positionData->net[0]);
-                    $fDada = [];
-                    if(isset($positionData->net)){
-                        foreach($positionData->net as $vl){
-                            $fDada[] = (object)[
-                                'product_type'=>$vl->product,
-                                'entry_time'=>'-',
-                                'txn_type'=>'-',
-                                'symbol_name'=>$vl->tradingsymbol,
-                                'qty'=>$vl->quantity,
-                                'entry_price'=>'-',
-                                'exit_price'=>'-',
-                                'sl_price'=>$vl->sell_price,
-                                'profile_loss'=>'',
-                            ];
-                        }
-                    }
-                    $data['trade_book_data'] = $fDada;
+                    // $kiteObj = new KiteConnectCls($params);
+                    // $kite = \Cache::remember('KITE_AUTH_'.$userData->account_user_name, 18000, function () use($kiteObj,$userData) {
+                    //     $pythonScript = '/home/forge/cityprofitedge.com/public/kite_login/app.py -u '.$userData->account_user_name;
+                    //     $command = 'python3 ' . $pythonScript; 
+                    //     exec($command, $output, $exitCode);
+                    //     $tokenArr =  explode("=",implode("\n", $output));
+                    //     $token =  $tokenArr[1];
+                    //     $kite = $kiteObj->generateSessionManual($token);
+                    //     return $kite;
+                    // });
+                    // $positionData = $kite->getPositions();
+                    // // dd($positionData->net[0]);
+                    // $fDada = [];
+                    // if(isset($positionData->net)){
+                    //     foreach($positionData->net as $vl){
+                    //         $fDada[] = (object)[
+                    //             'product_type'=>$vl->product,
+                    //             'entry_time'=>'-',
+                    //             'txn_type'=>'-',
+                    //             'symbol_name'=>$vl->tradingsymbol,
+                    //             'qty'=>$vl->quantity,
+                    //             'entry_price'=>'-',
+                    //             'exit_price'=>'-',
+                    //             'sl_price'=>$vl->sell_price,
+                    //             'profile_loss'=>'',
+                    //         ];
+                    //     }
+                    // }
+                    // $data['trade_book_data'] = $fDada;
                 }elseif($userData->client_type=='Angel'){
                     $param = [
                         'accountUserName'=>$userData->account_user_name,
@@ -648,7 +649,7 @@ class UserController extends Controller
                     ];
                     $angelObj = new AngelConnectCls($param);
                     $angelTokenArr = $angelObj->generate_access_token();
-                    // dd($angelTokenArr);
+                    // echo $angelTokenArr['token'];die;
                     $tokenA = $angelTokenArr['token'];
                     $clientLocalIp = $angelTokenArr['clientLocalIp'];
                     $clientPublicIp = $angelTokenArr['clientPublicIp'];
@@ -680,19 +681,35 @@ class UserController extends Controller
                     $response = curl_exec($curl);
                     curl_close($curl);
                     $dataArr = json_decode($response);
+                    // dd($dataArr);
                     if($dataArr->status==true){
                         if(!is_null($dataArr->data)){
                             foreach($dataArr->data as $vl){
                                 $fDada[] = (object)[
-                                    'product_type'=>$vl->producttype,
-                                    'entry_time'=>'-',
-                                    'txn_type'=>'-',
-                                    'symbol_name'=>$vl->tradingsymbol,
-                                    'qty'=>$vl->quantity,
-                                    'entry_price'=>'-',
-                                    'exit_price'=>'-',
-                                    'sl_price'=>$vl->sellamount,
-                                    'profile_loss'=>'',
+                                    "producttype"=> $vl->producttype,
+                                    "cfbuyqty"=> $vl->cfbuyqty,
+                                    "cfsellqty"=> $vl->cfsellqty,
+                                    "buyavgprice"=> $vl->buyavgprice,
+                                    "sellavgprice"=> $vl->sellavgprice,
+                                    "avgnetprice"=> $vl->avgnetprice,
+                                    "netvalue"=> $vl->netvalue,
+                                    "netqty"=> $vl->netqty,
+                                    "totalbuyvalue"=> $vl->totalbuyvalue,
+                                    "totalsellvalue"=> $vl->totalsellvalue,
+                                    "cfbuyavgprice"=> $vl->cfbuyavgprice,
+                                    "cfsellavgprice"=> $vl->cfsellavgprice,
+                                    "totalbuyavgprice"=> $vl->totalbuyavgprice,
+                                    "totalsellavgprice"=> $vl->totalsellavgprice,
+                                    "netprice"=> $vl->netprice,
+                                    "buyqty"=> $vl->buyqty,
+                                    "sellqty"=> $vl->sellqty,
+                                    "buyamount"=> $vl->buyamount,
+                                    "sellamount"=> $vl->sellamount,
+                                    "pnl"=> $vl->pnl,
+                                    "realised"=> $vl->realised,
+                                    "unrealised"=> $vl->unrealised,
+                                    "ltp"=> $vl->ltp,
+                                    "close"=> $vl->close
                                 ];
                             }
                         }
@@ -701,6 +718,7 @@ class UserController extends Controller
                 }
             }
         }
+        $data['brokerId'] = $brokerId;
         return view($this->activeTemplate . 'user.trade_positions',$data);
     }
 
