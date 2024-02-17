@@ -1,6 +1,9 @@
 @if ($stockName != "")
                 @php
                     $data = \DB::connection('mysql_rm')->table($stockName)->select('*')->where(['date'=>$todayDate,'timeframe'=>$timeFrame])->get();
+                    if(count($data)==0){
+                        $data = \DB::connection('mysql_rm')->table($stockName)->select('*')->where(['timeframe'=>$timeFrame])->get();
+                    }
                 @endphp
                 <div class="row mb-5">
                     <div class="col-lg-12">

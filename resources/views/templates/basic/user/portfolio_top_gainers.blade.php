@@ -177,6 +177,9 @@
 
                     }else{
                         $data = \DB::connection('mysql_rm')->table($v)->select('*')->where(['date'=>$todayDate,'timeframe'=>$timeFrame])->get(); 
+                        // if(count($data)==0){
+                        //     $data = \DB::connection('mysql_rm')->table($stockName)->select('*')->where(['timeframe'=>$timeFrame])->get();
+                        // }
                     }
                     @endphp
                 </pre>
