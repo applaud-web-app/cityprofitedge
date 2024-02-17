@@ -556,6 +556,7 @@ class UserController extends Controller
         $portfolioTopGainers = [];
        
         $todayDate = date("Y-m-d");
+        // $todayDate = "2024-02-16";
         $stockName = $request->stock_name;
         $timeFrame = $request->time_frame ? : 5;
         $symbolArr = allTradeSymbols();
@@ -1648,8 +1649,8 @@ class UserController extends Controller
         $omsObj->pyramid_freq = $request->pyramid_freq_up;
         $omsObj->user_id = auth()->user()->id;
         $omsObj->status = $request->status;
-        $omsObj->is_api_pushed = 0;
-        $omsObj->last_time = null;
+        // $omsObj->is_api_pushed = 0;
+        // $omsObj->last_time = null;
         $omsObj->cron_run_at = date("Y-m-d H:i:s",strtotime('-'.$request->pyramid_freq_up.' minutes'));
         $omsObj->save();
         $notify[] = ['success', 'Data updated Successfully...'];
