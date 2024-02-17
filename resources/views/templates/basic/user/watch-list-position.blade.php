@@ -34,36 +34,39 @@
                                     <thead>
                                         <tr>
                                             <th>ENTRY DATE</th>
-                                            <th>TNX TYPE</th>
                                             <th>SYMBOL NAME</th>
                                             <th>QTY</th>
                                             <th>PRICE</th>
                                             <th>LTP</th>
-                                            <th>STATUS</th>
+                                            <th>Average Price</th>
                                             <th>UNREALIZED P/L</th>
                                         </tr>
                                     </thead>
                                     <tbody id="watchList">
-                                        @isset($respond)
+
+                                        @if (isset($respond))
                                             @if ($respond['status'] == true)
-                                                @php $watchList = $respond['data']['fetched'];@endphp
+                                                @php $watchList = $respond['data']['fetched']; @endphp
+                                            @else
+                                                @php $watchList = NULL; @endphp
                                             @endif
-                                        @endisset
+                                        @else
+                                            @php $watchList = NULL; @endphp
+                                        @endif
                                         @isset($wishlistorder)
-                                            @if (count($wishlistorder))
+                                            @if (count($wishlistorder) && $watchList != NULL)
                                                 @foreach ($wishlistorder as $item)
                                                     @php
                                                         $key = array_search($item->token, array_column($watchList, 'symbolToken'));
                                                     @endphp
                                                     <tr>
                                                         <td>{{($item->created_at)->format('d-M, Y H:m:s')}}</td>
-                                                        <td>{{$item->type}}</td>
                                                         <td>{{$item->symbol}}</td>
                                                         <td>{{$item->quantity}}</td>
-                                                        <td>{{$item->avg_price}}</td>
+                                                        <td>{{$item->buy_price}}</td>
                                                         <td>{{$watchList[$key]['ltp']}}</td>
-                                                        <td>{{ucfirst($item->status)}}</td>
-                                                        <td class="{{ (($watchList[$key]['ltp'] - $item->avg_price) * $item->quantity) > 0 ? 'text-success' : 'text-danger' }}">{{($watchList[$key]['ltp'] - $item->avg_price) * $item->quantity}}</td>
+                                                        <td>{{$item->avg_price}}</td> 
+                                                        <td class="{{ (($watchList[$key]['ltp'] - $item->buy_price) * $item->quantity) > 0 ? 'text-success' : 'text-danger' }}">{{($watchList[$key]['ltp'] - $item->buy_price) * $item->quantity}}</td>
                                                     </tr>
                                                 @endforeach
                                             @else
