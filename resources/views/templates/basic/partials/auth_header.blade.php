@@ -30,6 +30,7 @@
                             <ul class="sub-menu">
                                 <li><a href="{{ route('user.ledgers') }}">@lang('Ledger')</a></li>
                                 <li><a href="{{ route('user.stock.portfolios') }}">@lang('Stock Portfolio')</a></li>
+                                <li><a href="{{ route('user.watchList') }}">@lang('Watch List')</a></li>
                             </ul>
                         </li>
                         <li class="menu_has_children">

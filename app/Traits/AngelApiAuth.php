@@ -1214,6 +1214,50 @@ trait AngelApiAuth
         }else{
            return null;
         }   
-    }    
+    }   
+    
+    
+    public function getWatchListRecords($payload){
+        $jwtToken =  $this->generate_access_token();
+        $errData = [];
+        if($jwtToken!=null){
+            $curl = curl_init();
+            curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://apiconnect.angelbroking.com/rest/secure/angelbroking/market/v1/quote/',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => '{
+                "mode": "FULL",
+                "exchangeTokens": '.$payload.'
+            }',
+            CURLOPT_HTTPHEADER => array(
+                'X-UserType: USER',
+                'X-SourceID: WEB',
+                'X-PrivateKey: '.$this->apiKey,
+                'X-ClientLocalIP: '.$this->clientLocalIp,
+                'X-ClientPublicIP: '.$this->clientPublicIp,
+                'X-MACAddress: '.$this->macAddress,
+                'Content-Type: application/json',
+                'Authorization: Bearer '.$jwtToken
+            ),
+            ));
+
+            $response = curl_exec($curl);
+            // dd($response);
+            $err = curl_error($curl);
+            curl_close($curl);
+            if ($err) {
+                return $errData;
+            }
+            $errData = json_decode($response,true);
+            return $errData;
+        }
+        return $errData;
+    }
 
 }

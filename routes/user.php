@@ -47,7 +47,11 @@ Route::middleware('auth')->name('user.')->group(function () {
 
             Route::controller('UserController')->group(function(){
                 Route::get('dashboard', 'home')->name('home');
-
+                Route::get('watch-list', 'watchList')->name('watchList');
+                Route::get('watch-list-order', 'watchListOrder')->name('watchListOrder');
+                Route::get('watch-list-position', 'watchListPosition')->name('watchListPosition');
+                Route::post('fetch-watch-list-data','fetchwatchList')->name('fetchwatchList');
+                Route::post('buy-watch-list-stock','buywishlist')->name('buyWatchListStock');
                 Route::post('purchase/package', 'purchasePackage')->name('purchase.package');
                 Route::post('renew/package', 'renewPackage')->name('renew.package');
                 Route::get('signals', 'signals')->name('signals');

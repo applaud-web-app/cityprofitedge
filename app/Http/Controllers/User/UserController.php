@@ -21,6 +21,7 @@ use App\Models\SignalHistory;
 use App\Models\StockPortfolio;
 use App\Models\ThematicPortfolio;
 use App\Models\BrokerApi;
+use App\Models\WatchList;
 use App\Models\Transaction;
 use App\Models\AngleOhlcData;
 use App\Models\AngleHistoricalApi;
@@ -1228,16 +1229,19 @@ class UserController extends Controller
         $table5 =  $request->symbol5 ?? "CRUDEOIL";
         $timeFrame5 = $request->timeframe5 ? : 5;
 
+        $todayDate = date("Y-m-d");
+        // $Symdata = \DB::connection('mysql_rm')->table($symbol)->select('*')->where(['date'=>
+
         // For Chart 1
-        $data1 = \DB::connection('mysql_rm')->table($table1)->select('*')->where('timeframe',$timeFrame1)->get();
+        $data1 = \DB::connection('mysql_rm')->table($table1)->select('*')->where('timeframe',$timeFrame1)->where('date',$todayDate)->get();
         // For Chart 2
-        $data2 = \DB::connection('mysql_rm')->table($table2)->select('*')->where('timeframe',$timeFrame2)->get();
+        $data2 = \DB::connection('mysql_rm')->table($table2)->select('*')->where('timeframe',$timeFrame2)->where('date',$todayDate)->get();
         // For Chart 3
-        $data3 = \DB::connection('mysql_rm')->table($table3)->select('*')->where('timeframe',$timeFrame3)->get();
+        $data3 = \DB::connection('mysql_rm')->table($table3)->select('*')->where('timeframe',$timeFrame3)->where('date',$todayDate)->get();
         // For Chart 4
-        $data4 = \DB::connection('mysql_rm')->table($table4)->select('*')->where('timeframe',$timeFrame4)->get();
+        $data4 = \DB::connection('mysql_rm')->table($table4)->select('*')->where('timeframe',$timeFrame4)->where('date',$todayDate)->get();
         // For Chart 5
-        $data5 = \DB::connection('mysql_rm')->table($table5)->select('*')->where('timeframe',$timeFrame5)->get();
+        $data5 = \DB::connection('mysql_rm')->table($table5)->select('*')->where('timeframe',$timeFrame5)->where('date',$todayDate)->get();
 
         return view($this->activeTemplate . 'user.option-analysis', compact('pageTitle','symbolArr','data1','data2','data3','data4','data5','Atmtype1','timeFrame1','table1','Atmtype2','timeFrame2','table2','Atmtype3','timeFrame3','table3','Atmtype4','timeFrame4','table4','Atmtype5','timeFrame5','table5'));
     }
@@ -1652,4 +1656,154 @@ class UserController extends Controller
         return to_route('user.portfolio.oms-config')->withNotify($notify);
     }
     
+
+    public function watchList(Request $request){
+        $pageTitle = "Watch List";
+        
+        $symbolArr = allTradeSymbols();
+        $todayDate = date("Y-m-d");
+        $stockName = $request->stock_name;
+        $timeFrame = $request->time_frame ? : 5;
+        $allSymbols = [];
+        foreach ($symbolArr as $key => $v) {
+            $data = \DB::connection('mysql_rm')->table($v)->select('*')->where(['date' => $todayDate, 'timeframe' => $timeFrame])->get();
+            $atmData = [];
+            foreach ($data as $vvl) {
+                if (isset($vvl->atm) && $vvl->atm == 'ATM') {
+                    $atmData[] = $vvl;
+                }
+            }
+            foreach ($atmData as $val) {
+                array_push($allSymbols,$val->ce);
+                array_push($allSymbols,$val->pe);
+            }
+        }
+
+        $zehrodha = ZerodhaInstrument::whereIN('trading_symbol',$allSymbols)->get();
+        $MCXpayload = [];
+        $NFOpayload = [];
+        if($zehrodha != NULL){
+            foreach ($zehrodha as $key => $value) {
+                if($value->exchange == "MCX"){
+                    array_push($MCXpayload,$value->exchange_token);
+                }else if($value->exchange == "NFO"){
+                    array_push($NFOpayload,$value->exchange_token);
+                }
+            }
+        }
+
+        $payload = [
+            'MCX'=>$MCXpayload,
+            'NFO'=>$NFOpayload
+        ];
+        $payload = json_encode($payload,true);
+        $respond = $this->getWatchListRecords($payload);
+
+        return view($this->activeTemplate . 'user.watch-list',compact('pageTitle','symbolArr','todayDate','timeFrame','stockName','respond','payload'));
+    }
+
+    public function fetchwatchList(Request $request){
+        dd(json_encode($request->all()));
+        try {
+            // $symbolArr = allTradeSymbols();
+            // $todayDate = date("Y-m-d");
+            // $stockName = $request->stock_name;
+            // $timeFrame = $request->time_frame ? : 5;
+            // $allSymbols = [];
+            // foreach ($symbolArr as $key => $v) {
+            //     $data = \DB::connection('mysql_rm')->table($v)->select('*')->where(['date' => $todayDate, 'timeframe' => $timeFrame])->get();
+            //     $atmData = [];
+            //     foreach ($data as $vvl) {
+            //         if (isset($vvl->atm) && $vvl->atm == 'ATM') {
+            //             $atmData[] = $vvl;
+            //         }
+            //     }
+            //     foreach ($atmData as $val) {
+            //         array_push($allSymbols,$val->ce);
+            //         array_push($allSymbols,$val->pe);
+            //     }
+            // }
+
+            // $zehrodha = ZerodhaInstrument::whereIN('trading_symbol',$allSymbols)->get();
+
+
+            return response()->json($this->getWatchListRecords($allSymbols));
+        } catch (\Throwable $th) {
+           return response()->json(
+            [ 'data' => ['status'=>false] ]
+           );
+        }
+    }
+
+    public function buywishlist(Request $request){
+        $request->validate([
+            'price'=>'required',
+            'quantity'=>'required',
+            'token'=>'required',
+            'symbol'=>'required',
+            'ltp'=>'required',
+            'type'=>'required',
+            'exchange'=>'required',
+            'order_type'=>'required'
+        ]);
+
+        $orderId = "WL".strtotime('d-m-y h:i:s').rand(100,10000000).rand(100,10000000);
+        $userId = \Auth::id();
+        $status = "executed";
+        $order = new WatchList;
+        $order->order_id = $orderId;
+        $order->user_id =  $userId;
+        $order->avg_price = $request->price;
+        $order->exchange = $request->exchange;
+        $order->quantity = $request->quantity;
+        $order->token = $request->token;
+        $order->symbol = $request->symbol;
+        $order->type = $request->type;
+        $order->ltp = $request->ltp;
+        $order->order_type = $request->order_type;
+        if($request->type == "limit"){
+            $status = "pending";
+        }
+        $order->status = $status;
+        $order->save();
+
+        $notify[] = ['success', 'Order Placed Successfully'];
+        return back()->withNotify($notify);
+
+    }
+
+    public function watchListOrder(){
+        $pageTitle = "Watch List Order";
+        $userId = \Auth::id();
+        $wishlistorder = WatchList::where('user_id',$userId)->orderBy('id','DESC')->get();
+        return view($this->activeTemplate . 'user.watch-list-order',compact('pageTitle','wishlistorder'));
+    }
+
+    public function watchListPosition(){
+        $pageTitle = "Watch List Position";
+        $userId = \Auth::id();
+        $wishlistorder = WatchList::where('user_id',$userId)->orderBy('id','DESC')->get();
+
+        $MCXpayload = [];
+        $NFOpayload = [];
+        if($wishlistorder != NULL){
+            foreach ($wishlistorder as $key => $value) {
+                if($value->exchange == "MCX"){
+                    array_push($MCXpayload,$value->token);
+                }else if($value->exchange == "NFO"){
+                    array_push($NFOpayload,$value->token);
+                }
+            }
+        }
+
+        $payload = [
+            'MCX'=>$MCXpayload,
+            'NFO'=>$NFOpayload
+        ];
+        $payload = json_encode($payload,true);
+        $respond = $this->getWatchListRecords($payload);
+
+        return view($this->activeTemplate . 'user.watch-list-position',compact('pageTitle','wishlistorder','respond'));
+    }
+
 }
