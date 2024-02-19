@@ -62,7 +62,7 @@
                                                         $key = array_search($item->token, array_column($watchList, 'symbolToken'));
                                                     @endphp
                                                     <tr>
-                                                        <td>{{($item->created_at)->format('d-M, Y H:m:s')}}</td>
+                                                        <td>{{($item->created_at)->format('d-M, Y H:i:s')}}</td>
                                                         <td>{{$item->symbol}}</td>
                                                         <td>{{$item->buy_quantity}}</td>
                                                         <td>{{$item->buy_price}}</td>
