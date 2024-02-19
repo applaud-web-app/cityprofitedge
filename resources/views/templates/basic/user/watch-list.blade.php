@@ -138,7 +138,7 @@
                             <input type="number" name="quantity" class="form--control" value="1" min="1" id="quantity" required>
                         </div>
                         <div class="d-flex justify-content-end">
-                            <button type="submit" class="btn btn-primary btn-sm">Buy Now</button>
+                            <button type="submit" class="btn btn-primary btn-sm">Submit</button>
                         </div>
                     </form>
                 </div>`;
