@@ -468,9 +468,10 @@ class UserController extends Controller
         return view($this->activeTemplate . 'user.ledgers', compact('pageTitle', 'ledgers'));
     }
 
-    public function stockPortfolios()
+    public function stockPortfolios(Request $request)
     {
         $pageTitle = 'Stock Portfolio';
+        $fullUrl = $request->fullUrl();
 
         // TODO:: modify commented code to implement searchable and filterable.
         $stockPortfolios = StockPortfolio::with('poolingAccountPortfolio')->where('user_id', auth()->id())->searchable(['broker_name', 'stock_price'])/* ->filter(['trx_type', 'remark']) */->orderBy('id', 'desc')->paginate(getPaginate());
@@ -479,8 +480,10 @@ class UserController extends Controller
         foreach ($stockPortfolios as $val) {
            array_push($symbolArray , $val['stock_name'].".NS");
         }
-
-        return view($this->activeTemplate . 'user.stock_portfolio', compact('pageTitle', 'stockPortfolios','symbolArray'));
+        if($request->ajax()){
+            return view($this->activeTemplate . 'user.stock_portfolio_ajax', compact('pageTitle', 'stockPortfolios','symbolArray','fullUrl'));
+        }
+        return view($this->activeTemplate . 'user.stock_portfolio', compact('pageTitle', 'stockPortfolios','symbolArray','fullUrl'));
     }
 
     public function thematicPortfolios(Request $request)
@@ -541,10 +544,10 @@ class UserController extends Controller
         return view($this->activeTemplate . 'user.fo_portfolio_hedging', compact('pageTitle', 'foPortFolioHedgings','symbolArray','fullUrl'));
     }
 
-    public function metalsPortfolio()
+    public function metalsPortfolio(Request $request)
     {
         $pageTitle = 'Metals Portfolio';
-
+        $fullUrl = $request->fullUrl();
         // TODO:: modify commented code to implement searchable and filterable.
         $metalsPortfolios = MetalsPortfolio::with('poolingAccountPortfolio')->where('user_id', auth()->id())->searchable(['broker_name', 'stock_price'])/* ->filter(['trx_type', 'remark']) */->orderBy('id', 'desc')->paginate(getPaginate());
 
@@ -552,8 +555,11 @@ class UserController extends Controller
         foreach ($metalsPortfolios as $val) {
            array_push($symbolArray , $val['stock_name'].".NS");
         }
+        if($request->ajax()){
+            return view($this->activeTemplate . 'user.metals_portfolio_ajax', compact('pageTitle', 'metalsPortfolios','symbolArray','fullUrl'));
+        }
 
-        return view($this->activeTemplate . 'user.metals_portfolio', compact('pageTitle', 'metalsPortfolios','symbolArray'));
+        return view($this->activeTemplate . 'user.metals_portfolio', compact('pageTitle', 'metalsPortfolios','symbolArray','fullUrl'));
     }
 
     public function portfolioTopGainers(Request $request)
