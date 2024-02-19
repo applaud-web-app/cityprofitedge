@@ -457,11 +457,12 @@ class OmsConfigCronRt{
     public function getTokenBySymbolName($symbName){
        $data =  AngelApiInstrument::select('trading_symbol','zi.exchange_token','lotsize','symbol_name','angel_api_instruments.tick_size')->join('zerodha_instruments as zi','zi.exchange_token','token')->where('trading_symbol',$symbName)->first();
        if($data){
+        $tSize = $data->tick_size/100;
             return [
                 'symbol'=> $data->symbol_name,
                 'token'=> $data->exchange_token,
                 'lot_size'=>$data->lotsize,
-                'tick_size'=>$data->tick_size
+                'tick_size'=>$tSize
             ];
            
        }
