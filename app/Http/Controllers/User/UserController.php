@@ -1798,6 +1798,9 @@ class UserController extends Controller
         ];
         $payload = json_encode($payload,true);
         $respond = $this->getWatchListRecords($payload);
+        if($respond == NULL){
+            $respond = $this->getWatchListRecords($payload);
+        }
 
         // dd($payload);
         $fullUrl = $request->fullUrl();
