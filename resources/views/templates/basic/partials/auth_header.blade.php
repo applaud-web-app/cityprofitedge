@@ -14,6 +14,23 @@
                 <div class="collapse navbar-collapse mt-lg-0 mt-3" id="navbarSupportedContent">
                     <ul class="navbar-nav main-menu ms-auto">
                         <li><a href="{{ route('user.home') }}">@lang('Dashboard')</a></li>
+
+                        <li class="menu_has_children">
+                            <a href="#0">@lang('Learn2Trade')</a>
+                            <ul class="sub-menu">
+                                <li><a href="{{ route('user.watchList') }}">@lang('Watch List')</a></li>
+                                <li><a href="{{ route('user.ledgers') }}">@lang('Option Strategies')</a></li>
+                                
+                            </ul>
+                        </li>
+                        <li class="menu_has_children">
+                            <a href="#0">@lang('Option Analysis')</a>
+                            <ul class="sub-menu">
+                                <li><a href="{{ route('user.option-analysis') }}">@lang('All Graph')</a></li>
+                                <li><a href="{{ route('user.ledgers') }}">@lang('Expiry Trading')</a></li>
+                                
+                            </ul>
+                        </li>
                         {{-- <li class="menu_has_children">
                             <a href="#0">@lang('Deposit')</a>
                             <ul class="sub-menu">
@@ -25,25 +42,16 @@
                         <li><a href="{{ route('user.signals') }}">@lang('Signals')</a></li>
                         <li><a href="{{ route('user.referrals') }}">@lang('Referrals')</a></li>
                         --}}
-                        <li class="menu_has_children">
+                        {{-- <li class="menu_has_children">
                             <a href="#0">@lang('Financial Overview')</a>
                             <ul class="sub-menu">
                                 <li><a href="{{ route('user.ledgers') }}">@lang('Ledger')</a></li>
                                 <li><a href="{{ route('user.stock.portfolios') }}">@lang('Stock Portfolio')</a></li>
                                 <li><a href="{{ route('user.watchList') }}">@lang('Watch List')</a></li>
                             </ul>
-                        </li>
+                        </li> --}}
                         <li class="menu_has_children">
-                            <a href="#0">@lang('Investment Overview')</a>
-                            <ul class="sub-menu">
-                                <li><a href="{{ route('user.thematic.portfolios') }}">@lang('Thematic Portfolios')</a></li>
-                                <li><a href="{{ route('user.global.stock.portfolio') }}">@lang('Global Stock Portfolio')</a></li>
-                                <li><a href="{{ route('user.fo.portfolio.hedging') }}">@lang('F&O Portfolio-Hedging')</a></li>
-                                <li><a href="{{ route('user.metals.portfolio') }}">@lang('Metals Portfolio (Gold & Silver)')</a></li>
-                            </ul>
-                        </li>
-                        <li class="menu_has_children">
-                            <a href="#0">@lang('Trading')</a>
+                            <a href="#0">@lang('AutoTrader')</a>
                             <ul class="sub-menu">
                                 <li><a href="{{ route('user.portfolio.top.gainers') }}">@lang('Trade Desk Signal')</a></li>
                                 
@@ -53,6 +61,16 @@
                                 <li><a href="{{ route('user.portfolio.oms-config') }}">@lang('OMS Config')</a></li>
                             </ul>
                         </li>
+                        <li class="menu_has_children">
+                            <a href="#0">@lang('Portfolios')</a>
+                            <ul class="sub-menu">
+                                <li><a href="{{ route('user.thematic.portfolios') }}">@lang('Thematic Portfolios')</a></li>
+                                <li><a href="{{ route('user.global.stock.portfolio') }}">@lang('Global Stock Portfolio')</a></li>
+                                <li><a href="{{ route('user.fo.portfolio.hedging') }}">@lang('F&O Portfolio-Hedging')</a></li>
+                                <li><a href="{{ route('user.metals.portfolio') }}">@lang('Metals Portfolio (Gold & Silver)')</a></li>
+                            </ul>
+                        </li>
+                       
 
                         {{-- <li class="menu_has_children">
                             <a href="#0">@lang('Portfolio Insights')</a>
@@ -61,13 +79,13 @@
                                 <li><a href="{{ route('user.portfolio.top.losers') }}">@lang('Portfolio Top Losers')</a></li>
                             </ul>
                         </li> --}}
-                        <li class="menu_has_children">
+                        {{-- <li class="menu_has_children">
                             <a href="#0">@lang('Support')</a>
                             <ul class="sub-menu">
                                 <li><a href="{{ route('ticket.open') }}">@lang('New Ticket')</a></li>
                                 <li><a href="{{ route('ticket.index') }}">@lang('My Tickets')</a></li>
                             </ul>
-                        </li>
+                        </li> --}}
                         <li class="menu_has_children">
                             <a href="#0">@lang('Account')</a>
                             <ul class="sub-menu">
@@ -77,7 +95,7 @@
                                 <li><a href="{{ route('user.transactions') }}">@lang('Stock Transactions')</a></li>
                                 <li><a href="{{ route('user.trade-book') }}">@lang('Trade Book')</a></li>
                                 <li><a href="{{ route('user.pl-reports') }}">@lang('PL Reports')</a></li>
-                                <li><a href="{{ route('user.option-analysis') }}">@lang('Option Analysis')</a></li>
+                                {{-- <li><a href="{{ route('user.option-analysis') }}">@lang('Option Analysis')</a></li> --}}
                                 <li><a href="{{ route('user.logout') }}">@lang('Logout')</a></li>
                             </ul>
                         </li>
