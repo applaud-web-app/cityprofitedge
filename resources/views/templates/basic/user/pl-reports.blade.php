@@ -4,7 +4,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 @endpush
 <section class="pt-100 pb-100">
-    <div class="container content-container">
+    <div class="container content-container" id="pst_hre">
         <form action="#" class="transparent-form mb-3" autocomplete="off">
             <div class="row">
                 <div class="col-lg-2 col-md-2 col-6 form-group">
@@ -218,6 +218,17 @@
     }).on("apply.daterangepicker", function (e, picker) {
         picker.element.val(picker.startDate.format('YYYY-MM-DD') + "/" + picker.endDate.format('YYYY-MM-DD'));
     });
+</script>
+<script>
+    function reloadData(){
+        $.get('{!!$fullUrl!!}',function(data){
+            $("#pst_hre").html(data);
+        });
+    }
+
+    setInterval(() => {
+        reloadData();
+    }, 30000);//call every 1/2 minute
 </script>
 @endpush
 @endsection

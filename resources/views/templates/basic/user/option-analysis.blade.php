@@ -35,7 +35,7 @@
 </style>
 @endpush
 <section class="pt-100 pb-100">
-    <div class="container-fluid">
+    <div class="container-fluid" id="pst_hre">
         <div class="row">
             {{-- First Graph Start --}}
             {{-- @php
@@ -1184,6 +1184,18 @@ var options = {
   chart.render();
 </script>
 
+<script>
+    function reloadData(){
+        $.get('{!!$fullUrl!!}',function(data){
+            $("#pst_hre").html(data);
+        });
+    }
+
+    setInterval(() => {
+        reloadData();
+    }, 30000);//call every 1/2 minute
+    
+</script>
 
 
 @endpush

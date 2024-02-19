@@ -796,6 +796,7 @@ class UserController extends Controller
     public function tradeBook(Request $request){
         $pageTitle = 'Trade Book';
         $data['pageTitle'] = $pageTitle;
+        $data['fullUrl'] = $request->fullUrl();
         
         if(!empty($request->buyDate) && $request->buyDate!='all'){
             $array = explode('/' ,$request->buyDate);
@@ -822,6 +823,9 @@ class UserController extends Controller
         $datas = Ledger::select('bought_date as date', \DB::raw('COUNT(*) as count'))->where('user_id',auth()->user()->id)->whereYear('bought_date', $currentYear)->groupBy('bought_date')->orderBy('bought_date')->get();
 
         // dd($datas);
+        if($request->ajax()){
+            return view($this->activeTemplate . 'user.trade-book-ajax',$data,compact('Ledger','stock','datas'));
+        }
         return view($this->activeTemplate . 'user.trade-book',$data,compact('Ledger','stock','datas'));
     }
 
@@ -844,9 +848,10 @@ class UserController extends Controller
     }
 
     public function plReports(Request $request){
-
+        $fullUrl = $request->fullUrl();
         $pageTitle = 'PL Reports';
         $data['pageTitle'] = $pageTitle;
+        $data['fullUrl'] = $request->fullUrl();
 
         $segments = "all";
         $type = "all";
@@ -971,7 +976,9 @@ class UserController extends Controller
         array_multisort($dates, SORT_ASC, $combinedArray);
 
         $allData = $this->getStockName();
-
+        if($request->ajax()){
+            return view($this->activeTemplate . 'user.pl-reports-ajax',$data,compact('combinedArray','allData')); 
+        }
 
         return view($this->activeTemplate . 'user.pl-reports',$data,compact('combinedArray','allData'));
     }
@@ -1244,8 +1251,12 @@ class UserController extends Controller
         $data4 = \DB::connection('mysql_rm')->table($table4)->select('*')->where('timeframe',$timeFrame4)->get();
         // For Chart 5
         $data5 = \DB::connection('mysql_rm')->table($table5)->select('*')->where('timeframe',$timeFrame5)->get();
+        $fullUrl =  $request->fullUrl();
+        if($request->ajax()){
+            return view($this->activeTemplate . 'user.option-analysis-ajax', compact('pageTitle','symbolArr','data1','data2','data3','data4','data5','Atmtype1','timeFrame1','table1','Atmtype2','timeFrame2','table2','Atmtype3','timeFrame3','table3','Atmtype4','timeFrame4','table4','Atmtype5','timeFrame5','table5','fullUrl'));
+        }
 
-        return view($this->activeTemplate . 'user.option-analysis', compact('pageTitle','symbolArr','data1','data2','data3','data4','data5','Atmtype1','timeFrame1','table1','Atmtype2','timeFrame2','table2','Atmtype3','timeFrame3','table3','Atmtype4','timeFrame4','table4','Atmtype5','timeFrame5','table5'));
+        return view($this->activeTemplate . 'user.option-analysis', compact('pageTitle','symbolArr','data1','data2','data3','data4','data5','Atmtype1','timeFrame1','table1','Atmtype2','timeFrame2','table2','Atmtype3','timeFrame3','table3','Atmtype4','timeFrame4','table4','Atmtype5','timeFrame5','table5','fullUrl'));
     }
 
     public function fetchTradeRecord(){

@@ -103,7 +103,7 @@
             </div>
         </form>
         <div class="row">
-            <div class="col-lg-12">
+            <div class="col-lg-12" id="pst_hre">
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="custom--card mb-3">
@@ -209,6 +209,17 @@ $("#heatmap-1").CalendarHeatmap(data, {
     }
 
 });
+</script>
+<script>
+    function reloadData(){
+        $.get('{!!$fullUrl!!}',function(data){
+            $("#pst_hre").html(data);
+        });
+    }
+
+    setInterval(() => {
+        reloadData();
+    }, 30000);//call every 1/2 minute
 </script>
 @endsection
 
