@@ -180,12 +180,16 @@
     <script>
         function reloadData(){
             $.get('{!!$fullUrl!!}',function(data){
+                // if(data=='DATA_ERROR'){
+                //     reloadData();
+                //     return;
+                // }
                 $("#pst_hre").html(data);
             });
         }
     
         setInterval(() => {
             reloadData();
-        }, 5000);//call every 1/2 minute
+        }, 10000);//call every 1/2 minute
     </script>
 @endpush
