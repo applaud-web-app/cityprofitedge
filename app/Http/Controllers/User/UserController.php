@@ -483,7 +483,7 @@ class UserController extends Controller
         return view($this->activeTemplate . 'user.stock_portfolio', compact('pageTitle', 'stockPortfolios','symbolArray'));
     }
 
-    public function thematicPortfolios()
+    public function thematicPortfolios(Request $request)
     {
         $pageTitle = 'Thematic Portfolios';
 
@@ -494,14 +494,17 @@ class UserController extends Controller
         foreach ($thematicPortfolios as $val) {
            array_push($symbolArray , $val['stock_name'].".NS");
         }
-
-        return view($this->activeTemplate . 'user.thematic_portfolios', compact('pageTitle', 'thematicPortfolios','symbolArray'));
+        $fullUrl = $request->fullUrl();
+        if($request->ajax()){
+            return view($this->activeTemplate . 'user.thematic_portfolios_ajax', compact('pageTitle', 'thematicPortfolios','symbolArray','fullUrl'));
+        }
+        return view($this->activeTemplate . 'user.thematic_portfolios', compact('pageTitle', 'thematicPortfolios','symbolArray','fullUrl'));
     }
 
-    public function globalStockPortfolio()
+    public function globalStockPortfolio(Request $request)
     {
         $pageTitle = 'Global Stock Portfolio';
-
+        $fullUrl = $request->fullUrl();
         // TODO:: modify commented code to implement searchable and filterable.
         $globalStockPortfolios = GlobalStockPortfolio::with('poolingAccountPortfolio')->where('user_id', auth()->id())->searchable(['broker_name', 'stock_price'])->orderBy('id', 'desc')->paginate(getPaginate());
 
@@ -515,14 +518,16 @@ class UserController extends Controller
 
         // dd($getToken);
         // $date = \DB::connection('mysql_pr')->table('LTP')->select('*')->get();
-        
-        return view($this->activeTemplate . 'user.global_stock_portfolio', compact('pageTitle', 'globalStockPortfolios','symbolArray'));
+        if($request->ajax()){
+            return view($this->activeTemplate . 'user.global_stock_portfolio_ajax', compact('pageTitle', 'globalStockPortfolios','symbolArray','fullUrl'));
+        }
+        return view($this->activeTemplate . 'user.global_stock_portfolio', compact('pageTitle', 'globalStockPortfolios','symbolArray','fullUrl'));
     }
 
-    public function foPortFolioHedging()
+    public function foPortFolioHedging(Request $request)
     {
         $pageTitle = 'FO Portfolio Hedging';
-
+        $fullUrl = $request->fullUrl();
         // TODO:: modify commented code to implement searchable and filterable.
         $foPortFolioHedgings = FOPortfolios::with('poolingAccountPortfolio')->where('user_id', auth()->id())->searchable(['broker_name', 'stock_price'])/* ->filter(['trx_type', 'remark']) */->orderBy('id', 'desc')->paginate(getPaginate());
         
@@ -530,8 +535,10 @@ class UserController extends Controller
         foreach ($foPortFolioHedgings as $val) {
            array_push($symbolArray , $val['stock_name'].".NS");
         }
-
-        return view($this->activeTemplate . 'user.fo_portfolio_hedging', compact('pageTitle', 'foPortFolioHedgings','symbolArray'));
+        if($request->ajax()){
+            return view($this->activeTemplate . 'user.fo_portfolio_hedging_ajax', compact('pageTitle', 'foPortFolioHedgings','symbolArray','fullUrl'));
+        }
+        return view($this->activeTemplate . 'user.fo_portfolio_hedging', compact('pageTitle', 'foPortFolioHedgings','symbolArray','fullUrl'));
     }
 
     public function metalsPortfolio()
