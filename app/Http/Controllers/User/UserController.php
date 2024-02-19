@@ -1964,7 +1964,7 @@ class UserController extends Controller
         return view($this->activeTemplate . 'user.watch-list-order',compact('pageTitle','wishlistorder','fullUrl'));
     }
 
-    public function watchListPosition(){
+    public function watchListPosition(Request $request){
         $pageTitle = "Watch List Position";
         $userId = \Auth::id();
         $wishlistorder = WatchTradePosition::where('user_id',$userId)->orderBy('id','DESC')->get();
@@ -1987,8 +1987,12 @@ class UserController extends Controller
         ];
         $payload = json_encode($payload,true);
         $respond = $this->getWatchListRecords($payload);
+        $fullUrl = $request->fullUrl();
+        if($request->ajax()){
+            return view($this->activeTemplate . 'user.watch-list-position-ajax',compact('pageTitle','wishlistorder','respond','fullUrl'));
+        }
 
-        return view($this->activeTemplate . 'user.watch-list-position',compact('pageTitle','wishlistorder','respond'));
+        return view($this->activeTemplate . 'user.watch-list-position',compact('pageTitle','wishlistorder','respond','fullUrl'));
     }
 
 }
