@@ -1660,10 +1660,109 @@ class UserController extends Controller
     
 
     public function watchList(Request $request){
+
+        $watchListData = WatchList::select('id','token','exchange','ltp')->where('status','pending')->get()->toArray();
+
+        $uniqueToken = [];
+        $uniqueWatchListData = [];
+        foreach ($watchListData as $key => $watchItem) {
+
+            dd($watchItem['token']);
+            if(!in_array($watchItem['token'], $uniqueToken)){
+                $uniqueToken = $watchItem['token'];
+                // array_push($uniqueToken,$watchItem['token']);
+                $uniqueWatchListData = [
+                    'token'=>$watchItem['token'],
+                    'exchange'=>$watchItem['exchange']
+                ];
+            }
+        }
+
+        dd($uniqueToken);
+        $newArray = array_chunk($watchListData,50);
+
+        if($newArray != NULL){
+            foreach ($newArray as $k => $watch) {
+                $MCXpayload = [];
+                $NFOpayload = [];
+                foreach ($watch as $key => $value) {
+                    if($value['exchange'] == "MCX"){
+                        array_push($MCXpayload,$value['token']);
+                    }else if($value['exchange'] == "NFO"){
+                        array_push($NFOpayload,$value['token']);
+                    }
+                }
+
+                $payload = [
+                    'MCX'=>$MCXpayload,
+                    'NFO'=>$NFOpayload
+                ];
+
+                $payload = json_encode($payload,true);
+                $respond = $this->getWatchListRecords($payload);
+                if($respond['data']['fetched'] != NULL){
+                    $RespondData = $respond['data']['fetched'];
+                    foreach ($RespondData as $key => $item) {
+
+                        $searchToken = $item['symbolToken'];
+                        $searchLtp = $item['ltp'];
+                        $result = array_filter($watchListData, function($watchItem) use ($searchToken, $searchLtp) {
+                            return $watchItem['token'] == $searchToken && $watchItem['ltp'] == $searchLtp;
+                        });
+
+                        if($result != NULL){
+
+                        }
+
+                    }
+                }
+
+
+            }
+        }
+
+
+        dd('End');
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         $pageTitle = "Watch List";
         
         $symbolArr = allTradeSymbols();
-        $todayDate = date("Y-m-d");
+        // $todayDate = date("Y-m-d");
+        $todayDate = date("2024-02-16");
         $stockName = $request->stock_name;
         $timeFrame = $request->time_frame ? : 5;
         $allSymbols = [];
@@ -1700,6 +1799,8 @@ class UserController extends Controller
         ];
         $payload = json_encode($payload,true);
         $respond = $this->getWatchListRecords($payload);
+
+        // dd($payload);
 
         return view($this->activeTemplate . 'user.watch-list',compact('pageTitle','symbolArr','todayDate','timeFrame','stockName','respond','payload'));
     }
@@ -1751,9 +1852,10 @@ class UserController extends Controller
 
         $userId = \Auth::id();
         $status = "executed";
-        if($request->type == "limit"){
+        if($request->order_type == "limit"){
             $status = "pending";
         }
+
         // Check For Previous BUY OR SELL FOR A PARTICULAR STOCK
         $makeAvgPrice = WatchList::WHERE('status','executed')->Where('token',$request->token)->WHERE('user_id',$userId)->get();
         $totalBuyPrice = 0;
@@ -1763,41 +1865,37 @@ class UserController extends Controller
 
         if(count($makeAvgPrice)){
             foreach ($makeAvgPrice as $key => $value) {
-                // For BUY
                 if($value->type == "BUY"){
                     $totalBuyPrice += ($value->quantity * $value->buy_price);
                     $totalBuyQuantity += $value->quantity;
                 }
-                // For SELL
-                // if($value->order_type == "SELL"){
-                //     $totalBuyPrice -= ($value->quantity * $value->buy_price);
-                //     $totalBuyQuantity -= $value->quantity;
-                // }
-            }
 
+                if($value->type == "SELL"){
+                    $totalSellPrice += ($value->quantity * $value->buy_price);
+                    $totalSellQuantity += $value->quantity;
+                }
+            }
         }
 
         // For CURRENT RECORD
-        // FOR BUY
         if ($request->type == "BUY") {
             $totalBuyPrice += ($request->quantity * $request->price);
             $totalBuyQuantity += $request->quantity;
         }
-        
-        // FOR SELL
-        // if($request->order_type == "SELL"){
-        //     $totalSellPrice -= ($request->quantity * $request->price);
-        //     $totalSellQuantity -= $request->quantity;
-        // }
+
+        if ($request->type == "SELL") {
+            $totalSellPrice += ($request->quantity * $request->price);
+            $totalSellQuantity += $request->quantity;
+        }
 
         if($totalBuyQuantity > 0){
-            $BuyavgPrice = round($totalBuyPrice / $totalBuyQuantity,2);  // AVG BUY PRICE
+            $BuyavgPrice = round($totalBuyPrice / $totalBuyQuantity,2);  
         }else{
             $BuyavgPrice = 0;
         }
 
         if($totalSellQuantity > 0){
-            $SellavgPrice = round($totalSellPrice / $totalSellQuantity,2);  // AVG SELL PRICE
+            $SellavgPrice = round($totalSellPrice / $totalSellQuantity,2);  
         }else{
             $SellavgPrice = 0;
         }

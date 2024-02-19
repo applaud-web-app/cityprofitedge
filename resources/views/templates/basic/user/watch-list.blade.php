@@ -51,9 +51,6 @@
                                         </tr>
                                     </thead>
                                     <tbody id="watchList">
-                                        {{-- <tr>
-                                            <button class="py-0 buyModal ms-1 btn btn-danger btn-sm" data-token="35732" data-symbol="NIFTY22FEB2422050CE" data-ltp="165.85" data-price="164.19" data-exchange="NFO" data-type="BUY" data-bs-toggle="modal" data-bs-target="#buy">SELL</button>
-                                        </tr> --}}
                                         @isset($respond)
                                             @if ($respond['status'] == true)
                                                 @php $watchList = $respond['data']['fetched']; @endphp
@@ -170,17 +167,14 @@
             }
         });
         function FetchWatchListData() {
-
             $.post('{{route("user.fetchwatchList")}}',{
                 data: "{{$payload}}",
                 _token: '{{csrf_token()}}',
             },
             function(data, status){
                 console.log(data);
-               //  alert("Data: " + data + "\nStatus: " + status);
             });
         }
-
         FetchWatchListData();
     </script>
 @endpush
