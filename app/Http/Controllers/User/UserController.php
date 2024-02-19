@@ -1952,11 +1952,16 @@ class UserController extends Controller
 
     }
 
-    public function watchListOrder(){
+    public function watchListOrder(Request $request){
         $pageTitle = "Watch List Order";
         $userId = \Auth::id();
         $wishlistorder = WatchList::where('user_id',$userId)->orderBy('id','DESC')->get();
-        return view($this->activeTemplate . 'user.watch-list-order',compact('pageTitle','wishlistorder'));
+        $fullUrl = $request->fullUrl();
+        if($request->ajax()){
+            return view($this->activeTemplate . 'user.watch-list-order-ajax',compact('pageTitle','wishlistorder','fullUrl'));
+        }
+        
+        return view($this->activeTemplate . 'user.watch-list-order',compact('pageTitle','wishlistorder','fullUrl'));
     }
 
     public function watchListPosition(){
