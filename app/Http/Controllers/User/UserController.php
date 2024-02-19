@@ -1661,6 +1661,78 @@ class UserController extends Controller
 
     public function watchList(Request $request){
 
+        // $watchListData = WatchList::select('id','token','exchange','buy_price')->where('status','pending')->get()->toArray();
+
+        // $uniqueToken = array();
+        // $uniqueWatchListData = array();
+        // foreach ($watchListData as $key => $watchItem) {
+        //     if(! in_array($watchItem['token'], $uniqueToken)){
+        //         array_push($uniqueToken,$watchItem['token']);
+        //         $data = [
+        //             'token'=>$watchItem['token'],
+        //             'exchange'=>$watchItem['exchange']
+        //         ];
+        //         array_push($uniqueWatchListData ,$data);
+        //     }
+        // }
+
+        // $newArray = array_chunk($uniqueWatchListData,50);
+        // if($newArray != NULL){
+        //     foreach ($newArray as $k => $watch) {
+        //         $MCXpayload = [];
+        //         $NFOpayload = [];
+        //         foreach ($watch as $key => $value) {
+        //             if($value['exchange'] == "MCX"){
+        //                 array_push($MCXpayload,$value['token']);
+        //             }else if($value['exchange'] == "NFO"){
+        //                 array_push($NFOpayload,$value['token']);
+        //             }
+        //         }
+
+        //         $payload = [
+        //             'MCX'=>$MCXpayload,
+        //             'NFO'=>$NFOpayload
+        //         ];
+
+        //         $payload = json_encode($payload,true);
+        //         $respond = $this->getWatchListRecords($payload);
+
+        //         if($respond['data']['fetched'] != NULL){
+        //             $RespondData = $respond['data']['fetched'];
+        //             foreach ($RespondData as $key => $item) {
+        //                 $searchToken = $item['symbolToken'];
+        //                 $searchLtp = $item['ltp'];
+        //                 $result = array_filter($watchListData, function($watchItem) use ($searchToken, $searchLtp) {
+        //                     return $watchItem['token'] == $searchToken;
+        //                 });
+
+        //                 // dd($result);
+
+        //                 if($result != NULL){
+        //                     foreach ($result as $key => $value) {
+        //                         $watchListData = WatchList::where('id',$value['id'])->first();
+        //                         $watchListData->order_type = "market";
+        //                         $watchListData->status = "executed";
+        //                         $watchListData->save();
+
+
+        //                         // For Trade Position 
+
+        //                     }
+        //                 }
+
+        //             }
+        //         }
+
+
+        //     }
+        // }
+
+        // 35730 => NFO
+        // 35731 => NFO
+
+        // dd('End');
+
         $pageTitle = "Watch List";
         
         $symbolArr = allTradeSymbols();
@@ -1854,7 +1926,7 @@ class UserController extends Controller
     public function watchListOrder(){
         $pageTitle = "Watch List Order";
         $userId = \Auth::id();
-        $wishlistorder = WatchList::where('user_id',$userId)->WHERE('status','!=','executed')->orderBy('id','DESC')->get();
+        $wishlistorder = WatchList::where('user_id',$userId)->orderBy('id','DESC')->get();
         return view($this->activeTemplate . 'user.watch-list-order',compact('pageTitle','wishlistorder'));
     }
 
