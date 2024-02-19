@@ -1800,8 +1800,13 @@ class UserController extends Controller
         $respond = $this->getWatchListRecords($payload);
 
         // dd($payload);
+        $fullUrl = $request->fullUrl();
 
-        return view($this->activeTemplate . 'user.watch-list',compact('pageTitle','symbolArr','todayDate','timeFrame','stockName','respond','payload'));
+        if($request->ajax()){
+            return view($this->activeTemplate . 'user.watch-list-ajax',compact('pageTitle','symbolArr','todayDate','timeFrame','stockName','respond','payload','fullUrl'));
+        }
+
+        return view($this->activeTemplate . 'user.watch-list',compact('pageTitle','symbolArr','todayDate','timeFrame','stockName','respond','payload','fullUrl'));
     }
 
     public function fetchwatchList(Request $request){

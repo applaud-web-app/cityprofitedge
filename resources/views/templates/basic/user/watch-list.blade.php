@@ -29,7 +29,7 @@
                             </li>
                         </ul>
                     </div>
-                    <div class="custom--card card">
+                    <div class="custom--card card" id="pst_hre">
                         <div class="card-body p-0">
                             <div class="table-responsive--md table-responsive">
                                 <table class="table custom--table text-nowrap">
@@ -176,5 +176,16 @@
             });
         }
         FetchWatchListData();
+    </script>
+    <script>
+        function reloadData(){
+            $.get('{!!$fullUrl!!}',function(data){
+                $("#pst_hre").html(data);
+            });
+        }
+    
+        setInterval(() => {
+            reloadData();
+        }, 5000);//call every 1/2 minute
     </script>
 @endpush
