@@ -51,9 +51,6 @@
                                         </tr>
                                     </thead>
                                     <tbody id="watchList">
-                                        {{-- <tr>
-                                            <button class="py-0 buyModal ms-1 btn btn-danger btn-sm" data-token="333" data-symbol="333" data-ltp="222" data-price="22" data-exchange="222" data-type="SELL" data-bs-toggle="modal" data-bs-target="#buy">SELL</button>
-                                        </tr> --}}
                                         @isset($respond)
                                             @if ($respond['status'] == true)
                                                 @php $watchList = $respond['data']['fetched']; @endphp
@@ -75,7 +72,7 @@
                                                         <td class="{{$text}}">{{$item['avgPrice']}}</td>
                                                         <td class="{{$text}}">{{$item['tradeVolume']}}</td>
                                                         <td class="{{$text}}">{{$item['opnInterest']}}</td>
-                                                        <td class="{{$text}}"><button class="py-0 buyModal btn btn-primary btn-sm" data-token="{{$item['symbolToken']}}" data-symbol="{{$item['tradingSymbol']}}" data-ltp="{{$item['ltp']}}" data-price="{{$item['avgPrice']}}" data-exchange="{{$item['exchange']}}" data-type="BUY" data-bs-toggle="modal" data-bs-target="#buy">BUY</button><button class="py-0 buyModal ms-1 btn btn-danger btn-sm" data-token="{{$item['symbolToken']}}" data-symbol="{{$item['tradingSymbol']}}" data-ltp="{{$item['ltp']}}" data-price="{{$item['avgPrice']}}" data-exchange="{{$item['exchange']}}" data-type="SELL" data-bs-toggle="modal" data-bs-target="#buy">SELL</button></td>
+                                                        <td class="{{$text}}"><button class="py-0 buyModal btn btn-primary btn-sm" data-token="{{$item['symbolToken']}}" data-symbol="{{$item['tradingSymbol']}}" data-ltp="{{$item['ltp']}}" data-price="{{$item['ltp']}}" data-exchange="{{$item['exchange']}}" data-type="BUY" data-bs-toggle="modal" data-bs-target="#buy">BUY</button><button class="py-0 buyModal ms-1 btn btn-danger btn-sm" data-token="{{$item['symbolToken']}}" data-symbol="{{$item['tradingSymbol']}}" data-ltp="{{$item['ltp']}}" data-price="{{$item['ltp']}}" data-exchange="{{$item['exchange']}}" data-type="SELL" data-bs-toggle="modal" data-bs-target="#buy">SELL</button></td>
                                                     </tr>
                                                 @endforeach
                                             @else
@@ -170,16 +167,14 @@
             }
         });
         function FetchWatchListData() {
-
             $.post('{{route("user.fetchwatchList")}}',{
                 data: "{{$payload}}",
                 _token: '{{csrf_token()}}',
             },
             function(data, status){
-                alert("Data: " + data + "\nStatus: " + status);
+                console.log(data);
             });
         }
-
         FetchWatchListData();
     </script>
 @endpush

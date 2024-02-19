@@ -1671,10 +1671,84 @@ class UserController extends Controller
     
 
     public function watchList(Request $request){
+
+        // $watchListData = WatchList::select('id','token','exchange','buy_price')->where('status','pending')->get()->toArray();
+
+        // $uniqueToken = array();
+        // $uniqueWatchListData = array();
+        // foreach ($watchListData as $key => $watchItem) {
+        //     if(! in_array($watchItem['token'], $uniqueToken)){
+        //         array_push($uniqueToken,$watchItem['token']);
+        //         $data = [
+        //             'token'=>$watchItem['token'],
+        //             'exchange'=>$watchItem['exchange']
+        //         ];
+        //         array_push($uniqueWatchListData ,$data);
+        //     }
+        // }
+
+        // $newArray = array_chunk($uniqueWatchListData,50);
+        // if($newArray != NULL){
+        //     foreach ($newArray as $k => $watch) {
+        //         $MCXpayload = [];
+        //         $NFOpayload = [];
+        //         foreach ($watch as $key => $value) {
+        //             if($value['exchange'] == "MCX"){
+        //                 array_push($MCXpayload,$value['token']);
+        //             }else if($value['exchange'] == "NFO"){
+        //                 array_push($NFOpayload,$value['token']);
+        //             }
+        //         }
+
+        //         $payload = [
+        //             'MCX'=>$MCXpayload,
+        //             'NFO'=>$NFOpayload
+        //         ];
+
+        //         $payload = json_encode($payload,true);
+        //         $respond = $this->getWatchListRecords($payload);
+
+        //         if($respond['data']['fetched'] != NULL){
+        //             $RespondData = $respond['data']['fetched'];
+        //             foreach ($RespondData as $key => $item) {
+        //                 $searchToken = $item['symbolToken'];
+        //                 $searchLtp = $item['ltp'];
+        //                 $result = array_filter($watchListData, function($watchItem) use ($searchToken, $searchLtp) {
+        //                     return $watchItem['token'] == $searchToken;
+        //                 });
+
+        //                 // dd($result);
+
+        //                 if($result != NULL){
+        //                     foreach ($result as $key => $value) {
+        //                         $watchListData = WatchList::where('id',$value['id'])->first();
+        //                         $watchListData->order_type = "market";
+        //                         $watchListData->status = "executed";
+        //                         $watchListData->save();
+
+
+        //                         // For Trade Position 
+
+        //                     }
+        //                 }
+
+        //             }
+        //         }
+
+
+        //     }
+        // }
+
+        // 35730 => NFO
+        // 35731 => NFO
+
+        // dd('End');
+
         $pageTitle = "Watch List";
         
         $symbolArr = allTradeSymbols();
-        $todayDate = date("Y-m-d");
+        // $todayDate = date("Y-m-d");
+        $todayDate = date("2024-02-16");
         $stockName = $request->stock_name;
         $timeFrame = $request->time_frame ? : 5;
         $allSymbols = [];
@@ -1712,11 +1786,13 @@ class UserController extends Controller
         $payload = json_encode($payload,true);
         $respond = $this->getWatchListRecords($payload);
 
+        // dd($payload);
+
         return view($this->activeTemplate . 'user.watch-list',compact('pageTitle','symbolArr','todayDate','timeFrame','stockName','respond','payload'));
     }
 
     public function fetchwatchList(Request $request){
-        dd(json_encode($request->all()));
+        // dd(json_encode($request->all()));
         try {
             // $symbolArr = allTradeSymbols();
             // $todayDate = date("Y-m-d");
@@ -1761,44 +1837,59 @@ class UserController extends Controller
         ]);
 
         $userId = \Auth::id();
-        $makeAvgPrice = WatchList::WHERE('status','executed')->Where('token',$request->token)->WHERE('user_id',$userId)->get();
-        if(count($makeAvgPrice)){
-            $totalPrice = 0;
-            $totalQuantity = 0;
-            foreach ($makeAvgPrice as $key => $value) {
+        $status = "executed";
+        if($request->order_type == "limit"){
+            $status = "pending";
+        }
 
-                if($value->order_type == "BUY"){
-                    $totalPrice += ($value->quantity * $value->buy_price);
-                    $totalQuantity += $value->quantity;
-                }else{
-                    $totalPrice -= ($value->quantity * $value->buy_price);
-                    $totalQuantity -= $value->quantity;
-                    // ($this->buyQty * $this->buyPrice) - ($this->sellQty * $this->sellPrice)
+        // Check For Previous BUY OR SELL FOR A PARTICULAR STOCK
+        $makeAvgPrice = WatchList::WHERE('status','executed')->Where('token',$request->token)->WHERE('user_id',$userId)->get();
+        $totalBuyPrice = 0;
+        $totalBuyQuantity = 0;
+        $totalSellPrice = 0;
+        $totalSellQuantity = 0;
+
+        if(count($makeAvgPrice)){
+            foreach ($makeAvgPrice as $key => $value) {
+                if($value->type == "BUY"){
+                    $totalBuyPrice += ($value->quantity * $value->buy_price);
+                    $totalBuyQuantity += $value->quantity;
+                }
+
+                if($value->type == "SELL"){
+                    $totalSellPrice += ($value->quantity * $value->buy_price);
+                    $totalSellQuantity += $value->quantity;
                 }
             }
-            
-            if ($request->order_type == "BUY") {
-                $totalPrice += ($request->quantity * $request->price);
-                $totalQuantity += $request->quantity;
-            }else{
-                $totalPrice -= ($request->quantity * $request->price);
-                $totalQuantity -= $request->quantity;
-            }
-            $avgPrice = round($totalPrice / $totalQuantity,2);
-        }else{
-            if ($request->order_type == "BUY") {
-                $totalPrice = ($request->quantity * $request->price);
-                $totalQuantity = $request->quantity;
-            }else{
-                $totalPrice = ($request->quantity * $request->price);
-                $totalQuantity = $request->quantity;
-            }
-           
-            $avgPrice = $totalPrice / $totalQuantity;
         }
+
+        // For CURRENT RECORD
+        if ($request->type == "BUY") {
+            $totalBuyPrice += ($request->quantity * $request->price);
+            $totalBuyQuantity += $request->quantity;
+        }
+
+        if ($request->type == "SELL") {
+            $totalSellPrice += ($request->quantity * $request->price);
+            $totalSellQuantity += $request->quantity;
+        }
+
+        if($totalBuyQuantity > 0){
+            $BuyavgPrice = round($totalBuyPrice / $totalBuyQuantity,2);  
+        }else{
+            $BuyavgPrice = 0;
+        }
+
+        if($totalSellQuantity > 0){
+            $SellavgPrice = round($totalSellPrice / $totalSellQuantity,2);  
+        }else{
+            $SellavgPrice = 0;
+        }
+
+        $netChange = ($totalBuyQuantity * $totalBuyPrice) - ($totalSellPrice * $totalSellQuantity);
         
         $orderId = "WL".strtotime('d-m-y h:i:s').rand(100,10000000).rand(100,10000000);
-        $status = "executed";
+       
         $order = new WatchList;
         $order->order_id = $orderId;
         $order->user_id =  $userId;
@@ -1810,19 +1901,18 @@ class UserController extends Controller
         $order->type = $request->type;
         $order->ltp = $request->ltp;
         $order->order_type = $request->order_type;
-        if($request->type == "limit"){
-            $status = "pending";
-        }
         $order->status = $status;
         $order->save();
 
         // Watch Trade Position
-        if($request->type == "executed"){
+        if($status == "executed"){
             $watchTradePosition = WatchTradePosition::Where('token',$request->token)->WHERE('user_id',$userId)->first();
             if($watchTradePosition != NULL){
-                $watchTradePosition->quantity = $totalQuantity;
-                $watchTradePosition->buy_price = $totalPrice;
-                $watchTradePosition->avg_price = $avgPrice;
+                $watchTradePosition->buy_quantity = $totalBuyQuantity;
+                $watchTradePosition->buy_price = $BuyavgPrice;
+                $watchTradePosition->net_change = $netChange;
+                $watchTradePosition->sell_quantity = $totalSellQuantity;
+                $watchTradePosition->sell_price = $SellavgPrice;
                 $watchTradePosition->save();
             }else{
                 $tradePostion = new WatchTradePosition;
@@ -1830,9 +1920,11 @@ class UserController extends Controller
                 $tradePostion->token = $request->token;
                 $tradePostion->symbol = $request->symbol;
                 $tradePostion->exchange = $request->exchange;
-                $tradePostion->quantity = $request->quantity;
-                $tradePostion->buy_price = $request->price;
-                $tradePostion->avg_price = $avgPrice;
+                $tradePostion->buy_quantity = $totalBuyQuantity;
+                $tradePostion->buy_price = $BuyavgPrice;
+                $tradePostion->sell_quantity = $totalSellQuantity;
+                $tradePostion->sell_price = $SellavgPrice;
+                $tradePostion->net_change = $netChange;
                 $tradePostion->save();
             }
         }
@@ -1845,7 +1937,7 @@ class UserController extends Controller
     public function watchListOrder(){
         $pageTitle = "Watch List Order";
         $userId = \Auth::id();
-        $wishlistorder = WatchList::where('user_id',$userId)->WHERE('status','!=','executed')->orderBy('id','DESC')->get();
+        $wishlistorder = WatchList::where('user_id',$userId)->orderBy('id','DESC')->get();
         return view($this->activeTemplate . 'user.watch-list-order',compact('pageTitle','wishlistorder'));
     }
 

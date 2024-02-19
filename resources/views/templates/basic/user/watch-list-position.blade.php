@@ -35,10 +35,12 @@
                                         <tr>
                                             <th>ENTRY DATE</th>
                                             <th>SYMBOL NAME</th>
-                                            <th>QTY</th>
-                                            <th>PRICE</th>
+                                            <th>BUY QTY</th>
+                                            <th>BUY PRICE</th>
+                                            <th>SELL QTY</th>
+                                            <th>SELL PRICE</th>
+                                            <th>NET CHANGE</th>
                                             <th>LTP</th>
-                                            <th>Average Price</th>
                                             <th>UNREALIZED P/L</th>
                                         </tr>
                                     </thead>
@@ -60,13 +62,15 @@
                                                         $key = array_search($item->token, array_column($watchList, 'symbolToken'));
                                                     @endphp
                                                     <tr>
-                                                        <td>{{($item->created_at)->format('d-M, Y H:m:s')}}</td>
+                                                        <td>{{($item->created_at)->format('d-M, Y H:i:s')}}</td>
                                                         <td>{{$item->symbol}}</td>
-                                                        <td>{{$item->quantity}}</td>
+                                                        <td>{{$item->buy_quantity}}</td>
                                                         <td>{{$item->buy_price}}</td>
+                                                        <td>{{$item->sell_quantity}}</td>
+                                                        <td>{{$item->sell_price}}</td> 
+                                                        <td>{{$item->net_change}}</td>
                                                         <td>{{$watchList[$key]['ltp']}}</td>
-                                                        <td>{{$item->avg_price}}</td> 
-                                                        <td class="{{ (($watchList[$key]['ltp'] - $item->buy_price) * $item->quantity) > 0 ? 'text-success' : 'text-danger' }}">{{($watchList[$key]['ltp'] - $item->buy_price) * $item->quantity}}</td>
+                                                        <td class="{{ (($watchList[$key]['ltp'] - $item->buy_price) * $item->quantity) > 0 ? 'text-success' : 'text-danger' }}">{{($watchList[$key]['ltp'] - $item->buy_price) * $item->buy_quantity}}</td>
                                                     </tr>
                                                 @endforeach
                                             @else

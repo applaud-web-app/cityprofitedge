@@ -53,7 +53,7 @@
                                                     <td>{{$item->quantity}}</td>
                                                     <td>{{$item->buy_price}}</td>
                                                     <td>{{ucfirst($item->status)}}</td>
-                                                    <td>{{($item->created_at)->format('d-M, Y H:m:s')}}</td>
+                                                    <td>{{($item->created_at)->format('d-M, Y H:i:s')}}</td>
                                                 </tr>
                                             @endforeach
                                         @else
