@@ -81,11 +81,20 @@ class store_market_data extends Command
                     $marketData->high = $value['high'];
                     $marketData->low = $value['low'];
                     $marketData->close = $value['close'];
+                    $marketData->lastTradeQty = $value['lastTradeQty'];
+                    $marketData->exchFeedTime = $value['exchFeedTime'];
+                    $marketData->exchTradeTime = $value['exchTradeTime'];
                     $marketData->netChange = $value['netChange'];
                     $marketData->percentChange = $value['percentChange'];
                     $marketData->avgPrice = $value['avgPrice'];
                     $marketData->tradeVolume = $value['tradeVolume'];
                     $marketData->opnInterest = $value['opnInterest'];
+                    $marketData->lowerCircuit = $value['lowerCircuit'];
+                    $marketData->upperCircuit = $value['upperCircuit'];
+                    $marketData->totBuyQuan = $value['totBuyQuan'];
+                    $marketData->totSellQuan = $value['totSellQuan'];
+                    $marketData->WeekLow52 = $value['52WeekLow'];
+                    $marketData->WeekHigh52 = $value['52WeekHigh'];
                     $marketData->save();
                 }
             }
