@@ -47,7 +47,6 @@
                                         </tr>
                                     </thead>
                                     <tbody id="watchList">
-
                                         @if (isset($respond))
                                             @if ($respond['status'] == true)
                                                 @php $watchList = $respond['data']['fetched']; @endphp
