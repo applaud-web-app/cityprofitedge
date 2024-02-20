@@ -36,6 +36,7 @@
                                             <th>ORDER ID</th>
                                             <th>TNX TYPE</th>
                                             <th>SYMBOL NAME</th>
+                                            <th>ORDER TYPE</th>
                                             <th>QTY</th>
                                             <th>PRICE</th>
                                             <th>STATUS</th>
@@ -50,6 +51,7 @@
                                                     <td>{{$item->order_id}}</td>
                                                     <td>{{$item->type}}</td>
                                                     <td>{{$item->symbol}}</td>
+                                                    <td>{{ucfirst($item->order_type)}}</td>
                                                     <td>{{$item->quantity}}</td>
                                                     <td>{{$item->buy_price}}</td>
                                                     <td>{{ucfirst($item->status)}}</td>
