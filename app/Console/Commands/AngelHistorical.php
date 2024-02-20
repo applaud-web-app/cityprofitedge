@@ -772,7 +772,7 @@ class AngelHistorical extends Command
                 foreach ($acceptedSymbols as $key => $symbolName) {
                     $angleApiInstuments = AngelApiInstrument::Where('name',$symbolName)->where(function ($query) {
                         $query->where('instrumenttype', '=', 'AMXIDX')->orWhere('instrumenttype', '=', 'COMDTY');
-                    })->first();
+                    })->orderBY('id','DESC')->first();
 
                     if($angleApiInstuments->exch_seg == "MCX"){
                         $allResponse = array();
@@ -803,7 +803,6 @@ class AngelHistorical extends Command
                             array_push($McxToken,$response[1][1]);
                         }
                     }
-
 
                     // For NSE Exch Records
                     if($angleApiInstuments->exch_seg == "NSE"){
