@@ -1804,7 +1804,12 @@ class UserController extends Controller
         $fullUrl = $request->fullUrl();
 
         if($request->ajax()){
-            return view($this->activeTemplate . 'user.watch-list-ajax',compact('pageTitle','fullUrl','finalResponse'));
+            // return 'NO_DATA';
+            if(!empty($finalResponse)){
+                return view($this->activeTemplate . 'user.watch-list-ajax',compact('pageTitle','fullUrl','finalResponse'));
+            }
+            return 'NO_DATA';
+            
         }
 
         return view($this->activeTemplate . 'user.watch-list',compact('pageTitle','finalResponse','fullUrl'));
