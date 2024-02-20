@@ -1727,6 +1727,9 @@ class UserController extends Controller
         $MCXpayload = array_chunk($MCXpayload, 10);
         $NFOpayload = array_chunk($NFOpayload , 10);
 
+
+        dd(count($MCXpayload).'-M--N-'.count($NFOpayload));
+
         $finalResponse = [];
         foreach ($NFOpayload as $key => $value) {
             $payload = [
