@@ -126,7 +126,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="price" class="col-form-label">Price:</label>
-                            <input type="number" min="1" name="price" data-price="${price}" class="form--control" value="${price}" id="price" placeholder="Enter Your Price" required readonly>
+                            <input type="number" min="0" step="any" name="price" data-price="${price}" class="form--control" value="${price}" id="price" placeholder="Enter Your Price" required readonly>
                             <input type="hidden" name="symbol" class="form-control" value="${symbol}" id="symbol" >
                             <input type="hidden" name="token" class="form-control" value="${token}" id="token">
                             <input type="hidden" name="ltp" class="form-control" value="${ltp}" id="ltp">
