@@ -60,7 +60,11 @@
                                             @endforeach
                                         @else
                                             <tr>
-                                                <td colspan="100%">No Order Found</td>
+                                                <td colspan="100%" class="text-center">
+                                                    <div class="spinner-border" role="status">
+                                                        <span class="visually-hidden">Loading...</span>
+                                                    </div>
+                                                </td>
                                             </tr>
                                         @endif
                                         @endisset
