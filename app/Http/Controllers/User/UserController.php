@@ -1688,12 +1688,12 @@ class UserController extends Controller
 
         $pageTitle = "Watch List";
         
-        $symbolArr = allTradeSymbols();
+        // $symbolArr = allTradeSymbols();
         $todayDate = date("Y-m-d");
         // $todayDate = date("2024-02-16");
-        $stockName = $request->stock_name;
-        $timeFrame = $request->time_frame ? : 5;
-        $allSymbols = [];
+        // $stockName = $request->stock_name;
+        // $timeFrame = $request->time_frame ? : 5;
+        // $allSymbols = [];
         // foreach ($symbolArr as $key => $v) {
         //     $data = \DB::connection('mysql_rm')->table($v)->select('*')->where(['date' => $todayDate, 'timeframe' => $timeFrame])->get();
         //     $atmData = [];
@@ -1708,8 +1708,7 @@ class UserController extends Controller
         //     }
         // }
 
-        $data = StoreMarketData::whereDay('created_at', now()->day)->get();
-        // dd($data);
+        $data = StoreMarketData::whereDay('created_at', now()->day)->WHERE('exchange','MCX')->orWhere('exchange','NFO')->GROUPBY('token')->get();
         $MCXpayload = [];
         $NFOpayload = [];
         if($data != NULL){
@@ -1725,6 +1724,42 @@ class UserController extends Controller
         $MCXpayload = array_unique($MCXpayload);
         $NFOpayload = array_unique($NFOpayload);
 
+        $MCXpayload = array_chunk($MCXpayload, 10);
+        $NFOpayload = array_chunk($NFOpayload , 10);
+
+        $finalResponse = [];
+        foreach ($NFOpayload as $key => $value) {
+            $payload = [
+                'NFO'=>$value
+            ];
+            
+            $payload = json_encode($payload,true);
+            $respond = $this->getWatchListRecords($payload);
+
+            if($respond != NULL){
+                if($respond['status'] == true){
+                    $fetchedData = $respond['data']['fetched'];
+                    array_unshift($finalResponse,$fetchedData);
+                }
+            }
+        }
+
+        foreach ($MCXpayload as $key => $value) {
+            $payload = [
+                'MCX'=>$value
+            ];
+
+            $payload = json_encode($payload,true);
+            $respond = $this->getWatchListRecords($payload);
+            if($respond != NULL){
+                if($respond['status'] == true){
+                    $fetchedData = $respond['data']['fetched'];
+                    array_unshift($finalResponse,$fetchedData);
+                }
+            }
+        }
+        $finalResponse = call_user_func_array('array_merge', $finalResponse);
+
         // $zehrodha = ZerodhaInstrument::whereIN('trading_symbol',$allSymbols)->get();
         // $MCXpayload = [];
         // $NFOpayload = [];
@@ -1738,28 +1773,28 @@ class UserController extends Controller
         //     }
         // }
 
-        $payload = [
-            'MCX'=>$MCXpayload,
-            'NFO'=>$NFOpayload
-        ];
+        // $payload = [
+        //     'MCX'=>$MCXpayload,
+        //     'NFO'=>$NFOpayload
+        // ];
 
-        $payload = json_encode($payload,true);
-        $respond = $this->getWatchListRecords($payload);
-        if($respond == NULL){
-            $respond = $this->getWatchListRecords($payload);
-        }
+        // $payload = json_encode($payload,true);
+        // $respond = $this->getWatchListRecords($payload);
+        // if($respond == NULL){
+        //     $respond = $this->getWatchListRecords($payload);
+        // }
         $fullUrl = $request->fullUrl();
 
         if($request->ajax()){
-            return view($this->activeTemplate . 'user.watch-list-ajax',compact('pageTitle','symbolArr','todayDate','timeFrame','stockName','respond','payload','fullUrl'));
+            return view($this->activeTemplate . 'user.watch-list-ajax',compact('pageTitle','fullUrl','finalResponse'));
         }
 
-        return view($this->activeTemplate . 'user.watch-list',compact('pageTitle','symbolArr','todayDate','timeFrame','stockName','respond','payload','fullUrl'));
+        return view($this->activeTemplate . 'user.watch-list',compact('pageTitle','finalResponse','fullUrl'));
     }
 
-    public function fetchwatchList(Request $request){
+    // public function fetchwatchList(Request $request){
         // dd(json_encode($request->all()));
-        try {
+        // try {
             // $symbolArr = allTradeSymbols();
             // $todayDate = date("Y-m-d");
             // $stockName = $request->stock_name;
@@ -1782,13 +1817,13 @@ class UserController extends Controller
             // $zehrodha = ZerodhaInstrument::whereIN('trading_symbol',$allSymbols)->get();
 
 
-            return response()->json($this->getWatchListRecords($allSymbols));
-        } catch (\Throwable $th) {
-           return response()->json(
-            [ 'data' => ['status'=>false] ]
-           );
-        }
-    }
+    //         return response()->json($this->getWatchListRecords($allSymbols));
+    //     } catch (\Throwable $th) {
+    //        return response()->json(
+    //         [ 'data' => ['status'=>false] ]
+    //        );
+    //     }
+    // }
 
     public function buywishlist(Request $request){
         $request->validate([
@@ -1915,7 +1950,6 @@ class UserController extends Controller
         if($request->ajax()){
             return view($this->activeTemplate . 'user.watch-list-order-ajax',compact('pageTitle','wishlistorder','fullUrl'));
         }
-        
         return view($this->activeTemplate . 'user.watch-list-order',compact('pageTitle','wishlistorder','fullUrl'));
     }
 

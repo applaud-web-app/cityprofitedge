@@ -51,10 +51,10 @@
                                         </tr>
                                     </thead>
                                     <tbody id="watchList">
-                                        @isset($respond)
-                                            @if ($respond['status'] == true)
-                                                @php $watchList = $respond['data']['fetched']; @endphp
-                                                @foreach ($watchList as $item)
+
+                                        @isset($finalResponse)
+                                            @if ($finalResponse != NULL)
+                                                @foreach ($finalResponse as $item)
                                                     @php $text = "text-danger"; @endphp
                                                     @if ($item['netChange'] > 0)
                                                         @php $text = "text-success"; @endphp
@@ -76,9 +76,9 @@
                                                     </tr>
                                                 @endforeach
                                             @else
-                                                <tr>
-                                                    <td colspan="100%" style="text-center">Please Try Some Other Time</td>
-                                                </tr>
+                                            <tr>
+                                                <td colspan="100%">No Data Found</td>
+                                            </tr>
                                             @endif
                                         @endisset
                                     </tbody>
@@ -143,7 +143,6 @@
                     </form>
                 </div>`;
                 $('#buyCurrentStock').html(buyhtml);
-                FetchWatchListData();
             });
         }); 
         
@@ -159,23 +158,6 @@
                 $('#price').val($price);
             }   
         }
-    </script>
-    <script>
-        $.ajaxSetup({
-            headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-        function FetchWatchListData() {
-            $.post('{{route("user.fetchwatchList")}}',{
-                data: "{{$payload}}",
-                _token: '{{csrf_token()}}',
-            },
-            function(data, status){
-                console.log(data);
-            });
-        }
-        FetchWatchListData();
     </script>
     <script>
         function reloadData(){
