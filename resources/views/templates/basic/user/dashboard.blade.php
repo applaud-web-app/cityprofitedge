@@ -6,8 +6,7 @@
     <div class="container content-container">
 
         {{-- <div class="row notice"></div> --}}
-
-        <div class="row justify-content-center gy-4">
+        <div class="row justify-content-center g-3">
             {{-- <div class="col-md-12 mb-3">
                 <form action="#" class="transparent-form">
                     <label>@lang('Referral Link')</label>
@@ -87,13 +86,15 @@
                             <div class="col-xl-6 col-lg-6 col-md-6">
                                 <p class="d-widget__caption fs--12px">@lang('Invested Value')</p>
                                 <h6 class="d-widget__amount mt-1">
-                                    {{ $general->cur_sym }} {{ showAmount($user->balance, 2) }}
+                                    ----
+                                    {{-- {{ $general->cur_sym }} {{ showAmount($user->balance, 2) }} --}}
                                 </h6>
                             </div>
                             <div class="col-xl-6 col-lg-6 col-md-6">
                                 <p class="d-widget__caption fs--12px">@lang('Current Value')</p>
                                 <h6 class="d-widget__amount mt-1">
-                                    {{ $general->cur_sym }} {{ showAmount($user->balance, 2) }}
+                                    ----
+                                    {{-- {{ $general->cur_sym }} {{ showAmount($user->balance, 2) }} --}}
                                 </h6>
                             </div>
                         </div>
@@ -152,6 +153,7 @@
                     </div>
                 </div><!-- d-widget end -->
             </div>
+
             <div class="col-xl-4 col-lg-4 col-md-6">
                 <div class="d-widget has--link">
                     <a href="{{ route('user.metals.portfolio') }}" class="item--link"></a>
@@ -178,6 +180,7 @@
                     </div>
                 </div><!-- d-widget end -->
             </div>
+
             <div class="col-xl-4 col-lg-4 col-md-6">
                 <div class="d-widget has--link">
                     <a href="{{ route('user.transactions') }}" class="item--link"></a>
@@ -333,23 +336,29 @@
                         </h3>
                     </div>
                 </div><!-- d-widget end -->
-            </div>
-        </div> --}}
+            </div>--}}
+        </div> 
 
         <div class="row mt-4">
             <div class="col-xl-6">
-                <div class="card">
-                    <div class="card-body">
+                <div class="card dash-card">
+                    <div class="card-header">
                         <h5 class="card-title">@lang('Networth Graph')</h5>
-                        <div id="apex-spline-chart"> </div>
+                    </div>
+                    <div class="card-body">
+                       
+                        <div id="apex-spline-chart" style="width: 100%;"> </div>
                     </div>
                 </div>
             </div>
             <div class="col-xl-6">
-                <div class="card">
+                <div class="card dash-card">
+                     <div class="card-header">
+                         <h5 class="card-title">@lang('Sectory Wise Protfolio')</h5>
+                    </div>
                     <div class="card-body">
-                        <h5 class="card-title">@lang('Sectory Wise Protfolio')</h5>
-                        <div id="apex-polar-area-basic-chart"></div>
+                      
+                        <div id="apex-polar-area-basic-chart" style="width: 100%;"></div>
                     </div>
                 </div>
             </div>
@@ -357,7 +366,7 @@
 
         <div class="row mt-4">
             <div class="col-lg-6">
-                <h5 class="m-4 text-center">@lang('Portfolio Top Gainers')</h5>
+                <h5 class="m-4 text-center">@lang('Top Gainers')</h5>
                 <div class="custom--card">
                     <div class="card-body p-0">
                         <div class="table-responsive--md">
@@ -382,7 +391,7 @@
                                             <td>
                                                 {{ $portfolioTopGainer->cmp }}
                                             </td>
-                                            <td>{{ $portfolioTopGainer->change_percentage }}</td>
+                                            <td> <span class="{{$portfolioTopGainer->change_percentage > 0 ? "text-success" : "text-danger"}}">{{ $portfolioTopGainer->change_percentage }}</span></td>
                                         </tr>
                                     @empty
                                         <tr>
@@ -396,7 +405,7 @@
                 </div>
             </div>
             <div class="col-lg-6">
-                <h5 class="m-4 text-center">@lang('Portfolio Top Losers')</h5>
+                <h5 class="m-4 text-center">@lang('Top Losers')</h5>
                 <div class="custom--card">
                     <div class="card-body p-0">
                         <div class="table-responsive--md">
@@ -421,7 +430,7 @@
                                             <td>
                                                 {{ $portfolioTopLoser->cmp }}
                                             </td>
-                                            <td>{{ $portfolioTopLoser->change_percentage }}</td>
+                                            <td> <span class="{{ $portfolioTopLoser->change_percentage > 0 ? "text-success" : "text-danger" }}">{{ $portfolioTopLoser->change_percentage }}</span></td>
                                         </tr>
                                     @empty
                                         <tr>
@@ -455,7 +464,7 @@
                             <input type="hidden" name="id" required>
                         </div>
                         <ul class="list-group list-group-flush">
-                            <li class="list-group-item d-flex justify-content-between align-items-center">@lang('Package') <span class="packageName"></span></li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">@lang('Product') <span class="packageName"></span></li>
                             <li class="list-group-item d-flex justify-content-between align-items-center">@lang('Price') <span class="packagePrice"></span></li>
                             <li class="list-group-item d-flex justify-content-between align-items-center">@lang('Validity') <span class="packageValidity"></span></li>
                             <li class="list-group-item d-flex justify-content-between align-items-center">@lang('Your Balance')
@@ -525,9 +534,13 @@
             }
         ],
         chart: {
-            // width: 400,
-            height: 350,
-            type: 'area'
+             width: '100%',
+            height: 360,
+            type: 'area',
+            toolbar: {
+        show: false,
+       
+    }
         },
         dataLabels: {
             enabled: false
@@ -535,6 +548,7 @@
         stroke: {
             curve: 'smooth'
         },
+        
         xaxis: {
             type: 'date',
             categories: [
@@ -554,6 +568,8 @@
             }
         },
         tooltip: {
+            enabled: true,
+            theme: 'dark',
             x: {
                 format: 'MM yyyy',
                 style: {
@@ -570,15 +586,16 @@
     var options = {
         series: [{{implode(',',$chrtArr)}}],
         chart: {
-            width: 775,
+            width: '100%',
             height: 360,
             type: 'polarArea',
+            foreColor: '#e4e4e4',
         },
         stroke: {
-            colors: ['#fff']
+          colors: ['#fff']
         },
         fill: {
-            opacity: 0.8
+          opacity: 0.8
         },
         labels: ['Stock Portfolio', 'Metals Portfolio', 'Global stock', 'F&O Portfolio'], // Add your labels here
         responsive: [{
@@ -596,6 +613,9 @@
 
     var chart = new ApexCharts(document.querySelector("#apex-polar-area-basic-chart"), options);
     chart.render();
+
+
 </script>
+
 @endpush
 

@@ -29,9 +29,6 @@
         max-width: 50% !important;
     }
 
-    .card {
-        background-color: #132d39 !important;
-    }
 </style>
 <script>
     (function ($) {

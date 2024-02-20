@@ -24,7 +24,7 @@
                     <div class="blog-post__content">
                         <div class="blog-post__date fs--14px d-inline-flex align-items-center">
                             <i class="las la-calendar-alt fs--18px me-2"></i>
-                            {{ showDateTime($singleBlog->created_at, 'd M Y') }}
+                            {{ showDateTime($singleBlog->updated_at, 'd M Y') }}
                         </div>
                         <h4 class="blog-post__title">
                             <a href="{{ route('blog.details', ['slug'=>slug($singleBlog->data_values->title), 'id'=>$singleBlog->id]) }}">

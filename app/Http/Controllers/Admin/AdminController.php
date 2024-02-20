@@ -16,6 +16,11 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Constants\Status;
+use App\Models\GlobalStockPortfolio;
+use App\Models\StockPortfolio;
+use App\Models\ThematicPortfolio;
+use App\Models\MetalsPortfolio;
+use App\Models\FOPortfolios;
 
 class AdminController extends Controller
 {
@@ -116,7 +121,113 @@ class AdminController extends Controller
         $general = gs();
         $showCronModal = Carbon::parse($general->last_cron)->diffInMinutes() > 15 || !$general->last_cron;
 
-        return view('admin.dashboard', compact('pageTitle', 'widget', 'chart','deposit','report','depositsMonth','months','trxReport','plusTrx','minusTrx', 'totalPackage', 'signalStatistics', 'showCronModal'));
+
+
+        // New Records
+
+        $date1 = date("Y-m-01");
+        $date2 = date("Y-m-t");
+        $stockPortFolioBuyVal = 0;
+        $stockPortFolioCurrVal = 0;
+
+        $investGraphArr = [];
+
+        $stockPortFolio =  StockPortfolio::select(\DB::raw('SUM(quantity*buy_price) as buy_value'),\DB::raw('SUM(quantity*cmp) as current_value'),\DB::raw('DATE_FORMAT(buy_date,"%M-%Y") as buy_date'))->groupBy('buy_date')->get();
+
+        foreach($stockPortFolio as $v){
+            $investGraphArr[$v->buy_date] = [
+                'buy_value'=>$v->buy_value,
+                'current_value'=>$v->current_value
+            ];
+            $stockPortFolioBuyVal += $v->buy_value;
+            $stockPortFolioCurrVal += $v->current_value;
+        }
+
+        $stockPortFolio->buy_value = $stockPortFolioBuyVal;
+        $stockPortFolio->current_value = $stockPortFolioCurrVal;
+
+        $globalstockPortFolioBuyVal = 0;
+        $globalstockPortFolioCurrVal = 0;
+
+
+        $globalStockPortFolio =  GlobalStockPortFolio::select(\DB::raw('SUM(quantity*buy_price) as buy_value'),\DB::raw('SUM(quantity*cmp) as current_value'),\DB::raw('DATE_FORMAT(buy_date,"%M-%Y") as buy_date'))->groupBy('buy_date')->get();
+        foreach($globalStockPortFolio as $v){
+            if(isset($investGraphArr[$v->buy_date])){
+                $investGraphArr[$v->buy_date] = [
+                    'buy_value'=>$v->buy_value + $investGraphArr[$v->buy_date]['buy_value'],
+                    'current_value'=>$v->current_value + $investGraphArr[$v->buy_date]['current_value']
+                ];
+            }else{
+                $investGraphArr[$v->buy_date] = [
+                    'buy_value'=>$v->buy_value,
+                    'current_value'=>$v->current_value
+                ];
+            }            
+            $globalstockPortFolioBuyVal += $v->buy_value;
+            $globalstockPortFolioCurrVal += $v->current_value;
+        }
+        $globalStockPortFolio->buy_value = $globalstockPortFolioBuyVal;
+        $globalStockPortFolio->current_value = $globalstockPortFolioCurrVal;
+
+
+        $foglobalstockPortFolioBuyVal = 0;
+        $foglobalstockPortFolioCurrVal = 0;
+
+
+        $foglobalStockPortFolio =  FOPortfolios::select(\DB::raw('SUM(quantity*buy_price) as buy_value'),\DB::raw('SUM(quantity*cmp) as current_value'),\DB::raw('DATE_FORMAT(buy_date,"%M-%Y") as buy_date'))->groupBy('buy_date')->get();
+        foreach($foglobalStockPortFolio as $v){
+            if(isset($investGraphArr[$v->buy_date])){
+                $investGraphArr[$v->buy_date] = [
+                    'buy_value'=>$v->buy_value + $investGraphArr[$v->buy_date]['buy_value'],
+                    'current_value'=>$v->current_value + $investGraphArr[$v->buy_date]['current_value']
+                ];
+            }else{
+                $investGraphArr[$v->buy_date] = [
+                    'buy_value'=>$v->buy_value,
+                    'current_value'=>$v->current_value
+                ];
+            }            
+            $foglobalstockPortFolioBuyVal += $v->buy_value;
+            $foglobalstockPortFolioCurrVal += $v->current_value;
+        }
+
+
+        $foglobalStockPortFolio->buy_value = $foglobalstockPortFolioBuyVal;
+        $foglobalStockPortFolio->current_value = $foglobalstockPortFolioCurrVal;
+
+
+        $metalsPortFolioBuyVal = 0;
+        $metalsPortFolioCurrVal = 0;
+
+
+        $metalsPortFolio =  MetalsPortfolio::select(\DB::raw('SUM(quantity*buy_price) as buy_value'),\DB::raw('SUM(quantity*cmp) as current_value'),\DB::raw('DATE_FORMAT(buy_date,"%M-%Y") as buy_date'))->groupBy('buy_date')->get();
+
+        foreach($metalsPortFolio as $v){
+            if(isset($investGraphArr[$v->buy_date])){
+                $investGraphArr[$v->buy_date] = [
+                    'buy_value'=>$v->buy_value + $investGraphArr[$v->buy_date]['buy_value'],
+                    'current_value'=>$v->current_value + $investGraphArr[$v->buy_date]['current_value']
+                ];
+            }else{
+                $investGraphArr[$v->buy_date] = [
+                    'buy_value'=>$v->buy_value,
+                    'current_value'=>$v->current_value
+                ];
+            }            
+            $metalsPortFolioBuyVal += $v->buy_value;
+            $metalsPortFolioCurrVal += $v->current_value;
+        }
+
+        $metalsPortFolio->buy_value = $metalsPortFolioBuyVal;
+        $metalsPortFolio->current_value = $metalsPortFolioCurrVal;
+
+
+        $totalInvestedAmount = $stockPortFolio->buy_value + $globalStockPortFolio->buy_value + $foglobalStockPortFolio->buy_value + $metalsPortFolio->buy_value;
+        $totalCurrentAmount = $stockPortFolio->current_value + $globalStockPortFolio->current_value + $foglobalStockPortFolio->current_value + $metalsPortFolio->current_value;
+
+        $user = User::sum('balance');
+
+        return view('admin.dashboard', compact('pageTitle', 'widget', 'chart','deposit','report','depositsMonth','months','trxReport','plusTrx','minusTrx', 'totalPackage', 'signalStatistics', 'showCronModal','stockPortFolio','globalStockPortFolio','foglobalStockPortFolio','metalsPortFolio','totalInvestedAmount','totalCurrentAmount','user'));
     }
 
 

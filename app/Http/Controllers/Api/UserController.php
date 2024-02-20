@@ -320,7 +320,7 @@ class UserController extends Controller
             return response()->json([
                 'remark'=>'validation_error',
                 'status'=>'error',
-                'message'=>['error'=>["Package not found"]],
+                'message'=>['error'=>["Product not found"]],
             ]);
         }
 
@@ -394,7 +394,7 @@ class UserController extends Controller
             return response()->json([
                 'remark'=>'validation_error',
                 'status'=>'error',
-                'message'=>['error'=>["Package not found"]],
+                'message'=>['error'=>["Product not found"]],
             ]);
         }
 
@@ -404,7 +404,7 @@ class UserController extends Controller
             return response()->json([
                 'remark'=>'validation_error',
                 'status'=>'error',
-                'message'=>['error'=>["There is no package to renew"]],
+                'message'=>['error'=>["There is no Product to renew"]],
             ]);
         }
 

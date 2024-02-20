@@ -26,7 +26,7 @@
                     <div class="footer-widget">
                         <h4 class="footer-widget__title text-white mb-2 mb-lg-4">@lang('Important Links')</h4>
                         <ul class="links">
-                            <li><a href="{{ route('packages') }}">@lang('Packages')</a></li>
+                            <li><a href="{{ route('packages') }}">@lang('Products')</a></li>
                             <li><a href="{{ route('user.login') }}">@lang('Login')</a></li>
                             <li><a href="{{ route('user.register') }}">@lang('Create Account')</a></li>
                         </ul>

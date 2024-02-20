@@ -77,6 +77,16 @@ class AppServiceProvider extends ServiceProvider
             ]);
         });
 
+        view()->composer('*', function ($view) {
+            $userGlblNameData = null;
+            if(auth()->user()){
+                $userGlblNameData = auth()->user();
+            }
+            $view->with([
+                'userGlblNameData' => $userGlblNameData,
+            ]);
+        });
+
         if($general->force_ssl){
             \URL::forceScheme('https');
         }

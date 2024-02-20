@@ -72,6 +72,8 @@ class FrontendController extends Controller
 
     public function frontendContent(Request $request, $key)
     {
+
+        // dd($request->all());
         $purifier = new \HTMLPurifier();
         $valInputs = $request->except('_token', 'image_input', 'key', 'status', 'type', 'id');
         foreach ($valInputs as $keyName => $input) {
@@ -110,6 +112,7 @@ class FrontendController extends Controller
             if (!$content || $request->type == 'element') {
                 $content = new Frontend();
                 $content->data_keys = $key . '.' . $request->type;
+                $content->template_name = activeTemplateName();
                 $content->save();
             }
         }

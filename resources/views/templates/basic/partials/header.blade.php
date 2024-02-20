@@ -26,7 +26,7 @@
                                 </a>
                             </li>
                         @endforeach
-                        <li><a href="{{ route('packages') }}">@lang('Packages')</a></li>
+                        <li><a href="{{ route('packages') }}">@lang('Products')</a></li>
                         <li><a href="{{ route('blogs') }}">@lang('Blogs')</a></li>
                         <li><a href="{{ route('contact') }}">@lang('Contact')</a></li>
                     </ul>

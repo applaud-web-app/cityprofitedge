@@ -16,7 +16,7 @@ use Illuminate\Support\Str;
 
 function systemDetails()
 {
-    $system['name'] = 'signallab';
+    $system['name'] = 'City Profitedge';
     $system['version'] = '2.2';
     $system['build_version'] = '4.4.7';
     return $system;
@@ -247,6 +247,7 @@ function menuActive($routeName, $type = null, $param = null)
     else $class = 'active';
 
     if (is_array($routeName)) {
+       
         foreach ($routeName as $key => $value) {
             if (request()->routeIs($value)) return $class;
         }
@@ -301,15 +302,19 @@ function diffForHumans($date)
 }
 
 
-function showDateTime($date, $format = 'Y-m-d h:i A')
+function showDateTime($date, $format = 'd-m-Y h:i A')
 {
+    
     $lang = session()->get('lang');
     Carbon::setlocale($lang);
     return Carbon::parse($date)->translatedFormat($format);
 }
 
-function showDate($date, $format = 'Y-m-d')
+function showDate($date, $format = 'd-m-Y')
 {
+    if($date == null || $date=='0000-00-00'){
+        return '-';
+    }
     $lang = session()->get('lang');
     Carbon::setlocale($lang);
     return Carbon::parse($date)->translatedFormat($format);
@@ -470,4 +475,40 @@ function sendVia($implode = false){
         $via = strtolower(implode(',', $via));
     }
     return $via;
+}
+
+function allTradeSymbols(){
+    $data = \DB::connection('mysql_rm')->select('SHOW TABLES');
+    $arr = [];
+    foreach($data as $vl){
+        $arr[] = $vl->Tables_in_PMS_Datastore;
+    }
+    return $arr;
+}
+
+function allTradeTimeFrames(){
+    return [1,3,5];
+}
+
+function strategyNames(){
+    return ["Buy CE"=>"PP Buy CE","Buy PE"=>"PP Buy PE","Sell CE"=>"PP Sell CE","Sell PE"=>"PP Sell PE","Bullish CE"=>"VWAP CE Buy","Bullish PE"=>"VWAP PE Buy","Bearish CE"=>"VWAP CE Sell","Bearish PE"=>"VWAP PE Sell"];
+}
+
+function clientList(){
+    return ["Zerodha","Angel"];
+}
+
+
+function calculatePyramids($numbertodivise,$no){
+    $intnumber = intval($numbertodivise / $no);
+    $rem = $numbertodivise % $no;
+    $array = [];
+    for($i=1;$i<=$no;$i++) {
+        if($i==$no) {
+            $array[] = $intnumber + $rem;
+        } else {
+            $array[] = $intnumber;
+        }
+    }
+    return $array;
 }

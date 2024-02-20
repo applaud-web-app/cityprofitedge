@@ -1,14 +1,87 @@
 @extends('admin.layouts.app')
 
 @section('panel')
+@push('style')
+<link rel="stylesheet" href="{{asset('assets/admin/css/vendor/select2.min.css')}}">
+    <style>
+        .select2-container .select2-selection--single {
+                width: 100% !important;
+                height: 45px;
+                line-height: 45px;
+                background: transparent;
+                border: 1px solid #D7DBDA;
+                font-size: 14px;
+                color: #A09E9E;
+                border-radius: 10px;
+            }
+
+            .select2-container--default .select2-selection--single .select2-selection__arrow {
+                height: 26px;
+                position: absolute;
+                top: 10px;
+                right: 1px;
+                width: 20px;
+            }
+
+            .select2-container--default .select2-selection--single .select2-selection__rendered {
+                color: #444;
+                line-height: 45px;
+            }
+            .select2-container{
+                width:100% !important;
+            }
+        </style>
+    </style>
+@endpush
+
 <div class="row">
     <div class="col-lg-12">
-        <div class="card b-radius--10 ">
-            <div class="card-body p-0">
-                <div class="table-responsive--lg">
+        <form action="{{route('admin.investment.thematic-portfolios.remove-stock-portfolio')}}" name="record_frm" id="record_frm" method="post">
+            @csrf
+                <div class="card responsive-filter-card mb-4">
+                    <div class="card-body">
+                        <div class="d-flex flex-wrap gap-3">
+                            <div class="flex-grow-1">
+                                <label>Sector</label>
+                                <select  id="client_id">
+                                    <option value="all">All</option>
+                                    @if($clientId!='all')
+                                        <option value="{{$clientId}}" selected>{{$clientId}}</option>
+                                    @endif
+                                </select>
+                            </div>
+                            <div class="flex-grow-1">
+                                <label>Stock Name</label>
+                                <select class="form-control" id="stock_name">
+                                    <option value="all">All</option>
+                                    @if($stockName!='all')
+                                        <option value="{{$stockName}}" selected>{{$stockName}}</option>
+                                    @endif
+                                </select>
+                            </div>
+                            {{-- <div class="flex-grow-1">
+                                <label>Buy Date</label>
+                                <input type="date" id="buy_date" class="form-control" {{$buyDate!='all' ? $buyDate : ''}}>
+                            </div> --}}
+                            <div class="flex-grow-1 align-self-end">
+                                <button class="btn btn--primary w-100 h-45" type="button" id="filter_btn"><i class="fas fa-filter"></i> Filter</button>
+                            </div>
+                            <div class="flex-grow-1 align-self-end">
+                                <a class="btn btn--primary w-100 h-45" href="{{url('admin/investment/thematic-portfolios')}}"><i class="las la-sync-alt"></i> Refresh</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-100 mb-3">
+                    <button type="submit" class="btn btn-danger" id="delete_records"><i class="las la-trash-alt"></i> Delete Records</button>
+                </div>
+                <div class="table-responsive--lg table-responsive">
                     <table class="table table--light style--two">
                         <thead>
                         <tr>
+                            <th>
+                                <input type="checkbox"  id="checkAll">
+                            </th>
                             <th>@lang('Stock Name')</th>
                             <th>@lang('Reco Date')</th>
                             <th>@lang('Buy Price')</th>
@@ -18,9 +91,17 @@
                             <th>@lang('Action')</th>
                         </tr>
                         </thead>
+                        @php
+                        $date = \DB::connection('mysql_pr')->table('LTP')->WHEREIN('symbol',$symbolArray)->pluck('ltp','symbol')->toArray();  
+                        @endphp
                         <tbody>
                             @forelse($thematicPortfolios as $thematicPortfolio)
+                                @php  $key = isset($date[$thematicPortfolio->stock_name.'.NS']) ? $date[$thematicPortfolio->stock_name.'.NS'] : 0;
+                                @endphp
                                 <tr>
+                                    <td>
+                                        <input type="checkbox" name="data[]" value="{{$thematicPortfolio->id}}" class="checkAll">
+                                    </td>
                                     <td>
                                         {{ $thematicPortfolio->stock_name }}
                                     </td>
@@ -30,9 +111,7 @@
                                     <td>
                                         {{ showAmount($thematicPortfolio->buy_price) }}
                                     </td>
-                                    <td>
-                                        {{ $thematicPortfolio->cmp }}
-                                    </td>
+                                    <td>{{showAmount($key)}}</td>
                                     <td>
                                         {{ $thematicPortfolio->pnl }}
                                     </td>
@@ -40,13 +119,13 @@
 
                                     <td>
                                         <div class="d-flex justify-content-end flex-wrap gap-2">
-                                            <a href="{{ route('admin.signal.edit', $thematicPortfolio->id) }}"
+                                            {{-- <a href="{{ route('admin.signal.edit', $thematicPortfolio->id) }}"
                                                 class="btn btn-sm btn-outline--primary">
                                                 <i class="la la-pencil"></i> @lang('Edit')
-                                            </a>
+                                            </a> --}}
                                             <button class="btn btn-sm btn-outline--danger confirmationBtn"
-                                                data-question="@lang('Are you sure to delete this signal')?"
-                                                data-action="{{ route('admin.signal.delete') }}"
+                                                data-question="@lang('Are you sure to delete this record')?"
+                                                data-action="{{ route('admin.investment.thematic-portfolios.delete') }}"
                                                 data-hidden_id="{{ $thematicPortfolio->id }}">
                                                 <i class="la la-trash"></i> @lang('Delete')
                                             </button>
@@ -67,7 +146,7 @@
                     {{ paginateLinks($thematicPortfolios) }}
                 </div>
             @endif
-        </div>
+        </form>
     </div>
 </div>
 
@@ -106,3 +185,102 @@
         <button class="btn btn-sm btn-outline--primary" data-bs-toggle="modal" data-bs-target="#uploadXlsModal"><i class="las la-upload"></i>@lang('Upload via XLS')</button>
     @endpush
 @endif
+
+
+@push('script')
+<script src="{{asset('assets/admin/js/vendor/select2.min.js')}}"></script>
+<script>
+    $("#client_id").select2({
+        placeholder: "Sector Name",
+        multiple: false,
+        tokenSeparators: [',', ' '],
+        minimumInputLength: 2,
+        minimumResultsForSearch: 10,
+        ajax: {
+            url: "{{ route('admin.investment.thematic-portfolios.get-search-client-id') }}",
+            dataType: "json",
+            type: "GET",
+            data: function(params) {
+
+                var queryParameters = {
+                    term: params.term
+                }
+                return queryParameters;
+            },
+            processResults: function(data) {
+                return {
+                    results: $.map(data, function(item) {
+                        return {
+                            text: item.sector,
+                            id: item.sector
+                        }
+                    })
+                };
+            }
+        }
+    });
+    
+    $("#stock_name").select2({
+        placeholder: "Stock Name",
+        multiple: false,
+        tokenSeparators: [',', ' '],
+        minimumInputLength: 2,
+        minimumResultsForSearch: 10,
+        ajax: {
+            url: "{{ route('admin.investment.thematic-portfolios.get-stock-name') }}",
+            dataType: "json",
+            type: "GET",
+            data: function(params) {
+
+                var queryParameters = {
+                    term: params.term
+                }
+                return queryParameters;
+            },
+            processResults: function(data) {
+                return {
+                    results: $.map(data, function(item) {
+                        return {
+                            text: item.stock_name,
+                            id: item.stock_name
+                        }
+                    })
+                };
+            }
+        }
+    });
+</script>
+<script>
+    $("#checkAll").on('click',function(){
+        if($(this).is(":checked")){
+            $(".checkAll").attr('checked','checked').prop("checked",true);
+        }else{
+            $(".checkAll").removeAttr('checked').prop("checked",false);
+        }
+    })
+</script>
+<script>
+    $("#filter_btn").on('click',function(){
+        var client_id = $("#client_id option:selected").val()!='' ? $("#client_id option:selected").val() : 'all';
+        var stock_name = $("#stock_name option:selected").val()!='' ? $("#stock_name option:selected").val() : 'all';
+        var buy_date = $("#buy_date").val()!='' ? $("#buy_date").val() : 'all';
+        window.location.href = '{{url("admin/investment/thematic-portfolios")}}?client_id='+client_id+"&stock_name="+stock_name;
+    });
+</script>
+
+<script>
+    $("#record_frm").on("submit",function(e){
+        e.preventDefault();
+        if($(".checkAll:checked").length>0){
+            var r=confirm("Are you sure?")
+            if (r==true)
+            {
+                $("#record_frm")[0].submit();
+            }
+        }else{
+            alert("Select one or more records to delete");
+        }
+    })
+</script>
+
+@endpush

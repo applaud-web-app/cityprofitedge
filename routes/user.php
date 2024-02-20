@@ -47,11 +47,16 @@ Route::middleware('auth')->name('user.')->group(function () {
 
             Route::controller('UserController')->group(function(){
                 Route::get('dashboard', 'home')->name('home');
-
+                Route::get('watch-list', 'watchList')->name('watchList');
+                Route::get('watch-list-order', 'watchListOrder')->name('watchListOrder');
+                Route::get('watch-list-position', 'watchListPosition')->name('watchListPosition');
+                // Route::post('fetch-watch-list-data','fetchwatchList')->name('fetchwatchList');
+                Route::post('buy-watch-list-stock','buywishlist')->name('buyWatchListStock');
                 Route::post('purchase/package', 'purchasePackage')->name('purchase.package');
                 Route::post('renew/package', 'renewPackage')->name('renew.package');
                 Route::get('signals', 'signals')->name('signals');
                 Route::get('referrals', 'referrals')->name('referrals');
+                Route::get('option-analysis', 'OptionAnalysis')->name('option-analysis');
 
                 //2FA
                 Route::get('twofactor', 'show2faForm')->name('twofactor');
@@ -69,13 +74,33 @@ Route::middleware('auth')->name('user.')->group(function () {
                 Route::get('metals-portfolio', 'metalsPortfolio')->name('metals.portfolio');
                 Route::get('portfolio-top-gainers', 'portfolioTopGainers')->name('portfolio.top.gainers');
                 Route::get('portfolio-top-losers', 'portfolioTopLosers')->name('portfolio.top.losers');
+                Route::get('broker-details', 'brokerDetails')->name('portfolio.broker-details');
+                Route::post('store-broker-details', 'storeBrokerDetails')->name('portfolio.store-broker-details');
+                Route::post('update-broker-details/{id}', 'updateBrokerDetails')->name('portfolio.update-broker-details');
+                Route::get('get-broker-details/{id}', 'getBrokerDetails')->name('portfolio.get-broker-details');
+                Route::post('remove-broker-details/{id}', 'removeBrokerDetails')->name('portfolio.remove-broker-details');
+                Route::get('trade-book','tradeBook')->name('trade-book');
+                Route::get('fetch-trade-record','fetchTradeRecord')->name('fetch-trade-book');
+                Route::get('store-ohlc-record','storenewData')->name('store-ohlc-record');
+                Route::get('pl-reports','plReports')->name('pl-reports');
 
                 Route::get('attachment-download/{fil_hash}','attachmentDownload')->name('attachment.download');
+
+                Route::get('oms-config', 'omsConfig')->name('portfolio.oms-config');
+                Route::post('store-oms-config', 'storeOmsConfig')->name('portfolio.store-oms-config');
+                Route::post('update-oms-config', 'updateOmsConfig')->name('portfolio.update-oms-config');
+                Route::post('get-pe-ce-symbol-names', 'getPeCeSymbolNames');
+                Route::post('get-omg-config-data', 'getOmgConfigData');
+                Route::post('remove-oms-config', 'removeOmsConfig')->name('portfolio.remove-oms-config');
+
+                Route::get('order-books', 'orderBooks')->name('order-books');
+                Route::get('trade-positions', 'tradePositions')->name('trade-positions');
 
             });
 
             //Profile setting
             Route::controller('ProfileController')->group(function(){
+                Route::get('info', 'userInfo')->name('info');
                 Route::get('profile-setting', 'profile')->name('profile.setting');
                 Route::post('profile-setting', 'submitProfile');
                 Route::get('change-password', 'changePassword')->name('change.password');

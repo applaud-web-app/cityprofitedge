@@ -4,6 +4,23 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', 'SiteController@index')->name('home');
 
+Route::get('get-market-data', 'SiteController@getMarketData')->name('get-market-data');
+Route::get('get-top-loser-api-data', 'SiteController@getTopLoserData')->name('get-top-loser-api-data');
+Route::get('get-top-gainer-api-data', 'SiteController@getTopGainerApiData')->name('get-top-gainer-api-data');
+Route::get('get-pcr-api-data', 'SiteController@getPcrApiData')->name('get-pcr-api-data');
+Route::get('get-long-build-api-data', 'SiteController@getLongBuildApiData')->name('get-long-build-api-data');
+Route::get('get-short-build-api-data', 'SiteController@getShortBuildApiData')->name('get-short-build-api-data');
+Route::get('get-short-covering-api-data', 'SiteController@getShortCoveringApiData')->name('get-short-covering-api-data');
+Route::get('get-long-unwilling-api-data', 'SiteController@getLongUnwillingApiData')->name('get-long-unwilling-api-data');
+
+// Store Instruments Data
+Route::get('store-token-data', 'SiteController@storeTokenData')->name('storeTokenData');
+
+// Store Historical Data
+Route::get('store-api-fetch-data', 'SiteController@storeApiFetchData');
+
+Route::get('fetch-option-greek-data','SiteController@fetchGreeksApiData')->name('fetch-option-greek-data');
+
 Route::get('/clear', function(){
     \Illuminate\Support\Facades\Artisan::call('optimize:clear');
 });
@@ -39,6 +56,8 @@ Route::controller('SiteController')->group(function () {
 
     Route::get('/cookie/accept', 'cookieAccept')->name('cookie.accept');
     Route::get('/packages', 'packages')->name('packages');
+    Route::get('/package-details/{id}', 'packageDetails')->name('packagedetails');
+    Route::post('/package-details/{id}', 'storeUserRequest')->name('storeUserRequest');
 
     Route::get('/blogs', 'blogs')->name('blogs');
     Route::get('blog/{slug}/{id}', 'blogDetails')->name('blog.details');
@@ -49,5 +68,6 @@ Route::controller('SiteController')->group(function () {
     Route::get('placeholder-image/{size}', 'placeholderImage')->name('placeholder.image');
 
     Route::get('/{slug}', 'pages')->name('pages');
+    
     // Route::get('/', 'index')->name('home');
 });

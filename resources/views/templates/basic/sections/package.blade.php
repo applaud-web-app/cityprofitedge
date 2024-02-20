@@ -29,27 +29,29 @@
                         <div class="col-xl-4 col-md-6 wow fadeInUp" data-wow-duration="0.5" data-wow-delay="0.5s">
                             <div class="package-card">
                                 <h4 class="package-card__name">{{ __($package->name) }}</h4>
-                                <div class="package-card__price">{{ $general->cur_sym }}{{ showAmount($package->price, 0) }}</div>
+                                <p class="">Min. Investment : <span class="text--base">{{ $package->min_investment }}</span></p>
                                 <ul class="package-card__feature-list mt-4">
-                                    @foreach ($package->features as $feature)
-                                        <li>{{ __($feature) }}</li>
-                                    @endforeach
+                                    <li>Horizon : <span class="text--base">{{ $package->time_horizon }}</span></li>
+                                    <li>Asset Type : <span class="text--base">{{ $package->asset_type }}</span></li>
+                                    <li>Risk Appetite : <span class="text--base">{{ $package->risk_appetite }}</span></li>
                                 </ul>
                                 <div class="mt-4">
-                                    <a href="javascript:void(0)" class="btn btn-outline--base chooseBtn"
+                                    <a href="{{url('/package-details/'.$package->id.'')}}" class="btn btn-outline--base ">
+                                        @lang('View Product')
+                                    </a>
+                                    {{-- <a href="{{url('/package-details/'.$package->id.'')}}" class="btn btn-outline--base chooseBtn"
                                         @auth data-id="{{ $package->id }}"
                                         data-name="{{ $package->name }}"
-                                        data-price="{{ showAmount($package->price, 2) }}"
+                                        data-price="{{ showAmount($package->min_investment, 2) }}"
                                         data-validity="{{ $package->validity }}" @endauth>
-                                        @lang('Choose Package')
-                                    </a>
+                                        @lang('View Product')
+                                    </a> --}}
                                 </div>
                             </div><!-- package-card end -->
                         </div>
                     @endforeach
                 </div><!-- row end -->
             </div>
-
             @if (!request()->routeIs('home'))
                 <div class="pt-50 d-flex text-center justify-content-center">
                     {{ $packages->links() }}
@@ -77,7 +79,7 @@
                         </div>
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item d-flex justify-content-between align-items-center">
-                                @lang('Package') <span class="packageName"></span>
+                                @lang('Product') <span class="packageName"></span>
                             </li>
                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                 @lang('Price') <span class="packagePrice"></span>
@@ -106,7 +108,7 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header"> 
-                    <h5 class="modal-title method-name">@lang('Please login before buy a package')</h5>
+                    <h5 class="modal-title method-name">@lang('Please login before buy a product')</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">

@@ -49,7 +49,7 @@
                             @if($user->package_id != 0)
                                 {{ __(@$user->package->name) }}
                             @else
-                                @lang('Package')
+                                @lang('Product')
                             @endif
                         </p>
                         <h4 class="title">
@@ -173,7 +173,7 @@
                             <input type="hidden" name="id" required>
                         </div>
                         <ul class="list-group list-group-flush mt-3">
-                            <li class="list-group-item d-flex justify-content-between align-items-center">@lang('Package') <span class="packageName"></span></li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">@lang('Product') <span class="packageName"></span></li>
                             <li class="list-group-item d-flex justify-content-between align-item
                             s-center">@lang('Price') <span class="packagePrice"></span></li>
                             <li class="list-group-item d-flex justify-content-between align-items-center">@lang('Validity') <span class="packageValidity"></span></li>

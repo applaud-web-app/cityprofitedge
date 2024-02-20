@@ -1,4 +1,16 @@
 /* Copy Animation */
+.dash-card{
+  background-color: #0d222b;
+}
+
+/* charts style */
+.apexcharts-legend-text {
+  position: relative;
+  font-size: 14px;
+  color: #e4e4e4!important;
+}
+
+
 
 .base-color{
   color: hsl(var(--main)) !important;
@@ -192,8 +204,6 @@
         color: #28c76f;
     }
 
-
-
  .show-filter{
   display: none;
 }
@@ -205,4 +215,17 @@
   .show-filter{
       display: block;
   }
+  .nifty--section {
+    padding: 5px;
+  
+   
+}
+.nifty--section p{
+
+  font-size: 12px;
+ 
+}
+.nifty--section p span{
+  display: block;
+}
 }

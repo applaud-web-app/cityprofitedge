@@ -73,11 +73,13 @@ class StockPortfolioDataImport implements ToCollection, WithHeadingRow
                     continue;
                 }
 
+                $ddtTime = \Carbon\Carbon::instance(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['buy_date']));
+
                 $stockPortfolio = new StockPortfolio();
                 $stockPortfolio->broker_name = $row['broker_name'] ?: null;
                 $stockPortfolio->stock_name = $row['stock_name'] ?: null;
                 $stockPortfolio->quantity = $row['qty'] ?: 0;
-                $stockPortfolio->buy_date = $row['buy_date'] ? date("Y-m-d",strtotime($row['buy_date'])) : null;
+                $stockPortfolio->buy_date = $row['buy_date'] ? date("Y-m-d",strtotime($ddtTime)) : null;
                 $stockPortfolio->buy_price = $row['buy_price'] ?: 0;
                 $stockPortfolio->cmp = $row['cmp'] ?: 0;
                 $stockPortfolio->current_value = $row['current_value'] ?: 0;

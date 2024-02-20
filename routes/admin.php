@@ -8,8 +8,8 @@ Route::namespace('Auth')->group(function () {
         Route::get('/', 'showLoginForm')->name('login');
         Route::post('/', 'login')->name('login');
         Route::get('logout', 'logout')->middleware('admin')->name('logout');
+        
     });
-
     // Admin Password Reset
     Route::controller('ForgotPasswordController')->prefix('password')->name('password.')->group(function(){
         Route::get('reset', 'showLinkRequestForm')->name('reset');
@@ -71,6 +71,46 @@ Route::middleware('admin')->group(function () {
         Route::get('notification-log/{id}', 'notificationLog')->name('notification.log');
         Route::get('signal-log/{id}', 'signalLog')->name('signal.log');
         Route::get('referrals/{id}', 'referrals')->name('referrals');
+
+        
+        Route::get('user-enquiry','getuserEnquiry')->name('getuserEnquiry');
+    });
+
+    // Route::controller('TradeController')->group(function(){
+    
+    //     Route::get('trade-desk-signal', 'index')->name('tradeDeskSignal');
+    //     Route::get('trade-position', 'tradePosition')->name('trade.tradePosition');
+    //     Route::get('broker-details', 'brokerDetails')->name('trade.brokerDetails');
+    //     Route::get('order-book', 'orderBook')->name('trade.orderBook');
+    //     Route::get('oms-config', 'omsConfig')->name('trade.omsConfig');
+       
+    // });
+
+
+    Route::controller('TradeController')->name('trade.')->prefix('trade')->group(function(){
+        Route::get('save-all-angel-instruments', 'saveAllAngelInstruments');
+        Route::get('upload-zerodha-instruments', 'uploadZerodhaInstruments')->name('uploadZerodhaInstruments');
+
+        Route::group(['as' => 'trade-desk-signal.', 'prefix' => 'trade-desk-signal'], function() {
+            Route::get('/', 'tradeDeskSignal')->name('all');
+        });
+
+        Route::group(['as' => 'trade-position.', 'prefix' => 'trade-position'], function() {
+            Route::get('/', 'tradePosition')->name('all');
+        });
+
+        Route::group(['as' => 'broker-details.', 'prefix' => 'broker-details'], function() {
+            Route::get('/', 'brokerDetails')->name('all');
+        });
+
+        Route::group(['as' => 'order-book.', 'prefix' => 'order-book'], function() {
+            Route::get('/', 'orderBook')->name('all');
+        });
+
+        Route::group(['as' => 'oms-config.', 'prefix' => 'oms-config'], function() {
+            Route::get('/', 'omsConfig')->name('all');
+        });
+        
     });
 
     Route::controller('InvestmentOverviewController')->name('investment.')->prefix('investment')->group(function(){
@@ -81,6 +121,11 @@ Route::middleware('admin')->group(function () {
 
             Route::get('download', 'templateThematicPortfolioDownload')->name('download.template');
             Route::post('upload', 'uploadThematicPortfolios')->name('upload');
+            Route::post('delete', 'deleteThematicPortfolio')->name('delete');
+            // New
+            Route::get('get-search-client-id', 'getThematicPortfoliosSearchClientId')->name('get-search-client-id');
+            Route::get('get-stock-name', 'getThematicPortfolios')->name('get-stock-name');
+            Route::post('remove-stock-portfolio', 'removeThematicPortfolios')->name('remove-stock-portfolio');
         });
 
         // global-stock portfolio
@@ -91,6 +136,10 @@ Route::middleware('admin')->group(function () {
 
             Route::get('download', 'templateGlobalStockPortfolioDownload')->name('download.template');
             Route::post('upload', 'uploadGlobalStockPortfolios')->name('upload');
+            Route::get('get-search-client-id', 'getSearchClientId')->name('get-search-client-id');
+            Route::get('get-stock-name', 'getStockName')->name('get-stock-name');
+            Route::post('remove-stock-portfolio', 'removeStockPortfolio')->name('remove-stock-portfolio');
+            Route::post('delete', 'deleteGlobalStockPortfolio')->name('delete');
         });
 
         // F&O portfolio hedging
@@ -99,8 +148,14 @@ Route::middleware('admin')->group(function () {
             Route::get('add', 'addFoPortfolioHedging')->name('add.page');
             Route::post('add', 'addSubmitFoPortfolioHedging')->name('add.submit');
 
+            Route::get('get-faport-search-client-id', 'getFoPortSearchClientId')->name('get-faport-search-client-id');
+            Route::get('get-foport-name', 'getFoPortfolioHedging')->name('get-foport-name');
+            Route::post('remove-foPortfolio', 'removefoPortfolio')->name('remove-foPortfolio');
+
             Route::get('download', 'templateFoPortfolioHedgingDownload')->name('download.template');
             Route::post('upload', 'uploadFoPortfolioHedging')->name('upload');
+
+            Route::post('delete', 'deleteFoPortfolioHedging')->name('delete');
         });
 
         // Metals portfolio
@@ -109,8 +164,15 @@ Route::middleware('admin')->group(function () {
             Route::get('add', 'addMetalsPortfolios')->name('add.page');
             Route::post('add', 'addSubmitMetalsPortfolios')->name('add.submit');
 
+
+            Route::get('get-metals-search-client-id', 'getMetalsPortfoliosSearchClientId')->name('get-metals-search-client-id');
+            Route::get('get-metals-name', 'getMetalsPortfoliosfolio')->name('get-metals-name');
+            Route::post('remove-MetalsPortfolios', 'removeMetalsPortfolios')->name('remove-MetalsPortfolios');
+            
             Route::get('download', 'templateMetalsPortfolioDownload')->name('download.template');
             Route::post('upload', 'uploadMetalsPortfolios')->name('upload');
+
+            Route::post('delete', 'deleteMetalsPortfolio')->name('delete');
         });
     });
 
@@ -121,9 +183,13 @@ Route::middleware('admin')->group(function () {
             Route::get('/', 'allTopGainers')->name('all');
             Route::get('add', 'addTopGainers')->name('add.page');
             Route::post('add', 'addSubmitTopGainers')->name('add.submit');
-
             Route::get('download', 'templateTopGainersDownload')->name('download.template');
             Route::post('upload', 'uploadTopGainers')->name('upload');
+            Route::post('delete', 'deleteTopGainer')->name('delete');
+
+            Route::get('get-stock-name', 'getTopGainers')->name('get-stock-name');
+            Route::post('remove-stock-portfolio', 'removeTopGainers')->name('remove-stock-portfolio');
+
         });
 
         // Portfolio Top Losers
@@ -134,6 +200,10 @@ Route::middleware('admin')->group(function () {
 
             Route::get('download', 'templateTopLosersDownload')->name('download.template');
             Route::post('upload', 'uploadTopLosers')->name('upload');
+
+            Route::post('delete', 'deleteTopLoser')->name('delete');
+            Route::get('get-stock-name', 'getTopLosers')->name('get-stock-name');
+            Route::post('remove-stock-portfolio', 'removeTopLosers')->name('remove-stock-portfolio');
         });
     });
 
@@ -145,6 +215,11 @@ Route::middleware('admin')->group(function () {
 
             Route::get('download', 'templateLedgerDownload')->name('download.template');
             Route::post('upload', 'uploadLedger')->name('upload');
+            Route::post('delete', 'deleteLedger')->name('delete');
+
+            Route::get('get-search-client-id', 'getLedgerSearchClientId')->name('get-search-client-id');
+            Route::get('get-stock-name', 'getLedger')->name('get-stock-name');
+            Route::post('remove-stock-portfolio', 'removeLedger')->name('remove-stock-portfolio');
         });
 
         // Stock Portfolio
@@ -153,6 +228,11 @@ Route::middleware('admin')->group(function () {
 
             Route::get('download', 'templateStockPortfolioDownload')->name('download.template');
             Route::post('upload', 'uploadStockPortfolio')->name('upload');
+
+            Route::post('delete', 'deleteStockPortfolio')->name('delete');
+            Route::get('get-search-client-id', 'getSearchClientId')->name('get-search-client-id');
+            Route::get('get-stock-name', 'getStockName')->name('get-stock-name');
+            Route::post('remove-stock-portfolio', 'removeStockPortfolio')->name('remove-stock-portfolio');
         });
     });
 
@@ -163,6 +243,10 @@ Route::middleware('admin')->group(function () {
         Route::get('download', 'templateTransactionDownload')->name('download.template');
         // upload transaction template
         Route::post('upload', 'uploadTransaction')->name('upload');
+        Route::post('delete', 'deleteTransaction')->name('delete');
+
+        Route::get('get-stock-name', 'getTransactions')->name('get-stock-name');
+        Route::post('remove-stock-portfolio', 'removeTransactions')->name('remove-stock-portfolio');
     });
 
     // Subscriber

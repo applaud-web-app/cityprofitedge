@@ -7,7 +7,7 @@
             <div class="row gy-5">
                 <div class="col-lg-8">
                     <div class="blog-post__date fs--14px d-inline-flex align-items-center"><i
-                            class="las la-calendar-alt fs--18px me-2"></i>{{ showDateTime($blog->created_at, 'd M Y') }}</div>
+                            class="las la-calendar-alt fs--18px me-2"></i>{{ showDateTime($blog->updated_at, 'd M Y') }}</div>
                     <h2 class="blog-details-title mb-3">
                         {{ __($blog->data_values->title) }}
                     </h2>
@@ -71,7 +71,7 @@
                                             </a>
                                         </h6>
                                         <p class="fs--12px mt-2"><i
-                                                class="las la-calendar-alt fs--14px me-1"></i>{{ showDateTime($singleBlog->created_at, 'd M Y') }}
+                                                class="las la-calendar-alt fs--14px me-1"></i>{{ showDateTime($singleBlog->updated_at, 'd M Y') }}
                                         </p>
                                     </div>
                                 </li>

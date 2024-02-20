@@ -1,0 +1,1177 @@
+<?php
+
+namespace App\Console\Commands;
+
+use Illuminate\Console\Command;
+use App\Models\AngelApiInstrument;
+use App\Models\AngleHistoricalApi;
+use App\Models\ZerodhaInstrument;
+use App\Models\AngleOhlcData;
+use App\Models\LTP_ROUNDOFF;
+use App\Http\Helpers\helpers;
+use App\Traits\AngelApiAuth;
+use App\Models\StoreMarketData;
+use Carbon\Carbon;
+
+class AngelHistorical extends Command
+{
+    use AngelApiAuth;
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'angleHistorical:every_minute';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Command description';
+
+    /**
+     * Execute the console command.
+     *
+     * @return int
+     */
+
+    // For MCX DATA
+    function isBetween915AMto1130PM() {
+        // date_default_timezone_set("Asia/Calcutta");
+        $currentTime = time();
+        $startTime = strtotime('9:15 AM');
+        $endTime = strtotime('11:30 PM');
+        
+        if ($currentTime >= $startTime && $currentTime <= $endTime) {
+            return true; 
+        } else {
+            return false; 
+        }
+    }
+
+    // For MCX AND NSE DATA
+    function getLTP($exhange , $symbol , $token){
+        $jwtToken =  $this->generate_access_token();
+        // dd($jwtToken);
+        $errData = [];
+        if($jwtToken!=null){
+            $curl = curl_init();
+            curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://apiconnect.angelbroking.com/order-service/rest/secure/angelbroking/order/v1/getLtpData',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => '{
+                "exchange": "'.$exhange.'",
+                "tradingsymbol": "'.$symbol.'",
+                "symboltoken": "'.$token.'"
+            }',
+            CURLOPT_HTTPHEADER => array(
+                'X-UserType: USER',
+                'X-SourceID: WEB',
+                'X-PrivateKey: '.$this->apiKey,
+                'X-ClientLocalIP: '.$this->clientLocalIp,
+                'X-ClientPublicIP: '.$this->clientPublicIp,
+                'X-MACAddress: '.$this->macAddress,
+                'Content-Type: application/json',
+                'Authorization: Bearer '.$jwtToken
+            ),
+            ));
+
+            $response = curl_exec($curl);
+            // dd($response);
+            $err = curl_error($curl);
+            curl_close($curl);
+            if ($err) {
+                return $errData;
+            }
+            $errData = json_decode($response,true);
+            return $errData;
+        }
+        return $errData;
+    }
+
+    // For MCX
+    function getUniqueStrikes($data) {
+        $uniqueStrikes = array();
+        $newArray = array();
+        foreach ($data as $item) {
+            if (!in_array($item['strike'], $uniqueStrikes, true)) {
+                $uniqueStrikes[] = $item['strike'];
+                $newArray[] = $item;
+            }
+        }
+        return $newArray;
+    }
+
+    // For MCX DATA
+    function getStrickData($name , $exhange , $givenLtp , $ce_adjustment, $pe_adjustment){
+        $angleData = AngelApiInstrument::Where('name',$name)->where('exch_seg',$exhange)->orderBy('expiry','ASC')->get()->toArray();
+      
+        $angleData = array_map(function ($y) {
+            $y['expiry'] = strtotime($y['expiry']);
+            
+            return $y;
+        }, $angleData);
+
+        array_multisort(array_column($angleData ,'expiry'),SORT_ASC ,$angleData);
+
+        $angleData = array_map(function ($y) {
+            $y['strike'] = ($y['strike'] / 100);
+            return $y;
+        }, $angleData);
+
+        if($name == "NATURALGAS"){
+            $angleData = array_values(array_filter($angleData, function($x) {
+                return ($x['strike'] % 60 == 0 || $x['strike'] % 70 == 0);
+            }));    
+        }else{
+            $angleData = array_values(array_filter($angleData, function($x) {
+                return $x['strike']%100==0;
+            }));
+        }
+
+        // New Change
+        $futComData = array_values(array_filter($angleData, function($x) {
+            return ($x['instrumenttype'] == 'FUTCOM' && $x['expiry'] >= strtotime(date('d-m-Y')));
+        }));
+          
+        $futComData = array_map(function ($y) {
+            $y['ts_len'] = strlen($y['symbol_name']);
+            return $y;
+        }, $futComData);
+
+        // dd($futComData);
+        $expiry = [];
+        $ts_len = [];
+
+        array_multisort(array_column($futComData ,'expiry'),SORT_ASC,array_column($futComData ,'ts_len'),SORT_ASC,$futComData );
+       
+        $latest_expriyDate = $futComData[0]['expiry'];
+        $token = $futComData[0]['token'];
+        $tradingsymbol = $futComData[0]['symbol_name'];
+
+        if(!$givenLtp){
+            $ltpByApi = $this->getLTP($exchangeVal,$nameVal,$tokenVal);
+            if($ltpByApi['status'] == true){
+                $ltp = $ltpByApi['data']['ltp'];
+            }
+        }else{
+            $ltp = $givenLtp;
+        }
+        
+        $strikes = $this->getUniqueStrikes($angleData);
+        
+
+        $strikes = array_values(array_filter($strikes, function($value) {
+            return $value['strike'] != null;
+        })); 
+
+        array_multisort(array_column($strikes, 'strike'),SORT_ASC,$strikes);
+       
+        $absprc = array_map(function ($y) use($ltp) {
+            return abs($y['strike'] - $ltp);
+        }, $strikes);
+
+        // dd($absprc);
+       
+        // dd(array_column($strikes, 'strike'));
+
+        $min_index = array_search(min($absprc), $absprc);
+        // dd($min_index);
+
+        if($min_index + $ce_adjustment < count($strikes) && $min_index + $pe_adjustment < count($strikes)){
+            $closest_strike_ce = $strikes[$min_index + ($ce_adjustment)]['strike'];
+            $closest_strike_pe = $strikes[$min_index + ($pe_adjustment)]['strike'];
+
+            if ($closest_strike_ce != 0.0 && $closest_strike_pe != 0.0) {
+
+                $strike_filter_ce  = array_filter($angleData,function($x) use($closest_strike_ce){
+                    return $x['strike'] == $closest_strike_ce;
+                });  
+                
+                $strike_filter_pe  = array_filter($angleData,function($x) use($closest_strike_pe){
+                    return $x['strike'] == $closest_strike_pe;
+                });  
+
+                $ce_instrument = array_values(array_filter($strike_filter_ce, function($x) {
+                    return substr($x['symbol_name'],-2) == "CE";
+                }));
+
+                $pe_instrument = array_values(array_filter($strike_filter_pe, function($x) {
+                    return substr($x['symbol_name'],-2) == "PE";
+                }));
+
+                $ce_instrument = $ce_instrument[0];
+                $pe_instrument = $pe_instrument[0];
+
+                $ce_token = $ce_instrument["token"];
+                $ce_symbol = $ce_instrument["symbol_name"];
+                $ce_exchange = $ce_instrument["exch_seg"];
+    
+                $pe_token = $pe_instrument["token"];
+                $pe_symbol = $pe_instrument["symbol_name"];
+                $pe_exchange = $pe_instrument["exch_seg"];
+
+                $instrumenttype = ($exhange == 'MCX') ? 'COMDTY' : 'AMXIDX';
+                $index = AngelApiInstrument::Where('name',$name)->where('exch_seg',$exhange)->where('instrumenttype',$instrumenttype)->first()->toArray();
+
+                $index_token = ($index != NULL) ? $index['token'] : null;
+
+                return  array(array($ce_symbol, $ce_token,$ce_exchange, $ce_adjustment), array($pe_symbol, $pe_token,$pe_exchange, $pe_adjustment), $index_token); 
+            }else{
+                return array(array(null, null), array(null, null), null);
+            }
+        }else{
+            return array(array(null, null), array(null, null), null);
+        }
+    }
+
+    // FOR NSE
+    public function get_upcoming_expiry($name, $exchange){
+        if ($exchange == 'NSE') {
+            $exchange = 'NFO';
+        }
+
+        $angleData = AngelApiInstrument::Where('name',$name)->where('exch_seg',$exchange)->get()->toArray();
+        // dd($angleData);
+        $angleData = array_map(function ($y) {
+            $y['expiry'] = date("d-m-Y", strtotime($y['expiry']));  
+            return $y;
+        }, $angleData);
+
+        $expiry_list = array_map(function ($y) {
+            return $y['expiry']; 
+        }, $angleData);
+
+        $final_expiry = array_unique($expiry_list);
+        usort($final_expiry, function ($a, $b) {
+            return strtotime($a) - strtotime($b);
+        });
+        
+        $current_date = date('d-m-Y');
+        $current_day = date('d');
+        $current_month = date('m');
+        $current_year = date('Y');
+        $upcoming_exp_date = "";
+        foreach ($final_expiry as $expiry) {
+            $datetime_object = date($expiry);
+            if ($datetime_object > $current_date) {
+                if ($current_year == date("Y", strtotime($datetime_object))) {
+                    if ($current_month == date("m", strtotime($datetime_object))) {
+                        $upcoming_exp_date = $datetime_object;
+                        break;
+                    } else {
+                        $next_month = $current_month + 1;
+                        if ($next_month == date("m", strtotime($datetime_object))) {
+                            $upcoming_exp_date = $datetime_object;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        $upcoming_exp_date_str = date("d-m-Y", strtotime($upcoming_exp_date));
+        $current_date_str = date("d-m-Y", strtotime($current_date));
+        return array($current_date_str, $upcoming_exp_date_str);
+
+    }
+
+    public function get_rounded_price($price,$symbol_name, $adjustment){
+
+        $ltp_roundoff = LTP_ROUNDOFF::WHERE('name',$symbol_name)->first();
+        return round(($price / $ltp_roundoff->value) + (int)$adjustment) * $ltp_roundoff->value;
+    }
+
+
+    public function get_atm_strike_symbol_angel($spt_prc, $symbol_name, $nse_symbol, $exchange_name, $expiry_dates, $ce_adjustment, $pe_adjustment){
+
+        $angleData = AngelApiInstrument::Where('name',$symbol_name)->get()->toArray();
+       
+        $rounded_price_ce = $this->get_rounded_price($spt_prc, $symbol_name, $ce_adjustment);
+        $rounded_price_pe = $this->get_rounded_price($spt_prc, $symbol_name, $pe_adjustment);
+
+        $filters = array_map(function ($y) {
+            $y['expiry'] = strtotime($y['expiry']);
+            return $y;
+        }, $angleData);
+
+        try {
+            $index_row = AngelApiInstrument::Where('name',$symbol_name)->where('exch_seg','NSE')->get()->toArray();
+            $index_token = $index_row[0]['token'];
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+        }
+
+        if ($exchange_name == 'NSE') {
+            $exchange_name = 'NFO';
+        }
+
+        // dd($expiry_dates);
+
+        $filters = array_values(array_filter($filters, function($x) use($symbol_name,$exchange_name,$expiry_dates) {
+            if(($x['name'] == $symbol_name) && ($x["exch_seg"] == $exchange_name) && ($x['expiry'] <= strtotime($expiry_dates[1])) && ($x['expiry'] >= strtotime($expiry_dates[0]))){
+                return $x;
+            }
+        }));
+
+        // dd($filters);
+       
+        $filters = array_map(function ($y) {
+            $y['strike'] = ($y['strike'] / 100);
+            return $y;
+        }, $filters);
+
+        // dd($filters);
+
+        try {
+            $ce_filters = array_values(array_filter($filters, function($x) use($expiry_dates,$rounded_price_ce) {
+                if(($x['expiry'] == strtotime($expiry_dates[1]))  && (substr($x['symbol_name'],-2) == "CE") && ($x["strike"] == $rounded_price_ce)){
+                    return $x;
+                }
+            }));
+         
+            $ce_symbol = $ce_filters[0]["symbol_name"];
+            $ce_instrument_token = $ce_filters[0]["token"];
+
+            $pe_filters = array_values(array_filter($filters, function($x) use($expiry_dates,$rounded_price_pe) {
+                if($x['expiry'] == strtotime($expiry_dates[1]) && (substr($x['symbol_name'],-2) == "PE") && ($x["strike"] == $rounded_price_pe)){
+                    return $x;
+                }
+            }));
+
+            $pe_symbol = $pe_filters[0]["symbol_name"];
+            $pe_instrument_token = $pe_filters[0]["token"];
+
+            // dd($pe_filters);
+
+            return array(array($ce_symbol, $ce_instrument_token, $ce_adjustment), array($pe_symbol, $pe_instrument_token, $pe_adjustment), $index_token);
+
+        } catch (IndexError $e) {
+            return array(array(null, null), array(null, null), NULL);
+        }
+    }
+
+    // For OHLC DATA
+    // public function storenewData($his_id , $period = 21 , $multiplier = 3){
+    //     // set_time_limit(0);
+    //     if($his_id > 1){
+    //         $previousData = AngleHistoricalApi::where('id', '<', $his_id)->orderBy('id','desc')->first()->toArray();
+    //         $previousClose = $previousData['close'];
+    //     }else{
+    //         $previousClose = NULL;
+    //     }
+    //     $ohlc = AngleHistoricalApi::where('id',$his_id)->first()->toArray();
+       
+    //     // New Records
+    //     $open = round(($ohlc['open'] + $ohlc['close']) / 2,2);
+    //     $close = round(($ohlc['open'] + $ohlc['high'] + $ohlc['low'] + $ohlc['close']) / 4,2);
+        
+
+    //     if ($previousClose != NULL) {
+    //         $high = max($ohlc['high'], $open, $close);
+    //         $low = min($ohlc['low'], $open, $close);
+    //     } else {
+    //         $high = $ohlc['high'];
+    //         $low = $ohlc['low'];
+    //     }       
+
+    //     $heikinAshiData = [
+    //         'historical_id' => $ohlc['id'],
+    //         'symbol' => $ohlc['symbol'],
+    //         'date' => $ohlc['timestamp'],
+    //         'open' => $open,
+    //         'high' => $high,
+    //         'low' => $low,
+    //         'close' => $close
+    //     ];
+
+    //     $trend = NULL;
+    //     $strength = NULL;
+    //     // for trend and strength8
+    //     $allOHLCData = AngleOhlcData::get()->toArray(); 
+    //     if(count($allOHLCData) >= $period){
+    //         $rowNum = count($allOHLCData);
+    //         $HighAll = array_map(function($val){
+    //             return $val['new_high'];
+    //         },$allOHLCData);
+    //         array_push($HighAll,$heikinAshiData['high']);
+    
+    //         $LowAll = array_map(function($val){
+    //             return $val['new_low'];
+    //         },$allOHLCData);
+    //         array_push($LowAll,$heikinAshiData['low']);
+    
+    //         $CloseAll = array_map(function($val){
+    //             return $val['new_close'];
+    //         },$allOHLCData);
+    //         array_push($CloseAll,$heikinAshiData['close']);
+
+    //         $basicUpperBand = ($HighAll[$rowNum - 1] + $LowAll[$rowNum - 1]) / 2;  // 20
+    //         $basicLowerBand = ($HighAll[$rowNum - 1] + $LowAll[$rowNum - 1]) / 2;  // 20
+    //         $finalUpperBand = 0;
+    //         $finalLowerBand = 0;
+            
+    //         // Calculate ATR
+    //         $atr = [];
+    //         $atr[0] = 0;
+
+    //         for ($i = 1; $i < count($CloseAll); $i++) {
+    //             $tr1 = max($HighAll[$i] - $LowAll[$i], abs($HighAll[$i] - $CloseAll[$i - 1]), abs($LowAll[$i] - $CloseAll[$i - 1]));
+    //             $atr[$i] = ($atr[$i - 1] * ($rowNum - 1) + $tr1) / $rowNum;
+
+    //             if($i % 100){
+    //                 sleep(1);
+    //             }
+    //         }
+
+    //         // Calculate Super Trend
+    //         if(count($CloseAll) >= $rowNum){
+
+    //             $basicUpperBand = (($HighAll[$rowNum] + $LowAll[$rowNum]) / 2 ) + ($multiplier * $atr[$rowNum]);
+    //             $basicLowerBand = (($HighAll[$rowNum] + $LowAll[$rowNum]) / 2 ) - ($multiplier * $atr[$rowNum]);
+                
+    //             if ($basicUpperBand < $finalUpperBand || $CloseAll[$rowNum - 1] > $finalUpperBand) {
+    //                 $finalUpperBand = $basicUpperBand;
+    //             } else {
+    //                 $finalUpperBand = $finalUpperBand;
+    //             }
+                
+    //             if ($basicLowerBand > $finalLowerBand || $CloseAll[$rowNum - 1] < $finalLowerBand) {
+    //                 $finalLowerBand = $basicLowerBand;
+    //             } else {
+    //                 $finalLowerBand = $finalLowerBand;
+    //             }            
+        
+    //             if ($CloseAll[$rowNum] <= $finalUpperBand) {
+    //                 $trend = 'Bullish';
+    //                 $strength  = ($finalUpperBand - $CloseAll[$rowNum]) / $atr[$rowNum];
+    //             } elseif ($CloseAll[$rowNum] >= $finalLowerBand) {
+    //                 $trend = 'Bearish';
+    //                 $strength = ($CloseAll[$rowNum] - $finalLowerBand) / $atr[$rowNum];
+    //             } 
+    //         }
+
+    //         // dd($trend.'--'.$strength.'--'.$finalLowerBand.'--'.$finalUpperBand);
+    //     }
+
+    //     if($strength != NULL){
+    //         $strength = round($strength, 2);
+    //     }
+
+    //     $insert = new AngleOhlcData;
+    //     $insert->historical_id = $heikinAshiData['historical_id'];
+    //     $insert->symbol = $heikinAshiData['symbol'];
+    //     $insert->date = $heikinAshiData['date'];
+    //     $insert->new_open = $heikinAshiData['open'];
+    //     $insert->new_high = $heikinAshiData['high'];
+    //     $insert->new_low = $heikinAshiData['low'];
+    //     $insert->new_close = $heikinAshiData['close'];
+    //     $insert->trend = $trend;
+    //     $insert->strength = $strength;
+    //     // dd($insert);
+    //     $insert->save();
+    //     return 1;
+    // }
+
+    // AVERAGE PRICE
+    public function get_average_price($exchange , $token, $jwtToken){
+        // $jwtToken =  $this->generate_access_token();
+        $errData = [];
+        if($jwtToken!=null){
+            $curl = curl_init();
+            curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://apiconnect.angelbroking.com/rest/secure/angelbroking/market/v1/quote/',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => '{
+                "mode": "FULL",
+                "exchangeTokens": {
+                    "'.$exchange.'": ["'.$token.'"]
+                }
+            }',
+            CURLOPT_HTTPHEADER => array(
+                'X-UserType: USER',
+                'X-SourceID: WEB',
+                'X-PrivateKey: '.$this->apiKey,
+                'X-ClientLocalIP: '.$this->clientLocalIp,
+                'X-ClientPublicIP: '.$this->clientPublicIp,
+                'X-MACAddress: '.$this->macAddress,
+                'Content-Type: application/json',
+                'Authorization: Bearer '.$jwtToken
+            ),
+            ));
+
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+            curl_close($curl);
+            if ($err) {
+                return $errData;
+            }
+            $errData = json_decode($response,true);
+            return $errData;
+        }
+        return $errData;
+    }
+
+    public function calcNewData($params,$multiplier=3,$period = 21){
+
+        $allOHLCData = AngleHistoricalApi::where('token', $params['token'])->get()->toArray(); 
+        $previousData = array_slice($allOHLCData,-1);
+        $previousClose = null;
+        $newhigh = $params['high'];
+        $newlow = $params['low'];
+        $newopen = $params['open'];
+        $newclose = $params['close'];
+
+        $trend = null;
+        $strength  = null;
+
+        if($previousData){
+            $previousClose = $previousData['close'];
+            $newopen = round(($params['open'] + $params['close']) / 2,2);
+            $newclose = round(($params['open'] + $params['high'] + $params['low'] + $params['close']) / 4,2);
+            $newhigh = max($ohlc['high'], $newopen, $newclose);
+            $newlow = min($ohlc['low'], $newopen, $newclose);
+        }
+
+        
+        if(count($allOHLCData) >= $period){
+            $rowNum = count($allOHLCData);
+            $HighAll = array_map(function($val){
+                return $val['new_high'];
+            },$allOHLCData);
+            array_push($HighAll,$newhigh);
+    
+            $LowAll = array_map(function($val){
+                return $val['new_low'];
+            },$allOHLCData);
+            array_push($LowAll,$newlow);
+    
+            $CloseAll = array_map(function($val){
+                return $val['new_close'];
+            },$allOHLCData);
+            array_push($CloseAll,$newclose);
+
+            $basicUpperBand = ($HighAll[$rowNum - 1] + $LowAll[$rowNum - 1]) / 2;  // 20
+            $basicLowerBand = ($HighAll[$rowNum - 1] + $LowAll[$rowNum - 1]) / 2;  // 20
+            $finalUpperBand = 0;
+            $finalLowerBand = 0;
+            
+            // Calculate ATR
+            $atr = [];
+            $atr[0] = 0;
+
+            for ($i = 1; $i < count($CloseAll); $i++) {
+                $tr1 = max($HighAll[$i] - $LowAll[$i], abs($HighAll[$i] - $CloseAll[$i - 1]), abs($LowAll[$i] - $CloseAll[$i - 1]));
+                $atr[$i] = ($atr[$i - 1] * ($rowNum - 1) + $tr1) / $rowNum;
+                if($i % 100){
+                    sleep(1);
+                }
+            }
+
+            // Calculate Super Trend
+            if(count($CloseAll) >= $rowNum){
+
+                $basicUpperBand = (($HighAll[$rowNum] + $LowAll[$rowNum]) / 2 ) + ($multiplier * $atr[$rowNum]);
+                $basicLowerBand = (($HighAll[$rowNum] + $LowAll[$rowNum]) / 2 ) - ($multiplier * $atr[$rowNum]);
+                
+                if ($basicUpperBand < $finalUpperBand || $CloseAll[$rowNum - 1] > $finalUpperBand) {
+                    $finalUpperBand = $basicUpperBand;
+                } else {
+                    $finalUpperBand = $finalUpperBand;
+                }
+                
+                if ($basicLowerBand > $finalLowerBand || $CloseAll[$rowNum - 1] < $finalLowerBand) {
+                    $finalLowerBand = $basicLowerBand;
+                } else {
+                    $finalLowerBand = $finalLowerBand;
+                }            
+        
+                if ($CloseAll[$rowNum] <= $finalUpperBand) {
+                    $trend = 'Bullish';
+                    $strength  = ($finalUpperBand - $CloseAll[$rowNum]) / $atr[$rowNum];
+                } elseif ($CloseAll[$rowNum] >= $finalLowerBand) {
+                    $trend = 'Bearish';
+                    $strength = ($CloseAll[$rowNum] - $finalLowerBand) / $atr[$rowNum];
+                } 
+            }   
+        }
+        return ['trend'=>$trend,'strength'=>$strength,'high'=>$newhigh,'low'=>$newlow,'open'=>$newopen,'close'=>$newclose];
+    }
+
+
+    // For Both NSE AND MCX
+    public function get_historical_api_data($symbolDetails, $alltoken,$atmRange){
+        // dd($atmRange);
+        // set_time_limit(0);
+        $jwtToken =  $this->generate_access_token();
+        // $todayDate = date("Y-m-d"); // today date
+        $currentDate = date("Y-m-d H:i"); // today date [currentval]
+        // $current_time = time(); // today date in timestamp
+        // $past_30_min_time = strtotime('-1 minutes', $current_time); // Subtract 24hr
+        $previousDate =  date('Y-m-d H:i',  strtotime($currentDate.' -1 minutes')); // 1min back current time [previousval]
+        foreach ($symbolDetails as $k => $sym){
+            $getDetails = AngelApiInstrument::Where('token',$alltoken[$k])->first();
+            $timeFrame = ['ONE_MINUTE','THREE_MINUTE','FIVE_MINUTE'];
+            if($getDetails != NULL){
+                foreach ($timeFrame as $interval) {
+                    $currentSymbol = $sym;  // symbol Name
+                    $token = $alltoken[$k]; // token name
+                    $atmStr = $atmRange[$k]; // token name
+                    $currentExchange =  $getDetails->exch_seg; // exchange
+                    $errData = [];   
+                    if($jwtToken!=null){
+                        $curl = curl_init();
+                        curl_setopt_array($curl, array(
+                            CURLOPT_URL => 'https://apiconnect.angelbroking.com/rest/secure/angelbroking/historical/v1/getCandleData',
+                            CURLOPT_RETURNTRANSFER => true,
+                            CURLOPT_ENCODING => '',
+                            CURLOPT_MAXREDIRS => 10,
+                            CURLOPT_TIMEOUT => 0,
+                            CURLOPT_FOLLOWLOCATION => true,
+                            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                            CURLOPT_CUSTOMREQUEST => 'POST',
+                            CURLOPT_POSTFIELDS => '{
+                                "exchange": "'.$currentExchange.'",
+                                "symboltoken": "'.$token.'",
+                                "interval": "'.$interval.'",
+                                "fromdate": "'.$previousDate.'",
+                                "todate": "'.$currentDate.'"
+                            }',
+                            CURLOPT_HTTPHEADER => array(
+                                'X-UserType: USER',
+                                'X-SourceID: WEB',
+                                'X-PrivateKey: '.$this->apiKey,
+                                'X-ClientLocalIP: '.$this->clientLocalIp,
+                                'X-ClientPublicIP: '.$this->clientPublicIp,
+                                'X-MACAddress: '.$this->macAddress,
+                                'Content-Type: application/json',
+                                'Authorization: Bearer '.$jwtToken
+                            ),
+                        ));
+            
+                        $response = curl_exec($curl);
+                        $err = curl_error($curl);
+                        curl_close($curl);
+
+                        // dd($response);
+                        if ($err) {
+                            return $errData;
+                        }
+
+                        $response = json_decode($response,true);
+                        // dd($response);die;
+                        
+                        try {
+                            if($response['status'] == true){
+                                $data = $response['data'];
+                                // check this
+                                $res = $this->get_average_price($currentExchange,$token,$jwtToken);
+                                if($res['status'] ==true){
+                                    $marketData = $res['data']['fetched'];
+                                    $avgprice = $marketData[0]['avgPrice'];
+                                    $opnInterest = $marketData[0]['opnInterest'];
+                                }else{
+                                    $avgprice = NULL;
+                                    $opnInterest = NULL;
+                                }
+
+                                $data = array_slice($data,-1);
+
+                                foreach($data as $key => $item){
+                                    // dd($item);die;
+                                    if($interval == 'ONE_MINUTE'){
+                                        $in = 1;
+                                    }else if($interval == 'THREE_MINUTE'){
+                                        $in = 3;
+                                    }else{
+                                        $in = 5;
+                                    }
+
+                                    // new calc
+
+                                    $params = [
+                                        'open'=>$data[$key][1],
+                                        'high'=>$data[$key][2],
+                                        'low'=>$data[$key][3],
+                                        'close'=>$data[$key][4],
+                                        'token'=>$token
+                                    ];
+                                    $newD = $this->calcNewData($params);                                    
+
+                                    $timestampNew = $data[$key][0];
+                                    $apiData = new AngleHistoricalApi;
+                                    $apiData->token = $token;
+                                    $apiData->symbol = $currentSymbol;
+                                    $apiData->time_interval = $in;
+                                    $apiData->exchange = $currentExchange;
+                                    $apiData->fromdate = $previousDate;
+                                    $apiData->todate = $currentDate;
+                                    $apiData->timestamp = date('Y-m-d h:i:s', strtotime($timestampNew));
+                                    $apiData->open = $data[$key][1];
+                                    $apiData->high = $data[$key][2];
+                                    $apiData->low = $data[$key][3];
+                                    $apiData->close = $data[$key][4];
+                                    $apiData->volume = $data[$key][5];
+                                    $apiData->avgPrice = $avgprice;
+                                    $apiData->opnInterest = $opnInterest;
+                                    $apiData->atm = $atmStr;
+                                    $apiData->trend = $newD['trend'];
+                                    $apiData->strength = $newD['strength'];
+                                    $apiData->new_high = $newD['high'];
+                                    $apiData->new_low = $newD['low'];
+                                    $apiData->new_open = $newD['open'];
+                                    $apiData->new_close = $newD['close'];
+                                    $apiData->save();
+
+                                    // $this->storenewData($apiData->id);
+                                   
+                                }
+                                // dd('devansh');
+                            }
+                        } catch (\Exception $th) {
+                            //throw $th;
+                        }
+                    }
+                sleep(1);
+                }
+            }
+        }
+        return $errData;
+    }
+
+    public function handle()
+    {
+        set_time_limit(0);
+        $symbol_range = 1;
+        $acceptedSymbols = ['CRUDEOIL','BANKNIFTY','FINNIFTY','NATURALGAS','NIFTY','MIDCPNIFTY'];
+        $marketHolidays = ["2024-01-22", "2024-01-26", "2024-03-08", "2024-03-25", "2024-03-29", "2024-04-11",
+        "2024-04-17", "2024-05-01", "2024-06-17", "2024-07-17", "2024-08-15", "2024-10-02", "2024-11-01", "2024-11-15", "2024-12-25"];
+
+        $currentDate = date('Y-m-d');
+
+        // Check Today Is Holiday Or Not
+        if(!in_array($currentDate,$marketHolidays)){
+            // For Current Time is B\w 9:15Am to 11:30pm
+            if($this->isBetween915AMto1130PM()){
+                // Loop For Symbols List
+                $McxToken = array();
+                $NfoToken = array();
+                // $BpoToken = array();
+                foreach ($acceptedSymbols as $key => $symbolName) {
+                    $angleApiInstuments = AngelApiInstrument::Where('name',$symbolName)->where(function ($query) {
+                        $query->where('instrumenttype', '=', 'AMXIDX')->orWhere('instrumenttype', '=', 'COMDTY');
+                    })->first();
+
+                    if($angleApiInstuments->exch_seg == "MCX"){
+                        $allResponse = array();
+                        $alltoken = array();
+                        $armRange = array();
+                       
+                        // For Atm Range
+                        for ($i=(-$symbol_range); $i <= $symbol_range ; $i++) { 
+                            $exchangeVal = $angleApiInstuments->exch_seg;
+                            $tokenVal = $angleApiInstuments->token;
+                            $nameVal = $angleApiInstuments->name;
+                            // GET LTP by Angle Api
+                            $ltpByApi = $this->getLTP($exchangeVal,$nameVal,$tokenVal);
+                            if(!isset($ltpByApi['data'])){
+                                continue;
+                            }
+                            $givenLtp = $ltpByApi['data']['ltp'];
+                            $response = $this->getStrickData($nameVal,$exchangeVal,$givenLtp ,$i , $i);
+                            // dd($response);
+                            // array_push($allResponse,$response[0][0]);
+                            // array_push($allResponse,$response[1][0]);
+                            // array_push($alltoken,$response[0][1]);
+                            // array_push($alltoken,$response[1][1]);
+                            // array_push($armRange,$response[0][2]);
+                            // array_push($armRange,$response[1][2]);
+
+                            array_push($McxToken,$response[0][1]);
+                            array_push($McxToken,$response[1][1]);
+                        }
+                    }
+
+
+                    // For NSE Exch Records
+                    if($angleApiInstuments->exch_seg == "NSE"){
+                        $exchangeVal = $angleApiInstuments->exch_seg;
+                        $tokenVal = $angleApiInstuments->token;
+                        $nameVal = $angleApiInstuments->name;
+                        $ltpByApi = $this->getLTP($exchangeVal,$nameVal,$tokenVal);
+                        $givenLtp = $ltpByApi['data']['ltp'];
+                        $expiry_dates = $this->get_upcoming_expiry($nameVal,$exchangeVal);
+                        $allResponse2 = array();
+                        $alltoken2 = array();
+                        $armRange = array();
+                        for ($i=(-$symbol_range); $i <= $symbol_range ; $i++) { 
+                            $response = $this->get_atm_strike_symbol_angel($givenLtp ,$nameVal, $nameVal , $exchangeVal , $expiry_dates, $i , $i);
+                            // array_push($allResponse2,$response[0][0]);
+                            // array_push($allResponse2,$response[1][0]);
+                            // array_push($alltoken2,$response[0][1]);
+                            // array_push($alltoken2,$response[1][1]);
+                            // array_push($armRange,$response[0][2]);
+                            // array_push($armRange,$response[1][2]);
+
+                            array_push($NfoToken,$response[0][1]);
+                            array_push($NfoToken,$response[1][1]);
+                        }
+                          // $historicalData3 = $this->get_historical_api_data($allResponse2,$alltoken2,$armRange);
+                    }
+
+                    sleep(1);
+                }
+
+                $tArr = [
+                    'mode'=>'FULL',
+                    'exchangeTokens'=>[
+                        'NFO'=>$NfoToken,
+                        'MCX'=>$McxToken
+                    ]
+                    
+                ];
+
+                // dd(json_encode($tArr));
+                $jwtToken =  $this->generate_access_token();
+                $errData = [];
+                if($jwtToken!=null){
+                    $curl = curl_init();
+                    curl_setopt_array($curl, array(
+                    CURLOPT_URL => 'https://apiconnect.angelbroking.com/rest/secure/angelbroking/market/v1/quote/',
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => '',
+                    CURLOPT_MAXREDIRS => 10,
+                    CURLOPT_TIMEOUT => 0,
+                    CURLOPT_FOLLOWLOCATION => true,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST => 'POST',
+                    CURLOPT_POSTFIELDS =>json_encode($tArr),
+                    CURLOPT_HTTPHEADER => array(
+                        'X-UserType: USER',
+                        'X-SourceID: WEB',
+                        'X-PrivateKey: '.$this->apiKey,
+                        'X-ClientLocalIP: '.$this->clientLocalIp,
+                        'X-ClientPublicIP: '.$this->clientPublicIp,
+                        'X-MACAddress: '.$this->macAddress,
+                        'Content-Type: application/json',
+                        'Authorization: Bearer '.$jwtToken
+                    ),
+                    ));
+
+                    $response = curl_exec($curl);
+                    $err = curl_error($curl);
+                    curl_close($curl);
+                    if ($err) {
+                        return $errData;
+                    }
+
+                    if($response != NULL){
+                        $errData = json_decode($response,true);
+                        // dd($errData);
+
+                    // dd($errData);
+                    if($errData['status']== true){
+                        $result = $errData['data']['fetched'];
+                        foreach ($result as $key => $value) {
+                            $marketData = new StoreMarketData;
+                            $marketData->token = $value['symbolToken'];
+                            $marketData->symbol = $value['tradingSymbol'];
+                            $marketData->exchange = $value['exchange'];
+                            $marketData->ltp = $value['ltp'];
+                            $marketData->open = $value['open'];
+                            $marketData->high = $value['high'];
+                            $marketData->low = $value['low'];
+                            $marketData->close = $value['close'];
+                            $marketData->lastTradeQty = $value['lastTradeQty'];
+                            $marketData->exchFeedTime = $value['exchFeedTime'];
+                            $marketData->exchTradeTime = $value['exchTradeTime'];
+                            $marketData->netChange = $value['netChange'];
+                            $marketData->percentChange = $value['percentChange'];
+                            $marketData->avgPrice = $value['avgPrice'];
+                            $marketData->tradeVolume = $value['tradeVolume'];
+                            $marketData->opnInterest = $value['opnInterest'];
+                            $marketData->lowerCircuit = $value['lowerCircuit'];
+                            $marketData->upperCircuit = $value['upperCircuit'];
+                            $marketData->totBuyQuan = $value['totBuyQuan'];
+                            $marketData->totSellQuan = $value['totSellQuan'];
+                            $marketData->WeekLow52 = $value['52WeekLow'];
+                            $marketData->WeekHigh52 = $value['52WeekHigh'];
+                            $marketData->save();
+                        }
+                    }
+                    }
+                }
+                return "Completed";
+            }else{
+                return null;
+            }
+        }else{
+           return null;
+        }   
+    }
+
+
+
+
+
+    //  public function handle()
+    // {
+    //     set_time_limit(0);
+    //     $threeDays = Carbon::now()->subDays(3);
+    //     AngleHistoricalApi::whereDate('timestamp','<',$threeDays)->delete();
+
+    //     $jwtToken =  $this->generate_access_token();
+        
+    //     $tables = allTradeSymbols();
+    //     $frame = [1,3,5];
+    //     $todayDate = date("Y-m-d");
+    //     $currentDate = date("Y-m-d H:s");
+    //     $previousDate =  date('Y-m-d H:s', strtotime($currentDate. ' - 30 days'));
+        
+    //     foreach ($tables as $v) {
+
+    //         foreach ($frame as $tf) {
+
+    //             $data = \DB::connection('mysql_rm')->table($v)->select('*')->where(['date'=>$todayDate,'timeframe'=>$tf])->get(); 
+          
+    //             $atmData = [];
+    //             foreach($data as $vvl){
+    //                 if(isset($vvl->atm) && $vvl->atm == "ATM"){
+    //                     $atmData[] = $vvl;
+    //                 }
+    //             }
+
+    //             foreach($atmData as $val){
+                    
+    //                 $arrData = json_decode($val->data,true);    
+    //                 $CE = array_unique($arrData['CE']);
+    //                 $PE = array_unique($arrData['PE']);
+
+    //                 $combineArray = array_merge($CE, $PE);
+    //                 // dd($combineArray);
+                    
+    //                 foreach ($combineArray as $k => $sym){
+    //                     $getzerodhaApiToken = ZerodhaInstrument::select('exchange_token')->Where('trading_symbol',$sym)->first();
+    //                     // dd($getzerodhaApiToken->exchange_token);
+    //                     if($getzerodhaApiToken != NULL){
+    //                         $getDetails = AngelApiInstrument::Where('token',$getzerodhaApiToken->exchange_token)->first();
+    //                         if($getDetails != NULL){
+    //                             $timeFrame = ['ONE_MINUTE','THREE_MINUTE','FIVE_MINUTE'];
+        
+    //                             foreach ($timeFrame as $interval) {
+    //                                 $exhange = $getDetails['exch_seg'];
+    //                                 $token = $getDetails['token'];
+                                   
+    //                                 $errData = [];
+                                    
+    //                                 if($jwtToken!=null){
+    //                                     $curl = curl_init();
+    //                                     curl_setopt_array($curl, array(
+    //                                         CURLOPT_URL => 'https://apiconnect.angelbroking.com/rest/secure/angelbroking/historical/v1/getCandleData',
+    //                                         CURLOPT_RETURNTRANSFER => true,
+    //                                         CURLOPT_ENCODING => '',
+    //                                         CURLOPT_MAXREDIRS => 10,
+    //                                         CURLOPT_TIMEOUT => 0,
+    //                                         CURLOPT_FOLLOWLOCATION => true,
+    //                                         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    //                                         CURLOPT_CUSTOMREQUEST => 'POST',
+    //                                         CURLOPT_POSTFIELDS => '{
+    //                                             "exchange": "'.$exhange.'",
+    //                                             "symboltoken": "'.$token.'",
+    //                                             "interval": "'.$interval.'",
+    //                                             "fromdate": "'.$previousDate.'",
+    //                                             "todate": "'.$currentDate.'"
+    //                                         }',
+    //                                         CURLOPT_HTTPHEADER => array(
+    //                                             'X-UserType: USER',
+    //                                             'X-SourceID: WEB',
+    //                                             'X-PrivateKey: '.$this->apiKey,
+    //                                             'X-ClientLocalIP: '.$this->clientLocalIp,
+    //                                             'X-ClientPublicIP: '.$this->clientPublicIp,
+    //                                             'X-MACAddress: '.$this->macAddress,
+    //                                             'Content-Type: application/json',
+    //                                             'Authorization: Bearer '.$jwtToken
+    //                                         ),
+    //                                     ));
+                            
+    //                                     $response = curl_exec($curl);
+    //                                     // dd($response);
+    //                                     $err = curl_error($curl);
+    //                                     curl_close($curl);
+        
+    //                                     if ($err) {
+    //                                        return $errData;
+    //                                     }
+        
+    //                                     $response = json_decode($response,true);
+    //                                     $data = $response['data'];
+                                        
+    //                                     foreach($data as $key => $item){
+    //                                         if($interval == 'ONE_MINUTE'){
+    //                                             $in = 1;
+    //                                         }else if($interval == 'THREE_MINUTE'){
+    //                                             $in = 3;
+    //                                         }else{
+    //                                             $in = 5;
+    //                                         }
+    //                                         $apiData = new AngleHistoricalApi;
+    //                                         $apiData->token = $token;
+    //                                         $apiData->symbol = $sym;
+    //                                         $apiData->time_interval = $in;
+    //                                         $apiData->exchange = $exhange;
+    //                                         $apiData->fromdate = $previousDate;
+    //                                         $apiData->todate = $currentDate;
+    //                                         $apiData->timestamp = $data[$key][0];
+    //                                         $apiData->open = $data[$key][1];
+    //                                         $apiData->high = $data[$key][2];
+    //                                         $apiData->low = $data[$key][3];
+    //                                         $apiData->close = $data[$key][4];
+    //                                         $apiData->volume = $data[$key][5];
+    //                                         $apiData->save();
+    //                                     }
+    //                                 }
+    //                             }
+    //                         }
+    //                     }
+    //                 }
+    //                 sleep(4);
+    //             }
+    //         }
+    //     }  
+    // }
+
+    // public function handle()
+    // {
+    //     set_time_limit(0);
+    //     $threeDays = Carbon::now()->subDays(3);
+    //     AngleHistoricalApi::whereDate('timestamp','<',$threeDays)->delete();
+
+    //     $jwtToken =  $this->generate_access_token();
+        
+    //     $tables = allTradeSymbols();
+    //     $frame = [1,3,5];
+    //     $todayDate = date("Y-m-d");
+    //     $currentDate = date("Y-m-d H:s");
+    //     $previousDate =  date('Y-m-d H:s', strtotime($currentDate. ' - 30 days'));
+        
+    //     foreach ($tables as $v) {
+
+    //         foreach ($frame as $tf) {
+
+    //             $data = \DB::connection('mysql_rm')->table($v)->select('*')->where(['date'=>$todayDate,'timeframe'=>$tf])->get(); 
+          
+    //             $atmData = [];
+    //             foreach($data as $vvl){
+    //                 if(isset($vvl->atm) && $vvl->atm == "ATM"){
+    //                     $atmData[] = $vvl;
+    //                 }
+    //             }
+
+    //             foreach($atmData as $val){
+                    
+    //                 $arrData = json_decode($val->data,true);    
+    //                 $CE = array_unique($arrData['CE']);
+    //                 $PE = array_unique($arrData['PE']);
+
+    //                 $combineArray = array_merge($CE, $PE);
+    //                 // dd($combineArray);
+                    
+    //                 foreach ($combineArray as $k => $sym){
+    //                     $getDetails = AngelApiInstrument::Where('symbol_name',$sym)->first();
+    //                     if($getDetails != NULL){
+    //                         $timeFrame = ['ONE_MINUTE','THREE_MINUTE','FIVE_MINUTE'];
+    
+    //                         foreach ($timeFrame as $interval) {
+    //                             $exhange = $getDetails['exch_seg'];
+    //                             $token = $getDetails['token'];
+                               
+    //                             $errData = [];
+                                
+    //                             if($jwtToken!=null){
+    //                                 $curl = curl_init();
+    //                                 curl_setopt_array($curl, array(
+    //                                     CURLOPT_URL => 'https://apiconnect.angelbroking.com/rest/secure/angelbroking/historical/v1/getCandleData',
+    //                                     CURLOPT_RETURNTRANSFER => true,
+    //                                     CURLOPT_ENCODING => '',
+    //                                     CURLOPT_MAXREDIRS => 10,
+    //                                     CURLOPT_TIMEOUT => 0,
+    //                                     CURLOPT_FOLLOWLOCATION => true,
+    //                                     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    //                                     CURLOPT_CUSTOMREQUEST => 'POST',
+    //                                     CURLOPT_POSTFIELDS => '{
+    //                                         "exchange": "'.$exhange.'",
+    //                                         "symboltoken": "'.$token.'",
+    //                                         "interval": "'.$interval.'",
+    //                                         "fromdate": "'.$previousDate.'",
+    //                                         "todate": "'.$currentDate.'"
+    //                                     }',
+    //                                     CURLOPT_HTTPHEADER => array(
+    //                                         'X-UserType: USER',
+    //                                         'X-SourceID: WEB',
+    //                                         'X-PrivateKey: '.$this->apiKey,
+    //                                         'X-ClientLocalIP: '.$this->clientLocalIp,
+    //                                         'X-ClientPublicIP: '.$this->clientPublicIp,
+    //                                         'X-MACAddress: '.$this->macAddress,
+    //                                         'Content-Type: application/json',
+    //                                         'Authorization: Bearer '.$jwtToken
+    //                                     ),
+    //                                 ));
+                        
+    //                                 $response = curl_exec($curl);
+    //                                 // dd($response);
+    //                                 $err = curl_error($curl);
+    //                                 curl_close($curl);
+    
+    //                                 if ($err) {
+    //                                    return $errData;
+    //                                 }
+    
+    //                                 $response = json_decode($response,true);
+    //                                 $data = $response['data'];
+                                    
+    //                                 foreach($data as $key => $item){
+    //                                     if($interval == 'ONE_MINUTE'){
+    //                                         $in = 1;
+    //                                     }else if($interval == 'THREE_MINUTE'){
+    //                                         $in = 3;
+    //                                     }else{
+    //                                         $in = 5;
+    //                                     }
+    //                                     $apiData = new AngleHistoricalApi;
+    //                                     $apiData->token = $token;
+    //                                     $apiData->symbol = $sym;
+    //                                     $apiData->time_interval = $in;
+    //                                     $apiData->exchange = $exhange;
+    //                                     $apiData->fromdate = $previousDate;
+    //                                     $apiData->todate = $currentDate;
+    //                                     $apiData->timestamp = $data[$key][0];
+    //                                     $apiData->open = $data[$key][1];
+    //                                     $apiData->high = $data[$key][2];
+    //                                     $apiData->low = $data[$key][3];
+    //                                     $apiData->close = $data[$key][4];
+    //                                     $apiData->volume = $data[$key][5];
+    //                                     $apiData->save();
+    //                                 }
+    //                             }
+    //                         }
+    //                     }
+    //                 }
+    //                 sleep(4);
+    //             }
+    //         }
+            
+    //     }  
+    // }
+}

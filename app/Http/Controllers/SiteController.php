@@ -7,24 +7,31 @@ use App\Models\DeviceToken;
 use App\Models\Frontend;
 use App\Models\Language;
 use App\Models\Page;
+use App\Models\Package;
 use App\Models\Subscriber;
 use App\Models\SupportMessage;
 use App\Models\SupportTicket;
 use Carbon\Carbon;
+use App\Models\UserEnquiry;
 use Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use App\Constants\Status;
-
+use App\Traits\AngelApiAuth;
 class SiteController extends Controller
 {
+    use AngelApiAuth;
     public function index(){
+
+        
+        // dd($this->getMarketData());
         $reference = @$_GET['reference'];
         if ($reference) {
             session()->put('reference', $reference);
         }
         $pageTitle = 'Home';
+       
         $sections = Page::where('tempname',$this->activeTemplate)->where('slug','/')->first();
         return view($this->activeTemplate . 'home', compact('pageTitle','sections'));
     }
@@ -34,6 +41,7 @@ class SiteController extends Controller
         $page = Page::where('tempname',$this->activeTemplate)->where('slug',$slug)->firstOrFail();
         $pageTitle = $page->name;
         $sections = $page->secs;
+        // dd($this->activeTemplate . 'pages');
         return view($this->activeTemplate . 'pages', compact('pageTitle','sections'));
     }
 
@@ -200,7 +208,7 @@ class SiteController extends Controller
     }
 
     public function packages(){
-        $pageTitle = 'Packages';
+        $pageTitle = 'Products';
         $extends = Auth::user() ? $this->activeTemplate.'layouts.master' : $this->activeTemplate.'layouts.frontend';
         $sections = Page::where('tempname', $this->activeTemplate)->where('slug','packages')->first();
         return view($this->activeTemplate.'package',compact('pageTitle', 'extends','sections'));
@@ -231,4 +239,136 @@ class SiteController extends Controller
         return ['success'=>true, 'message'=>'Token save successfully'];
     }
 
+    public function getMarketData(){
+        return response()->json($this->getMarketDataResp());
+    }
+
+    public function getTopLoserData(){
+        try {
+            return response()->json($this->getTopLoserAngleApiData());
+        } catch (\Throwable $th) {
+           return response()->json(
+            [ 'data' => ['status'=>false] ]
+           );
+        }
+        
+    }
+
+    public function getTopGainerApiData(){
+
+        try {
+            return response()->json($this->getTopGainerAngleApiData());
+        } catch (\Throwable $th) {
+           return response()->json(
+            [ 'data' => ['status'=>false] ]
+           );
+        }
+    }
+
+    public function getPcrApiData(){
+        try {
+            return response()->json($this->getPCRApiDatas());
+        } catch (\Throwable $th) {
+           return response()->json(
+            [ 'data' => ['status'=>false] ]
+           );
+        }
+    }
+
+    public function getLongBuildApiData(){
+        try {
+            return response()->json($this->getLongBuildData());
+        } catch (\Throwable $th) {
+           return response()->json(
+            [ 'data' => ['status'=>false] ]
+           );
+        }
+    }
+
+    public function getShortBuildApiData(){
+        try {
+            return response()->json($this->getShortBuildData());
+        } catch (\Throwable $th) {
+           return response()->json(
+            [ 'data' => ['status'=>false] ]
+           );
+        }
+    }
+
+    public function getShortCoveringApiData(){
+        try {
+            return response()->json($this->getShortCoveringData());
+        } catch (\Throwable $th) {
+           return response()->json(
+            [ 'data' => ['status'=>false] ]
+           );
+        }
+    }
+
+    public function getLongUnwillingApiData(){
+        try {
+            return response()->json($this->getLongUnwillingData());
+        } catch (\Throwable $th) {
+           return response()->json(
+            [ 'data' => ['status'=>false] ]
+           );
+        }
+    }
+
+    public function storeTokenData(){
+        return response()->json($this->getTokenData());
+    }
+
+    public function storeApiFetchData(){
+        try {
+            // dd($this->storeApiFetch());
+            $data = response()->json($this->storeApiFetch());
+            dd('Inserted');
+        } catch (\Throwable $th) {
+           return response()->json(
+            [ 'data' => ['status'=>false] ]
+           );
+        }
+    }
+
+    public function fetchGreeksApiData(){
+        // try {
+        //     $symbol = "";
+        //     $expDate = "";
+            return response()->json($this->fetchGreeksApi());
+        // } catch (\Throwable $th) {
+        //    return response()->json(
+        //     [ 'data' => ['status'=>false] ]
+        //    );
+        // }
+    }
+
+    public function packageDetails($id){
+        $pageTitle = 'Products Details';
+        $packageDetails = Package::Where('id',$id)->first();
+        return view($this->activeTemplate.'package-details',compact('pageTitle', 'packageDetails'));
+    }
+
+    public function storeUserRequest(Request $request,$id){
+
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email',
+            'number' => 'required|integer',
+        ]);
+
+        $userId = Auth::id();
+        $userEnquiry = new UserEnquiry;
+        $userEnquiry->user_id = $userId;
+        $userEnquiry->package_id = $id;
+        $userEnquiry->name = $request->name;
+        $userEnquiry->email = $request->email;
+        $userEnquiry->phone = $request->number;
+        $userEnquiry->save();
+
+        $notify[] = ['success', 'Request Submitted Successfully'];
+        return back()->withNotify($notify);
+    }
+
+   
 }
