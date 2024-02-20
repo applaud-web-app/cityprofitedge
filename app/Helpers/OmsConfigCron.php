@@ -778,9 +778,10 @@ class OmsConfigCron{
                                 // 'last_time'=>$timeFrmTm
                                 'last_time'=>date("Y-m-d H:i",strtotime($timeFrmTm.' +5 minutes'))
                             ]);                            
-                            $breakForeach = 1;
-                            break;
+                            
                         }
+                        $breakForeach = 1;
+                            break;
                     }
                 }
             }
