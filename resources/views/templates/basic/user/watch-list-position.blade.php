@@ -138,6 +138,10 @@
     $(document).ready(function(){
         function reloadData(){
             $.get('{!!$fullUrl!!}',function(data){
+                if(data=='NO_DATA'){
+                    reloadData();
+                    return;
+                }
                 $("#pst_hre").html(data);
             });
         }

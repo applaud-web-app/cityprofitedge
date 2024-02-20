@@ -2005,7 +2005,10 @@ class UserController extends Controller
         }
         $fullUrl = $request->fullUrl();
         if($request->ajax()){
-            return view($this->activeTemplate . 'user.watch-list-position-ajax',compact('pageTitle','wishlistorder','respond','fullUrl'));
+            if(!empty($finalResponse)){
+                return view($this->activeTemplate . 'user.watch-list-position-ajax',compact('pageTitle','wishlistorder','respond','fullUrl'));
+            }
+            return 'NO_DATA';
         }
 
         return view($this->activeTemplate . 'user.watch-list-position',compact('pageTitle','wishlistorder','respond','fullUrl'));
