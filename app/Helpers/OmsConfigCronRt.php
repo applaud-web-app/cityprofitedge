@@ -485,7 +485,7 @@ class OmsConfigCronRt{
             "transactiontype" => $txnType,
             "ordertype" => $omsData->order_type,
             // "producttype" => $omsData->product,
-            "producttype" => 'INTRADAY',
+            "producttype" => 'CARRYFORWARD',
             'duration'=>'DAY',
             'squareoff'=>0,
             'stoploss'=>0
