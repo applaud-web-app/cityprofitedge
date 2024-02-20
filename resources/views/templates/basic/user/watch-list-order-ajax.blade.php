@@ -29,9 +29,7 @@
                 @else
                     <tr>
                         <td colspan="100%" class="d-flex justify-content-center text-center">
-                            <div class="spinner-border" role="status">
-                                <span class="visually-hidden">Loading...</span>
-                            </div>
+                            Please Wait Data Is Loading...
                         </td>
                     </tr>
                 @endif
