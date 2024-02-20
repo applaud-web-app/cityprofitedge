@@ -30,6 +30,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\OmsConfig;
 use App\Models\OrderBook;
+use App\Models\StoreMarketData;
 use App\Models\ZerodhaInstrument;
 use App\Helpers\KiteConnectCls;
 use App\Helpers\AngelConnectCls;
@@ -1688,37 +1689,55 @@ class UserController extends Controller
         $pageTitle = "Watch List";
         
         $symbolArr = allTradeSymbols();
-        // $todayDate = date("Y-m-d");
-        $todayDate = date("2024-02-16");
+        $todayDate = date("Y-m-d");
+        // $todayDate = date("2024-02-16");
         $stockName = $request->stock_name;
         $timeFrame = $request->time_frame ? : 5;
         $allSymbols = [];
-        foreach ($symbolArr as $key => $v) {
-            $data = \DB::connection('mysql_rm')->table($v)->select('*')->where(['date' => $todayDate, 'timeframe' => $timeFrame])->get();
-            $atmData = [];
-            foreach ($data as $vvl) {
-                if (isset($vvl->atm) && $vvl->atm == 'ATM') {
-                    $atmData[] = $vvl;
+        // foreach ($symbolArr as $key => $v) {
+        //     $data = \DB::connection('mysql_rm')->table($v)->select('*')->where(['date' => $todayDate, 'timeframe' => $timeFrame])->get();
+        //     $atmData = [];
+        //     foreach ($data as $vvl) {
+        //         if (isset($vvl->atm) && $vvl->atm == 'ATM') {
+        //             $atmData[] = $vvl;
+        //         }
+        //     }
+        //     foreach ($atmData as $val) {
+        //         array_push($allSymbols,$val->ce);
+        //         array_push($allSymbols,$val->pe);
+        //     }
+        // }
+
+        $data = StoreMarketData::whereDay('created_at', now()->day)->get();
+        // dd($data);
+        $MCXpayload = [];
+        $NFOpayload = [];
+        if($data != NULL){
+            foreach ($data as $key => $value) {
+                if($value->exchange == "MCX"){
+                    array_push($MCXpayload,$value->token);
+                }else if($value->exchange == "NFO"){
+                    array_push($NFOpayload,$value->token);
                 }
-            }
-            foreach ($atmData as $val) {
-                array_push($allSymbols,$val->ce);
-                array_push($allSymbols,$val->pe);
             }
         }
 
-        $zehrodha = ZerodhaInstrument::whereIN('trading_symbol',$allSymbols)->get();
-        $MCXpayload = [];
-        $NFOpayload = [];
-        if($zehrodha != NULL){
-            foreach ($zehrodha as $key => $value) {
-                if($value->exchange == "MCX"){
-                    array_push($MCXpayload,$value->exchange_token);
-                }else if($value->exchange == "NFO"){
-                    array_push($NFOpayload,$value->exchange_token);
-                }
-            }
-        }
+        $MCXpayload = array_unique($MCXpayload);
+        $NFOpayload = array_unique($NFOpayload);
+
+        // $zehrodha = ZerodhaInstrument::whereIN('trading_symbol',$allSymbols)->get();
+        // $MCXpayload = [];
+        // $NFOpayload = [];
+        // if($zehrodha != NULL){
+        //     foreach ($zehrodha as $key => $value) {
+        //         if($value->exchange == "MCX"){
+        //             array_push($MCXpayload,$value->exchange_token);
+        //         }else if($value->exchange == "NFO"){
+        //             array_push($NFOpayload,$value->exchange_token);
+        //         }
+        //     }
+        // }
+
         $payload = [
             'MCX'=>$MCXpayload,
             'NFO'=>$NFOpayload
@@ -1729,12 +1748,6 @@ class UserController extends Controller
         if($respond == NULL){
             $respond = $this->getWatchListRecords($payload);
         }
-
-        if($respond == NULL){
-            $respond = $this->getWatchListRecords($payload);
-        }
-
-        // dd($payload);
         $fullUrl = $request->fullUrl();
 
         if($request->ajax()){
@@ -1843,6 +1856,13 @@ class UserController extends Controller
         
         $orderId = "WL".strtotime('d-m-y h:i:s').rand(100,10000000).rand(100,10000000);
        
+        // $payload = [
+        //     $request->exchange=>$request->token,
+        // ];
+        // $getLatestPrice = $this->getWatchListRecords(json_decode($payload));
+
+        // dd($getLatestPrice);
+
         $order = new WatchList;
         $order->order_id = $orderId;
         $order->user_id =  $userId;
