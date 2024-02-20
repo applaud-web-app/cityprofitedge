@@ -43,7 +43,7 @@
                                             <th>ORDER DATE</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="watchList">
+                                    <tbody>
                                         @isset($wishlistorder)
                                         @if (count($wishlistorder))
                                             @foreach ($wishlistorder as $item)
@@ -60,7 +60,7 @@
                                             @endforeach
                                         @else
                                             <tr>
-                                                <td colspan="100%" class="text-center">
+                                                <td colspan="100%" class="d-flex justify-content-center text-center">
                                                     <div class="spinner-border" role="status">
                                                         <span class="visually-hidden">Loading...</span>
                                                     </div>
@@ -81,14 +81,16 @@
 
 @push('script')
 <script>
-    function reloadData(){
-        $.get('{!!$fullUrl!!}',function(data){
-            $("#pst_hre").html(data);
-        });
-    }
+    $(document).ready(function(){
+        function reloadData(){
+            $.get('{!!$fullUrl!!}',function(data){
+                $("#pst_hre").html(data);
+            });
+        }
 
-    setInterval(() => {
-        reloadData();
-    }, 30000);//call every 1/2 minute
+        setInterval(() => {
+            reloadData();
+        }, 30000);//call every 1/2 minute
+    });
 </script>
 @endpush
