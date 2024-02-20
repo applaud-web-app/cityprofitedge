@@ -73,7 +73,7 @@ class Place_limit_order extends Command
                         $searchToken = $item['symbolToken'];
                         $searchLtp = $item['ltp'];
                         $result = array_filter($watchListData, function($watchItem) use ($searchToken, $searchLtp) {
-                            return $watchItem['token'] == $searchToken && $watchItem['buy_price'] == $searchLtp;
+                            return $watchItem['token'] == $searchToken && $watchItem['buy_price'] >= $searchLtp;
                         });
 
                         if($result != NULL){
