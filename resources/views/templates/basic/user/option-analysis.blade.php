@@ -530,42 +530,47 @@
             @empty
             @endforelse 
             @php
-            $time5 = array_map(function ($y) {
-                return date("g:i a", strtotime($y));
-            },$time5);
+              if(count($atmData5)){
+              $time5 = array_map(function ($y) {
+                  return date("g:i a", strtotime($y));
+              },$time5);
 
-            $ceArray5 = array();
-            $newArr15 = [];
+              $ceArray5 = array();
+              $newArr15 = [];
 
-            foreach($time5 as $i=>$y){
-              if(!in_array($vwap_CE_signal5[$i],$ceArray5)){
-                $ceArray5 = [];
-                array_push($ceArray5,$vwap_CE_signal5[$i]);
-                $newArr15[] = [
-                    'time'=>$y,
-                    'price'=>$CE_NETCHANGE_5[$i],
-                    'text'=>$vwap_CE_signal5[$i],
-                    'color'=>'#00bf63'
-                ];
+              foreach($time5 as $i=>$y){
+                if(!in_array($vwap_CE_signal5[$i],$ceArray5)){
+                  $ceArray5 = [];
+                  array_push($ceArray5,$vwap_CE_signal5[$i]);
+                  $newArr15[] = [
+                      'time'=>$y,
+                      'price'=>$CE_NETCHANGE_5[$i],
+                      'text'=>$vwap_CE_signal5[$i],
+                      'color'=>'#00bf63'
+                  ];
+                }
               }
-            }
 
-            $PeArray5 = array();
-            $newArr25 = [];
+              $PeArray5 = array();
+              $newArr25 = [];
 
-            foreach($time5 as $i=>$y){
-              if(!in_array($vwap_PE_signal5[$i],$PeArray5)){
-                $PeArray5 = [];
-                array_push($PeArray5,$vwap_PE_signal5[$i]);
-                $newArr25[] = [
-                    'time'=>$y,
-                    'price'=>$PE_NETCHANGE_5[$i],
-                    'text'=>$vwap_PE_signal5[$i],
-                    'color'=>'#FF0000'
-                ];
+              foreach($time5 as $i=>$y){
+                if(!in_array($vwap_PE_signal5[$i],$PeArray5)){
+                  $PeArray5 = [];
+                  array_push($PeArray5,$vwap_PE_signal5[$i]);
+                  $newArr25[] = [
+                      'time'=>$y,
+                      'price'=>$PE_NETCHANGE_5[$i],
+                      'text'=>$vwap_PE_signal5[$i],
+                      'color'=>'#FF0000'
+                  ];
+                }
               }
-            }
-            $mergedArray5 = array_merge($newArr15, $newArr25);
+              $mergedArray5 = array_merge($newArr15, $newArr25);
+            }else{
+                $mergedArray5 = [];
+              }
+              
           @endphp
         <div class="col-lg-12 mb-3">
             <div class="custom--card">
