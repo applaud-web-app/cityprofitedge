@@ -31,14 +31,23 @@
                 <label for="strategy_name_up" class="required">Strategy Name<sup class="text--danger">*</sup></label>
                 <select name="strategy_name_up" class="form--control" required="" id="strategy_name_up">
                     <option value="">Select Strategy</option>
-                    @foreach (strategyNames() as $item)
-                        <option value="{{$item}}" {{$omgData->strategy_name==$item ? 'selected':''}}>{{$item}}</option>    
+                    @foreach (strategyNames() as $item=>$val)
+                        @php
+                            $selVl = $item;
+                            if($omgData->strategy_name=="Bullish"){
+                                $selVl = $omgData->pe_symbol_name!=null ? 'Bullish PE': 'Bullish CE';
+                            }
+                            if($omgData->strategy_name=="Bearish"){
+                                $selVl = $omgData->pe_symbol_name!=null ? 'Bearish PE': 'Bearish CE';
+                            }
+                        @endphp
+                        <option value="{{$item}}" {{$item==$selVl ? 'selected':''}}>{{$val}}</option>    
                     @endforeach
                 </select>
             </div>
 
 
-            <div class="col-lg-6 form-group ce_pe_symbl_1" style="display: {{in_array($omgData->strategy_name,['Short Straddle','Long Straddle','Buy CE','Sell CE']) ? 'block':'none'}};">
+            <div class="col-lg-6 form-group ce_pe_symbl_1" style="display: {{$omgData->ce_symbol_name!=null ? 'block':'none'}};">
                 <label for="ce_symbol_name_up" class="required">CE Symbol Name</label>
                 <select name="ce_symbol_name_up" class="form--control select2" id="ce_symbol_name_up">
                     @if($omgData->ce_symbol_name!=null)
@@ -51,7 +60,7 @@
                 </select>
             </div>
 
-            <div class="col-lg-6 form-group ce_pe_symbl_2" style="display: {{in_array($omgData->strategy_name,['Short Straddle','Long Straddle','Buy PE','Sell PE']) ? 'block':'none'}};">
+            <div class="col-lg-6 form-group ce_pe_symbl_2" style="display: {{$omgData->pe_symbol_name!=null ? 'block':'none'}};">
                 <label for="pe_symbol_name_up" class="required">PE Symbol Name</label>
                 <select name="pe_symbol_name_up" class="form--control select2" id="pe_symbol_name_up">
                     @if($omgData->pe_symbol_name!=null)
@@ -233,6 +242,7 @@
                 $("#pe_symbol_name_up").attr('required','required');
                 break;
             case 'Buy CE':
+            case 'Bullish CE':
                 $(".ce_pe_symbl_1").show();
                 $(".ce_pe_symbl_2").hide();
                 $("#ce_symbol_name_up").attr('required','required');
@@ -241,6 +251,7 @@
                 $("#pe_quantity_up").attr('readonly','readonly').val(0);
                 break;
             case 'Buy PE':
+            case 'Bullish PE':
                 $(".ce_pe_symbl_1").hide();
                 $(".ce_pe_symbl_2").show();
                 $("#pe_symbol_name_up").attr('required','required');
@@ -249,6 +260,7 @@
                 $("#ce_quantity_up").attr('readonly','readonly').val(0);
                 break;
             case 'Sell CE':
+            case 'Bearish CE':
                 $(".ce_pe_symbl_1").show();
                 $(".ce_pe_symbl_2").hide();
                 $("#ce_symbol_name_up").attr('required','required');
@@ -257,6 +269,7 @@
                 $("#pe_quantity_up").attr('readonly','readonly').val(0);
                 break;
             case 'Sell PE':
+            case 'Bearish PE':
                 $(".ce_pe_symbl_1").hide();
                 $(".ce_pe_symbl_2").show();
                 $("#pe_symbol_name_up").attr('required','required');

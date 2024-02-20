@@ -175,7 +175,7 @@
                         <select name="signal_tf" class="form--control" required="" id="signal_tf">
                             <option value="">Select Signal TF</option>
                             @foreach (allTradeTimeFrames() as $item)
-                                <option value="{{$item}}">{{$item}}</option>
+                                <option value="{{$item}}" {{$item==5 ? 'selected':''}}>{{$item}}</option>
                             @endforeach
                         </select>
                     </div>
@@ -184,8 +184,8 @@
                         <label for="strategy_name" class="required">Strategy Name<sup class="text--danger">*</sup></label>
                         <select name="strategy_name" class="form--control" required="" id="strategy_name">
                             <option value="">Select Strategy</option>
-                            @foreach (strategyNames() as $item)
-                                <option value="{{$item}}">{{$item}}</option>    
+                            @foreach (strategyNames() as $item=>$val)
+                                <option value="{{$item}}">{{$val}}</option>    
                             @endforeach
                         </select>
                     </div>
@@ -230,17 +230,17 @@
                         <label for="order_type" class="required">Order Type<sup class="text--danger">*</sup></label>
                         <select name="order_type" class="form--control" required="" id="order_type">
                             <option value="">Select Order Type</option>
-                            <option value="LIMIT">LIMIT</option>
+                            <option value="LIMIT" selected>LIMIT</option>
                             <option value="MARKET">MARKET</option>  
                         </select>
                     </div>
 
-                    <div class="col-lg-6 form-group" id="pyramid_percent_dv" style="display: none;">
+                    <div class="col-lg-6 form-group" id="pyramid_percent_dv">
                         <label for="pyramid_percent" class="required">Pyramid(%)<sup class="text--danger">*</sup></label>
                         <select name="pyramid_percent" class="form--control" id="pyramid_percent">
                             <option value="">Select Pyramid</option>
                             <option value="33">33</option>
-                            <option value="50">50</option>  
+                            <option value="50" selected>50</option>  
                             <option value="100">100</option>  
                         </select>
                     </div>
@@ -249,7 +249,7 @@
                         <label for="product" class="required">Product<sup class="text--danger">*</sup></label>
                         <select name="product" class="form--control" id="product" required>
                             <option value="">Select Product</option>
-                            <option value="NRML">NRML</option>
+                            <option value="NRML" selected>NRML</option>
                             <option value="MIS">MIS</option>  
                         </select>
                     </div>
@@ -387,6 +387,7 @@
                 $("#pe_symbol_name").attr('required','required');
                 break;
             case 'Buy CE':
+                case 'Bullish CE':
                 $(".ce_pe_symbl_1").show();
                 $(".ce_pe_symbl_2").hide();
                 $("#ce_symbol_name").attr('required','required');
@@ -395,6 +396,7 @@
                 $("#pe_quantity").attr('readonly','readonly').val(0);
                 break;
             case 'Buy PE':
+            case 'Bullish PE':
                 $(".ce_pe_symbl_1").hide();
                 $(".ce_pe_symbl_2").show();
                 $("#pe_symbol_name").attr('required','required');
@@ -403,6 +405,7 @@
                 $("#ce_quantity").attr('readonly','readonly').val(0);
                 break;
             case 'Sell CE':
+            case 'Bearish CE':
                 $(".ce_pe_symbl_1").show();
                 $(".ce_pe_symbl_2").hide();
                 $("#ce_symbol_name").attr('required','required');
@@ -411,6 +414,7 @@
                 $("#pe_quantity").attr('readonly','readonly').val(0);
                 break;
             case 'Sell PE':
+            case 'Bearish PE':
                 $(".ce_pe_symbl_1").hide();
                 $(".ce_pe_symbl_2").show();
                 $("#pe_symbol_name").attr('required','required');

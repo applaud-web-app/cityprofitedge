@@ -11,19 +11,62 @@
   }
   .chart2 .apexcharts-legend-series .apexcharts-legend-marker[rel="1"]{
     background: transparent !important;
-    border: 2px solid rgb(0, 255, 0) !important;
+    border: 2px solid #00bf63 !important;
+    border-radius: 50% !important;
   }
   .chart2 .apexcharts-legend-series .apexcharts-legend-marker[rel="2"]{
     background: transparent !important;
     border: 2px solid rgb(255, 0, 0) !important;
+    border-radius: 50% !important;
   }
+
+  .tooltip-inner {
+
+      font-size: 12px;
+    }
+
+    @media (min-width: 768px) {
+      .tooltip-inner {
+        max-width: 500px !important;
+        
+    }
+  }
+
 </style>
 @endpush
 <section class="pt-100 pb-100">
-    <div class="container-fluid">
+    <div class="container-fluid" id="pst_hre">
         <div class="row">
             {{-- First Graph Start --}}
-            <div class="col-lg-12 mb-3">
+            {{-- @php
+              $atmData1 = [];
+              foreach($data1 as $vvl){
+                if(isset($vvl->atm) && $vvl->atm==$Atmtype1){
+                    $atmData1[] = $vvl;
+                }
+              }
+            @endphp
+            @php $i=1; @endphp
+            @forelse($atmData1 as $val)
+              @php
+                  $arrData1 = json_decode($val->data,true);   
+                  $CE1 = array_slice($arrData1['CE'],-1);
+                  $PE1 = array_slice($arrData1['PE'],-1);
+                  $Date1 = array_slice($arrData1['Date'],-40);
+                  $time1 = array_slice($arrData1['time'],-40);
+                  $CE_consolidated1 = array_slice($arrData1['CE_consolidated'],-40);
+                  $PE_consolidated1 = array_slice($arrData1['PE_consolidated'],-40);
+                  $close_CE1 = array_slice($arrData1['close_CE'],-40);
+                  $close_PE1 = array_slice($arrData1['close_PE'],-40); 
+              @endphp
+            @empty
+            @endforelse  
+            @php
+              $time1 = array_map(function ($k , $y) use($Date1){
+                  return date("d-M-Y",($Date1[$k]/1000)).', '.date("g:i a", strtotime($y));
+              },array_keys($Date1) , $time1);
+            @endphp --}}
+            {{-- <div class="col-lg-12 mb-3">
                 <div class="custom--card">
                     <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
                         <h5 class="card-title">@lang('Option Analysis 1')</h5>
@@ -38,7 +81,7 @@
                               </select>
                             </div>
                             <div class="mx-1">
-                              <select name="atmRange2" class="form-select" id="atmRange2">
+                              <select name="atmRange1" class="form-select" id="atmRange1">
                                 <option value="" disabled="" selected>Strike</option>
                                 @for ($i = -3; $i <= 3; $i++)
                                   @if ($i == 0)
@@ -50,7 +93,7 @@
                             </select>
                            </div>
                            <div class="mx-1">
-                              <select name="timeframe3" class="form-select" id="timeframe3">
+                              <select name="timeframe1" class="form-select" id="timeframe1">
                                 <option value="" disabled="" selected>Time Frame</option>
                                 <option value="1" {{$timeFrame1 == 1 ? 'selected' : ''}}>1</option>
                                 <option value="3" {{$timeFrame1 == 3 ? 'selected' : ''}}>3</option>
@@ -70,7 +113,7 @@
                         <div id="apex-analysis-chart" style="width: 100%;"></div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
             {{-- First Graph Start --}}
             {{-- Second Graph Start --}}
             @php
@@ -136,7 +179,7 @@
                 <div class="custom--card">
                     <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
                         <div>
-                          <h5 class="card-title mb-0">@lang('Option Analysis - Open Interest CE/PE Signals') </h5>
+                          <h5 class="card-title mb-0"  data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="right"  title="Open Interest CE/PE Signals indicate trading opportunities based on the open interest of Call Options (CE) and Put Options (PE) contracts. When there's a significant divergence between the open interest of CE and PE, it can signal a potential trading opportunity. A valid trading signal occurs when Call Options (CE) indicate bullish sentiment while Put Options (PE) suggest bearish sentiment. It is opportune to enter a trade when these signals align in this manner.">@lang('Option Analysis - Open Interest CE/PE Signals') </h5>
                           <small class="text-warning">Y- ClosePrice, X - Time</small>
                         </div>
                         <div class="filter-box d-flex">
@@ -150,7 +193,7 @@
                               </select>
                             </div>
                             <div class="mx-1">
-                              <select name="atmRange" class="form-select" id="atmRange">
+                              <select name="atmRange2" class="form-select" id="atmRange2">
                                 <option value="" disabled="" selected>Strike</option>
                                 @for ($i = -3; $i <= 3; $i++)
                                   @if ($i == 0)
@@ -162,7 +205,7 @@
                             </select>
                            </div>
                            <div class="mx-1">
-                              <select name="timeframe" class="form-select" id="timeframe">
+                              <select name="timeframe2" class="form-select" id="timeframe2">
                                 <option value="" disabled="" selected>Time Frame</option>
                                 <option value="1" {{$timeFrame2 == 1 ? 'selected' : ''}}>1</option>
                                 <option value="3" {{$timeFrame2 == 3 ? 'selected' : ''}}>3</option>
@@ -249,7 +292,7 @@
                 <div class="custom--card">
                     <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
                        <div>
-                          <h5 class="card-title mb-0">@lang('Option Analysis - VWAP CE/PE Signals') </h5>
+                          <h5 class="card-title mb-0"  data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="right"  title="VWAP CE/PE Signals refer to trading signals derived from the Volume Weighted Average Price (VWAP) specifically for Call Options (CE) and Put Options (PE) contracts in a given market. VWAP is a technical analysis tool that calculates the average price of a security over a specified period, weighted by trading volume. Traders often use VWAP to identify trends, support, and resistance levels in the market. A valid trading signal occurs when Call Options (CE) indicate bullish sentiment while Put Options (PE) suggest bearish sentiment. It is opportune to enter a trade when these signals align in this manner.">@lang('Option Analysis - VWAP CE/PE Signals') </h5>
                           <small class="text-warning">Y- ClosePrice, X - Time</small>
                        </div>
                         <div class="filter-box d-flex">
@@ -311,6 +354,7 @@
             @forelse($atmData4 as $val)
               @php
                   $arrData4 = json_decode($val->data,true);    
+                  // dd($arrData4);
                   $CE4 = array_slice($arrData4['CE'],-1);
                   $PE4 = array_slice($arrData4['PE'],-1);
                   $Date4 = array_slice($arrData4['Date'],-40);
@@ -319,8 +363,8 @@
                   $vwap_PE_signal4 = array_slice($arrData4['vwap_PE_signal'],-40);
                   $close_CE4 = array_slice($arrData4['close_CE'],-40);
                   $close_PE4 = array_slice($arrData4['close_PE'],-40);
-                  $OI_CE4 = array_slice([1493500,1480500,1539650,1623700,1667550,1693700,1722450,1718400,1741650,1749000,1756600,1748350,1766850,1777050,1797450,1840500,1908550,1959650,1998650,2026550,2018200,2024050,2008450,2008300,2011900,2005400,2025950,1996100,2010800,2052250,2084850,2102350,2205950,2209950,2271500,2399400,2592850,2803900,2928600,3070650],-40);
-                  $OI_PE4 = array_slice([2266450,2293150,2329300,2399700,2462350,2473700,2500550,2508800,2513400,2466700,2447550,2439100,2427600,2415600,2429100,2389700,2407800,2362400,2413650,2450800,2593600,2632300,2634600,2660050,2718550,2781050,2765050,2823400,2794550,2813550,2803150,2826700,2846400,2907450,2913550,2953050,3024900,3292200,3468450,3586400,3679100],-40);
+                  $OI_CE4 = array_slice($arrData4['oi_CE'],-40);
+                  $OI_PE4 = array_slice($arrData4['oi_PE'],-40);
               @endphp
             @empty
             @endforelse 
@@ -328,13 +372,46 @@
             $time4 = array_map(function ($k , $y) use($Date4){
                 return date("d-M-Y",($Date4[$k]/1000)).', '.date("g:i a", strtotime($y));
             },array_keys($Date4) , $time4);
-          @endphp
+
+            $ceArray4 = array();
+            $newArr14 = [];
+
+            foreach($time4 as $i=>$y){
+              if(!in_array($vwap_CE_signal4[$i],$ceArray4)){
+                $ceArray4 = [];
+                array_push($ceArray4,$vwap_CE_signal4[$i]);
+                $newArr14[] = [
+                    'time'=>$y,
+                    'price'=>$OI_CE4[$i],
+                    'text'=>$vwap_CE_signal4[$i],
+                ];
+              }
+            }
+
+            $PeArray4 = array();
+            $newArr24 = [];
+
+            foreach($time4 as $i=>$y){
+              if(!in_array($vwap_PE_signal4[$i],$PeArray4)){
+                $PeArray4 = [];
+                array_push($PeArray4,$vwap_PE_signal4[$i]);
+                $newArr24[] = [
+                    'time'=>$y,
+                    'price'=>$OI_PE4[$i],
+                    'text'=>$vwap_PE_signal4[$i],
+                ];
+              }
+            }
+            $mergedArray4 = array_merge($newArr14, $newArr24);
+            @endphp
         <div class="col-lg-12 mb-3">
             <div class="custom--card">
                 <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
                    <div>
-                      <h5 class="card-title mb-0">@lang('Open Interest CE/PE Crossovers') </h5>
-                      <small class="text-warning">Y- ClosePrice, X - Time</small>
+                      <h5 class="card-title mb-0"  data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="right" title="Open Interest CE/PE Crossovers occur when CE surpasses or falls below PE's open interest. It signals shifting sentiment.
+                      Interpretation: Bullish: CE crossing above PE indicates bullish sentiment. Bearish: PE surpassing CE suggests bearish sentiment. Confirm with volume, price trends, and market sentiment.
+                      A valid trading signal occurs when Call Options (CE) indicate bullish sentiment while Put Options (PE) suggest bearish sentiment. It is opportune to enter a trade when these signals align in this manner.">@lang('Open Interest CE/PE Crossovers') </h5>
+                      <small class="text-warning" >Y- Open Interest, X - Time</small>
                    </div>
                     <div class="filter-box d-flex">
                       <form method="GET" class="d-flex align-items-center flex-wrap filter_dropdown">
@@ -394,7 +471,7 @@
             @php $i=1; @endphp
             @forelse($atmData5 as $val)
               @php
-                  $arrData5 = json_decode($val->data,true);    
+                  $arrData5 = json_decode($val->data,true);   
                   $CE5 = array_slice($arrData5['CE'],-1);
                   $PE5 = array_slice($arrData5['PE'],-1);
                   $Date5 = array_slice($arrData5['Date'],-40);
@@ -403,22 +480,105 @@
                   $vwap_PE_signal5 = array_slice($arrData5['vwap_PE_signal'],-40);
                   $close_CE5 = array_slice($arrData5['close_CE'],-40);
                   $close_PE5 = array_slice($arrData5['close_PE'],-40);
-                  $CE_NETCHANGE_5 = array_slice([22450, 28900, 21500, -5000, -1700, 5250, 17300, 18750, 1300, -3450, 8550, 0, -4950, 16100, 2700, -14650, 7300, 27650, 13900, 5500, -1650, -11500, -950, 350, 4450, -900, -11700, -9050, 9700, -3750, 11150, 9750, -550, -23750, -6900, -4250, -32750, -3500, 16100, 11050, -1150, 17850, 21950, -1800, 8650, 43700, 3250, 2250, 6150, -9550, -500, 1800, 4950, -6450, -1700, 2350, -2200, 10300, 6600, 7700, 3100],-40);
-                  $PE_NETCHANGE_5 = array_slice([11600, 9400, 3850, 29650, 58000, 16600, 25250, 14450, -7550, 44200, 58200, -3200, 43900, 27950, 33350, 105300, 112950, 86650, 18500, 119950, 92700, 17000, 48600, 10600, 58150, 48550, 23600, 10500, 4300, 28900, 62250, 18050, 4700, -75350, -6550, 48150, 39600, 93000, 24000, 34350, 79600, -6850, 12500, 56600, 26700],-40);;
+                  $OI_CE5 = array_slice($arrData5['oi_CE'],-40);
+                  $OI_PE5 = array_slice($arrData5['oi_PE'],-40);
+                  
+                  
+                  $CE_PRE = 0;
+                  // $CE_NETCHANGE_5 = array_map(function ($key , $y) use($CE_PRE) {
+                  //   if ($key == 0) {
+                  //     $CE_PRE = $y;
+                  //     return $y;
+                  //   }
+                  //   $res = $y - $CE_PRE;
+                  //   $CE_PRE = $y;
+                  //   return $res;
+                  // },array_keys($OI_CE5) ,  $OI_CE5);
+
+                  $CE_NETCHANGE_5 = [];
+                  foreach ($OI_CE5 as $key => $y) {
+                    if ($key == 0) {
+                      $CE_PRE = $y;
+                      array_push($CE_NETCHANGE_5 , 0);
+                    }
+                    $res = $y - $CE_PRE;
+                    $CE_PRE = $y;
+                    array_push($CE_NETCHANGE_5 , $res);
+                  }
+
+                 $PE_PRE = 0;
+                 $PE_NETCHANGE_5 = [];
+                  foreach ($OI_PE5 as $key => $y) {
+                    if ($key == 0) {
+                      $PE_PRE = $y;
+                      array_push($PE_NETCHANGE_5 ,0);
+                    }
+                    $res = $y - $PE_PRE;
+                    $PE_PRE = $y;
+                    array_push($PE_NETCHANGE_5 , $res);
+                  }
+                  // $PE_NETCHANGE_5 = array_map(function ($key , $y) use($PE_PRE) {
+                  //   if ($key == 1) {
+                  //     $PE_PRE = $y;
+                  //     return 0;
+                  //   }
+                  //   $res = $y - $PE_PRE;
+                  //   $PE_PRE = $y;
+                  //   return $res;
+                  // },array_keys($OI_PE5) ,  $OI_PE5);
               @endphp
             @empty
             @endforelse 
             @php
-            $time5 = array_map(function ($y) {
-                return date("g:i a", strtotime($y));
-            },$time5);
+              if(count($atmData5)){
+              $time5 = array_map(function ($y) {
+                  return date("g:i a", strtotime($y));
+              },$time5);
+
+              $ceArray5 = array();
+              $newArr15 = [];
+
+              foreach($time5 as $i=>$y){
+                if(!in_array($vwap_CE_signal5[$i],$ceArray5)){
+                  $ceArray5 = [];
+                  array_push($ceArray5,$vwap_CE_signal5[$i]);
+                  $newArr15[] = [
+                      'time'=>$y,
+                      'price'=>$CE_NETCHANGE_5[$i],
+                      'text'=>$vwap_CE_signal5[$i],
+                      'color'=>'#00bf63'
+                  ];
+                }
+              }
+
+              $PeArray5 = array();
+              $newArr25 = [];
+
+              foreach($time5 as $i=>$y){
+                if(!in_array($vwap_PE_signal5[$i],$PeArray5)){
+                  $PeArray5 = [];
+                  array_push($PeArray5,$vwap_PE_signal5[$i]);
+                  $newArr25[] = [
+                      'time'=>$y,
+                      'price'=>$PE_NETCHANGE_5[$i],
+                      'text'=>$vwap_PE_signal5[$i],
+                      'color'=>'#FF0000'
+                  ];
+                }
+              }
+              $mergedArray5 = array_merge($newArr15, $newArr25);
+            }else{
+                $mergedArray5 = [];
+              }
+              
           @endphp
         <div class="col-lg-12 mb-3">
             <div class="custom--card">
                 <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
                     <div>
-                      <h5 class="card-title mb-0">@lang('Open Interest CE/PE Net Change') </h5>
-                      <small class="text-warning">Y- ClosePrice, X - Time</small>
+                    
+                      <h5 class="card-title mb-0"  data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="right" title="Open interest reflects active options contracts. The net change is the current minus previous open interest. Bullish: CE's net increase over PE indicates optimism for asset's rise. Bearish: PE's significant increase over CE signals pessimism for asset's decline.">@lang('Open Interest CE/PE Net Change') </h5>
+                      <small class="text-warning">Y- Open Interest, X - Time</small>
                     </div>
                     <div class="filter-box d-flex">
                       <form method="GET" class="d-flex align-items-center flex-wrap filter_dropdown">
@@ -468,76 +628,74 @@
         </div>
     </div>
 </section>
-
 @endsection
 @push('script')
 
 <script src="{{ asset('assets/admin/js/vendor/apexcharts.min.js') }}"></script>
 <script src="{{ asset('assets/admin/js/vendor/chart.js.2.8.0.js') }}"></script>
-
 <script>
-var options = {
+// var options = {
     
-    series: [{
-    name: 'Net Profit',
-    data: [44, 55, 57, 56, 61, 58, 63, 60, 66,85,45,25]
-  }, {
-    name: 'Revenue',
-    data: [76, 85, 101, 98, 87, 105, 91, 114,58,98,15, 94]
-  }, {
-    name: 'Free Cash Flow',
-    data: [35, 41, 36, 26, 45, 48, 52, 53,36,56,92, 41]
-  }],
-    chart: {
-    type: 'bar',
-    foreColor: '#e4e4e4',
-    height: 400,
-    toolbar: {
-        show: false,
+//     series: [{
+//     name: 'ATM-1',
+//     data: []
+//   }, {
+//     name: 'ATM',
+//     data: []
+//   }, {
+//     name: 'ATM+1',
+//     data: []
+//   }],
+//     chart: {
+//     type: 'bar',
+//     foreColor: '#e4e4e4',
+//     height: 400,
+//     toolbar: {
+//         show: false,
        
-    }
-  },
-  plotOptions: {
-    bar: {
-      horizontal: false,
-      columnWidth: '40%',
-      endingShape: 'rounded'
-    },
-  },
-  dataLabels: {
-    enabled: false
-  },
-  stroke: {
-    show: true,
-    width: 2,
-    colors: ['transparent']
-  },
-  xaxis: {
-    type: "category",
-    categories: ['1','2','3','4'],
-  },
-  yaxis: {
-    title: {
-      text: '$ (thousands)'
-    }
-  },
-  fill: {
-    opacity: 1
-  },
-  tooltip: {
-    enabled: true,
-    theme: 'dark',
+//     }
+//   },
+//   plotOptions: {
+//     bar: {
+//       horizontal: false,
+//       columnWidth: '40%',
+//       endingShape: 'rounded'
+//     },
+//   },
+//   dataLabels: {
+//     enabled: false
+//   },
+//   stroke: {
+//     show: true,
+//     width: 2,
+//     colors: ['transparent']
+//   },
+//   xaxis: {
+//     type: "category",
+//     categories: [],
+//   },
+//   yaxis: {
+//     title: {
+//       text: '$ (thousands)'
+//     }
+//   },
+//   fill: {
+//     opacity: 1
+//   },
+//   tooltip: {
+//     enabled: true,
+//     theme: 'dark',
           
-    y: {
-      formatter: function (val) {
-        return "$ " + val + " thousands"
-      }
-    }
-  }
-  };
+//     y: {
+//       formatter: function (val) {
+//         return "$ " + val + " thousands"
+//       }
+//     }
+//   }
+//   };
 
-  var chart = new ApexCharts(document.querySelector("#apex-analysis-chart"), options);
-  chart.render();
+//   var chart = new ApexCharts(document.querySelector("#apex-analysis-chart"), options);
+//   chart.render();
 
 //   apex charts 2
 
@@ -629,7 +787,7 @@ var options = {
         $background = "#FF0000";
         $color = "#fff";
       }else if($value['text'] == "Bullish"){
-        $background = "#00FF00";
+        $background = "#00bf63";
         $color = "#000";
       }else{
         $background = "yellow";
@@ -666,7 +824,7 @@ var options = {
         $background = "#FF0000";
         $color = "#fff";
       }else if($value['text'] == "Bullish"){
-        $background = "#00FF00";
+        $background = "#00bf63";
         $color = "#000";
       }else{
         $background = "yellow";
@@ -692,9 +850,96 @@ var options = {
         ]
       ];
     }
-    
 @endphp
 
+@php
+    $data4 = [];
+    foreach($mergedArray4 as $key => $value){
+      if($value['text'] == "Bearish"){
+        $background = "#FF0000";
+        $color = "#fff";
+      }else if($value['text'] == "Bullish"){
+        $background = "#00bf63";
+        $color = "#000";
+      }else{
+        $background = "yellow";
+        $color = "#000";
+      }
+      $data4[] = [
+        "x"=>$value['time'],
+        "y"=>$value['price'],
+        "marker"=>[
+          'size'=>6,
+          "fillColor"=> "#FFF",
+          "strokeColor"=> "transparent",
+          "radius"=> 2
+        ],
+        "label"=> [
+            "borderColor"=> $background,
+            "offsetY"=> 0,
+            "style"=> [
+              "color"=> $color,
+              "background"=> $background
+            ],
+            "text"=> $value['text']
+        ]
+      ];
+    }
+@endphp
+
+
+@php
+    $data5 = [];
+    foreach($mergedArray5 as $key => $value){
+      if($value['color'] == "#00bf63"){ // CE  // Green
+        $color = "#000";
+        if($value['text'] == "Bearish"){
+          $color = "#fff";
+        }
+        $data5[] = [
+            "x"=>$value['time'],
+            "borderColor"=>$value['color'],
+            "label"=>[
+              "borderColor"=>"transparent",
+              "style"=>[
+                "color"=>$color,
+                "background"=>$value['color'],
+              ],
+              "orientation"=>"horizontal",
+              "text"=>$value['text']
+            ]
+        ];
+
+        
+      }else if($value['color'] == "#FF0000"){ // PE
+
+        $color = "#000";
+        if($value['text'] == "Bearish"){
+          $color = "#fff";
+        }
+
+        $data5[] = [
+            "x"=>$value['time'],
+            "borderColor"=>$value['color'],
+            "label"=>[
+              "borderColor"=>"transparent",
+              "style"=>[
+                "color"=>$color,
+                "background"=>$value['color'],
+              ],
+              "text"=>$value['text']
+            ]
+        ];
+
+      }else{
+        $background = "yellow";
+        $color = "#000";
+      }      
+
+    }
+
+    
+@endphp
 
 {{-- Apex Chart 2 --}}
 <script>
@@ -732,7 +977,7 @@ var options = {
       curve: "straight",
       width:2
     },
-    colors: ['#00FF00','#FF0000'],
+    colors: ['#00bf63','#FF0000'],
     series: [
       {
         name: {!! json_encode($CE2[0]) !!},
@@ -792,7 +1037,7 @@ var options = {
       curve: "straight",
       width:2
     },
-    colors: ['#00FF00','#FF0000'],
+    colors: ['#00bf63','#FF0000'],
     series: [
       {
         name: {!! json_encode($CE3[0]) !!},
@@ -832,6 +1077,9 @@ var options = {
     }
   }
   var options = {
+    annotations: {
+      points: {!!json_encode($data4)!!}
+    },
     chart: {
       height: 400,
       foreColor: '#E4E4E4',
@@ -851,7 +1099,7 @@ var options = {
       curve: "straight",
       width:2
     },
-    colors: ['#00FF00','#FF0000'],
+    colors: ['#00bf63','#FF0000'],
     series: [
       {
         name: {!! json_encode($CE4[0]) !!},
@@ -890,6 +1138,9 @@ var options = {
     }
   }
   var options = {
+    annotations: {
+      xaxis: {!!json_encode($data5)!!}
+    },
     chart: {
       height: 400,
       foreColor: '#E4E4E4',
@@ -913,7 +1164,7 @@ var options = {
       curve: "straight",
       width:2
     },
-    colors: ['#00FF00','#FF0000'],
+    colors: ['#00bf63','#FF0000'],
     series: [
       {
         name: {!! json_encode($CE5[0]) !!},
@@ -938,8 +1189,19 @@ var options = {
   chart.render();
 </script>
 
+<script>
+    function reloadData(){
+        $.get('{!!$fullUrl!!}',function(data){
+            $("#pst_hre").html(data);
+        });
+    }
+
+    setInterval(() => {
+        reloadData();
+    }, 30000);//call every 1/2 minute
+    
+</script>
 
 
 @endpush
-
 

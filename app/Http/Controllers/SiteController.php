@@ -23,6 +23,8 @@ class SiteController extends Controller
 {
     use AngelApiAuth;
     public function index(){
+
+        
         // dd($this->getMarketData());
         $reference = @$_GET['reference'];
         if ($reference) {

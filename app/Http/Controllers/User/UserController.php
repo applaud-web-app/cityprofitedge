@@ -21,13 +21,16 @@ use App\Models\SignalHistory;
 use App\Models\StockPortfolio;
 use App\Models\ThematicPortfolio;
 use App\Models\BrokerApi;
+use App\Models\WatchList;
 use App\Models\Transaction;
 use App\Models\AngleOhlcData;
 use App\Models\AngleHistoricalApi;
+use App\Models\WatchTradePosition;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\OmsConfig;
 use App\Models\OrderBook;
+use App\Models\StoreMarketData;
 use App\Models\ZerodhaInstrument;
 use App\Helpers\KiteConnectCls;
 use App\Helpers\AngelConnectCls;
@@ -466,9 +469,10 @@ class UserController extends Controller
         return view($this->activeTemplate . 'user.ledgers', compact('pageTitle', 'ledgers'));
     }
 
-    public function stockPortfolios()
+    public function stockPortfolios(Request $request)
     {
         $pageTitle = 'Stock Portfolio';
+        $fullUrl = $request->fullUrl();
 
         // TODO:: modify commented code to implement searchable and filterable.
         $stockPortfolios = StockPortfolio::with('poolingAccountPortfolio')->where('user_id', auth()->id())->searchable(['broker_name', 'stock_price'])/* ->filter(['trx_type', 'remark']) */->orderBy('id', 'desc')->paginate(getPaginate());
@@ -477,11 +481,13 @@ class UserController extends Controller
         foreach ($stockPortfolios as $val) {
            array_push($symbolArray , $val['stock_name'].".NS");
         }
-
-        return view($this->activeTemplate . 'user.stock_portfolio', compact('pageTitle', 'stockPortfolios','symbolArray'));
+        if($request->ajax()){
+            return view($this->activeTemplate . 'user.stock_portfolio_ajax', compact('pageTitle', 'stockPortfolios','symbolArray','fullUrl'));
+        }
+        return view($this->activeTemplate . 'user.stock_portfolio', compact('pageTitle', 'stockPortfolios','symbolArray','fullUrl'));
     }
 
-    public function thematicPortfolios()
+    public function thematicPortfolios(Request $request)
     {
         $pageTitle = 'Thematic Portfolios';
 
@@ -492,14 +498,17 @@ class UserController extends Controller
         foreach ($thematicPortfolios as $val) {
            array_push($symbolArray , $val['stock_name'].".NS");
         }
-
-        return view($this->activeTemplate . 'user.thematic_portfolios', compact('pageTitle', 'thematicPortfolios','symbolArray'));
+        $fullUrl = $request->fullUrl();
+        if($request->ajax()){
+            return view($this->activeTemplate . 'user.thematic_portfolios_ajax', compact('pageTitle', 'thematicPortfolios','symbolArray','fullUrl'));
+        }
+        return view($this->activeTemplate . 'user.thematic_portfolios', compact('pageTitle', 'thematicPortfolios','symbolArray','fullUrl'));
     }
 
-    public function globalStockPortfolio()
+    public function globalStockPortfolio(Request $request)
     {
         $pageTitle = 'Global Stock Portfolio';
-
+        $fullUrl = $request->fullUrl();
         // TODO:: modify commented code to implement searchable and filterable.
         $globalStockPortfolios = GlobalStockPortfolio::with('poolingAccountPortfolio')->where('user_id', auth()->id())->searchable(['broker_name', 'stock_price'])->orderBy('id', 'desc')->paginate(getPaginate());
 
@@ -513,14 +522,16 @@ class UserController extends Controller
 
         // dd($getToken);
         // $date = \DB::connection('mysql_pr')->table('LTP')->select('*')->get();
-        
-        return view($this->activeTemplate . 'user.global_stock_portfolio', compact('pageTitle', 'globalStockPortfolios','symbolArray'));
+        if($request->ajax()){
+            return view($this->activeTemplate . 'user.global_stock_portfolio_ajax', compact('pageTitle', 'globalStockPortfolios','symbolArray','fullUrl'));
+        }
+        return view($this->activeTemplate . 'user.global_stock_portfolio', compact('pageTitle', 'globalStockPortfolios','symbolArray','fullUrl'));
     }
 
-    public function foPortFolioHedging()
+    public function foPortFolioHedging(Request $request)
     {
         $pageTitle = 'FO Portfolio Hedging';
-
+        $fullUrl = $request->fullUrl();
         // TODO:: modify commented code to implement searchable and filterable.
         $foPortFolioHedgings = FOPortfolios::with('poolingAccountPortfolio')->where('user_id', auth()->id())->searchable(['broker_name', 'stock_price'])/* ->filter(['trx_type', 'remark']) */->orderBy('id', 'desc')->paginate(getPaginate());
         
@@ -528,14 +539,16 @@ class UserController extends Controller
         foreach ($foPortFolioHedgings as $val) {
            array_push($symbolArray , $val['stock_name'].".NS");
         }
-
-        return view($this->activeTemplate . 'user.fo_portfolio_hedging', compact('pageTitle', 'foPortFolioHedgings','symbolArray'));
+        if($request->ajax()){
+            return view($this->activeTemplate . 'user.fo_portfolio_hedging_ajax', compact('pageTitle', 'foPortFolioHedgings','symbolArray','fullUrl'));
+        }
+        return view($this->activeTemplate . 'user.fo_portfolio_hedging', compact('pageTitle', 'foPortFolioHedgings','symbolArray','fullUrl'));
     }
 
-    public function metalsPortfolio()
+    public function metalsPortfolio(Request $request)
     {
         $pageTitle = 'Metals Portfolio';
-
+        $fullUrl = $request->fullUrl();
         // TODO:: modify commented code to implement searchable and filterable.
         $metalsPortfolios = MetalsPortfolio::with('poolingAccountPortfolio')->where('user_id', auth()->id())->searchable(['broker_name', 'stock_price'])/* ->filter(['trx_type', 'remark']) */->orderBy('id', 'desc')->paginate(getPaginate());
 
@@ -543,22 +556,30 @@ class UserController extends Controller
         foreach ($metalsPortfolios as $val) {
            array_push($symbolArray , $val['stock_name'].".NS");
         }
+        if($request->ajax()){
+            return view($this->activeTemplate . 'user.metals_portfolio_ajax', compact('pageTitle', 'metalsPortfolios','symbolArray','fullUrl'));
+        }
 
-        return view($this->activeTemplate . 'user.metals_portfolio', compact('pageTitle', 'metalsPortfolios','symbolArray'));
+        return view($this->activeTemplate . 'user.metals_portfolio', compact('pageTitle', 'metalsPortfolios','symbolArray','fullUrl'));
     }
 
     public function portfolioTopGainers(Request $request)
     {
-        $pageTitle = 'Trade Desk Signal';
 
-        // TODO:: modify commented code to implement searchable and filterable.
-        // $portfolioTopGainers = PortfolioTopGainer::searchable(['stock_name'])/* ->filter(['trx_type', 'remark']) */->orderBy('id', 'desc')->paginate(getPaginate());
+        $fullUrl =  $request->fullUrl();
+        $pageTitle = 'Trade Desk Signal';
         $portfolioTopGainers = [];
-        $symbolArr = allTradeSymbols();
+       
         $todayDate = date("Y-m-d");
+        // $todayDate = "2024-02-16";
         $stockName = $request->stock_name;
         $timeFrame = $request->time_frame ? : 5;
-        return view($this->activeTemplate . 'user.portfolio_top_gainers', compact('pageTitle', 'portfolioTopGainers','symbolArr','todayDate','timeFrame','stockName'));
+        $symbolArr = allTradeSymbols();
+        if($request->ajax()){
+            return view($this->activeTemplate . 'user.portfolio_top_gainers_ajax', compact('pageTitle', 'portfolioTopGainers','todayDate','timeFrame','stockName','fullUrl','symbolArr'));
+        }
+        
+        return view($this->activeTemplate . 'user.portfolio_top_gainers', compact('pageTitle', 'portfolioTopGainers','symbolArr','todayDate','timeFrame','stockName','fullUrl'));
     }
 
     public function brokerDetails(){
@@ -567,9 +588,15 @@ class UserController extends Controller
         return view($this->activeTemplate . 'user.broker_details',$data);
     }
 
-    public function orderBooks(){
+    public function orderBooks(Request $request){
+        $fullUrl =  $request->fullUrl();
         $data['pageTitle'] = 'Order Boook';
         $data['order_data'] = OrderBook::select('*')->where('user_id',auth()->user()->id)->paginate(50);
+        $data['fullUrl'] = $fullUrl;
+        if($request->ajax()){
+            
+            return view($this->activeTemplate . 'user.order_books_ajax',$data);
+        }
         return view($this->activeTemplate . 'user.order_books',$data);
     }
 
@@ -582,6 +609,7 @@ class UserController extends Controller
         $broker_data = BrokerApi::where('user_id',auth()->user()->id)->get();
         $data['broker_data'] = $broker_data;
         $data['trade_book_data'] = [];
+        $brokerId = 0;
         if($broker_data){
             $brokerId = !empty($request->broker_name) ? $request->broker_name : $broker_data[0]->id;
             $userData = null;
@@ -592,43 +620,43 @@ class UserController extends Controller
             }
             if(!is_null($userData)){
                 if($userData->client_type=='Zerodha'){
-                    $params = [
-                        'accountUserName'=>$userData->account_user_name,
-                        'accountPassword'=>$userData->account_password,
-                        'totpSecret'=>$userData->totp,
-                        'apiKey'=>$userData->api_key,
-                        'apiSecret'=>$userData->api_secret_key
-                    ];
+                    // $params = [
+                    //     'accountUserName'=>$userData->account_user_name,
+                    //     'accountPassword'=>$userData->account_password,
+                    //     'totpSecret'=>$userData->totp,
+                    //     'apiKey'=>$userData->api_key,
+                    //     'apiSecret'=>$userData->api_secret_key
+                    // ];
 
-                    $kiteObj = new KiteConnectCls($params);
-                    $kite = \Cache::remember('KITE_AUTH_'.$userData->account_user_name, 18000, function () use($kiteObj,$userData) {
-                        $pythonScript = '/home/forge/cityprofitedge.com/public/kite_login/app.py -u '.$userData->account_user_name;
-                        $command = 'python3 ' . $pythonScript; 
-                        exec($command, $output, $exitCode);
-                        $tokenArr =  explode("=",implode("\n", $output));
-                        $token =  $tokenArr[1];
-                        $kite = $kiteObj->generateSessionManual($token);
-                        return $kite;
-                    });
-                    $positionData = $kite->getPositions();
-                    // dd($positionData->net[0]);
-                    $fDada = [];
-                    if(isset($positionData->net)){
-                        foreach($positionData->net as $vl){
-                            $fDada[] = (object)[
-                                'product_type'=>$vl->product,
-                                'entry_time'=>'-',
-                                'txn_type'=>'-',
-                                'symbol_name'=>$vl->tradingsymbol,
-                                'qty'=>$vl->quantity,
-                                'entry_price'=>'-',
-                                'exit_price'=>'-',
-                                'sl_price'=>$vl->sell_price,
-                                'profile_loss'=>'',
-                            ];
-                        }
-                    }
-                    $data['trade_book_data'] = $fDada;
+                    // $kiteObj = new KiteConnectCls($params);
+                    // $kite = \Cache::remember('KITE_AUTH_'.$userData->account_user_name, 18000, function () use($kiteObj,$userData) {
+                    //     $pythonScript = '/home/forge/cityprofitedge.com/public/kite_login/app.py -u '.$userData->account_user_name;
+                    //     $command = 'python3 ' . $pythonScript; 
+                    //     exec($command, $output, $exitCode);
+                    //     $tokenArr =  explode("=",implode("\n", $output));
+                    //     $token =  $tokenArr[1];
+                    //     $kite = $kiteObj->generateSessionManual($token);
+                    //     return $kite;
+                    // });
+                    // $positionData = $kite->getPositions();
+                    // // dd($positionData->net[0]);
+                    // $fDada = [];
+                    // if(isset($positionData->net)){
+                    //     foreach($positionData->net as $vl){
+                    //         $fDada[] = (object)[
+                    //             'product_type'=>$vl->product,
+                    //             'entry_time'=>'-',
+                    //             'txn_type'=>'-',
+                    //             'symbol_name'=>$vl->tradingsymbol,
+                    //             'qty'=>$vl->quantity,
+                    //             'entry_price'=>'-',
+                    //             'exit_price'=>'-',
+                    //             'sl_price'=>$vl->sell_price,
+                    //             'profile_loss'=>'',
+                    //         ];
+                    //     }
+                    // }
+                    // $data['trade_book_data'] = $fDada;
                 }elseif($userData->client_type=='Angel'){
                     $param = [
                         'accountUserName'=>$userData->account_user_name,
@@ -638,7 +666,7 @@ class UserController extends Controller
                     ];
                     $angelObj = new AngelConnectCls($param);
                     $angelTokenArr = $angelObj->generate_access_token();
-                    // dd($angelTokenArr);
+                    // echo $angelTokenArr['token'];die;
                     $tokenA = $angelTokenArr['token'];
                     $clientLocalIp = $angelTokenArr['clientLocalIp'];
                     $clientPublicIp = $angelTokenArr['clientPublicIp'];
@@ -670,19 +698,35 @@ class UserController extends Controller
                     $response = curl_exec($curl);
                     curl_close($curl);
                     $dataArr = json_decode($response);
+                    // dd($dataArr);
                     if($dataArr->status==true){
                         if(!is_null($dataArr->data)){
                             foreach($dataArr->data as $vl){
                                 $fDada[] = (object)[
-                                    'product_type'=>$vl->producttype,
-                                    'entry_time'=>'-',
-                                    'txn_type'=>'-',
-                                    'symbol_name'=>$vl->tradingsymbol,
-                                    'qty'=>$vl->quantity,
-                                    'entry_price'=>'-',
-                                    'exit_price'=>'-',
-                                    'sl_price'=>$vl->sellamount,
-                                    'profile_loss'=>'',
+                                    "producttype"=> $vl->producttype,
+                                    "cfbuyqty"=> $vl->cfbuyqty,
+                                    "cfsellqty"=> $vl->cfsellqty,
+                                    "buyavgprice"=> $vl->buyavgprice,
+                                    "sellavgprice"=> $vl->sellavgprice,
+                                    "avgnetprice"=> $vl->avgnetprice,
+                                    "netvalue"=> $vl->netvalue,
+                                    "netqty"=> $vl->netqty,
+                                    "totalbuyvalue"=> $vl->totalbuyvalue,
+                                    "totalsellvalue"=> $vl->totalsellvalue,
+                                    "cfbuyavgprice"=> $vl->cfbuyavgprice,
+                                    "cfsellavgprice"=> $vl->cfsellavgprice,
+                                    "totalbuyavgprice"=> $vl->totalbuyavgprice,
+                                    "totalsellavgprice"=> $vl->totalsellavgprice,
+                                    "netprice"=> $vl->netprice,
+                                    "buyqty"=> $vl->buyqty,
+                                    "sellqty"=> $vl->sellqty,
+                                    "buyamount"=> $vl->buyamount,
+                                    "sellamount"=> $vl->sellamount,
+                                    "pnl"=> $vl->pnl,
+                                    "realised"=> $vl->realised,
+                                    "unrealised"=> $vl->unrealised,
+                                    "ltp"=> $vl->ltp,
+                                    "close"=> $vl->close
                                 ];
                             }
                         }
@@ -691,6 +735,7 @@ class UserController extends Controller
                 }
             }
         }
+        $data['brokerId'] = $brokerId;
         return view($this->activeTemplate . 'user.trade_positions',$data);
     }
 
@@ -765,6 +810,7 @@ class UserController extends Controller
     public function tradeBook(Request $request){
         $pageTitle = 'Trade Book';
         $data['pageTitle'] = $pageTitle;
+        $data['fullUrl'] = $request->fullUrl();
         
         if(!empty($request->buyDate) && $request->buyDate!='all'){
             $array = explode('/' ,$request->buyDate);
@@ -791,6 +837,9 @@ class UserController extends Controller
         $datas = Ledger::select('bought_date as date', \DB::raw('COUNT(*) as count'))->where('user_id',auth()->user()->id)->whereYear('bought_date', $currentYear)->groupBy('bought_date')->orderBy('bought_date')->get();
 
         // dd($datas);
+        if($request->ajax()){
+            return view($this->activeTemplate . 'user.trade-book-ajax',$data,compact('Ledger','stock','datas'));
+        }
         return view($this->activeTemplate . 'user.trade-book',$data,compact('Ledger','stock','datas'));
     }
 
@@ -813,9 +862,10 @@ class UserController extends Controller
     }
 
     public function plReports(Request $request){
-
+        $fullUrl = $request->fullUrl();
         $pageTitle = 'PL Reports';
         $data['pageTitle'] = $pageTitle;
+        $data['fullUrl'] = $request->fullUrl();
 
         $segments = "all";
         $type = "all";
@@ -940,7 +990,9 @@ class UserController extends Controller
         array_multisort($dates, SORT_ASC, $combinedArray);
 
         $allData = $this->getStockName();
-
+        if($request->ajax()){
+            return view($this->activeTemplate . 'user.pl-reports-ajax',$data,compact('combinedArray','allData')); 
+        }
 
         return view($this->activeTemplate . 'user.pl-reports',$data,compact('combinedArray','allData'));
     }
@@ -1000,7 +1052,6 @@ class UserController extends Controller
 
     public function storeOmsConfig(Request $request){
         $txnType = '';
-
         // ce symbol
         if(!$this->checkTradingSymbolExists($request->ce_symbol_name)){
             $notify[] = ['error', 'Enter valid trading symbol'];
@@ -1010,11 +1061,9 @@ class UserController extends Controller
             $notify[] = ['error', 'Enter valid trading symbol'];
             return to_route('user.portfolio.oms-config')->withNotify($notify);
         }
-
         $ce_symbol_name = $request->ce_symbol_name;
         $pe_symbol_name = $request->pe_symbol_name;
-
-
+        $strategyName = $request->strategy_name;
         switch($request->strategy_name){
             case 'Short Straddle':
                 $txnType = 'SELL';
@@ -1038,15 +1087,33 @@ class UserController extends Controller
                 $txnType = 'SELL';
                 $ce_symbol_name = null;
             break;
+            case 'Bullish CE':
+                $txnType = 'BUY';
+                $pe_symbol_name = null;
+                $strategyName = 'Bullish';
+            break;
+            case 'Bullish PE':
+                $txnType = 'BUY';
+                $ce_symbol_name = null;
+                $strategyName = 'Bullish';
+            break;
+            case 'Bearish CE':
+                $txnType = 'SELL';
+                $pe_symbol_name = null;
+                $strategyName = 'Bearish';
+            break;
+            case 'Bearish PE':
+                $txnType = 'SELL';
+                $ce_symbol_name = null;
+                $strategyName = 'Bearish';
+            break;
         }
-
         $ce_pyramid_1 = null;
         $ce_pyramid_2 = null;
         $ce_pyramid_3 = null;
         $pe_pyramid_1 = null;
         $pe_pyramid_2 = null;
         $pe_pyramid_3 = null;
-
         // if($request->order_type=="LIMIT"){
             $ce_quantity = $request->ce_quantity > 0 ? $request->ce_quantity : 0;
             $numbertodivise = $ce_quantity;
@@ -1086,7 +1153,6 @@ class UserController extends Controller
                 $pe_pyramid_1 = $pData[0];
             }
         // }
-
         $omsObj = new OmsConfig();
         $omsObj->symbol_name = $request->symbol_name;
         $omsObj->signal_tf = $request->signal_tf;
@@ -1094,7 +1160,7 @@ class UserController extends Controller
         $omsObj->pe_symbol_name = $pe_symbol_name;
         $omsObj->broker_api_id = $request->client_name;
         $omsObj->entry_point = $request->entry_point;
-        $omsObj->strategy_name = $request->strategy_name;
+        $omsObj->strategy_name = $strategyName;
         $omsObj->product = $request->product;
         $omsObj->order_type = $request->order_type;
         $omsObj->pyramid_percent = $request->pyramid_percent;
@@ -1116,7 +1182,6 @@ class UserController extends Controller
         $omsObj->status = $request->status;
         $omsObj->cron_run_at = date("Y-m-d H:i:s",strtotime('-'.$request->pyramid_freq.' minutes'));
         $omsObj->save();
-        
         $notify[] = ['success', 'Data added Successfully...'];
         return to_route('user.portfolio.oms-config')->withNotify($notify);
     }
@@ -1187,6 +1252,9 @@ class UserController extends Controller
         $table5 =  $request->symbol5 ?? "CRUDEOIL";
         $timeFrame5 = $request->timeframe5 ? : 5;
 
+        $todayDate = date("Y-m-d");
+        // $Symdata = \DB::connection('mysql_rm')->table($symbol)->select('*')->where(['date'=>
+
         // For Chart 1
         $data1 = \DB::connection('mysql_rm')->table($table1)->select('*')->where('timeframe',$timeFrame1)->get();
         // For Chart 2
@@ -1197,8 +1265,12 @@ class UserController extends Controller
         $data4 = \DB::connection('mysql_rm')->table($table4)->select('*')->where('timeframe',$timeFrame4)->get();
         // For Chart 5
         $data5 = \DB::connection('mysql_rm')->table($table5)->select('*')->where('timeframe',$timeFrame5)->get();
+        $fullUrl =  $request->fullUrl();
+        if($request->ajax()){
+            return view($this->activeTemplate . 'user.option-analysis-ajax', compact('pageTitle','symbolArr','data1','data2','data3','data4','data5','Atmtype1','timeFrame1','table1','Atmtype2','timeFrame2','table2','Atmtype3','timeFrame3','table3','Atmtype4','timeFrame4','table4','Atmtype5','timeFrame5','table5','fullUrl'));
+        }
 
-        return view($this->activeTemplate . 'user.option-analysis', compact('pageTitle','symbolArr','data1','data2','data3','data4','data5','Atmtype1','timeFrame1','table1','Atmtype2','timeFrame2','table2','Atmtype3','timeFrame3','table3','Atmtype4','timeFrame4','table4','Atmtype5','timeFrame5','table5'));
+        return view($this->activeTemplate . 'user.option-analysis', compact('pageTitle','symbolArr','data1','data2','data3','data4','data5','Atmtype1','timeFrame1','table1','Atmtype2','timeFrame2','table2','Atmtype3','timeFrame3','table3','Atmtype4','timeFrame4','table4','Atmtype5','timeFrame5','table5','fullUrl'));
     }
 
     public function fetchTradeRecord(){
@@ -1478,9 +1550,7 @@ class UserController extends Controller
     }
 
     public function updateOmsConfig(Request $request){
-       
         $txnType = '';
-
         // ce symbol
         if(!$this->checkTradingSymbolExists($request->ce_symbol_name_up)){
             $notify[] = ['error', 'Enter valid trading symbol'];
@@ -1490,12 +1560,10 @@ class UserController extends Controller
             $notify[] = ['error', 'Enter valid trading symbol'];
             return to_route('user.portfolio.oms-config')->withNotify($notify);
         }
-
         $ce_symbol_name = $request->ce_symbol_name_up;
         $pe_symbol_name = $request->pe_symbol_name_up;
-
-
-        switch($request->strategy_name){
+        $strategyName = $request->strategy_name_up;
+        switch($request->strategy_name_up){
             case 'Short Straddle':
                 $txnType = 'SELL';
             break;
@@ -1518,15 +1586,33 @@ class UserController extends Controller
                 $txnType = 'SELL';
                 $ce_symbol_name = null;
             break;
+            case 'Bullish CE':
+                $txnType = 'BUY';
+                $pe_symbol_name = null;
+                $strategyName = 'Bullish';
+            break;
+            case 'Bullish PE':
+                $txnType = 'BUY';
+                $ce_symbol_name = null;
+                $strategyName = 'Bullish';
+            break;
+            case 'Bearish CE':
+                $txnType = 'SELL';
+                $pe_symbol_name = null;
+                $strategyName = 'Bearish';
+            break;
+            case 'Bearish PE':
+                $txnType = 'SELL';
+                $ce_symbol_name = null;
+                $strategyName = 'Bearish';
+            break;
         }
-
         $ce_pyramid_1 = null;
         $ce_pyramid_2 = null;
         $ce_pyramid_3 = null;
         $pe_pyramid_1 = null;
         $pe_pyramid_2 = null;
         $pe_pyramid_3 = null;
-
         // if($request->order_type=="LIMIT"){
             $ce_quantity = $request->ce_quantity_up > 0 ? $request->ce_quantity_up : 0;
             $numbertodivise = $ce_quantity;
@@ -1566,15 +1652,14 @@ class UserController extends Controller
                 $pe_pyramid_1 = $pData[0];
             }
         // }
-
         $omsObj = OmsConfig::find($request->id);
         $omsObj->symbol_name = $request->symbol_name_up;
         $omsObj->signal_tf = $request->signal_tf_up;
-        $omsObj->ce_symbol_name = $pe_symbol_name;
+        $omsObj->ce_symbol_name = $ce_symbol_name;
         $omsObj->pe_symbol_name = $pe_symbol_name;
         $omsObj->broker_api_id = $request->client_name_up;
         $omsObj->entry_point = $request->entry_point_up;
-        $omsObj->strategy_name = $request->strategy_name_up;
+        $omsObj->strategy_name = $strategyName;
         $omsObj->product = $request->product_up;
         $omsObj->order_type = $request->order_type_up;
         $omsObj->pyramid_percent = $request->pyramid_percent_up;
@@ -1590,13 +1675,313 @@ class UserController extends Controller
         $omsObj->pyramid_freq = $request->pyramid_freq_up;
         $omsObj->user_id = auth()->user()->id;
         $omsObj->status = $request->status;
-        $omsObj->is_api_pushed = 0;
-        $omsObj->last_time = null;
+        // $omsObj->is_api_pushed = 0;
+        // $omsObj->last_time = null;
         $omsObj->cron_run_at = date("Y-m-d H:i:s",strtotime('-'.$request->pyramid_freq_up.' minutes'));
         $omsObj->save();
-        
         $notify[] = ['success', 'Data updated Successfully...'];
         return to_route('user.portfolio.oms-config')->withNotify($notify);
     }
     
+
+    public function watchList(Request $request){
+
+        $pageTitle = "Watch List";
+        
+        // $symbolArr = allTradeSymbols();
+        $todayDate = date("Y-m-d");
+        // $todayDate = date("2024-02-16");
+        // $stockName = $request->stock_name;
+        // $timeFrame = $request->time_frame ? : 5;
+        // $allSymbols = [];
+        // foreach ($symbolArr as $key => $v) {
+        //     $data = \DB::connection('mysql_rm')->table($v)->select('*')->where(['date' => $todayDate, 'timeframe' => $timeFrame])->get();
+        //     $atmData = [];
+        //     foreach ($data as $vvl) {
+        //         if (isset($vvl->atm) && $vvl->atm == 'ATM') {
+        //             $atmData[] = $vvl;
+        //         }
+        //     }
+        //     foreach ($atmData as $val) {
+        //         array_push($allSymbols,$val->ce);
+        //         array_push($allSymbols,$val->pe);
+        //     }
+        // }
+
+        $data = StoreMarketData::whereDay('created_at', now()->day)->WHERE('exchange','MCX')->orWhere('exchange','NFO')->GROUPBY('token')->get();
+        $MCXpayload = [];
+        $NFOpayload = [];
+        if($data != NULL){
+            foreach ($data as $key => $value) {
+                if($value->exchange == "MCX"){
+                    array_push($MCXpayload,$value->token);
+                }else if($value->exchange == "NFO"){
+                    array_push($NFOpayload,$value->token);
+                }
+            }
+        }
+
+        $MCXpayload = array_unique($MCXpayload);
+        $NFOpayload = array_unique($NFOpayload);
+
+        $MCXpayload = array_chunk($MCXpayload, 10);
+        $NFOpayload = array_chunk($NFOpayload , 10);
+
+        $finalResponse = [];
+        foreach ($NFOpayload as $key => $value) {
+            $payload = [
+                'NFO'=>$value
+            ];
+            
+            $payload = json_encode($payload,true);
+            $respond = $this->getWatchListRecords($payload);
+
+            if($respond != NULL){
+                if($respond['status'] == true){
+                    $fetchedData = $respond['data']['fetched'];
+                    array_unshift($finalResponse,$fetchedData);
+                }
+            }
+        }
+
+        foreach ($MCXpayload as $key => $value) {
+            $payload = [
+                'MCX'=>$value
+            ];
+
+            $payload = json_encode($payload,true);
+            $respond = $this->getWatchListRecords($payload);
+            if($respond != NULL){
+                if($respond['status'] == true){
+                    $fetchedData = $respond['data']['fetched'];
+                    array_unshift($finalResponse,$fetchedData);
+                }
+            }
+        }
+        $finalResponse = call_user_func_array('array_merge', $finalResponse);
+
+        // $zehrodha = ZerodhaInstrument::whereIN('trading_symbol',$allSymbols)->get();
+        // $MCXpayload = [];
+        // $NFOpayload = [];
+        // if($zehrodha != NULL){
+        //     foreach ($zehrodha as $key => $value) {
+        //         if($value->exchange == "MCX"){
+        //             array_push($MCXpayload,$value->exchange_token);
+        //         }else if($value->exchange == "NFO"){
+        //             array_push($NFOpayload,$value->exchange_token);
+        //         }
+        //     }
+        // }
+
+        // $payload = [
+        //     'MCX'=>$MCXpayload,
+        //     'NFO'=>$NFOpayload
+        // ];
+
+        // $payload = json_encode($payload,true);
+        // $respond = $this->getWatchListRecords($payload);
+        // if($respond == NULL){
+        //     $respond = $this->getWatchListRecords($payload);
+        // }
+        $fullUrl = $request->fullUrl();
+
+        if($request->ajax()){
+            return view($this->activeTemplate . 'user.watch-list-ajax',compact('pageTitle','fullUrl','finalResponse'));
+        }
+
+        return view($this->activeTemplate . 'user.watch-list',compact('pageTitle','finalResponse','fullUrl'));
+    }
+
+    // public function fetchwatchList(Request $request){
+        // dd(json_encode($request->all()));
+        // try {
+            // $symbolArr = allTradeSymbols();
+            // $todayDate = date("Y-m-d");
+            // $stockName = $request->stock_name;
+            // $timeFrame = $request->time_frame ? : 5;
+            // $allSymbols = [];
+            // foreach ($symbolArr as $key => $v) {
+            //     $data = \DB::connection('mysql_rm')->table($v)->select('*')->where(['date' => $todayDate, 'timeframe' => $timeFrame])->get();
+            //     $atmData = [];
+            //     foreach ($data as $vvl) {
+            //         if (isset($vvl->atm) && $vvl->atm == 'ATM') {
+            //             $atmData[] = $vvl;
+            //         }
+            //     }
+            //     foreach ($atmData as $val) {
+            //         array_push($allSymbols,$val->ce);
+            //         array_push($allSymbols,$val->pe);
+            //     }
+            // }
+
+            // $zehrodha = ZerodhaInstrument::whereIN('trading_symbol',$allSymbols)->get();
+
+
+    //         return response()->json($this->getWatchListRecords($allSymbols));
+    //     } catch (\Throwable $th) {
+    //        return response()->json(
+    //         [ 'data' => ['status'=>false] ]
+    //        );
+    //     }
+    // }
+
+    public function buywishlist(Request $request){
+        $request->validate([
+            'price'=>'required',
+            'quantity'=>'required',
+            'token'=>'required',
+            'symbol'=>'required',
+            'ltp'=>'required',
+            'type'=>'required',
+            'exchange'=>'required',
+            'order_type'=>'required'
+        ]);
+
+        $userId = \Auth::id();
+        $status = "executed";
+        if($request->order_type == "limit"){
+            $status = "pending";
+        }
+
+        // Check For Previous BUY OR SELL FOR A PARTICULAR STOCK
+        $makeAvgPrice = WatchList::WHERE('status','executed')->Where('token',$request->token)->WHERE('user_id',$userId)->get();
+        $totalBuyPrice = 0;
+        $totalBuyQuantity = 0;
+        $totalSellPrice = 0;
+        $totalSellQuantity = 0;
+
+        if(count($makeAvgPrice)){
+            foreach ($makeAvgPrice as $key => $value) {
+                if($value->type == "BUY"){
+                    $totalBuyPrice += ($value->quantity * $value->buy_price);
+                    $totalBuyQuantity += $value->quantity;
+                }
+
+                if($value->type == "SELL"){
+                    $totalSellPrice += ($value->quantity * $value->buy_price);
+                    $totalSellQuantity += $value->quantity;
+                }
+            }
+        }
+
+        // For CURRENT RECORD
+        if ($request->type == "BUY") {
+            $totalBuyPrice += ($request->quantity * $request->price);
+            $totalBuyQuantity += $request->quantity;
+        }
+
+        if ($request->type == "SELL") {
+            $totalSellPrice += ($request->quantity * $request->price);
+            $totalSellQuantity += $request->quantity;
+        }
+
+        if($totalBuyQuantity > 0){
+            $BuyavgPrice = round($totalBuyPrice / $totalBuyQuantity,2);  
+        }else{
+            $BuyavgPrice = 0;
+        }
+
+        if($totalSellQuantity > 0){
+            $SellavgPrice = round($totalSellPrice / $totalSellQuantity,2);  
+        }else{
+            $SellavgPrice = 0;
+        }
+
+        $netChange = ($totalBuyQuantity * $totalBuyPrice) - ($totalSellPrice * $totalSellQuantity);
+        
+        $orderId = "WL".strtotime('d-m-y h:i:s').rand(100,10000000).rand(100,10000000);
+       
+        // $payload = [
+        //     $request->exchange=>$request->token,
+        // ];
+        // $getLatestPrice = $this->getWatchListRecords(json_decode($payload));
+
+        // dd($getLatestPrice);
+
+        $order = new WatchList;
+        $order->order_id = $orderId;
+        $order->user_id =  $userId;
+        $order->buy_price = $request->price;
+        $order->exchange = $request->exchange;
+        $order->quantity = $request->quantity;
+        $order->token = $request->token;
+        $order->symbol = $request->symbol;
+        $order->type = $request->type;
+        $order->ltp = $request->ltp;
+        $order->order_type = $request->order_type;
+        $order->status = $status;
+        $order->save();
+
+        // Watch Trade Position
+        if($status == "executed"){
+            $watchTradePosition = WatchTradePosition::Where('token',$request->token)->WHERE('user_id',$userId)->first();
+            if($watchTradePosition != NULL){
+                $watchTradePosition->buy_quantity = $totalBuyQuantity;
+                $watchTradePosition->buy_price = $BuyavgPrice;
+                $watchTradePosition->net_change = $netChange;
+                $watchTradePosition->sell_quantity = $totalSellQuantity;
+                $watchTradePosition->sell_price = $SellavgPrice;
+                $watchTradePosition->save();
+            }else{
+                $tradePostion = new WatchTradePosition;
+                $tradePostion->user_id = $userId;
+                $tradePostion->token = $request->token;
+                $tradePostion->symbol = $request->symbol;
+                $tradePostion->exchange = $request->exchange;
+                $tradePostion->buy_quantity = $totalBuyQuantity;
+                $tradePostion->buy_price = $BuyavgPrice;
+                $tradePostion->sell_quantity = $totalSellQuantity;
+                $tradePostion->sell_price = $SellavgPrice;
+                $tradePostion->net_change = $netChange;
+                $tradePostion->save();
+            }
+        }
+
+        $notify[] = ['success', 'Order Placed Successfully'];
+        return back()->withNotify($notify);
+
+    }
+
+    public function watchListOrder(Request $request){
+        $pageTitle = "Watch List Order";
+        $userId = \Auth::id();
+        $wishlistorder = WatchList::where('user_id',$userId)->orderBy('id','DESC')->get();
+        $fullUrl = $request->fullUrl();
+        if($request->ajax()){
+            return view($this->activeTemplate . 'user.watch-list-order-ajax',compact('pageTitle','wishlistorder','fullUrl'));
+        }
+        return view($this->activeTemplate . 'user.watch-list-order',compact('pageTitle','wishlistorder','fullUrl'));
+    }
+
+    public function watchListPosition(Request $request){
+        $pageTitle = "Watch List Position";
+        $userId = \Auth::id();
+        $wishlistorder = WatchTradePosition::where('user_id',$userId)->orderBy('id','DESC')->get();
+
+        $MCXpayload = [];
+        $NFOpayload = [];
+        if($wishlistorder != NULL){
+            foreach ($wishlistorder as $key => $value) {
+                if($value->exchange == "MCX"){
+                    array_push($MCXpayload,$value->token);
+                }else if($value->exchange == "NFO"){
+                    array_push($NFOpayload,$value->token);
+                }
+            }
+        }
+
+        $payload = [
+            'MCX'=>$MCXpayload,
+            'NFO'=>$NFOpayload
+        ];
+        $payload = json_encode($payload,true);
+        $respond = $this->getWatchListRecords($payload);
+        $fullUrl = $request->fullUrl();
+        if($request->ajax()){
+            return view($this->activeTemplate . 'user.watch-list-position-ajax',compact('pageTitle','wishlistorder','respond','fullUrl'));
+        }
+
+        return view($this->activeTemplate . 'user.watch-list-position',compact('pageTitle','wishlistorder','respond','fullUrl'));
+    }
+
 }

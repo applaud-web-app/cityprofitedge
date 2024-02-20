@@ -10,6 +10,7 @@ use App\Models\AngleOhlcData;
 use App\Models\LTP_ROUNDOFF;
 use App\Http\Helpers\helpers;
 use App\Traits\AngelApiAuth;
+use App\Models\StoreMarketData;
 use Carbon\Carbon;
 
 class AngelHistorical extends Command
@@ -211,16 +212,18 @@ class AngelHistorical extends Command
 
                 $ce_token = $ce_instrument["token"];
                 $ce_symbol = $ce_instrument["symbol_name"];
+                $ce_exchange = $ce_instrument["exch_seg"];
     
                 $pe_token = $pe_instrument["token"];
                 $pe_symbol = $pe_instrument["symbol_name"];
+                $pe_exchange = $pe_instrument["exch_seg"];
 
                 $instrumenttype = ($exhange == 'MCX') ? 'COMDTY' : 'AMXIDX';
                 $index = AngelApiInstrument::Where('name',$name)->where('exch_seg',$exhange)->where('instrumenttype',$instrumenttype)->first()->toArray();
 
                 $index_token = ($index != NULL) ? $index['token'] : null;
 
-                return  array(array($ce_symbol, $ce_token, $ce_adjustment), array($pe_symbol, $pe_token, $pe_adjustment), $index_token); 
+                return  array(array($ce_symbol, $ce_token,$ce_exchange, $ce_adjustment), array($pe_symbol, $pe_token,$pe_exchange, $pe_adjustment), $index_token); 
             }else{
                 return array(array(null, null), array(null, null), null);
             }
@@ -752,8 +755,7 @@ class AngelHistorical extends Command
     {
         set_time_limit(0);
         $symbol_range = 1;
-        // $acceptedSymbols = ['CRUDEOIL','BANKNIFTY','NIFTY','GOLD','SILVER'];
-        $acceptedSymbols = ['CRUDEOIL'];
+        $acceptedSymbols = ['CRUDEOIL','BANKNIFTY','FINNIFTY','NATURALGAS','NIFTY','MIDCPNIFTY'];
         $marketHolidays = ["2024-01-22", "2024-01-26", "2024-03-08", "2024-03-25", "2024-03-29", "2024-04-11",
         "2024-04-17", "2024-05-01", "2024-06-17", "2024-07-17", "2024-08-15", "2024-10-02", "2024-11-01", "2024-11-15", "2024-12-25"];
 
@@ -764,21 +766,25 @@ class AngelHistorical extends Command
             // For Current Time is B\w 9:15Am to 11:30pm
             if($this->isBetween915AMto1130PM()){
                 // Loop For Symbols List
+                $McxToken = array();
+                $NfoToken = array();
+                // $BpoToken = array();
                 foreach ($acceptedSymbols as $key => $symbolName) {
                     $angleApiInstuments = AngelApiInstrument::Where('name',$symbolName)->where(function ($query) {
                         $query->where('instrumenttype', '=', 'AMXIDX')->orWhere('instrumenttype', '=', 'COMDTY');
                     })->first();
-                    // For MCX Exch Records
+
                     if($angleApiInstuments->exch_seg == "MCX"){
                         $allResponse = array();
                         $alltoken = array();
                         $armRange = array();
+                       
                         // For Atm Range
                         for ($i=(-$symbol_range); $i <= $symbol_range ; $i++) { 
                             $exchangeVal = $angleApiInstuments->exch_seg;
                             $tokenVal = $angleApiInstuments->token;
                             $nameVal = $angleApiInstuments->name;
-                            // getLTP by Angle Api
+                            // GET LTP by Angle Api
                             $ltpByApi = $this->getLTP($exchangeVal,$nameVal,$tokenVal);
                             if(!isset($ltpByApi['data'])){
                                 continue;
@@ -786,15 +792,18 @@ class AngelHistorical extends Command
                             $givenLtp = $ltpByApi['data']['ltp'];
                             $response = $this->getStrickData($nameVal,$exchangeVal,$givenLtp ,$i , $i);
                             // dd($response);
-                            array_push($allResponse,$response[0][0]);
-                            array_push($allResponse,$response[1][0]);
-                            array_push($alltoken,$response[0][1]);
-                            array_push($alltoken,$response[1][1]);
-                            array_push($armRange,$response[0][2]);
-                            array_push($armRange,$response[1][2]);
+                            // array_push($allResponse,$response[0][0]);
+                            // array_push($allResponse,$response[1][0]);
+                            // array_push($alltoken,$response[0][1]);
+                            // array_push($alltoken,$response[1][1]);
+                            // array_push($armRange,$response[0][2]);
+                            // array_push($armRange,$response[1][2]);
+
+                            array_push($McxToken,$response[0][1]);
+                            array_push($McxToken,$response[1][1]);
                         }
-                        $historicalData = $this->get_historical_api_data($allResponse,$alltoken,$armRange);
                     }
+
 
                     // For NSE Exch Records
                     if($angleApiInstuments->exch_seg == "NSE"){
@@ -809,17 +818,100 @@ class AngelHistorical extends Command
                         $armRange = array();
                         for ($i=(-$symbol_range); $i <= $symbol_range ; $i++) { 
                             $response = $this->get_atm_strike_symbol_angel($givenLtp ,$nameVal, $nameVal , $exchangeVal , $expiry_dates, $i , $i);
-                            array_push($allResponse2,$response[0][0]);
-                            array_push($allResponse2,$response[1][0]);
-                            array_push($alltoken2,$response[0][1]);
-                            array_push($alltoken2,$response[1][1]);
-                            array_push($armRange,$response[0][2]);
-                            array_push($armRange,$response[1][2]);
+                            // array_push($allResponse2,$response[0][0]);
+                            // array_push($allResponse2,$response[1][0]);
+                            // array_push($alltoken2,$response[0][1]);
+                            // array_push($alltoken2,$response[1][1]);
+                            // array_push($armRange,$response[0][2]);
+                            // array_push($armRange,$response[1][2]);
+
+                            array_push($NfoToken,$response[0][1]);
+                            array_push($NfoToken,$response[1][1]);
                         }
-                        $historicalData2 = $this->get_historical_api_data($allResponse2,$alltoken2,$armRange);
+                          // $historicalData3 = $this->get_historical_api_data($allResponse2,$alltoken2,$armRange);
                     }
 
                     sleep(1);
+                }
+
+                $tArr = [
+                    'mode'=>'FULL',
+                    'exchangeTokens'=>[
+                        'NFO'=>$NfoToken,
+                        'MCX'=>$McxToken
+                    ]
+                    
+                ];
+
+                // dd(json_encode($tArr));
+                $jwtToken =  $this->generate_access_token();
+                $errData = [];
+                if($jwtToken!=null){
+                    $curl = curl_init();
+                    curl_setopt_array($curl, array(
+                    CURLOPT_URL => 'https://apiconnect.angelbroking.com/rest/secure/angelbroking/market/v1/quote/',
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => '',
+                    CURLOPT_MAXREDIRS => 10,
+                    CURLOPT_TIMEOUT => 0,
+                    CURLOPT_FOLLOWLOCATION => true,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST => 'POST',
+                    CURLOPT_POSTFIELDS =>json_encode($tArr),
+                    CURLOPT_HTTPHEADER => array(
+                        'X-UserType: USER',
+                        'X-SourceID: WEB',
+                        'X-PrivateKey: '.$this->apiKey,
+                        'X-ClientLocalIP: '.$this->clientLocalIp,
+                        'X-ClientPublicIP: '.$this->clientPublicIp,
+                        'X-MACAddress: '.$this->macAddress,
+                        'Content-Type: application/json',
+                        'Authorization: Bearer '.$jwtToken
+                    ),
+                    ));
+
+                    $response = curl_exec($curl);
+                    $err = curl_error($curl);
+                    curl_close($curl);
+                    if ($err) {
+                        return $errData;
+                    }
+
+                    if($response != NULL){
+                        $errData = json_decode($response,true);
+                        // dd($errData);
+
+                    // dd($errData);
+                    if($errData['status']== true){
+                        $result = $errData['data']['fetched'];
+                        foreach ($result as $key => $value) {
+                            $marketData = new StoreMarketData;
+                            $marketData->token = $value['symbolToken'];
+                            $marketData->symbol = $value['tradingSymbol'];
+                            $marketData->exchange = $value['exchange'];
+                            $marketData->ltp = $value['ltp'];
+                            $marketData->open = $value['open'];
+                            $marketData->high = $value['high'];
+                            $marketData->low = $value['low'];
+                            $marketData->close = $value['close'];
+                            $marketData->lastTradeQty = $value['lastTradeQty'];
+                            $marketData->exchFeedTime = $value['exchFeedTime'];
+                            $marketData->exchTradeTime = $value['exchTradeTime'];
+                            $marketData->netChange = $value['netChange'];
+                            $marketData->percentChange = $value['percentChange'];
+                            $marketData->avgPrice = $value['avgPrice'];
+                            $marketData->tradeVolume = $value['tradeVolume'];
+                            $marketData->opnInterest = $value['opnInterest'];
+                            $marketData->lowerCircuit = $value['lowerCircuit'];
+                            $marketData->upperCircuit = $value['upperCircuit'];
+                            $marketData->totBuyQuan = $value['totBuyQuan'];
+                            $marketData->totSellQuan = $value['totSellQuan'];
+                            $marketData->WeekLow52 = $value['52WeekLow'];
+                            $marketData->WeekHigh52 = $value['52WeekHigh'];
+                            $marketData->save();
+                        }
+                    }
+                    }
                 }
                 return "Completed";
             }else{
