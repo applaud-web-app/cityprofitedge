@@ -45,7 +45,11 @@
                         @endforeach
                     @else
                     <tr>
-                        <td colspan="100%">No Data Found</td>
+                        <td colspan="100%" class="d-flex justify-content-center text-center">
+                            <div class="spinner-border" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </td>
                     </tr>
                     @endif
                 @endisset

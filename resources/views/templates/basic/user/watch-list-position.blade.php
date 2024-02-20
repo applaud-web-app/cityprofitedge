@@ -43,10 +43,13 @@
                                             <th>SELL VALUE</th>
                                             <th>NET CHANGE</th>
                                             <th>LTP</th>
-                                            <th>UNREALIZED P/L</th>
+                                            <th>MTM</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="watchList">
+                                    <tbody>
+                                        @php
+                                            $total = 0;
+                                        @endphp
                                         @if (isset($respond))
                                             @if ($respond['status'] == true)
                                                 @php $watchList = $respond['data']['fetched']; @endphp
@@ -93,17 +96,34 @@
                                                         <td>{{$sellValue}}</td>
                                                         <td>{{$item->net_change}}</td>
                                                         <td>{{$watchList[$key]['ltp']}}</td>
-                                                        <td class="{{ ((($watchList[$key]['ltp'] - $item->buy_price) * $item->quantity))*$angleData['lotsize'] > 0 ? 'text-success' : 'text-danger' }}">{{(($watchList[$key]['ltp'] - $item->buy_price) * $item->buy_quantity) * $angleData['lotsize']}}</td>
+                                                        @php
+                                                            $textColor = "text-success";
+                                                            $totalVal = ($watchList[$key]['ltp'] - $item->buy_price) * $item->buy_quantity;
+                                                            if(($totalVal * $angleData['lotsize']) < 0){
+                                                                $textColor = "text-danger";
+                                                            }
+                                                        @endphp
+                                                    <td class="{{$textColor}}" {{$angleData['lotsize']}}>{{$totalVal * $angleData['lotsize']}}</td>
                                                     </tr>
+                                                    @php
+                                                        $total += $totalVal * $angleData['lotsize'];
+                                                    @endphp
                                                 @endforeach
                                             @else
                                                 <tr>
-                                                    <td colspan="100%">No Order Found</td>
+                                                    <td colspan="100%" class="d-flex justify-content-center text-center">
+                                                        <div class="spinner-border" role="status">
+                                                            <span class="visually-hidden">Loading...</span>
+                                                        </div>
+                                                    </td>
                                                 </tr>
                                             @endif
                                         @endisset
                                     </tbody>
                                 </table>
+                                <div class="d-flex justify-content-end">
+                                    <button class="btn btn-danger">Total Profit : {{$total}}</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -115,14 +135,16 @@
 
 @push('script')
 <script>
-    function reloadData(){
-        $.get('{!!$fullUrl!!}',function(data){
-            $("#pst_hre").html(data);
-        });
-    }
+    $(document).ready(function(){
+        function reloadData(){
+            $.get('{!!$fullUrl!!}',function(data){
+                $("#pst_hre").html(data);
+            });
+        }
 
-    setInterval(() => {
-        reloadData();
-    }, 30000);//call every 1/2 minute
+        setInterval(() => {
+            reloadData();
+        }, 30000);//call every 1/2 minute
+    })
 </script>
 @endpush

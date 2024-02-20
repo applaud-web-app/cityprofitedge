@@ -1741,6 +1741,15 @@ class UserController extends Controller
                     $fetchedData = $respond['data']['fetched'];
                     array_unshift($finalResponse,$fetchedData);
                 }
+            }else{
+                $payload = json_encode($payload,true);
+                $respond = $this->getWatchListRecords($payload);
+                if($respond != NULL){
+                    if($respond['status'] == true){
+                        $fetchedData = $respond['data']['fetched'];
+                        array_unshift($finalResponse,$fetchedData);
+                    }
+                }
             }
         }
 
@@ -1755,6 +1764,15 @@ class UserController extends Controller
                 if($respond['status'] == true){
                     $fetchedData = $respond['data']['fetched'];
                     array_unshift($finalResponse,$fetchedData);
+                }
+            }else{
+                $payload = json_encode($payload,true);
+                $respond = $this->getWatchListRecords($payload);
+                if($respond != NULL){
+                    if($respond['status'] == true){
+                        $fetchedData = $respond['data']['fetched'];
+                        array_unshift($finalResponse,$fetchedData);
+                    }
                 }
             }
         }
@@ -1976,6 +1994,10 @@ class UserController extends Controller
         ];
         $payload = json_encode($payload,true);
         $respond = $this->getWatchListRecords($payload);
+
+        if($respond == NULL){
+            $respond = $this->getWatchListRecords($payload);
+        }
         $fullUrl = $request->fullUrl();
         if($request->ajax()){
             return view($this->activeTemplate . 'user.watch-list-position-ajax',compact('pageTitle','wishlistorder','respond','fullUrl'));
