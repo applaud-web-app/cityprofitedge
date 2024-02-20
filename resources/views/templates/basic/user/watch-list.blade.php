@@ -167,17 +167,17 @@
         $(document).ready(function(){
             function reloadData(){
                 $.get('{!!$fullUrl!!}',function(data){
-                    // if(data=='DATA_ERROR'){
-                    //     reloadData();
-                    //     return;
-                    // }
+                    if(data=='NO_DATA'){
+                        reloadData();
+                        return;
+                    }
                     $("#pst_hre").html(data);
                 });
             }
         
             setInterval(() => {
                 reloadData();
-            }, 10000);//call every 1/2 minute
+            }, 15000);//call every 1/2 minute
         });
     </script>
 @endpush
