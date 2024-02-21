@@ -1724,6 +1724,8 @@ class UserController extends Controller
         $MCXpayload = array_unique($MCXpayload);
         $NFOpayload = array_unique($NFOpayload);
 
+        // dd(count($MCXpayload)).'--'.count($NFOpayload);
+
         $MCXpayload = array_chunk($MCXpayload, 10);
         $NFOpayload = array_chunk($NFOpayload , 10);
         
