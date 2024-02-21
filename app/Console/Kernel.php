@@ -17,7 +17,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('oms-config:command')->everyMinute()->sendOutputTo('command1_output.log');
         // $schedule->command('oms-config-rt:command')->everyMinute()->sendOutputTo('command5_output.log');
-        $schedule->command('angel_instrument:daily_update')->everyMinute()->sendOutputTo('command2_output.log');
+        $schedule->command('angel_instrument:daily_update')->dailyAt('12:45')->sendOutputTo('command2_output.log');
         // $schedule->command('angleHistorical:every_minute')->everyMinute()->sendOutputTo('command3_output.log');
         // $schedule->command('zerodha_instrument:insert')->dailyAt('08:30')->sendOutputTo('command4_output.log');
         // $schedule->command('store_market_data:store_data')->everyMinute()->sendOutputTo('command6_output.log');
