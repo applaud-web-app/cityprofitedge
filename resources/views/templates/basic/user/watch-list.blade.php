@@ -91,6 +91,7 @@
             </div>
         </div>
     </section>
+
     <!-- BUY -->
     <div class="modal fade"  id="buy" tabindex="-1" aria-labelledby="buyLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
