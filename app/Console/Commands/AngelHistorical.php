@@ -600,7 +600,8 @@ class AngelHistorical extends Command
     {
         set_time_limit(0);
         $symbol_range = 1;
-        $acceptedSymbols = ['CRUDEOIL','BANKNIFTY','FINNIFTY','NATURALGAS','NIFTY','MIDCPNIFTY'];
+        // $acceptedSymbols = ['CRUDEOIL','BANKNIFTY','FINNIFTY','NATURALGAS','NIFTY','MIDCPNIFTY'];
+        $acceptedSymbols = ['BANKNIFTY'];
         $marketHolidays = ["2024-01-22", "2024-01-26", "2024-03-08", "2024-03-25", "2024-03-29", "2024-04-11",
         "2024-04-17", "2024-05-01", "2024-06-17", "2024-07-17", "2024-08-15", "2024-10-02", "2024-11-01", "2024-11-15", "2024-12-25"];
 
@@ -659,7 +660,28 @@ class AngelHistorical extends Command
                     }
                 }
 
-                // dd($completeResponse);
+                // $allTokens  =  array_merge($NfoToken,$McxToken);
+                // $LeftmarketData = StoreMarketData::whereNotIn('token',$allTokens)->whereDate('created_at', '=', date('Y-m-d'))->groupBy('token')->get();
+                // dd($LeftmarketData);
+
+                // if(count($LeftmarketData)){
+                //     foreach ($LeftmarketData as $k => $vl) {
+                //         if($vl->exhange == "MCX"){
+                //             array_push($McxToken,$vl->token);
+
+                //             if (!array_key_exists($vl->token, $completeResponse)) {
+                //                 $completeResponse[$vl->token] = $vl->atm;
+                //             }
+
+                //         }else if($vl->exhange == "NFO"){
+                //             array_push($NfoToken,$vl->token);
+                //             if (!array_key_exists($vl->token, $completeResponse)) {
+                //                 $completeResponse[$vl->token] = $vl->atm;
+                //             }
+                //         }
+                //     }
+                // }
+                
                 $tArr = [
                     'mode'=>'FULL',
                     'exchangeTokens'=>[
@@ -718,6 +740,7 @@ class AngelHistorical extends Command
                             if($value['ltp'] > $value['avgPrice']){
                                 $vmap = "Bullish";
                             }
+                            
                             $marketData->token = $value['symbolToken'];
                             $marketData->symbol = $value['tradingSymbol'];
                             $marketData->exchange = $value['exchange'];
