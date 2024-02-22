@@ -35,24 +35,31 @@
                             @php
                                 $key = array_search($item->token, array_column($watchList, 'symbolToken'));
                                 $angleData = App\Models\AngelApiInstrument::WHERE('token', $item->token)->first();
-
+                                $tickSize = 1;
                                 $buyValue = $item->buy_quantity * $item->buy_price;
                                 $sellValue = $item->sell_quantity * $item->sell_price;
-                                if ($angleData->name == 'CRUDEOIL') {
-                                    $buyValue = $buyValue * 100;
-                                    $sellValue = $sellValue * 100;
-                                } elseif ($angleData->name == 'GOLD') {
-                                    $buyValue = $buyValue * 10;
-                                    $sellValue = $sellValue * 10;
-                                } elseif ($angleData->name == 'NATURALGAS') {
-                                    $buyValue = $buyValue * 1250;
-                                    $sellValue = $sellValue * 1250;
-                                } elseif ($angleData->name == 'SILVER') {
-                                    $buyValue = $buyValue * 5;
-                                    $sellValue = $sellValue * 5;
-                                } else {
-                                    $buyValue = $buyValue * $angleData->tick_size;
-                                    $sellValue = $sellValue * $angleData->tick_size;
+                                if (isset($angleData)) {
+                                    if($angleData->name == "CRUDEOIL"){
+                                        $buyValue = $buyValue*100;
+                                        $sellValue = $sellValue*100;
+                                        $tickSize = $angleData['lotsize'];
+                                    }else if($angleData->name == "GOLD"){
+                                        $buyValue = $buyValue*10;
+                                        $sellValue = $sellValue*10;
+                                        $tickSize = $angleData['lotsize'];
+                                    }else if($angleData->name == "NATURALGAS"){
+                                        $buyValue = $buyValue*1250;
+                                        $sellValue = $sellValue*1250;
+                                        $tickSize = $angleData['lotsize'];
+                                    }else if($angleData->name == "SILVER"){
+                                        $buyValue = $buyValue*5;
+                                        $sellValue = $sellValue*5;
+                                        $tickSize = $angleData['lotsize'];
+                                    }else{
+                                        $buyValue = $buyValue*$angleData->tick_size;
+                                        $sellValue = $sellValue*$angleData->tick_size;
+                                        $tickSize = $angleData['lotsize'];
+                                    }
                                 }
                             @endphp
                             <tr>
@@ -70,14 +77,14 @@
                                 @php
                                     $textColor = "text-success";
                                     $totalVal = ($watchList[$key]['ltp'] - $item->buy_price) * $item->buy_quantity;
-                                    if(($totalVal * $angleData['lotsize']) < 0){
+                                    if(($totalVal * $tickSize) < 0){
                                         $textColor = "text-danger";
                                     }
                                 @endphp
-                            <td class="{{$textColor}}" {{$angleData['lotsize']}}>{{$totalVal * $angleData['lotsize']}}</td>
+                            <td class="{{$textColor}}" {{$tickSize}}>{{$totalVal * $tickSize}}</td>
                             </tr>
                             @php
-                                $total += $totalVal * $angleData['lotsize'];
+                                $total += $totalVal * $tickSize;
                             @endphp
                         @endforeach
                     @else
