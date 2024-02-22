@@ -603,138 +603,106 @@ class UserController extends Controller
     
 
     public function tradePositions(Request $request){
-        
-
         $data['pageTitle'] = 'Trade Positions';
         $broker_data = BrokerApi::where('user_id',auth()->user()->id)->get();
         $data['broker_data'] = $broker_data;
-        $data['trade_book_data'] = [];
+        $tradeBookData = [];
         $brokerId = 0;
-        if($broker_data){
-            $brokerId = !empty($request->broker_name) ? $request->broker_name : $broker_data[0]->id;
-            $userData = null;
-            foreach($broker_data as $val){
-                if($val->id == $brokerId){
-                    $userData = $val;
-                }
-            }
-            if(!is_null($userData)){
-                if($userData->client_type=='Zerodha'){
-                    // $params = [
-                    //     'accountUserName'=>$userData->account_user_name,
-                    //     'accountPassword'=>$userData->account_password,
-                    //     'totpSecret'=>$userData->totp,
-                    //     'apiKey'=>$userData->api_key,
-                    //     'apiSecret'=>$userData->api_secret_key
-                    // ];
-
-                    // $kiteObj = new KiteConnectCls($params);
-                    // $kite = \Cache::remember('KITE_AUTH_'.$userData->account_user_name, 18000, function () use($kiteObj,$userData) {
-                    //     $pythonScript = '/home/forge/cityprofitedge.com/public/kite_login/app.py -u '.$userData->account_user_name;
-                    //     $command = 'python3 ' . $pythonScript; 
-                    //     exec($command, $output, $exitCode);
-                    //     $tokenArr =  explode("=",implode("\n", $output));
-                    //     $token =  $tokenArr[1];
-                    //     $kite = $kiteObj->generateSessionManual($token);
-                    //     return $kite;
-                    // });
-                    // $positionData = $kite->getPositions();
-                    // // dd($positionData->net[0]);
-                    // $fDada = [];
-                    // if(isset($positionData->net)){
-                    //     foreach($positionData->net as $vl){
-                    //         $fDada[] = (object)[
-                    //             'product_type'=>$vl->product,
-                    //             'entry_time'=>'-',
-                    //             'txn_type'=>'-',
-                    //             'symbol_name'=>$vl->tradingsymbol,
-                    //             'qty'=>$vl->quantity,
-                    //             'entry_price'=>'-',
-                    //             'exit_price'=>'-',
-                    //             'sl_price'=>$vl->sell_price,
-                    //             'profile_loss'=>'',
-                    //         ];
-                    //     }
-                    // }
-                    // $data['trade_book_data'] = $fDada;
-                }elseif($userData->client_type=='Angel'){
-                    $param = [
-                        'accountUserName'=>$userData->account_user_name,
-                        'apiKey'=>$userData->api_key,
-                        'pin'=>$userData->security_pin,
-                        'totp_secret'=>$userData->totp,
-                    ];
-                    $angelObj = new AngelConnectCls($param);
-                    $angelTokenArr = $angelObj->generate_access_token();
-                    // echo $angelTokenArr['token'];die;
-                    $tokenA = $angelTokenArr['token'];
-                    $clientLocalIp = $angelTokenArr['clientLocalIp'];
-                    $clientPublicIp = $angelTokenArr['clientPublicIp'];
-                    $macAddress = $angelTokenArr['macAddress'];
-                    $httpHeaders = array(
-                        'X-UserType: USER',
-                        'X-SourceID: WEB',
-                        'X-PrivateKey: '.$userData->api_key,
-                        'X-ClientLocalIP: '.$clientLocalIp,
-                        'X-ClientPublicIP: '.$clientPublicIp,
-                        'X-MACAddress: '.$macAddress,
-                        'Content-Type: application/json',
-                        'Authorization: Bearer '.$tokenA
-                    );
-                    $fDada = [];
-
-                    $curl = curl_init();
-                    curl_setopt_array($curl, array(
-                        CURLOPT_URL => 'https://apiconnect.angelbroking.com/rest/secure/angelbroking/order/v1/getPosition',
-                        CURLOPT_RETURNTRANSFER => true,
-                        CURLOPT_ENCODING => '',
-                        CURLOPT_MAXREDIRS => 10,
-                        CURLOPT_TIMEOUT => 0,
-                        CURLOPT_FOLLOWLOCATION => true,
-                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                        CURLOPT_CUSTOMREQUEST => 'GET',
-                        CURLOPT_HTTPHEADER => $httpHeaders,
-                    ));
-                    $response = curl_exec($curl);
-                    curl_close($curl);
-                    $dataArr = json_decode($response);
-                    // dd($dataArr);
-                    if($dataArr->status==true){
-                        if(!is_null($dataArr->data)){
-                            foreach($dataArr->data as $vl){
-                                $fDada[] = (object)[
-                                    "producttype"=> $vl->producttype,
-                                    "cfbuyqty"=> $vl->cfbuyqty,
-                                    "cfsellqty"=> $vl->cfsellqty,
-                                    "buyavgprice"=> $vl->buyavgprice,
-                                    "sellavgprice"=> $vl->sellavgprice,
-                                    "avgnetprice"=> $vl->avgnetprice,
-                                    "netvalue"=> $vl->netvalue,
-                                    "netqty"=> $vl->netqty,
-                                    "totalbuyvalue"=> $vl->totalbuyvalue,
-                                    "totalsellvalue"=> $vl->totalsellvalue,
-                                    "cfbuyavgprice"=> $vl->cfbuyavgprice,
-                                    "cfsellavgprice"=> $vl->cfsellavgprice,
-                                    "totalbuyavgprice"=> $vl->totalbuyavgprice,
-                                    "totalsellavgprice"=> $vl->totalsellavgprice,
-                                    "netprice"=> $vl->netprice,
-                                    "buyqty"=> $vl->buyqty,
-                                    "sellqty"=> $vl->sellqty,
-                                    "buyamount"=> $vl->buyamount,
-                                    "sellamount"=> $vl->sellamount,
-                                    "pnl"=> $vl->pnl,
-                                    "realised"=> $vl->realised,
-                                    "unrealised"=> $vl->unrealised,
-                                    "ltp"=> $vl->ltp,
-                                    "close"=> $vl->close
-                                ];
-                            }
-                        }
-                    }
-                    $data['trade_book_data'] = $fDada;
+        $filterBrokderD = $broker_data;
+        if(!empty($request->broker_name)){
+            foreach($broker_data as $vl){
+                if($vl->id==$request->broker_name){
+                    $filterBrokderD = [];
+                    $filterBrokderD[] = $vl;
+                    $brokerId = $vl->id;
+                    // echo'true<br>';
+                    break;
                 }
             }
         }
+        // dd($filterBrokderD);
+        foreach($filterBrokderD as $userData){
+            if($userData->client_type=='Zerodha'){
+                $tradeBookData[$userData->account_user_name.' ('.$userData->client_name.')'] = [];
+            }elseif($userData->client_type=='Angel'){
+                $param = [
+                    'accountUserName'=>$userData->account_user_name,
+                    'apiKey'=>$userData->api_key,
+                    'pin'=>$userData->security_pin,
+                    'totp_secret'=>$userData->totp,
+                ];
+                $angelObj = new AngelConnectCls($param);
+                $angelTokenArr = $angelObj->generate_access_token();
+                // echo $angelTokenArr['token'];die;
+                $tokenA = $angelTokenArr['token'];
+                $clientLocalIp = $angelTokenArr['clientLocalIp'];
+                $clientPublicIp = $angelTokenArr['clientPublicIp'];
+                $macAddress = $angelTokenArr['macAddress'];
+                $httpHeaders = array(
+                    'X-UserType: USER',
+                    'X-SourceID: WEB',
+                    'X-PrivateKey: '.$userData->api_key,
+                    'X-ClientLocalIP: '.$clientLocalIp,
+                    'X-ClientPublicIP: '.$clientPublicIp,
+                    'X-MACAddress: '.$macAddress,
+                    'Content-Type: application/json',
+                    'Authorization: Bearer '.$tokenA
+                );
+                $fDada = [];
+
+                $curl = curl_init();
+                curl_setopt_array($curl, array(
+                    CURLOPT_URL => 'https://apiconnect.angelbroking.com/rest/secure/angelbroking/order/v1/getPosition',
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => '',
+                    CURLOPT_MAXREDIRS => 10,
+                    CURLOPT_TIMEOUT => 0,
+                    CURLOPT_FOLLOWLOCATION => true,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST => 'GET',
+                    CURLOPT_HTTPHEADER => $httpHeaders,
+                ));
+                $response = curl_exec($curl);
+                curl_close($curl);
+                $dataArr = json_decode($response);
+                // dd($dataArr);
+                if($dataArr!=null && $dataArr->status==true){
+                    if(!is_null($dataArr->data)){
+                        foreach($dataArr->data as $vl){
+                            $fDada[] = (object)[
+                                "producttype"=> $vl->producttype,
+                                "cfbuyqty"=> $vl->cfbuyqty,
+                                "cfsellqty"=> $vl->cfsellqty,
+                                "buyavgprice"=> $vl->buyavgprice,
+                                "sellavgprice"=> $vl->sellavgprice,
+                                "avgnetprice"=> $vl->avgnetprice,
+                                "netvalue"=> $vl->netvalue,
+                                "netqty"=> $vl->netqty,
+                                "totalbuyvalue"=> $vl->totalbuyvalue,
+                                "totalsellvalue"=> $vl->totalsellvalue,
+                                "cfbuyavgprice"=> $vl->cfbuyavgprice,
+                                "cfsellavgprice"=> $vl->cfsellavgprice,
+                                "totalbuyavgprice"=> $vl->totalbuyavgprice,
+                                "totalsellavgprice"=> $vl->totalsellavgprice,
+                                "netprice"=> $vl->netprice,
+                                "buyqty"=> $vl->buyqty,
+                                "sellqty"=> $vl->sellqty,
+                                "buyamount"=> $vl->buyamount,
+                                "sellamount"=> $vl->sellamount,
+                                "pnl"=> $vl->pnl,
+                                "realised"=> $vl->realised,
+                                "unrealised"=> $vl->unrealised,
+                                "ltp"=> $vl->ltp,
+                                "close"=> $vl->close
+                            ];
+                        }
+                    }
+                }
+                $tradeBookData[$userData->account_user_name.' ('.$userData->client_name.')'] = $fDada;
+            }
+        }
+        $data['trade_book_data'] = $tradeBookData;
+       
         $data['brokerId'] = $brokerId;
         return view($this->activeTemplate . 'user.trade_positions',$data);
     }
