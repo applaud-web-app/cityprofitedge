@@ -27,13 +27,21 @@
             <div class="row mt-3">
                 <div class="col-lg-12">
                     <div class="custom--card">
-                        <div class="card-header">
+                        <div class="card-header d-flex justify-content-between">
                             <h5 class="card-title">{{$key}}</h5>
+                            <div class="d-flex">
+                                @if(isset($trade_book_data['realised']))
+                                <span class="me-3">Realised  ({{isset($trade_book_data['realised']) ? $trade_book_data['realised'] : ''}})</span>
+                                <span>UnRealised  ({{isset($trade_book_data['un_realised']) ? $trade_book_data['un_realised'] : ''}})</span>
+                                @endif
+                            </div>
+                           
                         </div>
                         <div class="card-body p-0">
                             <div class="table-responsive--md table-responsive transparent-form">
                                 <table class="table custom--table text-nowrap">
                                     <thead>
+                                       
                                         <tr>
                                             <th>Product Type</th>
                                             <th>cfbuyqty</th>
@@ -62,7 +70,8 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    @forelse ($trade_book_data as $vl)
+                                    @forelse ($trade_book_data as $k=>$vl)
+                                        @if(!in_array($k,['un_realised','realised']))
                                         <tr>
                                             <td>{{$vl->producttype}}</td>
                                             <td>{{$vl->cfbuyqty}}</td>
@@ -90,6 +99,7 @@
                                             <td>{{$vl->close}}</td>
                                             
                                         </tr>
+                                        @endif
                                     @empty
                                         <tr>
                                             <td colspan="100%">NO DATA</td>
@@ -119,9 +129,7 @@
     <script>
         $("#filter_frm").on('submit',function(e){
             e.preventDefault();
-            if($("#broker_name").val()!=''){
-                $("#filter_frm")[0].submit();
-            }
+            $("#filter_frm")[0].submit();
         });
     </script>
 @endpush
