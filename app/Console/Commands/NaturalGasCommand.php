@@ -6,18 +6,17 @@ use Illuminate\Console\Command;
 use App\Models\AngelApiInstrument;
 use App\Models\LTP_ROUNDOFF;
 use App\Traits\AngelApiAuth;
-use App\Models\Crudeoil;
+use App\Models\NaturalGas;
 use Carbon\Carbon;
 
-class AngelHistorical extends Command
+class NaturalGasCommand extends Command
 {
-    use AngelApiAuth;
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'angleHistorical:every_minute';
+    protected $signature = 'naturalgas:every_minute';
 
     /**
      * The console command description.
@@ -31,7 +30,6 @@ class AngelHistorical extends Command
      *
      * @return int
      */
-
     // For MCX DATA
     function isBetween915AMto1130PM() {
         $currentTime = time();
@@ -594,12 +592,10 @@ class AngelHistorical extends Command
 
     public function handle()
     {
-
-        $timeperiod = date("Y-m-d 09:00");
         set_time_limit(0);
         $symbol_range = 1;
-        // $acceptedSymbols = ['CRUDEOIL','BANKNIFTY','FINNIFTY','NATURALGAS','NIFTY','MIDCPNIFTY'];
-        $acceptedSymbols = ['CRUDEOIL'];
+        // $acceptedSymbols = ['NaturalGas','BANKNIFTY','FINNIFTY','NATURALGAS','NIFTY','MIDCPNIFTY'];
+        $acceptedSymbols = "NATURALGAS";
         $marketHolidays = ["2024-01-22", "2024-01-26", "2024-03-08", "2024-03-25", "2024-03-29", "2024-04-11",
         "2024-04-17", "2024-05-01", "2024-06-17", "2024-07-17", "2024-08-15", "2024-10-02", "2024-11-01", "2024-11-15", "2024-12-25"];
 
@@ -609,20 +605,41 @@ class AngelHistorical extends Command
             // For Current Time is B\w 9:15Am to 11:30pm
             if($this->isBetween915AMto1130PM()){
                 // Loop For Symbols List
-                $McxToken = array();
-                $NfoToken = array();
+                $McxToken = array(); 
                 $completeResponse = [];
-                // $BpoToken = array();
-                foreach ($acceptedSymbols as $key => $symbolName) {
-                    $angleApiInstuments = AngelApiInstrument::Where('name',$symbolName)->where(function ($query) {
-                        $query->where('instrumenttype', '=', 'AMXIDX')->orWhere('instrumenttype', '=', 'COMDTY');
-                    })->whereDay('created_at', now()->day)->orderBY('id','DESC')->first();
+                $angleApiInstuments = AngelApiInstrument::Where('name',$symbolName)->where(function ($query) {
+                    $query->where('instrumenttype', '=', 'AMXIDX')->orWhere('instrumenttype', '=', 'COMDTY');
+                })->whereDay('created_at', now()->day)->orderBY('id','DESC')->first();
+                
+                if($angleApiInstuments->exch_seg == "MCX"){
+                    for ($i=(-$symbol_range); $i <= $symbol_range ; $i++) { 
+                        $exchangeVal = $angleApiInstuments->exch_seg;
+                        $tokenVal = $angleApiInstuments->token;
+                        $nameVal = $angleApiInstuments->name;
 
-                    if($angleApiInstuments->exch_seg == "MCX"){
+                        // GET LTP by Angle Api
+                        $ltpByApi = $this->getLTP($exchangeVal,$nameVal,$tokenVal);
+                        if(!isset($ltpByApi['data'])){
+                            continue;
+                        }
+                        $givenLtp = $ltpByApi['data']['ltp'];
+                        $response = $this->getStrickData($nameVal,$exchangeVal,$givenLtp ,$i , $i);
+                        $completeResponse[$response[0][1]] = $response[0][3];
+                        $completeResponse[$response[1][1]] = $response[1][3];
+                        array_push($McxToken,$response[0][1]);
+                        array_push($McxToken,$response[1][1]);
+                    }
+                }
+
+                $LeftmarketData = NaturalGas::whereNotIn('token_ce',$McxToken)->orwhereNotIn('token_pe',$McxToken)->whereDate('created_at', '=', date('Y-m-d'))->groupBy('token_ce')->groupBy('token_pe')->get();
+
+                if(count($LeftmarketData)){
+                    foreach ($LeftmarketData as $k => $vl) {
+                        $angelData = AngelApiInstrument::where('token',$vl->token)->first();
                         for ($i=(-$symbol_range); $i <= $symbol_range ; $i++) { 
-                            $exchangeVal = $angleApiInstuments->exch_seg;
-                            $tokenVal = $angleApiInstuments->token;
-                            $nameVal = $angleApiInstuments->name;
+                            $exchangeVal = $angelData->exch_seg;
+                            $tokenVal = $angelData->token;
+                            $nameVal = $angelData->name;
                             // GET LTP by Angle Api
                             $ltpByApi = $this->getLTP($exchangeVal,$nameVal,$tokenVal);
                             if(!isset($ltpByApi['data'])){
@@ -632,70 +649,9 @@ class AngelHistorical extends Command
                             $response = $this->getStrickData($nameVal,$exchangeVal,$givenLtp ,$i , $i);
                             $completeResponse[$response[0][1]] = $response[0][3];
                             $completeResponse[$response[1][1]] = $response[1][3];
+
                             array_push($McxToken,$response[0][1]);
                             array_push($McxToken,$response[1][1]);
-                        }
-                    }
-
-                    // For NSE Exch Records
-                    if($angleApiInstuments->exch_seg == "NSE"){
-                        $exchangeVal = $angleApiInstuments->exch_seg;
-                        $tokenVal = $angleApiInstuments->token;
-                        $nameVal = $angleApiInstuments->name;
-                        $ltpByApi = $this->getLTP($exchangeVal,$nameVal,$tokenVal);
-                        $givenLtp = $ltpByApi['data']['ltp'];
-                        $expiry_dates = $this->get_upcoming_expiry($nameVal,$exchangeVal);
-                        for ($i=(-$symbol_range); $i <= $symbol_range ; $i++) { 
-                            $response = $this->get_atm_strike_symbol_angel($givenLtp ,$nameVal, $nameVal , $exchangeVal , $expiry_dates, $i , $i);
-                            $completeResponse[$response[0][1]] = $response[0][2];
-                            $completeResponse[$response[1][1]] = $response[1][2];
-                            array_push($NfoToken,$response[0][1]);
-                            array_push($NfoToken,$response[1][1]);
-                        }
-                    }
-                }
-
-                $allTokens  =  array_merge($NfoToken,$McxToken);
-                $LeftmarketData = Crudeoil::whereNotIn('token_ce',$allTokens)->orwhereNotIn('token_pe',$allTokens)->whereDate('created_at', '=', date('Y-m-d'))->groupBy('token_ce')->groupBy('token_pe')->get();
-
-                if(count($LeftmarketData)){
-                    foreach ($LeftmarketData as $k => $vl) {
-                        if($vl->exhange == "MCX"){
-                            $angelData = AngelApiInstrument::where('token',$vl->token)->first();
-                            for ($i=(-$symbol_range); $i <= $symbol_range ; $i++) { 
-                                $exchangeVal = $angelData->exch_seg;
-                                $tokenVal = $angelData->token;
-                                $nameVal = $angelData->name;
-                                // GET LTP by Angle Api
-                                $ltpByApi = $this->getLTP($exchangeVal,$nameVal,$tokenVal);
-                                if(!isset($ltpByApi['data'])){
-                                    continue;
-                                }
-                                $givenLtp = $ltpByApi['data']['ltp'];
-                                $response = $this->getStrickData($nameVal,$exchangeVal,$givenLtp ,$i , $i);
-                                $completeResponse[$response[0][1]] = $response[0][3];
-                                $completeResponse[$response[1][1]] = $response[1][3];
-    
-                                array_push($McxToken,$response[0][1]);
-                                array_push($McxToken,$response[1][1]);
-                            }
-
-                        }else if($vl->exhange == "NFO"){
-                            $angelData = AngelApiInstrument::where('token',$vl->token)->first();
-                            $exchangeVal = $angelData->exch_seg;
-                            $tokenVal = $angelData->token;
-                            $nameVal = $angelData->name;
-                            $ltpByApi = $this->getLTP($exchangeVal,$nameVal,$tokenVal);
-                            $givenLtp = $ltpByApi['data']['ltp'];
-                            $expiry_dates = $this->get_upcoming_expiry($nameVal,$exchangeVal);
-                            for ($i=(-$symbol_range); $i <= $symbol_range ; $i++) { 
-                                $response = $this->get_atm_strike_symbol_angel($givenLtp ,$nameVal, $nameVal , $exchangeVal , $expiry_dates, $i , $i);
-                                $completeResponse[$response[0][1]] = $response[0][2];
-                                $completeResponse[$response[1][1]] = $response[1][2];
-                                array_push($NfoToken,$response[0][1]);
-                                array_push($NfoToken,$response[1][1]);
-                            }
-
                         }
                     }
                 }
@@ -753,7 +709,7 @@ class AngelHistorical extends Command
                         foreach ($result as $key => $value) {
                             if(!in_array($value['symbolToken'],$passedSymbols)){
 
-                                $marketData = new Crudeoil;
+                                $marketData = new NaturalGas;
                                 $atm = "";
                                 if (array_key_exists($value['symbolToken'], $completeResponse)) {
                                     $atm = $completeResponse[$value['symbolToken']];
@@ -780,32 +736,12 @@ class AngelHistorical extends Command
                                     array_push($passedSymbols,$result[$symbolSibling]['symbolToken']);
 
                                     // For PE Symbols
-                                    $time1 = strtotime($timeperiod);
-                                    $time2 = strtotime($value['lastTradeQty']);
-                                    // $time2 = strtotime(date('H:i',$time2));
-                                    $timeDiff = date('H:i',$time2-$time1);
-
-                                    list($hour, $minute) = explode(':', $timeDiff);
-                                    $finalTimeFrame = $hour*60 + $minute;
-
-                                    $for3min = "";
-                                    if($finalTimeFrame % 3 == 0){
-                                        $for3min = 3;
-                                    }
-
-                                    $for5min = "";
-                                    if($finalTimeFrame % 5 == 0){
-                                        $for5min = 5;
-                                    }
-
                                     $marketData->token_pe = $value['symbolToken'];
                                     $marketData->token_ce = $result[$symbolSibling]['symbolToken'];
                                     $marketData->symbol_pe = $value['tradingSymbol'];
                                     $marketData->symbol_ce = $result[$symbolSibling]['tradingSymbol'];
                                     $marketData->exchange = $value['exchange'];
                                     $marketData->atm = $atm;
-                                    $marketData->for3Min = $for3min;
-                                    $marketData->for5Min = $for5min;
                                     $marketData->ltp_pe = $value['ltp'];
                                     $marketData->ltp_ce = $result[$symbolSibling]['ltp'];
                                     $marketData->open_pe = $value['open'];
