@@ -10,7 +10,7 @@ use App\Models\AngleOhlcData;
 use App\Models\LTP_ROUNDOFF;
 use App\Http\Helpers\helpers;
 use App\Traits\AngelApiAuth;
-use App\Models\StoreMarketData;
+use App\Models\Crudeoil;
 use Carbon\Carbon;
 
 class AngelHistorical extends Command
@@ -634,9 +634,6 @@ class AngelHistorical extends Command
                             $response = $this->getStrickData($nameVal,$exchangeVal,$givenLtp ,$i , $i);
                             $completeResponse[$response[0][1]] = $response[0][3];
                             $completeResponse[$response[1][1]] = $response[1][3];
-                            // array_push($completeResponse,[$response[0][1]=>$response[0][3]]);
-                            // array_push($completeResponse,[$response[1][1]=>$response[1][3]]);
-
                             array_push($McxToken,$response[0][1]);
                             array_push($McxToken,$response[1][1]);
                         }
@@ -660,9 +657,8 @@ class AngelHistorical extends Command
                     }
                 }
 
-                // dd(count($NfoToken).'---'.count($McxToken));
                 $allTokens  =  array_merge($NfoToken,$McxToken);
-                $LeftmarketData = StoreMarketData::whereNotIn('token',$allTokens)->whereDate('created_at', '=', date('Y-m-d'))->groupBy('token')->get();
+                $LeftmarketData = Crudeoil::whereNotIn('token_ce',$allTokens)->orwhereNotIn('token_pe',$allTokens)->whereDate('created_at', '=', date('Y-m-d'))->groupBy('token_ce')->groupBy('token_pe')->get();
 
                 if(count($LeftmarketData)){
                     foreach ($LeftmarketData as $k => $vl) {
@@ -681,18 +677,12 @@ class AngelHistorical extends Command
                                 $response = $this->getStrickData($nameVal,$exchangeVal,$givenLtp ,$i , $i);
                                 $completeResponse[$response[0][1]] = $response[0][3];
                                 $completeResponse[$response[1][1]] = $response[1][3];
-                                // array_push($completeResponse,[$response[0][1]=>$response[0][3]]);
-                                // array_push($completeResponse,[$response[1][1]=>$response[1][3]]);
     
                                 array_push($McxToken,$response[0][1]);
                                 array_push($McxToken,$response[1][1]);
                             }
 
                         }else if($vl->exhange == "NFO"){
-                            // array_push($NfoToken,$vl->token);
-                            // if (!array_key_exists($vl->token, $completeResponse)) {
-                            //     $completeResponse[$vl->token] = $vl->atm;
-                            // }
                             $angelData = AngelApiInstrument::where('token',$vl->token)->first();
                             $exchangeVal = $angelData->exch_seg;
                             $tokenVal = $angelData->token;
@@ -712,8 +702,6 @@ class AngelHistorical extends Command
                     }
                 }
 
-                // dd(count($NfoToken).'---'.count($McxToken));
-                
                 $tArr = [
                     'mode'=>'FULL',
                     'exchangeTokens'=>[
@@ -722,7 +710,6 @@ class AngelHistorical extends Command
                     ]
                 ];
 
-                // dd(json_encode($tArr));
                 $jwtToken =  $this->generate_access_token();
                 $errData = [];
                 if($jwtToken!=null){
@@ -758,47 +745,214 @@ class AngelHistorical extends Command
 
                     if($response != NULL){
                         $errData = json_decode($response,true);
-                        // dd($errData);
+                        if($errData == NULL){
+                            $errData['status']== false;
+                        }
                     if($errData['status']== true){
                         $result = $errData['data']['fetched'];
+                        array_multisort(array_column($result ,'tradingSymbol'),SORT_ASC ,$result);
+                        $passedSymbols = [];
                         foreach ($result as $key => $value) {
-                            $marketData = new StoreMarketData;
-                            $atm = "";
-                            if (array_key_exists($value['symbolToken'], $completeResponse)) {
-                                $atm = $completeResponse[$value['symbolToken']];
+                            if(!in_array($value['symbolToken'],$passedSymbols)){
+
+                                $marketData = new Crudeoil;
+                                $atm = "";
+                                if (array_key_exists($value['symbolToken'], $completeResponse)) {
+                                    $atm = $completeResponse[$value['symbolToken']];
+                                }
+
+                                // For CE & PE SYMBOLS
+                                $getSymbolType = substr($value['tradingSymbol'],-2);
+                                if($getSymbolType == "PE"){
+                                    $baseValue = substr($value['tradingSymbol'],0,-2);
+                                    $baseValue = $baseValue."CE";
+                                    $symbolSibling = array_search($baseValue, array_column($result, 'tradingSymbol'));
+
+                                    $vmap_pe = "Bearish";
+                                    if($value['ltp'] > $value['avgPrice']){
+                                        $vmap_pe = "Bullish";
+                                    }
+
+                                    $vmap_ce = "Bearish";
+                                    if($result[$symbolSibling]['ltp'] > $result[$symbolSibling]['avgPrice']){
+                                        $vmap_ce = "Bullish";
+                                    }
+
+                                    array_push($passedSymbols,$value['symbolToken']);
+                                    array_push($passedSymbols,$result[$symbolSibling]['symbolToken']);
+
+                                    // For PE Symbols
+                                    $marketData->token_pe = $value['symbolToken'];
+                                    $marketData->token_ce = $result[$symbolSibling]['symbolToken'];
+                                    $marketData->symbol_pe = $value['tradingSymbol'];
+                                    $marketData->symbol_ce = $result[$symbolSibling]['tradingSymbol'];
+                                    $marketData->exchange = $value['exchange'];
+                                    $marketData->atm = $atm;
+                                    $marketData->ltp_pe = $value['ltp'];
+                                    $marketData->ltp_ce = $result[$symbolSibling]['ltp'];
+                                    $marketData->open_pe = $value['open'];
+                                    $marketData->open_ce = $result[$symbolSibling]['open'];
+                                    $marketData->high_pe = $value['high'];
+                                    $marketData->high_ce = $result[$symbolSibling]['high'];
+                                    $marketData->low_pe = $value['low'];
+                                    $marketData->low_ce = $result[$symbolSibling]['low'];
+                                    $marketData->close_pe = $value['close'];
+                                    $marketData->close_ce = $result[$symbolSibling]['close'];
+                                    $marketData->lastTradeQty_pe = $value['lastTradeQty'];
+                                    $marketData->lastTradeQty_ce = $result[$symbolSibling]['lastTradeQty'];
+                                    $marketData->exchFeedTime_pe = $value['exchFeedTime'];
+                                    $marketData->exchFeedTime_ce = $result[$symbolSibling]['exchFeedTime'];
+                                    $marketData->exchTradeTime_pe = $value['exchTradeTime'];
+                                    $marketData->exchTradeTime_ce = $result[$symbolSibling]['exchTradeTime'];
+                                    $marketData->netChange_pe = $value['netChange'];
+                                    $marketData->netChange_ce = $result[$symbolSibling]['netChange'];
+                                    $marketData->percentChange_pe = $value['percentChange'];
+                                    $marketData->percentChange_ce = $result[$symbolSibling]['percentChange'];
+                                    $marketData->avgPrice_pe = $value['avgPrice'];
+                                    $marketData->avgPrice_ce = $result[$symbolSibling]['avgPrice'];
+                                    $marketData->tradeVolume_pe = $value['tradeVolume'];
+                                    $marketData->tradeVolume_ce = $result[$symbolSibling]['tradeVolume'];
+                                    $marketData->opnInterest_pe = $value['opnInterest'];
+                                    $marketData->opnInterest_ce = $result[$symbolSibling]['opnInterest'];
+                                    $marketData->lowerCircuit_pe = $value['lowerCircuit'];
+                                    $marketData->lowerCircuit_ce = $result[$symbolSibling]['lowerCircuit'];
+                                    $marketData->upperCircuit_pe = $value['upperCircuit'];
+                                    $marketData->upperCircuit_ce = $result[$symbolSibling]['upperCircuit'];
+                                    $marketData->totBuyQuan_pe = $value['totBuyQuan'];
+                                    $marketData->totBuyQuan_ce = $result[$symbolSibling]['totBuyQuan'];
+                                    $marketData->totSellQuan_pe = $value['totSellQuan'];
+                                    $marketData->totSellQuan_ce = $result[$symbolSibling]['totSellQuan'];
+                                    $marketData->WeekLow52_pe = $value['52WeekLow'];
+                                    $marketData->WeekLow52_ce = $result[$symbolSibling]['52WeekLow'];
+                                    $marketData->WeekHigh52_pe = $value['52WeekHigh'];
+                                    $marketData->WeekHigh52_ce = $result[$symbolSibling]['52WeekHigh'];
+                                    $marketData->vmap_pe = $vmap_pe;
+                                    $marketData->vmap_ce = $vmap_ce;
+                                    $marketData->save();
+
+                                }else{
+                                    $baseValue = substr($value['tradingSymbol'],0,-2);
+                                    $baseValue = $baseValue."PE";
+
+                                    $symbolSibling = array_search($baseValue, array_column($result, 'tradingSymbol'));
+
+                                    $vmap_ce = "Bearish";
+                                    if($value['ltp'] > $value['avgPrice']){
+                                        $vmap_ce = "Bullish";
+                                    }
+
+                                    $vmap_pe = "Bearish";
+                                    if($result[$symbolSibling]['ltp'] > $result[$symbolSibling]['avgPrice']){
+                                        $vmap_pe = "Bullish";
+                                    }
+
+                                    array_push($passedSymbols,$value['symbolToken']);
+                                    array_push($passedSymbols,$result[$symbolSibling]['symbolToken']);
+
+                                    // For CE Symbols
+                                    $marketData->token_ce = $value['symbolToken'];
+                                    $marketData->token_pe = $result[$symbolSibling]['symbolToken'];
+                                    $marketData->symbol_ce = $value['tradingSymbol'];
+                                    $marketData->symbol_pe = $result[$symbolSibling]['tradingSymbol'];
+                                    $marketData->exchange = $value['exchange'];
+                                    $marketData->atm = $atm;
+                                    $marketData->ltp_ce = $value['ltp'];
+                                    $marketData->ltp_pe = $result[$symbolSibling]['ltp'];
+                                    $marketData->open_ce = $value['open'];
+                                    $marketData->open_pe = $result[$symbolSibling]['open'];
+                                    $marketData->high_ce = $value['high'];
+                                    $marketData->high_pe = $result[$symbolSibling]['high'];
+                                    $marketData->low_ce = $value['low'];
+                                    $marketData->low_pe = $result[$symbolSibling]['low'];
+                                    $marketData->close_ce = $value['close'];
+                                    $marketData->close_pe = $result[$symbolSibling]['close'];
+                                    $marketData->lastTradeQty_ce = $value['lastTradeQty'];
+                                    $marketData->lastTradeQty_pe = $result[$symbolSibling]['lastTradeQty'];
+                                    $marketData->exchFeedTime_ce = $value['exchFeedTime'];
+                                    $marketData->exchFeedTime_pe = $result[$symbolSibling]['exchFeedTime'];
+                                    $marketData->exchTradeTime_ce = $value['exchTradeTime'];
+                                    $marketData->exchTradeTime_pe = $result[$symbolSibling]['exchTradeTime'];
+                                    $marketData->netChange_ce = $value['netChange'];
+                                    $marketData->netChange_pe = $result[$symbolSibling]['netChange'];
+                                    $marketData->percentChange_ce = $value['percentChange'];
+                                    $marketData->percentChange_pe = $result[$symbolSibling]['percentChange'];
+                                    $marketData->avgPrice_ce = $value['avgPrice'];
+                                    $marketData->avgPrice_pe = $result[$symbolSibling]['avgPrice'];
+                                    $marketData->tradeVolume_ce = $value['tradeVolume'];
+                                    $marketData->tradeVolume_pe = $result[$symbolSibling]['tradeVolume'];
+                                    $marketData->opnInterest_ce = $value['opnInterest'];
+                                    $marketData->opnInterest_pe = $result[$symbolSibling]['opnInterest'];
+                                    $marketData->lowerCircuit_ce = $value['lowerCircuit'];
+                                    $marketData->lowerCircuit_pe = $result[$symbolSibling]['lowerCircuit'];
+                                    $marketData->upperCircuit_ce = $value['upperCircuit'];
+                                    $marketData->upperCircuit_pe = $result[$symbolSibling]['upperCircuit'];
+                                    $marketData->totBuyQuan_ce = $value['totBuyQuan'];
+                                    $marketData->totBuyQuan_pe = $result[$symbolSibling]['totBuyQuan'];
+                                    $marketData->totSellQuan_ce = $value['totSellQuan'];
+                                    $marketData->totSellQuan_pe = $result[$symbolSibling]['totSellQuan'];
+                                    $marketData->WeekLow52_ce = $value['52WeekLow'];
+                                    $marketData->WeekLow52_pe = $result[$symbolSibling]['52WeekLow'];
+                                    $marketData->WeekHigh52_ce = $value['52WeekHigh'];
+                                    $marketData->WeekHigh52_pe = $result[$symbolSibling]['52WeekHigh'];
+                                    $marketData->vmap_ce = $vmap_ce;
+                                    $marketData->vmap_pe = $vmap_pe;
+                                    $marketData->save();
+                                    
+                                }
                             }
-                            
-                            $vmap = "Bearish";
-                            if($value['ltp'] > $value['avgPrice']){
-                                $vmap = "Bullish";
-                            }
-                            
-                            $marketData->token = $value['symbolToken'];
-                            $marketData->symbol = $value['tradingSymbol'];
-                            $marketData->exchange = $value['exchange'];
-                            $marketData->atm = $atm;
-                            $marketData->ltp = $value['ltp'];
-                            $marketData->open = $value['open'];
-                            $marketData->high = $value['high'];
-                            $marketData->low = $value['low'];
-                            $marketData->close = $value['close'];
-                            $marketData->lastTradeQty = $value['lastTradeQty'];
-                            $marketData->exchFeedTime = $value['exchFeedTime'];
-                            $marketData->exchTradeTime = $value['exchTradeTime'];
-                            $marketData->netChange = $value['netChange'];
-                            $marketData->percentChange = $value['percentChange'];
-                            $marketData->avgPrice = $value['avgPrice'];
-                            $marketData->tradeVolume = $value['tradeVolume'];
-                            $marketData->opnInterest = $value['opnInterest'];
-                            $marketData->lowerCircuit = $value['lowerCircuit'];
-                            $marketData->upperCircuit = $value['upperCircuit'];
-                            $marketData->totBuyQuan = $value['totBuyQuan'];
-                            $marketData->totSellQuan = $value['totSellQuan'];
-                            $marketData->WeekLow52 = $value['52WeekLow'];
-                            $marketData->WeekHigh52 = $value['52WeekHigh'];
-                            $marketData->vmap = $vmap;
-                            $marketData->save();
+
+                            // $marketData->token_ce = $value['symbolToken'];
+                            // $marketData->token_pe = $result[$symbolSibling]['symbolToken'];
+
+                            // $marketData->exchange = $value['exchange'];
+                            // $marketData->atm = $atm;
+                            // $marketData->ltp_ce = $value['ltp'];
+                            // $marketData->ltp_pe = $value['ltp'];
+                            // $marketData->open_ce = $value['open'];
+                            // $marketData->open_pe = $value['open'];
+                            // $marketData->high_ce = $value['high'];
+                            // $marketData->high_pe = $value['high'];
+                            // $marketData->low_ce = $value['low'];
+                            // $marketData->low_pe = $value['low'];
+                            // $marketData->close_ce = $value['close'];
+                            // $marketData->close_pe = $value['close'];
+
+
+
+
+                            // $marketData->lastTradeQty_ce = $value['lastTradeQty'];
+                            // $marketData->lastTradeQty_pe = $value['lastTradeQty'];
+                            // $marketData->exchFeedTime_ce = $value['exchFeedTime'];
+                            // $marketData->exchFeedTime_pe = $value['exchFeedTime'];
+                            // $marketData->exchTradeTime_ce = $value['exchTradeTime'];
+                            // $marketData->exchTradeTime_pe = $value['exchTradeTime'];
+                            // $marketData->netChange_ce = $value['netChange'];
+                            // $marketData->netChange_pe = $value['netChange'];
+                            // $marketData->percentChange_ce = $value['percentChange'];
+                            // $marketData->percentChange_pe = $value['percentChange'];
+                            // $marketData->avgPrice_ce = $value['avgPrice'];
+                            // $marketData->avgPrice_pe = $value['avgPrice'];
+                            // $marketData->tradeVolume_ce = $value['tradeVolume'];
+                            // $marketData->tradeVolume_pe = $value['tradeVolume'];
+                            // $marketData->opnInterest_ce = $value['opnInterest'];
+                            // $marketData->opnInterest_pe = $value['opnInterest'];
+                            // $marketData->lowerCircuit_ce = $value['lowerCircuit'];
+                            // $marketData->lowerCircuit_pe = $value['lowerCircuit'];
+                            // $marketData->upperCircuit_ce = $value['upperCircuit'];
+                            // $marketData->upperCircuit_pe = $value['upperCircuit'];
+                            // $marketData->totBuyQuan_ce = $value['totBuyQuan'];
+                            // $marketData->totBuyQuan_pe = $value['totBuyQuan'];
+                            // $marketData->totSellQuan_ce = $value['totSellQuan'];
+                            // $marketData->totSellQuan_pe = $value['totSellQuan'];
+                            // $marketData->WeekLow52_ce = $value['52WeekLow'];
+                            // $marketData->WeekLow52_pe = $value['52WeekLow'];
+                            // $marketData->WeekHigh52_ce = $value['52WeekHigh'];
+                            // $marketData->WeekHigh52_pe = $value['52WeekHigh'];
+                            // $marketData->vmap_ce = $vmap;
+                            // $marketData->vmap_pe = $vmap;
+                            // $marketData->save();
                         }
+                        dd($passedSymbols);
                     }
                     }
                 }
