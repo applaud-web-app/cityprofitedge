@@ -759,6 +759,24 @@ class AngelHistorical extends Command
                                     $atm = $completeResponse[$value['symbolToken']];
                                 }
 
+                                // For PE Symbols
+                                $time1 = strtotime($timeperiod);
+                                $time2 = strtotime($value['lastTradeQty']);
+                                $timeDiff = date('H:i',$time2-$time1);
+
+                                list($hour, $minute) = explode(':', $timeDiff);
+                                $finalTimeFrame = $hour*60 + $minute;
+
+                                $for3min = "";
+                                if($finalTimeFrame % 3 == 0){
+                                    $for3min = 3;
+                                }
+
+                                $for5min = "";
+                                if($finalTimeFrame % 5 == 0){
+                                    $for5min = 5;
+                                }
+
                                 // For CE & PE SYMBOLS
                                 $getSymbolType = substr($value['tradingSymbol'],-2);
                                 if($getSymbolType == "PE"){
@@ -779,24 +797,7 @@ class AngelHistorical extends Command
                                     array_push($passedSymbols,$value['symbolToken']);
                                     array_push($passedSymbols,$result[$symbolSibling]['symbolToken']);
 
-                                    // For PE Symbols
-                                    $time1 = strtotime($timeperiod);
-                                    $time2 = strtotime($value['lastTradeQty']);
-                                    // $time2 = strtotime(date('H:i',$time2));
-                                    $timeDiff = date('H:i',$time2-$time1);
-
-                                    list($hour, $minute) = explode(':', $timeDiff);
-                                    $finalTimeFrame = $hour*60 + $minute;
-
-                                    $for3min = "";
-                                    if($finalTimeFrame % 3 == 0){
-                                        $for3min = 3;
-                                    }
-
-                                    $for5min = "";
-                                    if($finalTimeFrame % 5 == 0){
-                                        $for5min = 5;
-                                    }
+                                    
 
                                     $marketData->token_pe = $value['symbolToken'];
                                     $marketData->token_ce = $result[$symbolSibling]['symbolToken'];
