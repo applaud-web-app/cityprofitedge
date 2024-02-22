@@ -4,6 +4,9 @@
 <div class="row mt-3">
     <div class="col-lg-12">
         <div class="custom--card">
+            <div class="card-header">
+                <h5 class="card-title">OMS Config Orders</h5>
+            </div>
             <div class="card-body p-0">
                 <div class="table-responsive--md table-responsive transparent-form">
                     <table class="table custom--table text-nowrap">
