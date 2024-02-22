@@ -664,35 +664,24 @@ class UserController extends Controller
                 $response = curl_exec($curl);
                 curl_close($curl);
                 $dataArr = json_decode($response);
-                // dd($dataArr);
                 if($dataArr!=null && $dataArr->status==true){
                     if(!is_null($dataArr->data)){
                         foreach($dataArr->data as $vl){
                             $fDada[] = (object)[
+                                "variety"=> $vl->variety,
+                                "ordertype"=> $vl->ordertype,
                                 "producttype"=> $vl->producttype,
-                                "cfbuyqty"=> $vl->cfbuyqty,
-                                "cfsellqty"=> $vl->cfsellqty,
-                                "buyavgprice"=> $vl->buyavgprice,
-                                "sellavgprice"=> $vl->sellavgprice,
-                                "avgnetprice"=> $vl->avgnetprice,
-                                "netvalue"=> $vl->netvalue,
-                                "netqty"=> $vl->netqty,
-                                "totalbuyvalue"=> $vl->totalbuyvalue,
-                                "totalsellvalue"=> $vl->totalsellvalue,
-                                "cfbuyavgprice"=> $vl->cfbuyavgprice,
-                                "cfsellavgprice"=> $vl->cfsellavgprice,
-                                "totalbuyavgprice"=> $vl->totalbuyavgprice,
-                                "totalsellavgprice"=> $vl->totalsellavgprice,
-                                "netprice"=> $vl->netprice,
-                                "buyqty"=> $vl->buyqty,
-                                "sellqty"=> $vl->sellqty,
-                                "buyamount"=> $vl->buyamount,
-                                "sellamount"=> $vl->sellamount,
-                                "pnl"=> $vl->pnl,
-                                "realised"=> $vl->realised,
-                                "unrealised"=> $vl->unrealised,
-                                "ltp"=> $vl->ltp,
-                                "close"=> $vl->close
+                                "duration"=> $vl->duration,
+                                "price"=> $vl->price,
+                                "quantity"=> $vl->quantity,
+                                "tradingsymbol"=> $vl->tradingsymbol,
+                                "transactiontype"=> $vl->transactiontype,
+                                "lotsize"=> $vl->lotsize,
+                                "averageprice"=> $vl->averageprice,
+                                "orderid"=> $vl->orderid,
+                                "status"=> $vl->status,
+                                "orderstatus"=> $vl->orderstatus,
+                                "updatetime"=> $vl->updatetime,
                             ];
                         }
                     }

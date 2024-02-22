@@ -70,7 +70,51 @@
                                     </tbody>
                                 </table>
                                 @else
-
+                                <table class="table custom--table text-nowrap">
+                                    <thead>
+                                        <tr>
+                                            <th>variety</th>
+                                            <th>ordertype</th>
+                                            <th>producttype</th>
+                                            <th>duration</th>
+                                            <th>price</th>
+                                            <th>quantity</th>
+                                            <th>tradingsymbol</th>
+                                            <th>transactiontype</th>
+                                            <th>lotsize</th>                                        
+                                            <th>averageprice</th>                                        
+                                            <th>orderid</th>                                        
+                                            <th>status</th>                                        
+                                            <th>orderstatus</th>                                        
+                                            <th>updatetime</th>                                    
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    @forelse ($order_data as $item)
+                                        <tr>
+                                            <td>{{$item->variety}}</td>
+                                            <td>{{$item->ordertype}}</td>
+                                            <td>{{$item->producttype}}</td>
+                                            <td>{{$item->duration}}</td>
+                                            <td>{{$item->price}}</td>
+                                            <td>{{$item->quantity}}</td>
+                                            <td>{{$item->tradingsymbol}}</td>
+                                            <td>{{$item->transactiontype}}</td>
+                                            <td>{{$item->lotsize}}</td>
+                                            <td>{{$item->averageprice}}</td>
+                                            <td>{{$item->orderid}}</td>
+                                            <td>{{$item->status}}</td>
+                                            <td>{{$item->orderstatus}}</td>
+                                            <td>{{$item->updatetime}}</td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="9"><h4 class="text-center">NO DATA</h4></td>
+                                        </tr>
+                                    @endforelse
+                                                
+                                    </tbody>
+                                </table>
                                 @endif
 
 
