@@ -31,8 +31,8 @@
                             <h5 class="card-title">{{$key}}</h5>
                             <div class="d-flex">
                                 @if(isset($trade_book_data['realised']))
-                                <span class="me-3">Realised  ({{isset($trade_book_data['realised']) ? $trade_book_data['realised'] : ''}})</span>
-                                <span>UnRealised  ({{isset($trade_book_data['un_realised']) ? $trade_book_data['un_realised'] : ''}})</span>
+                                <span class="me-3 {{$trade_book_data['realised'] > 0 ? 'text-success':'text-danger'}}">Realised  ({{$trade_book_data['realised']}})</span>
+                                <span class="{{$trade_book_data['un_realised'] > 0 ? 'text-success':'text-danger'}}">UnRealised  ({{$trade_book_data['un_realised']}})</span>
                                 @endif
                             </div>
                            
