@@ -702,7 +702,7 @@ class UserController extends Controller
     
 
     public function tradePositions(Request $request){
-        echo date("Y-m-d H:i:s");die;
+        // echo date("Y-m-d H:i:s");die;
         $data['pageTitle'] = 'Trade Positions';
         $broker_data = BrokerApi::where('user_id',auth()->user()->id)->get();
         $data['broker_data'] = $broker_data;
