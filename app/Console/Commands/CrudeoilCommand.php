@@ -52,7 +52,7 @@ class CrudeoilCommand extends Command
         $trueRanges = array();
         for ($i = 1; $i < count($ltpData); $i++) {
             // dd($ltpData[$i]["high_ce"]);
-            $trueRanges[] = max($ltpData[$i]["high_ce"] - $ltpData[$i]["low_ce"], abs($ltpData[$i]["high_ce"] - $ltpData[$i - 1]["close_ce"]), abs($ltpData[$i]["low_ce"] - $ltpData[$i - 1]["close_ce"]));
+            $trueRanges[] = max($ltpData[$i]["high"] - $ltpData[$i]["low"], abs($ltpData[$i]["high"] - $ltpData[$i - 1]["close"]), abs($ltpData[$i]["low"] - $ltpData[$i - 1]["close"]));
         }
         // Calculate Average True Range (ATR) over the period
         $atr = array_sum(array_slice($trueRanges, 0, $period)) / $period;
@@ -73,15 +73,15 @@ class CrudeoilCommand extends Command
             if ($index >= $period) {
                 $atr = $this->calculateATR(array_slice($ltpData, $index - $period, $period), $period);
                 if ($index === $period) {
-                    $ub = $ltp["high_ce"] + $multiplier * $atr;
-                    $lb = $ltp["low_ce"] - $multiplier * $atr;
+                    $ub = $ltp["high"] + $multiplier * $atr;
+                    $lb = $ltp["low"] - $multiplier * $atr;
                 } else {
-                    $ub = min($ltp["high_ce"] + $multiplier * $atr, $ub);
-                    $lb = max($ltp["low_ce"] - $multiplier * $atr, $lb);
+                    $ub = min($ltp["high"] + $multiplier * $atr, $ub);
+                    $lb = max($ltp["low"] - $multiplier * $atr, $lb);
                 }
-                if ($ltp["close_ce"] > $ub) {
+                if ($ltp["close"] > $ub) {
                     $signals[] = "Buy"; // Generate Buy Signal
-                } elseif ($ltp["close_ce"] < $lb) {
+                } elseif ($ltp["close"] < $lb) {
                     $signals[] = "Sell"; // Generate Sell Signal
                 } else {
                     $signals[] = "Hold"; // No Signal
