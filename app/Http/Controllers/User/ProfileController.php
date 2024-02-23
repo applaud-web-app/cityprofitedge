@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 use DB;
+use App\Models\OmsConfig;
+use App\Models\BrokerApi;
 class ProfileController extends Controller
 {
     public function profile()
@@ -93,7 +95,7 @@ class ProfileController extends Controller
     }
 
     public function tradeDeskSignal(Request $request){
-        $data['pageTitle'] = "User Info";
+        $data['pageTitle'] = "Trade Desk Signal";
         $symbolArr = allTradeSymbolsNew();
         
         $timeFrame = 5;
@@ -166,5 +168,63 @@ class ProfileController extends Controller
         $data['filtered'] = $filtered;
         // dd($finalData);
         return view($this->activeTemplate . 'user.trade-desk-signal', $data);
+    }
+
+    public function omsConfigOrder(){
+        $data['pageTitle'] = 'OMS Config';
+        $data['omsData'] = OmsConfig::where('user_id',auth()->user()->id)->with('broker:id,client_name')->paginate(50);
+        $brokers = BrokerApi::select('client_name','id')->where('user_id',auth()->user()->id)->get();
+        $data['brokers'] = $brokers;
+        return view($this->activeTemplate . 'user.oms-config-order', $data);
+    }
+
+    public function getPeCeSymbolNamesOrder(Request $request){
+        $symbol = $request->symbol;
+        $signal = $request->signal;
+        $todayDate = date("Y-m-d");
+        $data = \DB::table($symbol)->select('symbol_ce','symbol_pe')->whereDate('created_at',$todayDate);
+        if($signal==3){
+            $data->where("for3Min",3);
+        }
+        if($signal==5){
+            $data->where("for3Min",5);
+        }
+        $data = $data->groupBy('symbol_ce')->get();
+        $fData = [];
+        foreach($data as $val){
+            $fData[] = [
+                'ce'=>$val->symbol_ce,
+                'pe'=>$val->symbol_pe
+            ];
+        }
+        return response()->json(['s'=>1,'data'=>$fData]);
+    }
+
+    public function getOmgConfigDataOrder(Request $request){
+        $id = $request->id;
+        $brokers = BrokerApi::select('client_name','id')->where('user_id',auth()->user()->id)->get();
+        $data['brokers'] = $brokers;
+        $data['omgData'] = OmsConfig::where(['id'=>$id,'user_id'=>auth()->user()->id])->first();
+        $symbol = strtolower($data['omgData']->symbol_name);
+        $signal = $data['omgData']->signal_tf;
+        $todayDate = date("Y-m-d");
+        $dataD = \DB::table($symbol)->select('symbol_ce','symbol_pe')->whereDate('created_at',$todayDate);
+       
+        if($signal==3){
+            $dataD->where("for3Min",3);
+        }
+        if($signal==5){
+            $dataD->where("for3Min",5);
+        }
+        $dataD = $dataD->groupBy('symbol_ce')->get();
+        $fData = [];
+        foreach($dataD as $val){
+            $fData[] = [
+                'ce'=>$val->symbol_ce,
+                'pe'=>$val->symbol_pe
+            ];
+        }
+        $data['fData'] = $fData;
+        return view($this->activeTemplate . 'user.get-omg-config-data-order',$data);
     }
 }

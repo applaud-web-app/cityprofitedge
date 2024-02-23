@@ -1129,11 +1129,11 @@ class UserController extends Controller
         // ce symbol
         if(!$this->checkTradingSymbolExists($request->ce_symbol_name)){
             $notify[] = ['error', 'Enter valid trading symbol'];
-            return to_route('user.portfolio.oms-config')->withNotify($notify);
+            return redirect()->back()->withNotify($notify);
         }
         if(!$this->checkTradingSymbolExists($request->pe_symbol_name)){
             $notify[] = ['error', 'Enter valid trading symbol'];
-            return to_route('user.portfolio.oms-config')->withNotify($notify);
+            return redirect()->back()->withNotify($notify);
         }
         $ce_symbol_name = $request->ce_symbol_name;
         $pe_symbol_name = $request->pe_symbol_name;
@@ -1257,7 +1257,7 @@ class UserController extends Controller
         $omsObj->cron_run_at = date("Y-m-d H:i:s",strtotime('-'.$request->pyramid_freq.' minutes'));
         $omsObj->save();
         $notify[] = ['success', 'Data added Successfully...'];
-        return to_route('user.portfolio.oms-config')->withNotify($notify);
+        return redirect()->back()->withNotify($notify);
     }
 
     public function getOmgConfigData(Request $request){
@@ -1628,11 +1628,11 @@ class UserController extends Controller
         // ce symbol
         if(!$this->checkTradingSymbolExists($request->ce_symbol_name_up)){
             $notify[] = ['error', 'Enter valid trading symbol'];
-            return to_route('user.portfolio.oms-config')->withNotify($notify);
+            return redirect()->back()->withNotify($notify);
         }
         if(!$this->checkTradingSymbolExists($request->pe_symbol_name_up)){
             $notify[] = ['error', 'Enter valid trading symbol'];
-            return to_route('user.portfolio.oms-config')->withNotify($notify);
+            return redirect()->back()->withNotify($notify);
         }
         $ce_symbol_name = $request->ce_symbol_name_up;
         $pe_symbol_name = $request->pe_symbol_name_up;
@@ -1754,7 +1754,7 @@ class UserController extends Controller
         $omsObj->cron_run_at = date("Y-m-d H:i:s",strtotime('-'.$request->pyramid_freq_up.' minutes'));
         $omsObj->save();
         $notify[] = ['success', 'Data updated Successfully...'];
-        return to_route('user.portfolio.oms-config')->withNotify($notify);
+        return redirect()->back()->withNotify($notify);
     }
     
 
