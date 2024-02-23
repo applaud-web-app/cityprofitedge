@@ -335,6 +335,12 @@ class CrudeoilCommand extends Command
                                 foreach ($result as $key => $value) {
                                     if(!in_array($value['symbolToken'],$passedSymbols)){
 
+                                        // For Buy Signal
+                                        $previousData = Crudeoil::where('symbol_ce',$value['symbolToken'])->orWhere('symbol_pe',$value['symbolToken'])->orderby('id','DESC')->first();
+
+                                        $oiIncrease = $currentOI > $previousOI;
+                                        $priceIncrease = $currentPriceI > $previousPrice;
+
                                         $marketData = new Crudeoil;
                                         $atm = "";
                                         if (array_key_exists($value['symbolToken'], $completeResponse)) {
@@ -364,6 +370,7 @@ class CrudeoilCommand extends Command
                                         // For CE & PE SYMBOLS
                                         $getSymbolType = substr($value['tradingSymbol'],-2);
                                         if($getSymbolType == "PE"){
+
                                             $baseValue = substr($value['tradingSymbol'],0,-2);
                                             $baseValue = $baseValue."CE";
                                             $symbolSibling = array_search($baseValue, array_column($result, 'tradingSymbol'));
@@ -380,6 +387,28 @@ class CrudeoilCommand extends Command
 
                                             array_push($passedSymbols,$value['symbolToken']);
                                             array_push($passedSymbols,$result[$symbolSibling]['symbolToken']);
+
+
+                                            // For BUY PRICE 
+                                            $currentOI_pe = $value['opnInterest'];
+                                            $currentOI_ce = $result[$symbolSibling]['opnInterest'];
+                                            $currentPrice_pe = $value['ltp'];
+                                            $currentPrice_ce = $result[$symbolSibling]['ltp'];
+
+                                            $previousOI_pe = $previousData->lowerCircuit_pe;
+                                            $previousOI_ce = $previousData->lowerCircuit_ce;
+                                            $previousPrice_ce = $previousData->ltp_ce;
+                                            $previousPrice_pe = $previousData->ltp_pe;
+
+                                            $buyPrice_ce = "";
+                                            if(($currentOI_ce > $previousOI_ce) && ($currentPrice_ce > $previousPrice_ce)){
+                                                $buyPrice_ce = "BUY CE";
+                                            }
+
+                                            $buyPrice_pe = "";
+                                            if(($currentOI_pe > $previousOI_pe) && ($currentPrice_pe > $previousPrice_pe)){
+                                                $buyPrice_pe = "BUY PE";
+                                            }
 
                                             // For PE Symbols
                                             $marketData->token_pe = $value['symbolToken'];
@@ -430,6 +459,8 @@ class CrudeoilCommand extends Command
                                             $marketData->WeekHigh52_ce = $result[$symbolSibling]['52WeekHigh'];
                                             $marketData->vmap_pe = $vmap_pe;
                                             $marketData->vmap_ce = $vmap_ce;
+                                            $marketData->buy_ce = $buyPrice_ce;
+                                            $marketData->buy_pe = $buyPrice_pe;
                                             $marketData->save();
 
                                         }else{
@@ -450,6 +481,27 @@ class CrudeoilCommand extends Command
 
                                             array_push($passedSymbols,$value['symbolToken']);
                                             array_push($passedSymbols,$result[$symbolSibling]['symbolToken']);
+
+                                            // For BUY PRICE 
+                                            $currentOI_ce = $value['opnInterest'];
+                                            $currentOI_pe = $result[$symbolSibling]['opnInterest'];
+                                            $currentPrice_ce = $value['ltp'];
+                                            $currentPrice_pe = $result[$symbolSibling]['ltp'];
+
+                                            $previousOI_pe = $previousData->lowerCircuit_pe;
+                                            $previousOI_ce = $previousData->lowerCircuit_ce;
+                                            $previousPrice_ce = $previousData->ltp_ce;
+                                            $previousPrice_pe = $previousData->ltp_pe;
+
+                                            $buyPrice_ce = "";
+                                            if(($currentOI_ce > $previousOI_ce) && ($currentPrice_ce > $previousPrice_ce)){
+                                                $buyPrice_ce = "BUY CE";
+                                            }
+
+                                            $buyPrice_pe = "";
+                                            if(($currentOI_pe > $previousOI_pe) && ($currentPrice_pe > $previousPrice_pe)){
+                                                $buyPrice_pe = "BUY PE";
+                                            }
 
                                             // For CE Symbols
                                             $marketData->token_ce = $value['symbolToken'];
@@ -500,6 +552,8 @@ class CrudeoilCommand extends Command
                                             $marketData->WeekHigh52_pe = $result[$symbolSibling]['52WeekHigh'];
                                             $marketData->vmap_ce = $vmap_ce;
                                             $marketData->vmap_pe = $vmap_pe;
+                                            $marketData->buy_ce = $buyPrice_ce;
+                                            $marketData->buy_pe = $buyPrice_pe;
                                             $marketData->save();
                                             
                                         }
