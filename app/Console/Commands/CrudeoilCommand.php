@@ -73,7 +73,7 @@ class CrudeoilCommand extends Command
             // dd($atr);
             if ($index >= $period) {
                 $atr = $this->calculateATR(array_slice($ltpData, $index - $period, $period), $period);
-                if ($index === $period) {
+                if ($index == $period) {
                     $ub = $ltp["high"] + $multiplier * $atr;
                     $lb = $ltp["low"] - $multiplier * $atr;
                 } else {
