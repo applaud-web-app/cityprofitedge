@@ -116,6 +116,11 @@ class ProfileController extends Controller
         foreach($symbolArr as $value){
             $tableName = strtolower($value);
             $dataFetch = DB::table($tableName)->whereDate('created_at',$today)->where("atm",$atm);
+            if($timeFrame==3){
+                $dataFetch->where('for3Min',3);
+            }elseif($timeFrame==5){
+                $dataFetch->where('for5Min',5);
+            }
             if($filtered==0){
                 $dataFetch->limit(5)->orderBY('id','DESC');
                 $dataFetch = $dataFetch->orderBy('created_at','ASC')->get();
@@ -154,6 +159,7 @@ class ProfileController extends Controller
             }
            
         }
+        // dd($finalData);
         $data['finalData'] = $finalData;
         $data['timeFrame'] = $timeFrame;
         $data['stockName'] = $stockName;
