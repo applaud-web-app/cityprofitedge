@@ -179,7 +179,7 @@ class ProfileController extends Controller
     }
 
     public function getPeCeSymbolNamesOrder(Request $request){
-        $symbol = $request->symbol;
+        $symbol = strtolower($request->symbol);
         $signal = $request->signal;
         $todayDate = date("Y-m-d");
         $data = \DB::table($symbol)->select('symbol_ce','symbol_pe')->whereDate('created_at',$todayDate);
