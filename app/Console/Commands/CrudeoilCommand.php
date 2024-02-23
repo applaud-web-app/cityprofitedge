@@ -338,8 +338,8 @@ class CrudeoilCommand extends Command
                                         // For Buy Signal
                                         $previousData = Crudeoil::where('symbol_ce',$value['symbolToken'])->orWhere('symbol_pe',$value['symbolToken'])->orderby('id','DESC')->first();
 
-                                        $oiIncrease = $currentOI > $previousOI;
-                                        $priceIncrease = $currentPriceI > $previousPrice;
+                                        // $oiIncrease = $currentOI > $previousOI;
+                                        // $priceIncrease = $currentPriceI > $previousPrice;
 
                                         $marketData = new Crudeoil;
                                         $atm = "";
