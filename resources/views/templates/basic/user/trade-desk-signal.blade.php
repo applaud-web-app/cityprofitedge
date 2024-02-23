@@ -38,66 +38,123 @@
         </form>
 
         <div id="pst_hre">
-
-            @foreach ($finalData as $symbol => $item)
-                <div class="row mb-5">
-                    <div class="col-lg-12">
-                        <div class="custom--card card">
-                            <div class="card-header">
-                                <h6 class="card-title">{{$symbol}}</h6>
-                            </div>
-                            <div class="card-body p-0">
-                                <div class="table-responsive--md table-responsive">
-                                    <table class="table custom--table text-nowrap">
-                                        <thead>
-                                            <tr>
-                                                {{-- <th>#</th> --}}
-                                                <th class="text-nowrap">DATE</th>
-                                                <th>TIME</th>
-                                                <th>CE Symbol Name</th>
-                                                <th>PE Symbol Name</th>
-                                                <th>VWAP CE</th>
-                                                <th>VWAP PE</th>
-                                                <th>OI CE</th>
-                                                <th>OI PE</th>
-                                                <th>CE CLOSE PRICE</th>
-                                                <th>PE CLOSE PRICE</th>
-                                                <th>BUY ACTION</th>
-                                                <th>SELL ACTION</th>
-                                                <th>STRATEGY NAME</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($item as $val)
-                                                <tr>
-                                                    <td>{{$val->date}}</td>
-                                                    <td>{{$val->time}}</td>
-                                                    <td>{{$val->ce_symbol_name}}</td>
-                                                    <td>{{$val->pe_symbol_name}}</td>
-                                                    <td>{{$val->ce_vmap}}</td>
-                                                    <td>{{$val->pe_vmap}}</td>
-                                                    <td>{{$val->ce_oi}}</td>
-                                                    <td>{{$val->pe_oi}}</td>
-                                                    <td>{{$val->ce_close_price}}</td>
-                                                    <td>{{$val->pe_close_price}}</td>
-                                                    <td>{{$val->buy_action}}</td>
-                                                    <td>{{$val->sell_action}}</td>
-                                                    <td>{{$val->strategy_name}}</td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
+            @if($filtered==2)
+                @foreach ($finalData as $symbol => $item)
+                    <div class="row mb-5">
+                        <div class="col-lg-12">
+                            <div class="custom--card card">
+                                <div class="card-header">
+                                    <h6 class="card-title">{{$symbol}}</h6>
                                 </div>
+                                <div class="card-body p-0">
+                                    <div class="table-responsive--md table-responsive">
+                                        <table class="table custom--table text-nowrap">
+                                            <thead>
+                                                <tr>
+                                                    {{-- <th>#</th> --}}
+                                                    <th class="text-nowrap">DATE</th>
+                                                    <th>TIME</th>
+                                                    <th>CE Symbol Name</th>
+                                                    <th>PE Symbol Name</th>
+                                                    <th>VWAP CE</th>
+                                                    <th>VWAP PE</th>
+                                                    <th>OI CE</th>
+                                                    <th>OI PE</th>
+                                                    <th>CE CLOSE PRICE</th>
+                                                    <th>PE CLOSE PRICE</th>
+                                                    <th>BUY ACTION</th>
+                                                    <th>SELL ACTION</th>
+                                                    <th>STRATEGY NAME</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($item as $val)
+                                                    <tr>
+                                                        <td>{{$val->date}}</td>
+                                                        <td>{{$val->time}}</td>
+                                                        <td>{{$val->ce_symbol_name}}</td>
+                                                        <td>{{$val->pe_symbol_name}}</td>
+                                                        <td>{{$val->ce_vmap}}</td>
+                                                        <td>{{$val->pe_vmap}}</td>
+                                                        <td>{{$val->ce_oi}}</td>
+                                                        <td>{{$val->pe_oi}}</td>
+                                                        <td>{{$val->ce_close_price}}</td>
+                                                        <td>{{$val->pe_close_price}}</td>
+                                                        <td>{{$val->buy_action}}</td>
+                                                        <td>{{$val->sell_action}}</td>
+                                                        <td>{{$val->strategy_name}}</td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
 
-                            
+                                
+                                </div>
+                        
                             </div>
-                    
                         </div>
                     </div>
-                </div>
-                
-            @endforeach
+                    
+                @endforeach
+            @else
+            <div class="row mb-5">
+                <div class="col-lg-12">
+                    <div class="custom--card card">
+                        <div class="card-header">
+                            <h6 class="card-title">{{$stockName}}</h6>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive--md table-responsive">
+                                <table class="table custom--table text-nowrap">
+                                    <thead>
+                                            <th class="text-nowrap">DATE</th>
+                                            <th>TIME</th>
+                                            <th>CE Symbol Name</th>
+                                            <th>PE Symbol Name</th>
+                                            <th>VWAP CE</th>
+                                            <th>VWAP PE</th>
+                                            <th>OI CE</th>
+                                            <th>OI PE</th>
+                                            <th>CE CLOSE PRICE</th>
+                                            <th>PE CLOSE PRICE</th>
+                                            <th>BUY ACTION</th>
+                                            <th>SELL ACTION</th>
+                                            <th>STRATEGY NAME</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($finalData as $val)
+                                            <tr>
+                                                <td>{{date("d-M-Y",strtotime($val->exchFeedTime_ce))}}</td>
+                                                <td>{{date("H:i",strtotime($val->exchFeedTime_ce))}}</td>
+                                                <td>{{$val->symbol_ce}}</td>
+                                                <td>{{$val->symbol_pe}}</td>
+                                                <td>{{$val->vmap_ce}}</td>
+                                                <td>{{$val->vmap_pe}}</td>
+                                                <td>{{$val->vmap_ce}}</td>
+                                                <td>{{$val->vmap_pe}}</td>
+                                                <td>{{$val->close_ce}}</td>
+                                                <td>{{$val->close_pe}}</td>
+                                                <td>{{"BUY CE"}}</td>
+                                                <td>{{"SELL PE"}}</td>
+                                                <td>{{"LONG CE, SHORT PE"}}</td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
 
+                        
+                        </div>
+                
+                    </div>
+                </div>
+            </div>
+                <div class="mt-4 justify-content-center d-flex">
+                    {{ paginateLinks($finalData)}}
+                </div>
+            @endif
         </div>    
     </div>
 </section>
