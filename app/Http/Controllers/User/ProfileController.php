@@ -187,7 +187,7 @@ class ProfileController extends Controller
             $data->where("for3Min",3);
         }
         if($signal==5){
-            $data->where("for3Min",5);
+            $data->where("for5Min",5);
         }
         $data = $data->groupBy('symbol_ce')->get();
         $fData = [];
@@ -214,7 +214,7 @@ class ProfileController extends Controller
             $dataD->where("for3Min",3);
         }
         if($signal==5){
-            $dataD->where("for3Min",5);
+            $dataD->where("for5Min",5);
         }
         $dataD = $dataD->groupBy('symbol_ce')->get();
         $fData = [];
