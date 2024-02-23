@@ -192,7 +192,7 @@
     });
 </script>
 <script>
-    $("#symbol_name_up,#signal_tf_up").on('click',function(){
+    $("#symbol_name_up,#signal_tf_up").on('change',function(){
         var symbl = $("#symbol_name_up option:selected").val();
         var signl = $("#signal_tf_up option:selected").val();
         if(symbl!='' && signl!=''){
