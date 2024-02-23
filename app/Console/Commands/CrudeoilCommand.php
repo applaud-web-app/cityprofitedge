@@ -45,6 +45,51 @@ class CrudeoilCommand extends Command
         }
     }
 
+    
+    // Function to calculate Average True Range (ATR)
+    function calculateATR($ltpData, $period) {
+        // Calculate True Range (TR) for each period
+        $trueRanges = array();
+        for ($i = 1; $i < count($ltpData); $i++) {
+            $trueRanges[] = max($ltpData[$i]["high"] - $ltpData[$i]["low"], abs($ltpData[$i]["high"] - $ltpData[$i - 1]["close"]), abs($ltpData[$i]["low"] - $ltpData[$i - 1]["close"]));
+        }
+        // Calculate Average True Range (ATR) over the period
+        $atr = array_sum(array_slice($trueRanges, 0, $period)) / $period;
+        return $atr;
+    }
+
+    // Function to calculate SuperTrend bands and signals
+    function calculateSuperTrend($ltpData, $period, $multiplier) {
+        $signals = array(); // Array to store buy/sell signals
+        $ub = 0; // Initial Upper Band
+        $lb = 0; // Initial Lower Band
+        foreach ($ltpData as $index => $ltp) {
+            // dd($ltp);
+            if ($index >= $period) {
+                $atr = $this->calculateATR(array_slice($ltpData, $index - $period, $period), $period);
+                if ($index === $period) {
+                    $ub = $ltp["high"] + $multiplier * $atr;
+                    $lb = $ltp["low"] - $multiplier * $atr;
+                } else {
+                    $ub = min($ltp["high"] + $multiplier * $atr, $ub);
+                    $lb = max($ltp["low"] - $multiplier * $atr, $lb);
+                }
+                if ($ltp["close"] > $ub) {
+                    $signals[] = "Buy"; // Generate Buy Signal
+                } elseif ($ltp["close"] < $lb) {
+                    $signals[] = "Sell"; // Generate Sell Signal
+                } else {
+                    $signals[] = "Hold"; // No Signal
+                }
+            } else {
+                $signals[] = "Hold"; // No Signal during initialization period
+            }
+        }
+
+        // dd($signals);
+        return $signals;
+    }
+
     // For MCX AND NSE DATA
     function getLTP($exhange , $symbol , $token){
         $jwtToken =  $this->generate_access_token(); 
@@ -385,6 +430,24 @@ class CrudeoilCommand extends Command
                                             array_push($passedSymbols,$value['symbolToken']);
                                             array_push($passedSymbols,$result[$symbolSibling]['symbolToken']);
 
+                                            // FOR PE
+                                            // $allLtp = Crudeoil::Where('symbol_pe',$value['tradingSymbol'])->pluck('ltp_pe')->toArray();
+                                            // array_push($allLtp,$value['ltp']);
+                                            // $res[] = $this->calculateSuperTrend($allLtp,21,3);
+                                            // $supertrend_pe = $res[count($allLtp)+1];
+
+
+                                            // FOR CE
+                                            $allLtp_ce = Crudeoil::Where('symbol_ce',$result[$symbolSibling]['tradingSymbol'])->pluck('ltp_ce')->toArray();
+                                            array_push($allLtp_ce,$result[$symbolSibling]['ltp']);
+                                            $res_ce[] =  $this->calculateSuperTrend($allLtp_ce,21,3);
+                                            $supertrend_ce = $res_ce[count($allLtp_ce)];
+
+                                            // FOR PE
+                                            $allLtp_pe = Crudeoil::Where('symbol_pe',$value['tradingSymbol'])->pluck('ltp_pe')->toArray();
+                                            array_push($allLtp_pe,$value['ltp']);
+                                            $res_pe[] =  $this->calculateSuperTrend($allLtp_pe,21,3);
+                                            $supertrend_pe = $res_pe[count($allLtp_pe)];
 
                                             // For BUY PRICE 
                                             $currentOI_pe = $value['opnInterest'];
@@ -480,6 +543,8 @@ class CrudeoilCommand extends Command
                                             $marketData->vmap_ce = $vmap_ce;
                                             $marketData->oi_ce = $oi_ce;
                                             $marketData->oi_pe = $oi_pe;
+                                            $marketData->supertrend_pe = $supertrend_pe;
+                                            $marketData->supertrend_ce = $supertrend_ce;
                                             $marketData->save();
 
                                         }else{
@@ -500,6 +565,20 @@ class CrudeoilCommand extends Command
 
                                             array_push($passedSymbols,$value['symbolToken']);
                                             array_push($passedSymbols,$result[$symbolSibling]['symbolToken']);
+
+                                            // FOR CE
+                                            $allLtp_ce = Crudeoil::Where('symbol_ce',$value['tradingSymbol'])->pluck('ltp_ce')->toArray();
+                                            array_push($allLtp_ce,$value['ltp']);
+                                            // dd($this->calculateSuperTrend($allLtp_ce,21,3),$value['tradingSymbol']);
+                                            $res_ce[] =  $this->calculateSuperTrend($allLtp_ce,21,3);
+                                            // dd($res_ce);
+                                            $supertrend_ce = $res_ce[count($allLtp_ce)];
+
+                                            // FOR PE
+                                            $allLtp_pe = Crudeoil::Where('symbol_pe',$result[$symbolSibling]['tradingSymbol'])->pluck('ltp_pe')->toArray();
+                                            array_push($allLtp_pe,$result[$symbolSibling]['ltp']);
+                                            $res_pe[] =  $this->calculateSuperTrend($allLtp_pe,21,3);
+                                            $supertrend_pe = $res_pe[count($allLtp_pe)];
 
                                             // For BUY PRICE 
                                             $currentOI_ce = $value['opnInterest'];
@@ -583,6 +662,8 @@ class CrudeoilCommand extends Command
                                             $marketData->vmap_pe = $vmap_pe;
                                             $marketData->oi_ce = $oi_ce;
                                             $marketData->oi_pe = $oi_pe;
+                                            $marketData->supertrend_pe = $supertrend_pe;
+                                            $marketData->supertrend_ce = $supertrend_ce;
                                             $marketData->save();
                                             
                                         }

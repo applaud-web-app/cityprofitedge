@@ -382,91 +382,91 @@ class AngelHistorical extends Command
     //     return $errData;
     // }
 
-    // public function calcNewData($params,$multiplier=3,$period = 21){
+    public function calcNewData($params,$multiplier=3,$period = 21){
 
-    //     $allOHLCData = AngleHistoricalApi::where('token', $params['token'])->get()->toArray(); 
-    //     $previousData = array_slice($allOHLCData,-1);
-    //     $previousClose = null;
-    //     $newhigh = $params['high'];
-    //     $newlow = $params['low'];
-    //     $newopen = $params['open'];
-    //     $newclose = $params['close'];
+        $allOHLCData = AngleHistoricalApi::where('token', $params['token'])->get()->toArray(); 
+        $previousData = array_slice($allOHLCData,-1);
+        $previousClose = null;
+        $newhigh = $params['high'];
+        $newlow = $params['low'];
+        $newopen = $params['open'];
+        $newclose = $params['close'];
 
-    //     $trend = null;
-    //     $strength  = null;
+        $trend = null;
+        $strength  = null;
 
-    //     if($previousData){
-    //         $previousClose = $previousData['close'];
-    //         $newopen = round(($params['open'] + $params['close']) / 2,2);
-    //         $newclose = round(($params['open'] + $params['high'] + $params['low'] + $params['close']) / 4,2);
-    //         $newhigh = max($ohlc['high'], $newopen, $newclose);
-    //         $newlow = min($ohlc['low'], $newopen, $newclose);
-    //     }
+        if($previousData){
+            $previousClose = $previousData['close'];
+            $newopen = round(($params['open'] + $params['close']) / 2,2);
+            $newclose = round(($params['open'] + $params['high'] + $params['low'] + $params['close']) / 4,2);
+            $newhigh = max($ohlc['high'], $newopen, $newclose);
+            $newlow = min($ohlc['low'], $newopen, $newclose);
+        }
 
         
-    //     if(count($allOHLCData) >= $period){
-    //         $rowNum = count($allOHLCData);
-    //         $HighAll = array_map(function($val){
-    //             return $val['new_high'];
-    //         },$allOHLCData);
-    //         array_push($HighAll,$newhigh);
+        if(count($allOHLCData) >= $period){
+            $rowNum = count($allOHLCData);
+            $HighAll = array_map(function($val){
+                return $val['new_high'];
+            },$allOHLCData);
+            array_push($HighAll,$newhigh);
     
-    //         $LowAll = array_map(function($val){
-    //             return $val['new_low'];
-    //         },$allOHLCData);
-    //         array_push($LowAll,$newlow);
+            $LowAll = array_map(function($val){
+                return $val['new_low'];
+            },$allOHLCData);
+            array_push($LowAll,$newlow);
     
-    //         $CloseAll = array_map(function($val){
-    //             return $val['new_close'];
-    //         },$allOHLCData);
-    //         array_push($CloseAll,$newclose);
+            $CloseAll = array_map(function($val){
+                return $val['new_close'];
+            },$allOHLCData);
+            array_push($CloseAll,$newclose);
 
-    //         $basicUpperBand = ($HighAll[$rowNum - 1] + $LowAll[$rowNum - 1]) / 2;  // 20
-    //         $basicLowerBand = ($HighAll[$rowNum - 1] + $LowAll[$rowNum - 1]) / 2;  // 20
-    //         $finalUpperBand = 0;
-    //         $finalLowerBand = 0;
+            $basicUpperBand = ($HighAll[$rowNum - 1] + $LowAll[$rowNum - 1]) / 2;  // 20
+            $basicLowerBand = ($HighAll[$rowNum - 1] + $LowAll[$rowNum - 1]) / 2;  // 20
+            $finalUpperBand = 0;
+            $finalLowerBand = 0;
             
-    //         // Calculate ATR
-    //         $atr = [];
-    //         $atr[0] = 0;
+            // Calculate ATR
+            $atr = [];
+            $atr[0] = 0;
 
-    //         for ($i = 1; $i < count($CloseAll); $i++) {
-    //             $tr1 = max($HighAll[$i] - $LowAll[$i], abs($HighAll[$i] - $CloseAll[$i - 1]), abs($LowAll[$i] - $CloseAll[$i - 1]));
-    //             $atr[$i] = ($atr[$i - 1] * ($rowNum - 1) + $tr1) / $rowNum;
-    //             if($i % 100){
-    //                 sleep(1);
-    //             }
-    //         }
+            for ($i = 1; $i < count($CloseAll); $i++) {
+                $tr1 = max($HighAll[$i] - $LowAll[$i], abs($HighAll[$i] - $CloseAll[$i - 1]), abs($LowAll[$i] - $CloseAll[$i - 1]));
+                $atr[$i] = ($atr[$i - 1] * ($rowNum - 1) + $tr1) / $rowNum;
+                if($i % 100){
+                    sleep(1);
+                }
+            }
 
-    //         // Calculate Super Trend
-    //         if(count($CloseAll) >= $rowNum){
+            // Calculate Super Trend
+            if(count($CloseAll) >= $rowNum){
 
-    //             $basicUpperBand = (($HighAll[$rowNum] + $LowAll[$rowNum]) / 2 ) + ($multiplier * $atr[$rowNum]);
-    //             $basicLowerBand = (($HighAll[$rowNum] + $LowAll[$rowNum]) / 2 ) - ($multiplier * $atr[$rowNum]);
+                $basicUpperBand = (($HighAll[$rowNum] + $LowAll[$rowNum]) / 2 ) + ($multiplier * $atr[$rowNum]);
+                $basicLowerBand = (($HighAll[$rowNum] + $LowAll[$rowNum]) / 2 ) - ($multiplier * $atr[$rowNum]);
                 
-    //             if ($basicUpperBand < $finalUpperBand || $CloseAll[$rowNum - 1] > $finalUpperBand) {
-    //                 $finalUpperBand = $basicUpperBand;
-    //             } else {
-    //                 $finalUpperBand = $finalUpperBand;
-    //             }
+                if ($basicUpperBand < $finalUpperBand || $CloseAll[$rowNum - 1] > $finalUpperBand) {
+                    $finalUpperBand = $basicUpperBand;
+                } else {
+                    $finalUpperBand = $finalUpperBand;
+                }
                 
-    //             if ($basicLowerBand > $finalLowerBand || $CloseAll[$rowNum - 1] < $finalLowerBand) {
-    //                 $finalLowerBand = $basicLowerBand;
-    //             } else {
-    //                 $finalLowerBand = $finalLowerBand;
-    //             }            
+                if ($basicLowerBand > $finalLowerBand || $CloseAll[$rowNum - 1] < $finalLowerBand) {
+                    $finalLowerBand = $basicLowerBand;
+                } else {
+                    $finalLowerBand = $finalLowerBand;
+                }            
         
-    //             if ($CloseAll[$rowNum] <= $finalUpperBand) {
-    //                 $trend = 'Bullish';
-    //                 $strength  = ($finalUpperBand - $CloseAll[$rowNum]) / $atr[$rowNum];
-    //             } elseif ($CloseAll[$rowNum] >= $finalLowerBand) {
-    //                 $trend = 'Bearish';
-    //                 $strength = ($CloseAll[$rowNum] - $finalLowerBand) / $atr[$rowNum];
-    //             } 
-    //         }   
-    //     }
-    //     return ['trend'=>$trend,'strength'=>$strength,'high'=>$newhigh,'low'=>$newlow,'open'=>$newopen,'close'=>$newclose];
-    // }
+                if ($CloseAll[$rowNum] <= $finalUpperBand) {
+                    $trend = 'Bullish';
+                    $strength  = ($finalUpperBand - $CloseAll[$rowNum]) / $atr[$rowNum];
+                } elseif ($CloseAll[$rowNum] >= $finalLowerBand) {
+                    $trend = 'Bearish';
+                    $strength = ($CloseAll[$rowNum] - $finalLowerBand) / $atr[$rowNum];
+                } 
+            }   
+        }
+        return ['trend'=>$trend,'strength'=>$strength,'high'=>$newhigh,'low'=>$newlow,'open'=>$newopen,'close'=>$newclose];
+    }
 
 
     // For Both NSE AND MCX
