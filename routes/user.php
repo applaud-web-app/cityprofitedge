@@ -107,6 +107,9 @@ Route::middleware('auth')->name('user.')->group(function () {
                 Route::get('change-password', 'changePassword')->name('change.password');
                 Route::post('change-password', 'submitPassword');
                 Route::get('trade-desk-signal', 'tradeDeskSignal')->name('trade-desk-signal');
+                Route::get('oms-config-order', 'omsConfigOrder')->name('oms-config-order');
+                Route::post('get-pe-ce-symbol-names-order', 'getPeCeSymbolNamesOrder')->name('get-pe-ce-symbol-names-order');
+                Route::post('get-omg-config-data-order', 'getOmgConfigDataOrder')->name('get-omg-config-data-order');
                 // Route::get('trade-desk-signal-test', 'tradeDeskSignalTest')->name('trade-desk-signal-test');
             });
 
