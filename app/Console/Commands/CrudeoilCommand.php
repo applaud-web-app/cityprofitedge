@@ -403,14 +403,18 @@ class CrudeoilCommand extends Command
                                                 $previousPrice_pe = $previousData->ltp_pe;
                                             }
 
-                                            $buyAction = "";
+                                            $oi_ce = "";
                                             if(($currentOI_ce > $previousOI_ce) && ($currentPrice_ce > $previousPrice_ce)){
-                                                $buyAction = "BUY CE";
+                                                $oi_ce = "BUY CE";
+                                            }else{
+                                                $oi_ce = "SELL CE";
                                             }
 
-                                            $sellAction = "";
+                                            $oi_pe = "";
                                             if(($currentOI_pe < $previousOI_pe) && ($currentPrice_pe < $previousPrice_pe)){
-                                                $sellAction = "SELL PE";
+                                                $oi_pe = "SELL PE";
+                                            }else{
+                                                $oi_pe = "BUY PE";
                                             }
 
                                             // For SELL PRICE 
@@ -474,8 +478,8 @@ class CrudeoilCommand extends Command
                                             $marketData->WeekHigh52_ce = $result[$symbolSibling]['52WeekHigh'];
                                             $marketData->vmap_pe = $vmap_pe;
                                             $marketData->vmap_ce = $vmap_ce;
-                                            $marketData->buy = $buyAction;
-                                            $marketData->sell = $sellAction;
+                                            $marketData->oi_ce = $oi_ce;
+                                            $marketData->oi_pe = $oi_pe;
                                             $marketData->save();
 
                                         }else{
@@ -514,14 +518,18 @@ class CrudeoilCommand extends Command
                                                 $previousPrice_pe = $previousData->ltp_pe;
                                             }
 
-                                            $buyAction = "";
+                                            $oi_ce = "";
                                             if(($currentOI_ce > $previousOI_ce) && ($currentPrice_ce > $previousPrice_ce)){
-                                                $buyAction = "BUY CE";
+                                                $oi_ce = "BUY CE";
+                                            }else{
+                                                $oi_ce = "SELL CE";
                                             }
 
-                                            $sellAction = "";
+                                            $oi_pe = "";
                                             if(($currentOI_pe < $previousOI_pe) && ($currentPrice_pe < $previousPrice_pe)){
-                                                $sellAction = "SELL PE";
+                                                $oi_pe = "SELL PE";
+                                            }else{
+                                                $oi_pe = "BUY PE";
                                             }
 
                                             // For CE Symbols
@@ -573,8 +581,8 @@ class CrudeoilCommand extends Command
                                             $marketData->WeekHigh52_pe = $result[$symbolSibling]['52WeekHigh'];
                                             $marketData->vmap_ce = $vmap_ce;
                                             $marketData->vmap_pe = $vmap_pe;
-                                            $marketData->buy = $buyAction;
-                                            $marketData->sell = $sellAction;
+                                            $marketData->oi_ce = $oi_ce;
+                                            $marketData->oi_pe = $oi_pe;
                                             $marketData->save();
                                             
                                         }
