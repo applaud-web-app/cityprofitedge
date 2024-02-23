@@ -392,10 +392,16 @@ class CrudeoilCommand extends Command
                                             $currentPrice_pe = $value['ltp'];
                                             $currentPrice_ce = $result[$symbolSibling]['ltp'];
 
-                                            $previousOI_pe = $previousData->opnInterest_pe ?? NULL;
-                                            $previousOI_ce = $previousData->opnInterest_ce ?? NULL;
-                                            $previousPrice_ce = $previousData->ltp_ce ?? NULL;
-                                            $previousPrice_pe = $previousData->ltp_pe ?? NULL;
+                                            $previousOI_pe = NULL;
+                                            $previousOI_ce = NULL;
+                                            $previousPrice_ce = NULL;
+                                            $previousPrice_pe = NULL;
+                                            if($previousData != NULL){
+                                                $previousOI_pe = $previousData->opnInterest_pe;
+                                                $previousOI_ce = $previousData->opnInterest_ce;
+                                                $previousPrice_ce = $previousData->ltp_ce;
+                                                $previousPrice_pe = $previousData->ltp_pe;
+                                            }
 
                                             $buyPrice_ce = "";
                                             if(($currentOI_ce > $previousOI_ce) && ($currentPrice_ce > $previousPrice_ce)){
@@ -485,10 +491,16 @@ class CrudeoilCommand extends Command
                                             $currentPrice_ce = $value['ltp'];
                                             $currentPrice_pe = $result[$symbolSibling]['ltp'];
 
-                                            $previousOI_pe = $previousData->opnInterest_pe ?? NULL;
-                                            $previousOI_ce = $previousData->opnInterest_ce ?? NULL;
-                                            $previousPrice_ce = $previousData->ltp_ce ?? NULL;
-                                            $previousPrice_pe = $previousData->ltp_pe ?? NULL;
+                                            $previousOI_pe = NULL;
+                                            $previousOI_ce = NULL;
+                                            $previousPrice_ce = NULL;
+                                            $previousPrice_pe = NULL;
+                                            if($previousData != NULL){
+                                                $previousOI_pe = $previousData->opnInterest_pe;
+                                                $previousOI_ce = $previousData->opnInterest_ce;
+                                                $previousPrice_ce = $previousData->ltp_ce;
+                                                $previousPrice_pe = $previousData->ltp_pe;
+                                            }
 
                                             $buyPrice_ce = "";
                                             if(($currentOI_ce > $previousOI_ce) && ($currentPrice_ce > $previousPrice_ce)){
