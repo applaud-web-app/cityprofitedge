@@ -122,37 +122,42 @@ class ProfileController extends Controller
             }else{
                 $dataFetch = $dataFetch->paginate(100);
             }
-           
-            $finalD = [];
-            foreach($dataFetch as $val){
-                $finalD[] = (object)[
-                    'date'=>date("d-M-Y",strtotime($val->exchFeedTime_ce)),
-                    'time'=>date("H:i",strtotime($val->exchFeedTime_ce)),
-                    'ce_symbol_name'=>$val->symbol_ce,
-                    'pe_symbol_name'=>$val->symbol_pe,
-                    'ce_vmap'=>$val->vmap_ce,
-                    'pe_vmap'=>$val->vmap_pe,
-                    'ce_oi'=>$val->vmap_ce,
-                    'pe_oi'=>$val->vmap_pe,
-                    'ce_close_price'=>$val->close_ce,
-                    'pe_close_price'=>$val->close_pe,
-                    'buy_action'=>"BUY CE",
-                    'sell_action'=>"SELL PE",
-                    'strategy_name'=>"LONG CE, SHORT PE",
-                    'created'=>date(strtotime($val->exchFeedTime_ce))
-                ];
-            }
             if($filtered==0){
-                usort($finalD, function($a, $b)
-                {
-                    return $a->created > $b->created;
-                });
+                $finalD = [];
+                foreach($dataFetch as $val){
+                    $finalD[] = (object)[
+                        'date'=>date("d-M-Y",strtotime($val->exchFeedTime_ce)),
+                        'time'=>date("H:i",strtotime($val->exchFeedTime_ce)),
+                        'ce_symbol_name'=>$val->symbol_ce,
+                        'pe_symbol_name'=>$val->symbol_pe,
+                        'ce_vmap'=>$val->vmap_ce,
+                        'pe_vmap'=>$val->vmap_pe,
+                        'ce_oi'=>$val->vmap_ce,
+                        'pe_oi'=>$val->vmap_pe,
+                        'ce_close_price'=>$val->close_ce,
+                        'pe_close_price'=>$val->close_pe,
+                        'buy_action'=>"BUY CE",
+                        'sell_action'=>"SELL PE",
+                        'strategy_name'=>"LONG CE, SHORT PE",
+                        'created'=>date(strtotime($val->exchFeedTime_ce))
+                    ];
+                }
+                if($filtered==0){
+                    usort($finalD, function($a, $b)
+                    {
+                        return $a->created > $b->created;
+                    });
+                }
+                $finalData[$value] = $finalD;
+            }else{
+                $finalData = $dataFetch;
             }
-            $finalData[$value] = $finalD;
+           
         }
         $data['finalData'] = $finalData;
         $data['timeFrame'] = $timeFrame;
         $data['stockName'] = $stockName;
+        $data['filtered'] = $filtered;
         // dd($finalData);
         return view($this->activeTemplate . 'user.trade-desk-signal', $data);
     }
