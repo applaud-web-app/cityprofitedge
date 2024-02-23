@@ -8,6 +8,7 @@ use App\Models\LTP_ROUNDOFF;
 use App\Traits\AngelApiAuth;
 use App\Models\Crudeoil;
 use Carbon\Carbon;
+use DateTime;
 
 class AngelHistorical extends Command
 {
@@ -604,6 +605,7 @@ class AngelHistorical extends Command
         "2024-04-17", "2024-05-01", "2024-06-17", "2024-07-17", "2024-08-15", "2024-10-02", "2024-11-01", "2024-11-15", "2024-12-25"];
 
         $currentDate = date('Y-m-d');
+
         // Check Today Is Holiday Or Not
         if(!in_array($currentDate,$marketHolidays)){
             // For Current Time is B\w 9:15Am to 11:30pm
@@ -760,11 +762,13 @@ class AngelHistorical extends Command
                                 }
 
                                 // For PE Symbols
-                                $time1 = strtotime($timeperiod);
-                                $time2 = strtotime($value['lastTradeQty']);
-                                $timeDiff = date('H:i',$time2-$time1);
-
-                                list($hour, $minute) = explode(':', $timeDiff);
+                                $date1 = new DateTime($timeperiod);
+                                $t = $value['exchFeedTime'];
+                                $date2 = new DateTime($t);
+                                $interval = $date1->diff($date2);
+                                $interval->format('%H:%I');
+                                $hour  = $interval->h;
+                                $minute  = $interval->i;
                                 $finalTimeFrame = $hour*60 + $minute;
 
                                 $for3min = "";
@@ -776,6 +780,23 @@ class AngelHistorical extends Command
                                 if($finalTimeFrame % 5 == 0){
                                     $for5min = 5;
                                 }
+                                // dd($finalTimeFrame,$hour,$minute);
+                                // $time1 = strtotime($timeperiod);
+                                // $time2 = strtotime($value['lastTradeQty']);
+                                // $timeDiff = date('H:i',$time2-$time1);
+
+                                // list($hour, $minute) = explode(':', $timeDiff);
+                                // $finalTimeFrame = $hour*60 + $minute;
+
+                                // $for3min = "";
+                                // if($finalTimeFrame % 3 == 0){
+                                //     $for3min = 3;
+                                // }
+
+                                // $for5min = "";
+                                // if($finalTimeFrame % 5 == 0){
+                                //     $for5min = 5;
+                                // }
 
                                 // For CE & PE SYMBOLS
                                 $getSymbolType = substr($value['tradingSymbol'],-2);
@@ -796,8 +817,6 @@ class AngelHistorical extends Command
 
                                     array_push($passedSymbols,$value['symbolToken']);
                                     array_push($passedSymbols,$result[$symbolSibling]['symbolToken']);
-
-                                    
 
                                     $marketData->token_pe = $value['symbolToken'];
                                     $marketData->token_ce = $result[$symbolSibling]['symbolToken'];
@@ -875,6 +894,8 @@ class AngelHistorical extends Command
                                     $marketData->symbol_pe = $result[$symbolSibling]['tradingSymbol'];
                                     $marketData->exchange = $value['exchange'];
                                     $marketData->atm = $atm;
+                                    $marketData->for3Min = $for3min;
+                                    $marketData->for5Min = $for5min;
                                     $marketData->ltp_ce = $value['ltp'];
                                     $marketData->ltp_pe = $result[$symbolSibling]['ltp'];
                                     $marketData->open_ce = $value['open'];
