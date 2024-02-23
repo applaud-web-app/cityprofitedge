@@ -38,7 +38,7 @@
         </form>
 
         <div id="pst_hre">
-            @if($filtered==2)
+            @if($filtered==0)
                 @foreach ($finalData as $symbol => $item)
                     <div class="row mb-5">
                         <div class="col-lg-12">

@@ -159,6 +159,7 @@ class ProfileController extends Controller
             }
            
         }
+        // dd($finalData);
         $data['finalData'] = $finalData;
         $data['timeFrame'] = $timeFrame;
         $data['stockName'] = $stockName;
