@@ -10,6 +10,9 @@ use App\Models\Crudeoil;
 use Carbon\Carbon;
 use DateTime;
 
+// MCX = 9:00
+// NFO = 9:30
+
 class AngelHistorical extends Command
 {
     use AngelApiAuth;
