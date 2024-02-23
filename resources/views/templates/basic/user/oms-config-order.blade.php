@@ -337,7 +337,7 @@
     });
 </script>
 <script>
-    $("#symbol_name,#signal_tf").on('click',function(){
+    $("#symbol_name,#signal_tf").on('change',function(){
         var symbl = $("#symbol_name option:selected").val();
         var signl = $("#signal_tf option:selected").val();
         if(symbl!='' && signl!=''){
