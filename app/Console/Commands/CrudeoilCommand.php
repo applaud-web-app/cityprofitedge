@@ -48,10 +48,10 @@ class CrudeoilCommand extends Command
     
     // Function to calculate Average True Range (ATR)
     function calculateATR($ltpData, $period) {
+        // dd();
         // Calculate True Range (TR) for each period
         $trueRanges = array();
         for ($i = 1; $i < count($ltpData); $i++) {
-            // dd($ltpData[$i]["high_ce"]);
             $trueRanges[] = max($ltpData[$i]["high"] - $ltpData[$i]["low"], abs($ltpData[$i]["high"] - $ltpData[$i - 1]["close"]), abs($ltpData[$i]["low"] - $ltpData[$i - 1]["close"]));
         }
         // Calculate Average True Range (ATR) over the period
@@ -452,7 +452,7 @@ class CrudeoilCommand extends Command
 
 
                                             // FOR CE
-                                            $allLtp_ce = Crudeoil::select('ltp_ce','high_ce','low_ce','close_ce')->Where('symbol_ce',$result[$symbolSibling]['tradingSymbol'])->get()->toArray();
+                                            $allLtp_ce = Crudeoil::select('ltp_ce as ltp','high_ce as high','low_ce as low','close_ce as close')->Where('symbol_ce',$result[$symbolSibling]['tradingSymbol'])->get()->toArray();
                                             $latestData_ce = [
                                                 "ltp" => $result[$symbolSibling]['ltp'],
                                                 "high" => $result[$symbolSibling]['high'],
@@ -464,7 +464,7 @@ class CrudeoilCommand extends Command
                                             $supertrend_ce = $res_ce[count($allLtp_ce)-1];
 
                                             // FOR PE
-                                            $allLtp_pe = Crudeoil::select('ltp_pe','high_pe','low_pe','close_pe')->Where('symbol_pe',$value['tradingSymbol'])->get()->toArray();
+                                            $allLtp_pe = Crudeoil::select('ltp_pe as ltp','high_pe as high','low_pe as low','close_pe as close')->Where('symbol_pe',$value['tradingSymbol'])->get()->toArray();
                                             $latestData_pe = [
                                                 "ltp" => $value['ltp'],
                                                 "high" => $value['high'],
@@ -594,7 +594,7 @@ class CrudeoilCommand extends Command
                                             array_push($passedSymbols,$result[$symbolSibling]['symbolToken']);
 
                                             // FOR CE
-                                            $allLtp_ce = Crudeoil::select('ltp_ce','high_ce','low_ce','close_ce')->Where('symbol_ce',$value['tradingSymbol'])->get()->toArray();
+                                            $allLtp_ce = Crudeoil::select('ltp_ce as ltp','high_ce as high','low_ce as ce','close_ce')->Where('symbol_ce',$value['tradingSymbol'])->get()->toArray();
                                             $latestData_ce = [
                                                 "ltp" => $value['ltp'],
                                                 "high" => $value['high'],
@@ -606,7 +606,7 @@ class CrudeoilCommand extends Command
                                             $supertrend_ce = $res_ce[count($allLtp_ce)-1];
 
                                             // FOR PE
-                                            $allLtp_pe = Crudeoil::Where('symbol_pe',$result[$symbolSibling]['tradingSymbol'])->pluck('ltp_pe')->toArray();
+                                            $allLtp_pe = Crudeoil::select('ltp_pe as ltp','high_pe as high','low_pe as pe','close_pe')->Where('symbol_pe',$result[$symbolSibling]['tradingSymbol'])->get()->toArray();
                                             $latestData_pe = [
                                                 "ltp" => $result[$symbolSibling]['ltp'],
                                                 "high" => $result[$symbolSibling]['high'],
