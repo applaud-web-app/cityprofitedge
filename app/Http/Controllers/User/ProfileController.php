@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
-
+use DB;
 class ProfileController extends Controller
 {
     public function profile()
@@ -90,5 +90,70 @@ class ProfileController extends Controller
         $pageTitle = "User Info";
         $user = auth()->user();
         return view($this->activeTemplate . 'user.info', compact('pageTitle', 'user'));
+    }
+
+    public function tradeDeskSignal(Request $request){
+        $data['pageTitle'] = "User Info";
+        $symbolArr = allTradeSymbolsNew();
+        
+        $timeFrame = 5;
+        $atm = 1;
+        if(!empty($request->time_frame)){
+            $timeFrame = $request->time_frame;
+        }
+
+        $filtered = 0;
+        $data['symbolArr'] = $symbolArr;
+        $stockName = '';
+        if(!empty($request->stock_name) && in_array($request->stock_name,$symbolArr)){
+            $symbolArr = [$request->stock_name];
+            $stockName = $request->stock_name;
+            $filtered = 1;
+        }
+
+        $today = date("Y-m-d");
+        $finalData = [];
+        foreach($symbolArr as $value){
+            $tableName = strtolower($value);
+            $dataFetch = DB::table($tableName)->whereDate('created_at',$today)->where("atm",$atm);
+            if($filtered==0){
+                $dataFetch->limit(5)->orderBY('id','DESC');
+                $dataFetch = $dataFetch->orderBy('created_at','ASC')->get();
+            }else{
+                $dataFetch = $dataFetch->paginate(100);
+            }
+           
+            $finalD = [];
+            foreach($dataFetch as $val){
+                $finalD[] = (object)[
+                    'date'=>date("d-M-Y",strtotime($val->exchFeedTime_ce)),
+                    'time'=>date("H:i",strtotime($val->exchFeedTime_ce)),
+                    'ce_symbol_name'=>$val->symbol_ce,
+                    'pe_symbol_name'=>$val->symbol_pe,
+                    'ce_vmap'=>$val->vmap_ce,
+                    'pe_vmap'=>$val->vmap_pe,
+                    'ce_oi'=>$val->vmap_ce,
+                    'pe_oi'=>$val->vmap_pe,
+                    'ce_close_price'=>$val->close_ce,
+                    'pe_close_price'=>$val->close_pe,
+                    'buy_action'=>"BUY CE",
+                    'sell_action'=>"SELL PE",
+                    'strategy_name'=>"LONG CE, SHORT PE",
+                    'created'=>date(strtotime($val->exchFeedTime_ce))
+                ];
+            }
+            if($filtered==0){
+                usort($finalD, function($a, $b)
+                {
+                    return $a->created > $b->created;
+                });
+            }
+            $finalData[$value] = $finalD;
+        }
+        $data['finalData'] = $finalData;
+        $data['timeFrame'] = $timeFrame;
+        $data['stockName'] = $stockName;
+        // dd($finalData);
+        return view($this->activeTemplate . 'user.trade-desk-signal', $data);
     }
 }

@@ -512,3 +512,7 @@ function calculatePyramids($numbertodivise,$no){
     }
     return $array;
 }
+
+function allTradeSymbolsNew(){
+    return ['BANKNIFTY','CRUDEOIL','FINNIFTY','MIDCPNIFTY','NATURALGAS','NIFTY'];
+}
