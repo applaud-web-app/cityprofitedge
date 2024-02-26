@@ -69,16 +69,16 @@ class CrudeoilCommand extends Command
         $lb = 0; // Initial Lower Band
         foreach ($ltpData as $index => $ltp) {
             // dd(array_slice($ltpData, $index - $period, $period));
-            $atr = $this->calculateATR(array_slice($ltpData, $index - $period, $period), $period);
+            // $atr = $this->calculateATR(array_slice($ltpData, $index - $period, $period), $period);
             // dd($atr);
             if ($index >= $period) {
                 $atr = $this->calculateATR(array_slice($ltpData, $index - $period, $period), $period);
                 if ($index == $period) {
-                    $ub = $ltp["high"] + $multiplier * $atr;
-                    $lb = $ltp["low"] - $multiplier * $atr;
+                    $ub = $ltp["high"] + ($multiplier * $atr);
+                    $lb = $ltp["low"] - ($multiplier * $atr);
                 } else {
-                    $ub = min($ltp["high"] + $multiplier * $atr, $ub);
-                    $lb = max($ltp["low"] - $multiplier * $atr, $lb);
+                    $ub = min($ltp["high"] + ($multiplier * $atr), $ub);
+                    $lb = max($ltp["low"] - ($multiplier * $atr), $lb);
                 }
                 if ($ltp["close"] > $ub) {
                     $signals[] = "Buy"; // Generate Buy Signal
@@ -92,7 +92,6 @@ class CrudeoilCommand extends Command
             }
         }
 
-        // dd($signals);
         return $signals;
     }
 

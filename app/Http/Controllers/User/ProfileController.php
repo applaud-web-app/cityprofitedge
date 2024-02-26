@@ -99,7 +99,7 @@ class ProfileController extends Controller
         $symbolArr = allTradeSymbolsNew();
         
         $timeFrame = 5;
-        $atm = 1;
+        $atm = 0;
         if(!empty($request->time_frame)){
             $timeFrame = $request->time_frame;
         }
@@ -182,7 +182,8 @@ class ProfileController extends Controller
         $symbol = strtolower($request->symbol);
         $signal = $request->signal;
         $todayDate = date("Y-m-d");
-        $data = \DB::table($symbol)->select('symbol_ce','symbol_pe')->whereDate('created_at',$todayDate);
+        $atmArr = [-1,0,1];
+        $data = \DB::table($symbol)->select('symbol_ce','symbol_pe')->whereIn('atm',$atmArr)->whereDate('created_at',$todayDate);
         if($signal==3){
             $data->where("for3Min",3);
         }
