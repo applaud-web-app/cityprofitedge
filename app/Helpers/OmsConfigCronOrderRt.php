@@ -680,7 +680,6 @@ class OmsConfigCronOrderRt{
     // angel api ends
 
     public function placeOrder(){
-        $todayDate=date("Y-m-d");
         $startDateTime = strtotime(date("Y-m-d 15:30:00"));
         $endDateTime = strtotime(date("Y-m-d 23:30:00"));
         $currentDateTime = strtotime(date("Y-m-d H:i:s"));
@@ -690,7 +689,7 @@ class OmsConfigCronOrderRt{
         if($currentDateTime > $startDateTime && $currentDateTime < $endDateTime){
             $omsDt->whereIn('symbol_name',['CRUDEOIL','NATURALGAS','GOLD','SILVER']);
         }
-        $omsDt->chunk(100, function($omgData) use($todayDate){
+        $omsDt->chunk(100, function($omgData){
             foreach ($omgData as $val) {
                 if($val->broker->client_type=="Zerodha"){
                     // $this->callKiteApi($val);

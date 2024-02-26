@@ -108,22 +108,28 @@ class OmsConfigCronOrder{
     }
 
     public function getZerodhaSymLotSize($symbol){
-        $lotSizeDat = ZerodhaInstrument::select('lot_size','tick_size')->where('trading_symbol',$symbol)->first();
-        if($lotSizeDat){
+        $data =  ZerodhaInstrument::select('trading_symbol as symbol_name','lot_size as lotsize','tick_size')->join('angel_api_instruments as zi','zi.token','exchange_token')->where('symbol_name',$symbol)->first();
+       if($data){
+            $tSize = $data->tick_size/100;
             return [
-                'lot_size'=>$lotSizeDat->lot_size,
-                'tick_size'=>$lotSizeDat->tick_size
+                'symbol'=> $data->symbol_name,
+                'lot_size'=>$data->lotsize,
+                'tick_size'=>$tSize
             ];
-        }
-        return [
-            'lot_size'=>null,
-            'tick_size'=>null
-        ];
+           
+       }
+       return [
+        'symbol'=>null,
+        'lot_size'=>null,
+        'tick_size'=>null,
+       ];
     }
 
-    public function callKiteApi($signalData,object $omsData){
+    public function callKiteApi(object $omsData){
         $mcxSymArr = ['CRUDEOIL','NATURALGAS','GOLD','SILVER'];
         $txnType = $omsData->txn_type;
+        $atmArr = [1,-1,0];
+        $todayDate = date("Y-m-d");
         $fData = [
             "exchange" => in_array($omsData->symbol_name,$mcxSymArr) ? "MCX" : "NFO",//crude oil,naturalgas,gold,silver--mcx .. remaining --NFO
             "transaction_type" => $txnType,
@@ -140,197 +146,135 @@ class OmsConfigCronOrder{
         $peLow = 0;
         $peClosePrice = 0;
         
-        foreach($signalData as $vvl){
-            $data = json_decode($vvl->data,true);
-            $datahigh_CE = array_reverse($data['high_CE']);
-            $datalow_CE = array_reverse($data['low_CE']);
-            $datahigh_PE = array_reverse($data['high_PE']);
-            $datalow_PE = array_reverse($data['low_PE']);
+        $dbTableName = strtolower($omsData->symbol_name);
+        $strtgName = strtolower($omsData->strategy_name);
 
-            $dataclose_CE = array_reverse($data['close_CE']);
-            $dataclose_PE = array_reverse($data['close_PE']);
-            $buyAct = array_reverse($data['BUY_Action']);
-            $sellAct = array_reverse($data['SELL_Action']);
-
-            $vwap_CE_signal = array_reverse($data['vwap_CE_signal']);
-            $vwap_PE_signal = array_reverse($data['vwap_PE_signal']);
-
-
-            if($vvl->ce==$omsData->ce_symbol_name){
-                foreach($sellAct as $k=>$v){
-                    $strtgName = strtolower($omsData->strategy_name);
-                    if(in_array($strtgName,['bullish','bearish'])){
-                        if((strtolower($vwap_CE_signal[$k])==$strtgName || strtolower($vwap_PE_signal[$k])==$strtgName)){
-                            // dd('matched');
-                            if((strtolower($vwap_CE_signal[$k])=='bullish' && strtolower($vwap_PE_signal[$k])=='bearish') || (strtolower($vwap_CE_signal[$k])=='bearish' && strtolower($vwap_PE_signal[$k])=='bullish')){
-                                $ceHigh = $datahigh_CE[$k];
-                                $ceLow = $datalow_CE[$k];
-                                $ceClosePrice = $dataclose_CE[$k];
-                                break;
-                            }
-                        }
-                    }else{
-                        if((strtolower($v)==$strtgName || strtolower($buyAct[$k])==$strtgName)){
-                            $ceHigh = $datahigh_CE[$k];
-                            $ceLow = $datalow_CE[$k];
-                            $ceClosePrice = $dataclose_CE[$k];
-                            break;
-                        }
-                    }
-                }
+        // get symbol high low
+        if(!is_null($omsData->ce_symbol_name)){
+            $highLowData = DB::table($dbTableName)->select('high_ce','low_ce','close_ce')->where('symbol_ce',$omsData->ce_symbol_name)->whereIn('atm',$atmArr)->whereDate('created_at',$todayDate)->orderBy('id','DESC')->first();
+            if($highLowData){
+                $ceHigh = $highLowData->high_ce;
+                $ceLow = $highLowData->low_ce;
+                $ceClosePrice = $highLowData->close_ce;
             }
-            if($vvl->pe==$omsData->pe_symbol_name){
-                foreach($sellAct as $k=>$v){
-                    $strtgName = strtolower($omsData->strategy_name);
-                    if(in_array($strtgName,['bullish','bearish'])){
-                        if((strtolower($vwap_CE_signal[$k])==$strtgName || strtolower($vwap_PE_signal[$k])==$strtgName)){
-                            if((strtolower($vwap_CE_signal[$k])=='bullish' && strtolower($vwap_PE_signal[$k])=='bearish') || (strtolower($vwap_CE_signal[$k])=='bearish' && strtolower($vwap_PE_signal[$k])=='bullish')){
-                                $peHigh = $datahigh_PE[$k];
-                                $peLow = $datalow_PE[$k];
-                                $peClosePrice = $dataclose_PE[$k];
-                                break;
-
-                            }
-                        }
-                    }else{
-                        if(strtolower($v)==strtolower($omsData->strategy_name) || strtolower($buyAct[$k])==strtolower($omsData->strategy_name)){
-                            $peHigh = $datahigh_PE[$k];
-                            $peLow = $datalow_PE[$k];
-                            $peClosePrice = $dataclose_PE[$k];
-                            break;
-                        }
-                    }
-
-                }
+        }else{
+            $highLowData = DB::table($dbTableName)->select('high_pe','low_pe','close_pe')->where('symbol_pe',$omsData->ce_symbol_name)->whereIn('atm',$atmArr)->whereDate('created_at',$todayDate)->orderBy('id','DESC')->first();
+            if($highLowData){
+                $peHigh = $highLowData->high_pe;
+                $peLow = $highLowData->low_pe;
+                $peClosePrice = $highLowData->close_pe;
             }
         }
 
-        foreach($signalData as $vvl){
-            if($breakForeach == 1){
-                break;
+        $tradeDeskData = null;
+
+        if(in_array($strtgName,['bullish','bearish'])){
+            if($omsData->ce_symbol_name!=null){
+                if($strtgName=='bullish'){
+                    $tradeDeskData = DB::table($dbTableName)->select('id','symbol_ce','symbol_pe','token_ce','token_pe','created_at')->where(['symbol_ce'=>$omsData->ce_symbol_name,'atm'=>0,'vmap_ce'=>'Bullish','vmap_pe'=>'Bearish'])->whereDate('created_at',$todayDate)->orderBy('id','DESC')->first();
+                }else{
+                    $tradeDeskData = DB::table($dbTableName)->select('id','symbol_ce','symbol_pe','token_ce','token_pe','created_at')->where(['symbol_ce'=>$omsData->ce_symbol_name,'atm'=>0,'vmap_pe'=>'Bullish','vmap_ce'=>'Bearish'])->whereDate('created_at',$todayDate)->orderBy('id','DESC')->first();
+                }
             }
-            $data = json_decode($vvl->data,true);
-            $strategyArr = array_slice($data['Strategy_name'],-1);
-            $buyActionArr = array_slice($data['BUY_Action'],-1);
-            $sellActionArr = array_slice($data['SELL_Action'],-1);
-            $timeActArr = array_slice($data['time'],-1);
-            $dateActArr = array_slice($data['Date'],-1);
 
-            $vwap_CE_signal = array_slice($data['vwap_CE_signal'],-1);
-                $vwap_PE_signal = array_slice($data['vwap_PE_signal'],-1);
-
-            foreach($strategyArr as $key=>$v){
-                // if(strtolower($v)==strtolower($omsData->strategy_name)){
-
-                $isPlaceOrderB = 0;
-                $strtgName = strtolower($omsData->strategy_name);
-                if(in_array($strtgName,['bullish','bearish'])){
-                    // dd(strtolower($vwap_PE_signal[$key]));
-                    if((strtolower($vwap_CE_signal[$key])=='bullish' && strtolower($vwap_PE_signal[$key])=='bearish') || (strtolower($vwap_CE_signal[$key])=='bearish' && strtolower($vwap_PE_signal[$key])=='bullish')){
-                        $isPlaceOrderB = 1;
-                    }
-                    if($isPlaceOrderB!=1){
-                        continue;
-                    }
+            if($omsData->pe_symbol_name!=null){
+                if($strtgName=='bullish'){
+                    $tradeDeskData = DB::table($dbTableName)->select('id','symbol_ce','symbol_pe','token_ce','token_pe','created_at')->where(['symbol_pe'=>$omsData->pe_symbol_name,'atm'=>0,'vmap_pe'=>'Bullish','vmap_ce'=>'Bearish'])->whereDate('created_at',$todayDate)->orderBy('id','DESC')->first();
+                }else{
+                    $tradeDeskData = DB::table($dbTableName)->select('id','symbol_ce','symbol_pe','token_ce','token_pe','created_at')->where(['symbol_pe'=>$omsData->ce_symbol_name,'atm'=>0,'vmap_ce'=>'Bullish','vmap_pe'=>'Bearish'])->whereDate('created_at',$todayDate)->orderBy('id','DESC')->first();
                 }
-                if((strtolower($buyActionArr[$key])==strtolower($omsData->strategy_name)) || (strtolower($sellActionArr[$key])==strtolower($omsData->strategy_name)) || $isPlaceOrderB==1){
-                    // $high = $highCEArr[$key];
-                    // $low = $lowCEArr[$key];
-                    // $closePrice = $closeCEArr[$key];
+            }
+        }else{
+            $tradeDeskData = DB::table($dbTableName)->select('id','symbol_ce','symbol_pe','token_ce','token_pe','created_at')->where(function($q) use($strtgName){
+                $q->where('oi_ce',$strtgName)->orWhere('oi_pe',$strtgName);
+            })->where('atm',0)->whereDate('created_at',$todayDate)->orderBy('id','DESC')->first();
+        }        
 
-                    $high =$ceHigh;
-                    $low = $ceLow;
-                    $closePrice = $ceClosePrice;
+        if($tradeDeskData){
+            //place orders
+            $timeFrmTm = $tradeDeskData->created_at;
+            $updateDb = 1;
+            
+            $high =$ceHigh;
+            $low = $ceLow;
+            $closePrice = $ceClosePrice;
 
+            $lotSizeArr = $this->getZerodhaSymLotSize($omsData->ce_symbol_name);
+            $lotSize = $lotSizeArr['lot_size'];
+            $tickSize = $lotSizeArr['tick_size'];
+            $fData["tradingsymbol"] = $lotSizeArr['symbol'];
 
-                    $dateStr = date("Y-m-d",($dateActArr[$key]/1000));
-
-                    $timeFrmTm = $dateStr." ".$timeActArr[$key];
-
-
-                    $fData["tradingsymbol"] = $omsData->ce_symbol_name;
-
-                   
-
-
-                    $lotSizeArr = $this->getZerodhaSymLotSize($omsData->ce_symbol_name);
-                    $lotSize = $lotSizeArr['lot_size'];
-                    $tickSize = $lotSizeArr['tick_size'];
-                    $updateDb = 1;
-                    if(!is_null($omsData->ce_pyramid_1)){
-                        if($omsData->order_type=="LIMIT"){ 
-                            $price =  $this->getCeLimitPrice($high,$low,38.20,$txnType,$closePrice,$tickSize);
-                            $fData['price'] = $price;
-                        }
-                       
-                       $fData['quantity'] = $omsData->ce_pyramid_1;
-                       $updateDb = $this->postPlaceOrder($omsData->broker,$fData);
-                    }
-                    if(!is_null($omsData->ce_pyramid_2)){
-                        //50%
-                        if($omsData->order_type=="LIMIT"){ 
-                            $price =  $this->getCeLimitPrice($high,$low,50,$txnType,$closePrice,$tickSize);
-                            $fData['price'] = $price;
-                        }
-                        $fData['quantity'] = $omsData->ce_pyramid_2;
-                        $updateDb = $this->postPlaceOrder($omsData->broker,$fData);
-                    }
-                    if(!is_null($omsData->ce_pyramid_3)){
-                        if($omsData->order_type=="LIMIT"){ 
-                            $price =  $this->getCeLimitPrice($high,$low,61.80,$txnType,$closePrice,$tickSize);
-                            $fData['price'] = $price;
-                        }
-                        $fData['quantity'] = $omsData->ce_pyramid_3;
-                        $updateDb = $this->postPlaceOrder($omsData->broker,$fData);
-                    }
-
-                    //
-                    $fData["tradingsymbol"] = $omsData->pe_symbol_name;
-                    
-                    $lotSizeArr = $this->getZerodhaSymLotSize($omsData->pe_symbol_name);
-                    $lotSize = $lotSizeArr['lot_size'];
-                    $tickSize = $lotSizeArr['tick_size'];
-
-
-                    $high =$peHigh;
-                    $low = $peLow;
-                    $closePrice = $peClosePrice;
-
-                    if(!is_null($omsData->pe_pyramid_1)){
-                        if($omsData->order_type=="LIMIT"){ 
-                            $price =  $this->getPeLimitPrice($high,$low,38.20,$txnType,$closePrice,$tickSize);
-                            $fData['price'] = $price;
-                        }
-                        $fData['quantity'] = $omsData->pe_pyramid_1;
-                        $updateDb = $this->postPlaceOrder($omsData->broker,$fData);
-                    }
-                    if(!is_null($omsData->pe_pyramid_2)){
-                        if($omsData->order_type=="LIMIT"){ 
-                            $price =  $this->getPeLimitPrice($high,$low,50,$txnType,$closePrice,$tickSize);
-                            $fData['price'] = $price;
-                        }
-                        $fData['quantity'] = $omsData->pe_pyramid_2;
-                        $updateDb = $this->postPlaceOrder($omsData->broker,$fData);
-                    }
-                    if(!is_null($omsData->pe_pyramid_3)){
-                        if($omsData->order_type=="LIMIT"){ 
-                            $price =  $this->getPeLimitPrice($high,$low,61.80,$txnType,$closePrice,$tickSize);
-                            $fData['price'] = $price;
-                        }
-                        $fData['quantity'] = $omsData->pe_pyramid_3;
-                        $updateDb = $this->postPlaceOrder($omsData->broker,$fData);
-                    }
-
-                    if($updateDb==1){
-                        OmsConfig::where("id",$omsData->id)->update([
-                            'is_api_pushed'=>1,
-                            'last_time'=>date("Y-m-d H:i",strtotime($timeFrmTm.' +5 minutes'))
-                        ]);
-                        $breakForeach = 1;
-                        break;
-                    }
-                    
+            if(!is_null($omsData->ce_pyramid_1)){
+                if($omsData->order_type=="LIMIT"){ 
+                    $price =  $this->getCeLimitPrice($high,$low,38.20,$txnType,$closePrice,$tickSize);
+                    $fData['price'] = $price;
                 }
+               
+               $fData['quantity'] = $omsData->ce_pyramid_1;
+               $updateDb = $this->postPlaceOrder($omsData->broker,$fData);
+            }
+            if(!is_null($omsData->ce_pyramid_2)){
+                //50%
+                if($omsData->order_type=="LIMIT"){ 
+                    $price =  $this->getCeLimitPrice($high,$low,50,$txnType,$closePrice,$tickSize);
+                    $fData['price'] = $price;
+                }
+                $fData['quantity'] = $omsData->ce_pyramid_2;
+                $updateDb = $this->postPlaceOrder($omsData->broker,$fData);
+            }
+            if(!is_null($omsData->ce_pyramid_3)){
+                if($omsData->order_type=="LIMIT"){ 
+                    $price =  $this->getCeLimitPrice($high,$low,61.80,$txnType,$closePrice,$tickSize);
+                    $fData['price'] = $price;
+                }
+                $fData['quantity'] = $omsData->ce_pyramid_3;
+                $updateDb = $this->postPlaceOrder($omsData->broker,$fData);
+            }
+
+
+           
+                    
+            $lotSizeArr = $this->getZerodhaSymLotSize($omsData->pe_symbol_name);
+            $lotSize = $lotSizeArr['lot_size'];
+            $tickSize = $lotSizeArr['tick_size'];
+            $fData["tradingsymbol"] = $lotSizeArr['symbol'];
+
+            $high =$peHigh;
+            $low = $peLow;
+            $closePrice = $peClosePrice;
+
+            if(!is_null($omsData->pe_pyramid_1)){
+                if($omsData->order_type=="LIMIT"){ 
+                    $price =  $this->getPeLimitPrice($high,$low,38.20,$txnType,$closePrice,$tickSize);
+                    $fData['price'] = $price;
+                }
+                $fData['quantity'] = $omsData->pe_pyramid_1;
+                $updateDb = $this->postPlaceOrder($omsData->broker,$fData);
+            }
+            if(!is_null($omsData->pe_pyramid_2)){
+                if($omsData->order_type=="LIMIT"){ 
+                    $price =  $this->getPeLimitPrice($high,$low,50,$txnType,$closePrice,$tickSize);
+                    $fData['price'] = $price;
+                }
+                $fData['quantity'] = $omsData->pe_pyramid_2;
+                $updateDb = $this->postPlaceOrder($omsData->broker,$fData);
+            }
+            if(!is_null($omsData->pe_pyramid_3)){
+                if($omsData->order_type=="LIMIT"){ 
+                    $price =  $this->getPeLimitPrice($high,$low,61.80,$txnType,$closePrice,$tickSize);
+                    $fData['price'] = $price;
+                }
+                $fData['quantity'] = $omsData->pe_pyramid_3;
+                $updateDb = $this->postPlaceOrder($omsData->broker,$fData);
+            }
+
+
+            if($updateDb==1){
+                OmsConfig::where("id",$omsData->id)->update([
+                    'is_api_pushed'=>1,
+                    'last_time'=>date("Y-m-d H:i",strtotime($timeFrmTm.' +1 minutes')),
+                    'last_id'=>$tradeDeskData->id
+                ]);                               
             }
         }
         OmsConfig::where("id",$omsData->id)->update([
@@ -678,7 +622,7 @@ class OmsConfigCronOrder{
         $omsDt->chunk(100, function($omgData){
             foreach ($omgData as $val) {
                 if($val->broker->client_type=="Zerodha"){
-                    // $this->callKiteApi($val);
+                    $this->callKiteApi($val);
                 }     
                 elseif($val->broker->client_type=="Angel"){
                     $this->callAngelApi($val);
