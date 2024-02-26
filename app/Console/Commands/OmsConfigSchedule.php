@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Helpers\OmsConfigCron;
+use App\Helpers\OmsConfigCronOrder;
 
 class OmsConfigSchedule extends Command
 {
@@ -34,6 +35,7 @@ class OmsConfigSchedule extends Command
         }
         
         $obj = new OmsConfigCron();
+        // $obj = new OmsConfigCronOrder();
         $obj->placeOrder();
     }
 }
