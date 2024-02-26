@@ -664,7 +664,8 @@ class UserController extends Controller
                 $response = curl_exec($curl);
                 curl_close($curl);
                 $dataArr = json_decode($response);
-                if($dataArr!=null && $dataArr->status==true){
+                // dd($dataArr);
+                if($dataArr!=null && isset($dataArr->status) &&  $dataArr->status==true){
                     if(!is_null($dataArr->data)){
                         foreach($dataArr->data as $vl){
                             $fDada[] = (object)[
