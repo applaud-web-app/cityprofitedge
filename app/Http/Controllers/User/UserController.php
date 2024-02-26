@@ -1115,13 +1115,13 @@ class UserController extends Controller
     }
 
     public function checkTradingSymbolExists($symbol){
-        if(!empty($symbol)){
-            $cnt = ZerodhaInstrument::where('trading_symbol',$symbol)->count();
-            if($cnt){
-                return true;
-            }
-            return false;
-        }
+        // if(!empty($symbol)){
+        //     $cnt = ZerodhaInstrument::where('trading_symbol',$symbol)->count();
+        //     if($cnt){
+        //         return true;
+        //     }
+        //     return false;
+        // }
         return true;
     }
 
