@@ -134,6 +134,7 @@ class CrudeoilCommand extends Command
                 return $errData;
             }
             $errData = json_decode($response,true);
+            // dd($errData);
             return $errData;
         }
         return $errData;
@@ -303,6 +304,7 @@ class CrudeoilCommand extends Command
                             if(!isset($ltpByApi['data'])){
                                 continue;
                             }
+                            // dd($ltpByApi);
                             $givenLtp = $ltpByApi['data']['ltp'];
                             $response = $this->getStrickData($nameVal,$exchangeVal,$givenLtp ,$i , $i);
                             $completeResponse[$response[0][1]] = $response[0][3];
@@ -313,7 +315,7 @@ class CrudeoilCommand extends Command
                     }
                 }
 
-                // dd($angleApiInstuments);
+                // dd($McxToken);
                 $LeftmarketData = Crudeoil::whereNotIn('token_ce',$McxToken)->orwhereNotIn('token_pe',$McxToken)->whereDate('created_at', '=', date('Y-m-d'))->groupBy('token_ce')->groupBy('token_pe')->get();
                 if($LeftmarketData != NULL){
                     foreach ($LeftmarketData as $k => $vl) {
@@ -349,6 +351,7 @@ class CrudeoilCommand extends Command
                 ];
 
                 $jwtToken =  $this->generate_access_token();
+                // dd($jwtToken);
                 $errData = [];
                 if($jwtToken!=null){
                     $curl = curl_init();
@@ -373,14 +376,15 @@ class CrudeoilCommand extends Command
                         'Authorization: Bearer '.$jwtToken
                     ),
                     ));
-
+                    // dd( curl_exec($curl));
                     $response = curl_exec($curl);
+                    // dd($response);
                     $err = curl_error($curl);
                     curl_close($curl);
                     if ($err) {
                         return $errData;
                     }
-
+                    // dd($response);
                     if($response != NULL){
                         $errData = json_decode($response,true);
                         if($errData != NULL){
@@ -393,6 +397,7 @@ class CrudeoilCommand extends Command
                                         // For Buy Signal
                                         $previousData = Crudeoil::where('symbol_ce',$value['symbolToken'])->orWhere('symbol_pe',$value['symbolToken'])->orderby('id','DESC')->first();
 
+                                        // dd($value['symbolToken']);
                                         $marketData = new Crudeoil;
                                         $atm = "";
                                         if (array_key_exists($value['symbolToken'], $completeResponse)) {
@@ -453,7 +458,6 @@ class CrudeoilCommand extends Command
                                             // array_push($allLtp_pe,$value['ltp']);
                                             // $res_pe[] =  $this->calculateSuperTrend($allLtp_pe,21,3);
                                             // $supertrend_pe = $res_pe[count($allLtp_pe)];
-
 
 
                                             // FOR CE
