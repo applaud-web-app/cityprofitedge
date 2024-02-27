@@ -313,7 +313,7 @@ class CrudeoilCommand extends Command
                     }
                 }
 
-                dd($angleApiInstuments);
+                // dd($angleApiInstuments);
                 $LeftmarketData = Crudeoil::whereNotIn('token_ce',$McxToken)->orwhereNotIn('token_pe',$McxToken)->whereDate('created_at', '=', date('Y-m-d'))->groupBy('token_ce')->groupBy('token_pe')->get();
                 if($LeftmarketData != NULL){
                     foreach ($LeftmarketData as $k => $vl) {
