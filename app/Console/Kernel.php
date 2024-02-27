@@ -28,11 +28,11 @@ class Kernel extends ConsoleKernel
 
         // New Crons
         $schedule->command('crudeoil:every_minute')->everyMinute()->sendOutputTo('command10_output.log');
-        $schedule->command('banknifty:every_minute')->everyMinute()->sendOutputTo('command11_output.log');
-        $schedule->command('finifty:every_minute')->everyMinute()->sendOutputTo('command12_output.log');
-        $schedule->command('naturalgas:every_minute')->everyMinute()->sendOutputTo('command13_output.log');
-        $schedule->command('nifty:every_minute')->everyMinute()->sendOutputTo('command14_output.log');
-        $schedule->command('midcpnifty:every_minute')->everyMinute()->sendOutputTo('command15_output.log');
+        // $schedule->command('banknifty:every_minute')->everyMinute()->sendOutputTo('command11_output.log');
+        // $schedule->command('finifty:every_minute')->everyMinute()->sendOutputTo('command12_output.log');
+        // $schedule->command('naturalgas:every_minute')->everyMinute()->sendOutputTo('command13_output.log');
+        // $schedule->command('nifty:every_minute')->everyMinute()->sendOutputTo('command14_output.log');
+        // $schedule->command('midcpnifty:every_minute')->everyMinute()->sendOutputTo('command15_output.log');
 
     }
 
