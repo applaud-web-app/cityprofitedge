@@ -288,7 +288,9 @@ class CrudeoilCommand extends Command
                 $completeResponse = [];
                 $angleApiInstuments = AngelApiInstrument::Where('name',$acceptedSymbols)->where(function ($query) {
                     $query->where('instrumenttype', '=', 'AMXIDX')->orWhere('instrumenttype', '=', 'COMDTY');
-                })->whereDay('created_at', now()->day)->orderBY('id','DESC')->first();
+                })->whereDay('created_at', now()->day)->first();
+
+                // dd($angleApiInstuments);
                 if($angleApiInstuments != NULL){
                     if($angleApiInstuments->exch_seg == "MCX"){
                         for ($i=(-$symbol_range); $i <= $symbol_range ; $i++) { 
@@ -311,6 +313,7 @@ class CrudeoilCommand extends Command
                     }
                 }
 
+                dd($angleApiInstuments);
                 $LeftmarketData = Crudeoil::whereNotIn('token_ce',$McxToken)->orwhereNotIn('token_pe',$McxToken)->whereDate('created_at', '=', date('Y-m-d'))->groupBy('token_ce')->groupBy('token_pe')->get();
                 if($LeftmarketData != NULL){
                     foreach ($LeftmarketData as $k => $vl) {

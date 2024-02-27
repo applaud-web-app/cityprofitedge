@@ -223,7 +223,7 @@ class MidcpNiftyCommand extends Command
                 $completeResponse = [];
                 $angleApiInstuments = AngelApiInstrument::Where('name',$acceptedSymbols)->where(function ($query) {
                     $query->where('instrumenttype', '=', 'AMXIDX')->orWhere('instrumenttype', '=', 'COMDTY');
-                })->whereDay('created_at', now()->day)->orderBY('id','DESC')->first();
+                })->whereDay('created_at', now()->day)->first();
 
                 // For NSE Exch Records
                 if($angleApiInstuments != NULL){
