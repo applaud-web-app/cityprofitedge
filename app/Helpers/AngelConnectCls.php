@@ -67,12 +67,17 @@ class AngelConnectCls{
                     return null;
                 }
                 $dataArr = json_decode($response);
-                return [
-                    'token'=>$dataArr->data->jwtToken,
-                    'clientLocalIp'=>$this->clientLocalIp,
-                    'clientPublicIp'=>$this->clientPublicIp,
-                    'macAddress'=>$this->macAddress
-                ];
+
+                if(isset($dataArr->status) && $dataArr->status==true){
+                    return [
+                        'token'=>$dataArr->data->jwtToken,
+                        'clientLocalIp'=>$this->clientLocalIp,
+                        'clientPublicIp'=>$this->clientPublicIp,
+                        'macAddress'=>$this->macAddress
+                    ];
+                }
+                return null;
+                
             });
             return $data;
         } catch (Exception $ex) {
