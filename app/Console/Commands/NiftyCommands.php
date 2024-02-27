@@ -116,7 +116,7 @@ class NiftyCommands extends Command
         $upcoming_exp_date = "";
         foreach ($final_expiry as $expiry) {
             $datetime_object = date($expiry);
-            if ($datetime_object > $current_date) {
+            if (strtotime($datetime_object) > strtotime($current_date)) {
                 if ($current_year == date("Y", strtotime($datetime_object))) {
                     if ($current_month == date("m", strtotime($datetime_object))) {
                         $upcoming_exp_date = $datetime_object;
