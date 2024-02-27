@@ -134,8 +134,8 @@
                                                 <td>{{$val->vmap_pe}}</td>
                                                 <td>{{$val->vmap_ce}}</td>
                                                 <td>{{$val->vmap_pe}}</td>
-                                                <td>{{$val->close_ce}}</td>
-                                                <td>{{$val->close_pe}}</td>
+                                                <td>{{$val->ltp_ce}}</td>
+                                                <td>{{$val->ltp_pe}}</td>
                                                 <td>{{"BUY CE"}}</td>
                                                 <td>{{"SELL PE"}}</td>
                                                 <td>{{"LONG CE, SHORT PE"}}</td>
