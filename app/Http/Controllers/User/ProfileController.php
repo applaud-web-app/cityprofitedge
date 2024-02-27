@@ -131,6 +131,7 @@ class ProfileController extends Controller
             }
             if($filtered==0){
                 $finalD = [];
+                // dd($dataFetch);
                 foreach($dataFetch as $val){
                     $finalD[] = (object)[
                         'date'=>date("d-M-Y",strtotime($val->exchFeedTime_ce)),
