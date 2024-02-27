@@ -60,32 +60,95 @@ class CrudeoilCommand extends Command
     }
 
     // Function to calculate SuperTrend bands and signals
+    // function calculateSuperTrend($ltpData, $period, $multiplier) {
+    //     $signals = array(); // Array to store buy/sell signals
+    //     $ub = 0; // Initial Upper Band
+    //     $lb = 0; // Initial Lower Band
+    //     foreach ($ltpData as $index => $ltp) {
+    //         if ($index >= $period) {
+    //             $atr = $this->calculateATR(array_slice($ltpData, $index - $period, $period), $period);
+    //             if ($index == $period) {
+    //                 $ub = $ltp["high"] + ($multiplier * $atr);
+    //                 $lb = $ltp["low"] - ($multiplier * $atr);
+    //             } else {
+    //                 $ub = min($ltp["high"] + ($multiplier * $atr), $ub);
+    //                 $lb = max($ltp["low"] - ($multiplier * $atr), $lb);
+    //             }
+    //             if ($ltp["close"] > $ub) {
+    //                 $signals[] = "Buy"; // Generate Buy Signal
+    //             } elseif ($ltp["close"] < $lb) {
+    //                 $signals[] = "Sell"; // Generate Sell Signal
+    //             } else {
+    //                 $signals[] = "Hold"; // No Signal
+    //             }
+    //         } else {
+    //             $signals[] = "Hold"; // No Signal during initialization period
+    //         }
+    //     }
+
+    //     return $signals;
+    // }
+
     function calculateSuperTrend($ltpData, $period, $multiplier) {
         $signals = array(); // Array to store buy/sell signals
-        $ub = 0; // Initial Upper Band
-        $lb = 0; // Initial Lower Band
+        $previousClose = 0;
+        $previousFinalUpperBand = 0;
+        $previousFinalLowerBand = 0;
+        $finalUpperBand = 0;
+        $finalLowerBand = 0;
+        $previousSuperTrend = 0;
+        $superTrend = 0;
         foreach ($ltpData as $index => $ltp) {
             if ($index >= $period) {
+                // For ATR
                 $atr = $this->calculateATR(array_slice($ltpData, $index - $period, $period), $period);
-                if ($index == $period) {
-                    $ub = $ltp["high"] + ($multiplier * $atr);
-                    $lb = $ltp["low"] - ($multiplier * $atr);
+
+                // BASIC UPPER & LOWER BAND
+                $basicUpperBand = ($ltp["high"] + $ltp["low"]) / 2 + ($multiplier * $atr);
+                $basicLowerBand = ($ltp["high"] + $ltp["low"]) / 2 - ($multiplier * $atr);
+
+                // FINAL UPPER & LOWER BAND
+                if (($basicUpperBand < $previousFinalUpperBand) || ($previousClose > $previousFinalUpperBand)) {
+                    $finalUpperBand = $basicUpperBand;
                 } else {
-                    $ub = min($ltp["high"] + ($multiplier * $atr), $ub);
-                    $lb = max($ltp["low"] - ($multiplier * $atr), $lb);
+                    $finalUpperBand = $previousFinalUpperBand;
                 }
-                if ($ltp["close"] > $ub) {
-                    $signals[] = "Buy"; // Generate Buy Signal
-                } elseif ($ltp["close"] < $lb) {
-                    $signals[] = "Sell"; // Generate Sell Signal
+                
+                if (($basicLowerBand > $previousFinalLowerBand) || ($previousClose < $previousFinalLowerBand)) {
+                    $finalLowerBand = $basicLowerBand;
                 } else {
-                    $signals[] = "Hold"; // No Signal
+                    $finalLowerBand = $previousFinalLowerBand;
+                }   
+
+                if(($previousSuperTrend == $previousFinalUpperBand) && ($ltp["close"] <= $finalUpperBand)){
+                    $superTrend = $finalUpperBand;
+                }else{
+                    if(($previousSuperTrend == $previousFinalUpperBand) && ($ltp["close"] > $finalUpperBand)){
+                        $superTrend = $finalLowerBand;
+                    }else{
+                        if(($previousSuperTrend == $previousFinalLowerBand) && ($ltp["close"] >= $finalLowerBand)){
+                            $superTrend = $finalLowerBand;
+                        }else{
+                            if(($previousSuperTrend == $previousFinalLowerBand) && ($ltp["close"] < $finalLowerBand)){
+                                $superTrend = $finalLowerBand;
+                            }
+                        }
+                    }
+                }
+
+                if($ltp["close"] > $superTrend){
+                    $signals[] = "Buy";
+                }else{
+                    $signals[] = "Sell";
                 }
             } else {
                 $signals[] = "Hold"; // No Signal during initialization period
             }
+            $previousSuperTrend = $superTrend;
+            $previousFinalUpperBand = $finalUpperBand;
+            $previousFinalLowerBand = $finalLowerBand;
+            $previousClose = $ltp["close"];
         }
-
         return $signals;
     }
 
@@ -382,9 +445,7 @@ class CrudeoilCommand extends Command
                                 foreach ($result as $key => $value) {
                                     if(!in_array($value['symbolToken'],$passedSymbols)){
                                         // For Buy Signal
-                                        $previousData = Crudeoil::where('symbol_ce',$value['symbolToken'])->orWhere('symbol_pe',$value['symbolToken'])->orderby('id','DESC')->first();
-
-                                     
+                                        $previousData = Crudeoil::where('symbol_ce',$value['symbolToken'])->orWhere('symbol_pe',$value['symbolToken'])->orderby('id','DESC')->first();                                     
                                         $marketData = new Crudeoil;
                                         $atm = "";
                                         if (array_key_exists($value['symbolToken'], $completeResponse)) {
@@ -442,7 +503,9 @@ class CrudeoilCommand extends Command
                                             ];
                                             array_push($allLtp_ce,$latestData_ce);
                                             $res_ce[] =  $this->calculateSuperTrend($allLtp_ce,21,3);
-                                            $supertrend_ce = json_encode($res_ce);
+                                            $ce_super = array_slice($res_ce[0],-1);
+                                            dd($ce_super);
+                                            $supertrend_ce = $ce_super[0];
 
                                             // FOR PE
                                             $allLtp_pe = Crudeoil::select('ltp_pe as ltp','high_pe as high','low_pe as low','close_pe as close')->Where('symbol_pe',$value['tradingSymbol'])->get()->toArray();
@@ -454,7 +517,8 @@ class CrudeoilCommand extends Command
                                             ];
                                             array_push($allLtp_pe,$latestData_pe);
                                             $res_pe[] =  $this->calculateSuperTrend($allLtp_pe,21,3);
-                                            $supertrend_pe = json_encode($res_pe);
+                                            $pe_super = array_slice($res_pe[0],-1);
+                                            $supertrend_pe = $pe_super[0];
                                             
 
                                             // For BUY PRICE 
@@ -584,7 +648,8 @@ class CrudeoilCommand extends Command
                                             ];
                                             array_push($allLtp_ce,$latestData_ce);
                                             $res_ce[] =  $this->calculateSuperTrend($allLtp_ce,21,3);
-                                            $supertrend_ce = json_encode($res_ce);
+                                            $ce_super = array_slice($res_ce[0],-1);
+                                            $supertrend_ce = $ce_super[0];
 
                                             // FOR PE
                                             $allLtp_pe = Crudeoil::select('ltp_pe as ltp','high_pe as high','low_pe as low','close_pe as close')->Where('symbol_pe',$result[$symbolSibling]['tradingSymbol'])->get()->toArray();
@@ -596,7 +661,8 @@ class CrudeoilCommand extends Command
                                             ];
                                             array_push($allLtp_pe,$latestData_pe);
                                             $res_pe[] =  $this->calculateSuperTrend($allLtp_pe,21,3);
-                                            $supertrend_pe = json_encode($res_pe);
+                                            $pe_super = array_slice($res_pe[0],-1);
+                                            $supertrend_pe = $pe_super[0];
 
                                             // For BUY PRICE 
                                             $currentOI_ce = $value['opnInterest'];
