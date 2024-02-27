@@ -231,40 +231,43 @@ class BankNiftyCommand extends Command
                 })->whereDay('created_at', now()->day)->orderBY('id','DESC')->first();
 
                 // For NSE Exch Records
-                if($angleApiInstuments->exch_seg == "NSE"){
-                    $exchangeVal = $angleApiInstuments->exch_seg;
-                    $tokenVal = $angleApiInstuments->token;
-                    $nameVal = $angleApiInstuments->name;
-                    $ltpByApi = $this->getLTP($exchangeVal,$nameVal,$tokenVal);
-                    $givenLtp = $ltpByApi['data']['ltp'];
-                    $expiry_dates = $this->get_upcoming_expiry($nameVal,$exchangeVal);
-                    for ($i=(-$symbol_range); $i <= $symbol_range ; $i++) { 
-                        $response = $this->get_atm_strike_symbol_angel($givenLtp ,$nameVal, $nameVal , $exchangeVal , $expiry_dates, $i , $i);
-                        $completeResponse[$response[0][1]] = $response[0][2];
-                        $completeResponse[$response[1][1]] = $response[1][2];
-                        array_push($NfoToken,$response[0][1]);
-                        array_push($NfoToken,$response[1][1]);
+                if($angleApiInstuments != NULL){
+                    if($angleApiInstuments->exch_seg == "NSE"){
+                        $exchangeVal = $angleApiInstuments->exch_seg;
+                        $tokenVal = $angleApiInstuments->token;
+                        $nameVal = $angleApiInstuments->name;
+                        $ltpByApi = $this->getLTP($exchangeVal,$nameVal,$tokenVal);
+                        $givenLtp = $ltpByApi['data']['ltp'];
+                        $expiry_dates = $this->get_upcoming_expiry($nameVal,$exchangeVal);
+                        for ($i=(-$symbol_range); $i <= $symbol_range ; $i++) { 
+                            $response = $this->get_atm_strike_symbol_angel($givenLtp ,$nameVal, $nameVal , $exchangeVal , $expiry_dates, $i , $i);
+                            $completeResponse[$response[0][1]] = $response[0][2];
+                            $completeResponse[$response[1][1]] = $response[1][2];
+                            array_push($NfoToken,$response[0][1]);
+                            array_push($NfoToken,$response[1][1]);
+                        }
                     }
                 }
                 
                 $LeftmarketData = BankNifty::whereNotIn('token_ce',$NfoToken)->orwhereNotIn('token_pe',$NfoToken)->whereDate('created_at', '=', date('Y-m-d'))->groupBy('token_ce')->groupBy('token_pe')->get();
 
-                if(count($LeftmarketData)){
+                if($LeftmarketData != NULL){
                     foreach ($LeftmarketData as $k => $vl) {
                         if($vl->exhange == "NFO"){
                             $angelData = AngelApiInstrument::where('token',$vl->token)->first();
-                            $exchangeVal = $angelData->exch_seg;
-                            $tokenVal = $angelData->token;
-                            $nameVal = $angelData->name;
-                            $ltpByApi = $this->getLTP($exchangeVal,$nameVal,$tokenVal);
-                            $givenLtp = $ltpByApi['data']['ltp'];
-                            $expiry_dates = $this->get_upcoming_expiry($nameVal,$exchangeVal);
-                            for ($i=(-$symbol_range); $i <= $symbol_range ; $i++) { 
-                                $response = $this->get_atm_strike_symbol_angel($givenLtp ,$nameVal, $nameVal , $exchangeVal , $expiry_dates, $i , $i);
-                                $completeResponse[$response[0][1]] = $response[0][2];
-                                $completeResponse[$response[1][1]] = $response[1][2];
-                                array_push($NfoToken,$response[0][1]);
-                                array_push($NfoToken,$response[1][1]);
+                            if($angelData != NULL){$exchangeVal = $angelData->exch_seg;
+                                $tokenVal = $angelData->token;
+                                $nameVal = $angelData->name;
+                                $ltpByApi = $this->getLTP($exchangeVal,$nameVal,$tokenVal);
+                                $givenLtp = $ltpByApi['data']['ltp'];
+                                $expiry_dates = $this->get_upcoming_expiry($nameVal,$exchangeVal);
+                                for ($i=(-$symbol_range); $i <= $symbol_range ; $i++) { 
+                                    $response = $this->get_atm_strike_symbol_angel($givenLtp ,$nameVal, $nameVal , $exchangeVal , $expiry_dates, $i , $i);
+                                    $completeResponse[$response[0][1]] = $response[0][2];
+                                    $completeResponse[$response[1][1]] = $response[1][2];
+                                    array_push($NfoToken,$response[0][1]);
+                                    array_push($NfoToken,$response[1][1]);
+                                }
                             }
                         }
                     }

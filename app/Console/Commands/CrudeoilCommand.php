@@ -289,36 +289,13 @@ class CrudeoilCommand extends Command
                 $angleApiInstuments = AngelApiInstrument::Where('name',$acceptedSymbols)->where(function ($query) {
                     $query->where('instrumenttype', '=', 'AMXIDX')->orWhere('instrumenttype', '=', 'COMDTY');
                 })->whereDay('created_at', now()->day)->orderBY('id','DESC')->first();
-                
-                if($angleApiInstuments->exch_seg == "MCX"){
-                    for ($i=(-$symbol_range); $i <= $symbol_range ; $i++) { 
-                        $exchangeVal = $angleApiInstuments->exch_seg;
-                        $tokenVal = $angleApiInstuments->token;
-                        $nameVal = $angleApiInstuments->name;
-
-                        // GET LTP by Angle Api
-                        $ltpByApi = $this->getLTP($exchangeVal,$nameVal,$tokenVal);
-                        if(!isset($ltpByApi['data'])){
-                            continue;
-                        }
-                        $givenLtp = $ltpByApi['data']['ltp'];
-                        $response = $this->getStrickData($nameVal,$exchangeVal,$givenLtp ,$i , $i);
-                        $completeResponse[$response[0][1]] = $response[0][3];
-                        $completeResponse[$response[1][1]] = $response[1][3];
-                        array_push($McxToken,$response[0][1]);
-                        array_push($McxToken,$response[1][1]);
-                    }
-                }
-
-                $LeftmarketData = Crudeoil::whereNotIn('token_ce',$McxToken)->orwhereNotIn('token_pe',$McxToken)->whereDate('created_at', '=', date('Y-m-d'))->groupBy('token_ce')->groupBy('token_pe')->get();
-
-                if(count($LeftmarketData)){
-                    foreach ($LeftmarketData as $k => $vl) {
-                        $angelData = AngelApiInstrument::where('token',$vl->token)->first();
+                if($angleApiInstuments != NULL){
+                    if($angleApiInstuments->exch_seg == "MCX"){
                         for ($i=(-$symbol_range); $i <= $symbol_range ; $i++) { 
-                            $exchangeVal = $angelData->exch_seg;
-                            $tokenVal = $angelData->token;
-                            $nameVal = $angelData->name;
+                            $exchangeVal = $angleApiInstuments->exch_seg;
+                            $tokenVal = $angleApiInstuments->token;
+                            $nameVal = $angleApiInstuments->name;
+    
                             // GET LTP by Angle Api
                             $ltpByApi = $this->getLTP($exchangeVal,$nameVal,$tokenVal);
                             if(!isset($ltpByApi['data'])){
@@ -328,9 +305,35 @@ class CrudeoilCommand extends Command
                             $response = $this->getStrickData($nameVal,$exchangeVal,$givenLtp ,$i , $i);
                             $completeResponse[$response[0][1]] = $response[0][3];
                             $completeResponse[$response[1][1]] = $response[1][3];
-
                             array_push($McxToken,$response[0][1]);
                             array_push($McxToken,$response[1][1]);
+                        }
+                    }
+                }
+
+                $LeftmarketData = Crudeoil::whereNotIn('token_ce',$McxToken)->orwhereNotIn('token_pe',$McxToken)->whereDate('created_at', '=', date('Y-m-d'))->groupBy('token_ce')->groupBy('token_pe')->get();
+                if($LeftmarketData != NULL){
+                    foreach ($LeftmarketData as $k => $vl) {
+                        $angelData = AngelApiInstrument::where('token',$vl->token)->first();
+                        if($angelData != NULL){
+                            for ($i=(-$symbol_range); $i <= $symbol_range ; $i++) { 
+                                $exchangeVal = $angelData->exch_seg;
+                                $tokenVal = $angelData->token;
+                                $nameVal = $angelData->name;
+                                // GET LTP by Angle Api
+                                $ltpByApi = $this->getLTP($exchangeVal,$nameVal,$tokenVal);
+                                if(!isset($ltpByApi['data'])){
+                                    continue;
+                                }
+                                $givenLtp = $ltpByApi['data']['ltp'];
+                                $response = $this->getStrickData($nameVal,$exchangeVal,$givenLtp ,$i , $i);
+                                $completeResponse[$response[0][1]] = $response[0][3];
+                                $completeResponse[$response[1][1]] = $response[1][3];
+    
+                                array_push($McxToken,$response[0][1]);
+                                array_push($McxToken,$response[1][1]);
+                            }
+
                         }
                     }
                 }
@@ -384,7 +387,6 @@ class CrudeoilCommand extends Command
                                 $passedSymbols = [];
                                 foreach ($result as $key => $value) {
                                     if(!in_array($value['symbolToken'],$passedSymbols)){
-
                                         // For Buy Signal
                                         $previousData = Crudeoil::where('symbol_ce',$value['symbolToken'])->orWhere('symbol_pe',$value['symbolToken'])->orderby('id','DESC')->first();
 
