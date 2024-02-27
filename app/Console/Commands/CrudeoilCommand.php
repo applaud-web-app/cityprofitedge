@@ -301,7 +301,7 @@ class CrudeoilCommand extends Command
     
                             // GET LTP by Angle Api
                             $ltpByApi = $this->getLTP($exchangeVal,$nameVal,$tokenVal);
-                            dd($ltpByApi);
+                            // dd($ltpByApi);
                             if($ltpByApi['status'] == true){
                                 $givenLtp = $ltpByApi['data']['ltp'];
                             }else{
@@ -446,21 +446,6 @@ class CrudeoilCommand extends Command
 
                                             array_push($passedSymbols,$value['symbolToken']);
                                             array_push($passedSymbols,$result[$symbolSibling]['symbolToken']);
-
-
-                                            // FOR CE
-                                            // $allLtp_ce = Crudeoil::select('ltp_ce','high_ce','low_ce','close_ce')->Where('symbol_ce',$result[$symbolSibling]['tradingSymbol'])->get()->toArray();
-                                            // dd($allLtp_ce);
-                                            // array_push($allLtp_ce,$result[$symbolSibling]['ltp']);
-                                            // $res_ce[] =  $this->calculateSuperTrend($allLtp_ce,21,3);
-                                            // $supertrend_ce = $res_ce[count($allLtp_ce)];
-
-                                            // // FOR PE
-                                            // $allLtp_pe = Crudeoil::Where('symbol_pe',$value['tradingSymbol'])->pluck('ltp_pe')->toArray();
-                                            // array_push($allLtp_pe,$value['ltp']);
-                                            // $res_pe[] =  $this->calculateSuperTrend($allLtp_pe,21,3);
-                                            // $supertrend_pe = $res_pe[count($allLtp_pe)];
-
 
                                             // FOR CE
                                             $allLtp_ce = Crudeoil::select('ltp_ce as ltp','high_ce as high','low_ce as low','close_ce as close')->Where('symbol_ce',$result[$symbolSibling]['tradingSymbol'])->get()->toArray();
