@@ -117,7 +117,7 @@ class FinNiftyCommand extends Command
         $upcoming_exp_date = "";
         foreach ($final_expiry as $expiry) {
             $datetime_object = date($expiry);
-            if ($datetime_object > $current_date) {
+            if (strtotime($datetime_object) > strtotime($current_date)) {
                 if ($current_year == date("Y", strtotime($datetime_object))) {
                     if ($current_month == date("m", strtotime($datetime_object))) {
                         $upcoming_exp_date = $datetime_object;
@@ -157,6 +157,8 @@ class FinNiftyCommand extends Command
             return $y;
         }, $angleData);
 
+        // dd($filters);
+
         try {
             $index_row = AngelApiInstrument::Where('name',$symbol_name)->where('exch_seg','NSE')->whereDay('created_at', now()->day)->get()->toArray();
             $index_token = $index_row[0]['token'];
@@ -164,20 +166,27 @@ class FinNiftyCommand extends Command
             error_log($e->getMessage());
         }
 
+        // dd($index_row);
+
         if ($exchange_name == 'NSE') {
             $exchange_name = 'NFO';
         }
 
+        // dd( $filters,$symbol_name,$exchange_name,$expiry_dates);
         $filters = array_values(array_filter($filters, function($x) use($symbol_name,$exchange_name,$expiry_dates) {
             if(($x['name'] == $symbol_name) && ($x["exch_seg"] == $exchange_name) && ($x['expiry'] <= strtotime($expiry_dates[1])) && ($x['expiry'] >= strtotime($expiry_dates[0]))){
                 return $x;
             }
         }));
+
+        // dd($filters);
        
         $filters = array_map(function ($y) {
             $y['strike'] = ($y['strike'] / 100);
             return $y;
         }, $filters);
+
+        // dd($filters);
 
         try {
             $ce_filters = array_values(array_filter($filters, function($x) use($expiry_dates,$rounded_price_ce) {
@@ -186,6 +195,7 @@ class FinNiftyCommand extends Command
                 }
             }));
          
+            // dd($ce_filters);
             $ce_symbol = $ce_filters[0]["symbol_name"];
             $ce_instrument_token = $ce_filters[0]["token"];
 

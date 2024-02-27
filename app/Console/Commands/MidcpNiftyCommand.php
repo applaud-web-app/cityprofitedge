@@ -117,7 +117,9 @@ class MidcpNiftyCommand extends Command
         $upcoming_exp_date = "";
         foreach ($final_expiry as $expiry) {
             $datetime_object = date($expiry);
-            if ($datetime_object > $current_date) {
+            // dd($datetime_object,$current_date);
+            if (strtotime($datetime_object) > strtotime($current_date)) {
+                // dd($datetime_object,$current_date);
                 if ($current_year == date("Y", strtotime($datetime_object))) {
                     if ($current_month == date("m", strtotime($datetime_object))) {
                         $upcoming_exp_date = $datetime_object;
@@ -185,7 +187,7 @@ class MidcpNiftyCommand extends Command
                     return $x;
                 }
             }));
-         
+          
             $ce_symbol = $ce_filters[0]["symbol_name"];
             $ce_instrument_token = $ce_filters[0]["token"];
 
@@ -194,6 +196,8 @@ class MidcpNiftyCommand extends Command
                     return $x;
                 }
             }));
+
+           
 
             $pe_symbol = $pe_filters[0]["symbol_name"];
             $pe_instrument_token = $pe_filters[0]["token"];
@@ -225,6 +229,7 @@ class MidcpNiftyCommand extends Command
                     $query->where('instrumenttype', '=', 'AMXIDX')->orWhere('instrumenttype', '=', 'COMDTY');
                 })->whereDay('created_at', now()->day)->first();
 
+                // dd($angleApiInstuments);
                 // For NSE Exch Records
                 if($angleApiInstuments != NULL){
                     if($angleApiInstuments->exch_seg == "NSE"){
@@ -234,6 +239,7 @@ class MidcpNiftyCommand extends Command
                         $ltpByApi = $this->getLTP($exchangeVal,$nameVal,$tokenVal);
                         $givenLtp = $ltpByApi['data']['ltp'];
                         $expiry_dates = $this->get_upcoming_expiry($nameVal,$exchangeVal);
+                        // dd($expiry_dates);
                         for ($i=(-$symbol_range); $i <= $symbol_range ; $i++) { 
                             $response = $this->get_atm_strike_symbol_angel($givenLtp ,$nameVal, $nameVal , $exchangeVal , $expiry_dates, $i , $i);
                             $completeResponse[$response[0][1]] = $response[0][2];

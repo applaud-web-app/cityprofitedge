@@ -48,18 +48,15 @@ class CrudeoilCommand extends Command
     
     // Function to calculate Average True Range (ATR)
     function calculateATR($ltpData, $period) {
-        // dd();
         // Calculate True Range (TR) for each period
         $trueRanges = array();
         for ($i = 1; $i < count($ltpData); $i++) {
-            // dd($ltpData[$i]);
             $trueRanges[] = max($ltpData[$i]["high"] - $ltpData[$i]["low"], abs($ltpData[$i]["high"] - $ltpData[$i - 1]["close"]), abs($ltpData[$i]["low"] - $ltpData[$i - 1]["close"]));
         }
         // Calculate Average True Range (ATR) over the period
         $atr = array_sum(array_slice($trueRanges, 0, $period)) / $period;
         return $atr;
 
-        // dd($atr);
     }
 
     // Function to calculate SuperTrend bands and signals
@@ -68,9 +65,6 @@ class CrudeoilCommand extends Command
         $ub = 0; // Initial Upper Band
         $lb = 0; // Initial Lower Band
         foreach ($ltpData as $index => $ltp) {
-            // dd(array_slice($ltpData, $index - $period, $period));
-            // $atr = $this->calculateATR(array_slice($ltpData, $index - $period, $period), $period);
-            // dd($atr);
             if ($index >= $period) {
                 $atr = $this->calculateATR(array_slice($ltpData, $index - $period, $period), $period);
                 if ($index == $period) {
@@ -134,7 +128,6 @@ class CrudeoilCommand extends Command
                 return $errData;
             }
             $errData = json_decode($response,true);
-            // dd($errData);
             return $errData;
         }
         return $errData;
@@ -290,8 +283,6 @@ class CrudeoilCommand extends Command
                 $angleApiInstuments = AngelApiInstrument::Where('name',$acceptedSymbols)->where(function ($query) {
                     $query->where('instrumenttype', '=', 'AMXIDX')->orWhere('instrumenttype', '=', 'COMDTY');
                 })->whereDay('created_at', now()->day)->first();
-
-                // dd($angleApiInstuments);
                 if($angleApiInstuments != NULL){
                     if($angleApiInstuments->exch_seg == "MCX"){
                         for ($i=(-$symbol_range); $i <= $symbol_range ; $i++) { 
@@ -301,7 +292,6 @@ class CrudeoilCommand extends Command
     
                             // GET LTP by Angle Api
                             $ltpByApi = $this->getLTP($exchangeVal,$nameVal,$tokenVal);
-                            // dd($ltpByApi);
                             if($ltpByApi['status'] == true){
                                 $givenLtp = $ltpByApi['data']['ltp'];
                             }else{
@@ -316,7 +306,6 @@ class CrudeoilCommand extends Command
                     }
                 }
 
-                // dd($McxToken);
                 $LeftmarketData = Crudeoil::whereNotIn('token_ce',$McxToken)->orwhereNotIn('token_pe',$McxToken)->whereDate('created_at', '=', date('Y-m-d'))->groupBy('token_ce')->groupBy('token_pe')->get();
                 if($LeftmarketData != NULL){
                     foreach ($LeftmarketData as $k => $vl) {
@@ -353,7 +342,6 @@ class CrudeoilCommand extends Command
                 ];
 
                 $jwtToken =  $this->generate_access_token();
-                // dd($jwtToken);
                 $errData = [];
                 if($jwtToken!=null){
                     $curl = curl_init();
@@ -378,15 +366,12 @@ class CrudeoilCommand extends Command
                         'Authorization: Bearer '.$jwtToken
                     ),
                     ));
-                    // dd( curl_exec($curl));
                     $response = curl_exec($curl);
-                    // dd($response);
                     $err = curl_error($curl);
                     curl_close($curl);
                     if ($err) {
                         return $errData;
                     }
-                    // dd($response);
                     if($response != NULL){
                         $errData = json_decode($response,true);
                         if($errData != NULL){
@@ -399,7 +384,7 @@ class CrudeoilCommand extends Command
                                         // For Buy Signal
                                         $previousData = Crudeoil::where('symbol_ce',$value['symbolToken'])->orWhere('symbol_pe',$value['symbolToken'])->orderby('id','DESC')->first();
 
-                                        // dd($value['symbolToken']);
+                                     
                                         $marketData = new Crudeoil;
                                         $atm = "";
                                         if (array_key_exists($value['symbolToken'], $completeResponse)) {
@@ -753,7 +738,7 @@ class CrudeoilCommand extends Command
                                     // $marketData->vmap_pe = $vmap;
                                     // $marketData->save();
                                 }
-                                // dd($passedSymbols);
+                            
                             }
                         }
                     }
