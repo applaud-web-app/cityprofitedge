@@ -632,62 +632,68 @@ class UserController extends Controller
                 ];
                 $angelObj = new AngelConnectCls($param);
                 $angelTokenArr = $angelObj->generate_access_token();
-                // echo $angelTokenArr['token'];die;
-                $tokenA = $angelTokenArr['token'];
-                $clientLocalIp = $angelTokenArr['clientLocalIp'];
-                $clientPublicIp = $angelTokenArr['clientPublicIp'];
-                $macAddress = $angelTokenArr['macAddress'];
-                $httpHeaders = array(
-                    'X-UserType: USER',
-                    'X-SourceID: WEB',
-                    'X-PrivateKey: '.$userData->api_key,
-                    'X-ClientLocalIP: '.$clientLocalIp,
-                    'X-ClientPublicIP: '.$clientPublicIp,
-                    'X-MACAddress: '.$macAddress,
-                    'Content-Type: application/json',
-                    'Authorization: Bearer '.$tokenA
-                );
-                $fDada = [];
-
-                $curl = curl_init();
-                curl_setopt_array($curl, array(
-                    CURLOPT_URL => 'https://apiconnect.angelbroking.com/rest/secure/angelbroking/order/v1/getOrderBook',
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_ENCODING => '',
-                    CURLOPT_MAXREDIRS => 10,
-                    CURLOPT_TIMEOUT => 0,
-                    CURLOPT_FOLLOWLOCATION => true,
-                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                    CURLOPT_CUSTOMREQUEST => 'GET',
-                    CURLOPT_HTTPHEADER => $httpHeaders,
-                ));
-                $response = curl_exec($curl);
-                curl_close($curl);
-                $dataArr = json_decode($response);
-                // dd($dataArr);
-                if($dataArr!=null && isset($dataArr->status) &&  $dataArr->status==true){
-                    if(!is_null($dataArr->data)){
-                        foreach($dataArr->data as $vl){
-                            $fDada[] = (object)[
-                                "variety"=> $vl->variety,
-                                "ordertype"=> $vl->ordertype,
-                                "producttype"=> $vl->producttype,
-                                "duration"=> $vl->duration,
-                                "price"=> $vl->price,
-                                "quantity"=> $vl->quantity,
-                                "tradingsymbol"=> $vl->tradingsymbol,
-                                "transactiontype"=> $vl->transactiontype,
-                                "lotsize"=> $vl->lotsize,
-                                "averageprice"=> $vl->averageprice,
-                                "orderid"=> $vl->orderid,
-                                "status"=> $vl->status,
-                                "orderstatus"=> $vl->orderstatus,
-                                "updatetime"=> $vl->updatetime,
-                            ];
+                if(is_null($angelTokenArr)){
+                    $orderData[$userData->account_user_name.' ('.$userData->client_name.')'] = [];
+                }else{
+                    
+                    // echo $angelTokenArr['token'];die;
+                    $tokenA = $angelTokenArr['token'];
+                    $clientLocalIp = $angelTokenArr['clientLocalIp'];
+                    $clientPublicIp = $angelTokenArr['clientPublicIp'];
+                    $macAddress = $angelTokenArr['macAddress'];
+                    $httpHeaders = array(
+                        'X-UserType: USER',
+                        'X-SourceID: WEB',
+                        'X-PrivateKey: '.$userData->api_key,
+                        'X-ClientLocalIP: '.$clientLocalIp,
+                        'X-ClientPublicIP: '.$clientPublicIp,
+                        'X-MACAddress: '.$macAddress,
+                        'Content-Type: application/json',
+                        'Authorization: Bearer '.$tokenA
+                    );
+                    $fDada = [];
+    
+                    $curl = curl_init();
+                    curl_setopt_array($curl, array(
+                        CURLOPT_URL => 'https://apiconnect.angelbroking.com/rest/secure/angelbroking/order/v1/getOrderBook',
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_ENCODING => '',
+                        CURLOPT_MAXREDIRS => 10,
+                        CURLOPT_TIMEOUT => 0,
+                        CURLOPT_FOLLOWLOCATION => true,
+                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                        CURLOPT_CUSTOMREQUEST => 'GET',
+                        CURLOPT_HTTPHEADER => $httpHeaders,
+                    ));
+                    $response = curl_exec($curl);
+                    curl_close($curl);
+                    $dataArr = json_decode($response);
+                    // dd($dataArr);
+                    if($dataArr!=null && isset($dataArr->status) &&  $dataArr->status==true){
+                        if(!is_null($dataArr->data)){
+                            foreach($dataArr->data as $vl){
+                                $fDada[] = (object)[
+                                    "variety"=> $vl->variety,
+                                    "ordertype"=> $vl->ordertype,
+                                    "producttype"=> $vl->producttype,
+                                    "duration"=> $vl->duration,
+                                    "price"=> $vl->price,
+                                    "quantity"=> $vl->quantity,
+                                    "tradingsymbol"=> $vl->tradingsymbol,
+                                    "transactiontype"=> $vl->transactiontype,
+                                    "lotsize"=> $vl->lotsize,
+                                    "averageprice"=> $vl->averageprice,
+                                    "orderid"=> $vl->orderid,
+                                    "status"=> $vl->status,
+                                    "orderstatus"=> $vl->orderstatus,
+                                    "updatetime"=> $vl->updatetime,
+                                ];
+                            }
                         }
                     }
+                    $orderData[$userData->account_user_name.' ('.$userData->client_name.')'] = $fDada;
                 }
-                $orderData[$userData->account_user_name.' ('.$userData->client_name.')'] = $fDada;
+               
             }
         }
 
