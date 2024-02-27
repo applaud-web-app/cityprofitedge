@@ -301,11 +301,11 @@ class CrudeoilCommand extends Command
     
                             // GET LTP by Angle Api
                             $ltpByApi = $this->getLTP($exchangeVal,$nameVal,$tokenVal);
-                            if(!isset($ltpByApi['data'])){
-                                continue;
+                            if($ltpByApi['status'] == true){
+                                $givenLtp = $ltpByApi['data']['ltp'];
+                            }else{
+                                $givenLtp = NULL;
                             }
-                            // dd($ltpByApi);
-                            $givenLtp = $ltpByApi['data']['ltp'];
                             $response = $this->getStrickData($nameVal,$exchangeVal,$givenLtp ,$i , $i);
                             $completeResponse[$response[0][1]] = $response[0][3];
                             $completeResponse[$response[1][1]] = $response[1][3];
@@ -327,10 +327,11 @@ class CrudeoilCommand extends Command
                                 $nameVal = $angelData->name;
                                 // GET LTP by Angle Api
                                 $ltpByApi = $this->getLTP($exchangeVal,$nameVal,$tokenVal);
-                                if(!isset($ltpByApi['data'])){
-                                    continue;
+                                if($ltpByApi['status'] == true){
+                                    $givenLtp = $ltpByApi['data']['ltp'];
+                                }else{
+                                    $givenLtp = NULL;
                                 }
-                                $givenLtp = $ltpByApi['data']['ltp'];
                                 $response = $this->getStrickData($nameVal,$exchangeVal,$givenLtp ,$i , $i);
                                 $completeResponse[$response[0][1]] = $response[0][3];
                                 $completeResponse[$response[1][1]] = $response[1][3];
