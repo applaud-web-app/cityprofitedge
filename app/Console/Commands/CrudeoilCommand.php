@@ -301,6 +301,7 @@ class CrudeoilCommand extends Command
     
                             // GET LTP by Angle Api
                             $ltpByApi = $this->getLTP($exchangeVal,$nameVal,$tokenVal);
+                            dd($ltpByApi);
                             if($ltpByApi['status'] == true){
                                 $givenLtp = $ltpByApi['data']['ltp'];
                             }else{
