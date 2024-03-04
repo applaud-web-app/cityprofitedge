@@ -1765,42 +1765,188 @@ class UserController extends Controller
     }
     
 
+    // public function watchList(Request $request){
+
+    //     $pageTitle = "Watch List";
+        
+    //     $symbolArr = allTradeSymbols();
+    //     $todayDate = date("Y-m-d");
+    //     // $todayDate = date("2024-02-28");
+    //     $stockName = $request->stock_name;
+    //     $timeFrame = $request->time_frame ? : 5;
+    //     $allSymbols = [];
+    //     foreach ($symbolArr as $key => $v) {
+    //         $data = \DB::connection('mysql_rm')->table($v)->select('*')->where(['date' => $todayDate, 'timeframe' => $timeFrame])->get();
+    //         $atmData = [];
+    //         foreach ($data as $vvl) {
+    //             if (isset($vvl->atm) && $vvl->atm == 'ATM') {
+    //                 $atmData[] = $vvl;
+    //             }
+    //         }
+    //         foreach ($atmData as $val) {
+    //             array_push($allSymbols,$val->ce);
+    //             array_push($allSymbols,$val->pe);
+    //         }
+    //     }
+
+    //     $zehrodha = ZerodhaInstrument::whereIN('trading_symbol',$allSymbols)->get();
+    //     $MCXpayload = [];
+    //     $NFOpayload = [];
+    //     if($zehrodha != NULL){
+    //         foreach ($zehrodha as $key => $value) {
+    //             if($value->exchange == "MCX"){
+    //                 array_push($MCXpayload,$value->exchange_token);
+    //             }else if($value->exchange == "NFO"){
+    //                 array_push($NFOpayload,$value->exchange_token);
+    //             }
+    //         }
+    //     }
+
+    //     $payload = [
+    //         'MCX'=>$MCXpayload,
+    //         'NFO'=>$NFOpayload
+    //     ];
+
+    //     $payload = json_encode($payload,true);
+    //     $respond = $this->getWatchListRecords($payload);
+    //     if(isset($respond)){
+    //         if($respond['status'] == true){
+    //             $finalResponse = $respond['data']['fetched'];
+    //         }else{
+    //             $finalResponse = false;
+    //         }
+    //     }else{
+    //         $finalResponse = false;
+    //     }
+
+    //     // $data = StoreMarketData::whereDate('created_at', now()->today())->where(function($q){
+    //     //     $q->where('exchange','MCX')->orWhere('exchange','NFO');
+    //     // })->GROUPBY('token')->get();
+    //     // dd($data);
+    //     // $MCXpayload = [];
+    //     // $NFOpayload = [];
+    //     // if($data != NULL){
+    //     //     foreach ($data as $key => $value) {
+    //     //         if($value->exchange == "MCX"){
+    //     //             array_push($MCXpayload,$value->token);
+    //     //         }else if($value->exchange == "NFO"){
+    //     //             array_push($NFOpayload,$value->token);
+    //     //         }
+    //     //     }
+    //     // }
+
+    //     // $MCXpayload = array_unique($MCXpayload);
+    //     // $NFOpayload = array_unique($NFOpayload);
+
+    //     // // dd(count($MCXpayload)).'--'.count($NFOpayload);
+
+    //     // $MCXpayload = array_chunk($MCXpayload, 10);
+    //     // $NFOpayload = array_chunk($NFOpayload , 10);
+        
+    //     // $finalResponse = [];
+    //     // foreach ($NFOpayload as $key => $value) {
+    //     //     $payload = [
+    //     //         'NFO'=>$value
+    //     //     ];
+            
+    //     //     $payload = json_encode($payload,true);
+    //     //     $respond = $this->getWatchListRecords($payload);
+
+    //     //     if($respond != NULL){
+    //     //         if($respond['status'] == true){
+    //     //             $fetchedData = $respond['data']['fetched'];
+    //     //             array_unshift($finalResponse,$fetchedData);
+    //     //         }
+    //     //     }else{
+    //     //         $payload = json_encode($payload,true);
+    //     //         $respond = $this->getWatchListRecords($payload);
+    //     //         if($respond != NULL){
+    //     //             if($respond['status'] == true){
+    //     //                 $fetchedData = $respond['data']['fetched'];
+    //     //                 array_unshift($finalResponse,$fetchedData);
+    //     //             }
+    //     //         }
+    //     //     }
+    //     // }
+
+    //     // foreach ($MCXpayload as $key => $value) {
+    //     //     $payload = [
+    //     //         'MCX'=>$value
+    //     //     ];
+
+    //     //     $payload = json_encode($payload,true);
+    //     //     $respond = $this->getWatchListRecords($payload);
+    //     //     if($respond != NULL){
+    //     //         if($respond['status'] == true){
+    //     //             $fetchedData = $respond['data']['fetched'];
+    //     //             array_unshift($finalResponse,$fetchedData);
+    //     //         }
+    //     //     }else{
+    //     //         $payload = json_encode($payload,true);
+    //     //         $respond = $this->getWatchListRecords($payload);
+    //     //         if($respond != NULL){
+    //     //             if($respond['status'] == true){
+    //     //                 $fetchedData = $respond['data']['fetched'];
+    //     //                 array_unshift($finalResponse,$fetchedData);
+    //     //             }
+    //     //         }
+    //     //     }
+    //     // }
+    //     // $finalResponse = call_user_func_array('array_merge', $finalResponse);
+
+     
+    //     $fullUrl = $request->fullUrl();
+
+    //     if($request->ajax()){
+    //         // return 'NO_DATA';
+    //         if(!empty($finalResponse)){
+    //             return view($this->activeTemplate . 'user.watch-list-ajax',compact('pageTitle','fullUrl','finalResponse'));
+    //         }
+    //         return 'NO_DATA';
+            
+    //     }
+
+    //     return view($this->activeTemplate . 'user.watch-list',compact('pageTitle','finalResponse','fullUrl'));
+    // }
+
     public function watchList(Request $request){
 
         $pageTitle = "Watch List";
         
-        $symbolArr = allTradeSymbols();
+        $symbolArr = ['BANKNIFTY','FINNIFTY','NATURALGAS','NIFTY','MIDCPNIFTY','CRUDEOIL'];
         $todayDate = date("Y-m-d");
         // $todayDate = date("2024-02-28");
         $stockName = $request->stock_name;
         $timeFrame = $request->time_frame ? : 5;
         $allSymbols = [];
+        $MCXpayload = [];
+        $NFOpayload = [];
         foreach ($symbolArr as $key => $v) {
-            $data = \DB::connection('mysql_rm')->table($v)->select('*')->where(['date' => $todayDate, 'timeframe' => $timeFrame])->get();
-            $atmData = [];
-            foreach ($data as $vvl) {
-                if (isset($vvl->atm) && $vvl->atm == 'ATM') {
-                    $atmData[] = $vvl;
+            $data =  \DB::table(strtolower($v))->select(['symbol_ce', 'symbol_pe','token_ce','token_pe','exchange'])->groupBy(['symbol_ce', 'symbol_pe'])->whereDate('created_at', now()->today())->where('atm',0)->get();
+            foreach ($data as $key => $value) {
+                if($value->exchange == "MCX"){
+                    array_push($MCXpayload,$value->token_ce);
+                    array_push($MCXpayload,$value->token_pe);
+                }else if($value->exchange == "NFO"){
+                    array_push($NFOpayload,$value->token_ce);
+                    array_push($NFOpayload,$value->token_pe);
                 }
-            }
-            foreach ($atmData as $val) {
-                array_push($allSymbols,$val->ce);
-                array_push($allSymbols,$val->pe);
             }
         }
 
-        $zehrodha = ZerodhaInstrument::whereIN('trading_symbol',$allSymbols)->get();
-        $MCXpayload = [];
-        $NFOpayload = [];
-        if($zehrodha != NULL){
-            foreach ($zehrodha as $key => $value) {
-                if($value->exchange == "MCX"){
-                    array_push($MCXpayload,$value->exchange_token);
-                }else if($value->exchange == "NFO"){
-                    array_push($NFOpayload,$value->exchange_token);
-                }
-            }
-        }
+        // dd($MCXpayload,$NFOpayload);
+
+        // $zehrodha = ZerodhaInstrument::whereIN('trading_symbol',$allSymbols)->get();
+        
+        // if($zehrodha != NULL){
+        //     foreach ($zehrodha as $key => $value) {
+        //         if($value->exchange == "MCX"){
+        //             array_push($MCXpayload,$value->exchange_token);
+        //         }else if($value->exchange == "NFO"){
+        //             array_push($NFOpayload,$value->exchange_token);
+        //         }
+        //     }
+        // }
 
         $payload = [
             'MCX'=>$MCXpayload,
