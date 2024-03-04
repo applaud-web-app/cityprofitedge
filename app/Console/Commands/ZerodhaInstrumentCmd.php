@@ -32,7 +32,7 @@ class ZerodhaInstrumentCmd extends Command
        
         //delete old order books
         $today = date("Y-m-d");
-        OrderBook::whereDate('created_at','<',$today)->delete();
+        // OrderBook::whereDate('created_at','<',$today)->delete();
         $content = file_get_contents('https://api.kite.trade/instruments');
         file_put_contents(public_path('file.csv'), $content);
         $file = fopen(public_path('file.csv'), 'r');

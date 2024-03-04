@@ -236,7 +236,6 @@ class UserController extends Controller
         $remarks = Transaction::where('remark', '!=', null)->distinct('remark')->orderBy('remark')->get('remark');
 
         $transactions = Transaction::where('user_id',auth()->id())->searchable(['trx'])->filter(['trx_type','remark'])->orderBy('id','desc')->paginate(getPaginate());
-
         return view($this->activeTemplate.'user.transactions', compact('pageTitle','transactions','remarks'));
     }
 
@@ -476,7 +475,7 @@ class UserController extends Controller
         $fullUrl = $request->fullUrl();
 
         // TODO:: modify commented code to implement searchable and filterable.
-        $stockPortfolios = StockPortfolio::with('poolingAccountPortfolio')->where('user_id', auth()->id())->searchable(['broker_name', 'stock_price'])/* ->filter(['trx_type', 'remark']) */->orderBy('id', 'desc')->paginate(getPaginate());
+        $stockPortfolios = StockPortfolio::with('poolingAccountPortfolio')->where('user_id', auth()->id())->searchable(['broker_name', 'stock_name'])/* ->filter(['trx_type', 'remark']) */->orderBy('id', 'desc')->paginate(getPaginate());
 
         $symbolArray = [];
         foreach ($stockPortfolios as $val) {
@@ -1770,121 +1769,132 @@ class UserController extends Controller
 
         $pageTitle = "Watch List";
         
-        // $symbolArr = allTradeSymbols();
+        $symbolArr = allTradeSymbols();
         $todayDate = date("Y-m-d");
-        // $todayDate = date("2024-02-16");
-        // $stockName = $request->stock_name;
-        // $timeFrame = $request->time_frame ? : 5;
-        // $allSymbols = [];
-        // foreach ($symbolArr as $key => $v) {
-        //     $data = \DB::connection('mysql_rm')->table($v)->select('*')->where(['date' => $todayDate, 'timeframe' => $timeFrame])->get();
-        //     $atmData = [];
-        //     foreach ($data as $vvl) {
-        //         if (isset($vvl->atm) && $vvl->atm == 'ATM') {
-        //             $atmData[] = $vvl;
-        //         }
-        //     }
-        //     foreach ($atmData as $val) {
-        //         array_push($allSymbols,$val->ce);
-        //         array_push($allSymbols,$val->pe);
-        //     }
-        // }
+        // $todayDate = date("2024-02-28");
+        $stockName = $request->stock_name;
+        $timeFrame = $request->time_frame ? : 5;
+        $allSymbols = [];
+        foreach ($symbolArr as $key => $v) {
+            $data = \DB::connection('mysql_rm')->table($v)->select('*')->where(['date' => $todayDate, 'timeframe' => $timeFrame])->get();
+            $atmData = [];
+            foreach ($data as $vvl) {
+                if (isset($vvl->atm) && $vvl->atm == 'ATM') {
+                    $atmData[] = $vvl;
+                }
+            }
+            foreach ($atmData as $val) {
+                array_push($allSymbols,$val->ce);
+                array_push($allSymbols,$val->pe);
+            }
+        }
 
-        $data = StoreMarketData::whereDay('created_at', now()->day)->WHERE('exchange','MCX')->orWhere('exchange','NFO')->GROUPBY('token')->get();
+        $zehrodha = ZerodhaInstrument::whereIN('trading_symbol',$allSymbols)->get();
         $MCXpayload = [];
         $NFOpayload = [];
-        if($data != NULL){
-            foreach ($data as $key => $value) {
+        if($zehrodha != NULL){
+            foreach ($zehrodha as $key => $value) {
                 if($value->exchange == "MCX"){
-                    array_push($MCXpayload,$value->token);
+                    array_push($MCXpayload,$value->exchange_token);
                 }else if($value->exchange == "NFO"){
-                    array_push($NFOpayload,$value->token);
+                    array_push($NFOpayload,$value->exchange_token);
                 }
             }
         }
 
-        $MCXpayload = array_unique($MCXpayload);
-        $NFOpayload = array_unique($NFOpayload);
+        $payload = [
+            'MCX'=>$MCXpayload,
+            'NFO'=>$NFOpayload
+        ];
 
-        // dd(count($MCXpayload)).'--'.count($NFOpayload);
-
-        $MCXpayload = array_chunk($MCXpayload, 10);
-        $NFOpayload = array_chunk($NFOpayload , 10);
-        
-        $finalResponse = [];
-        foreach ($NFOpayload as $key => $value) {
-            $payload = [
-                'NFO'=>$value
-            ];
-            
-            $payload = json_encode($payload,true);
-            $respond = $this->getWatchListRecords($payload);
-
-            if($respond != NULL){
-                if($respond['status'] == true){
-                    $fetchedData = $respond['data']['fetched'];
-                    array_unshift($finalResponse,$fetchedData);
-                }
+        $payload = json_encode($payload,true);
+        $respond = $this->getWatchListRecords($payload);
+        if(isset($respond)){
+            if($respond['status'] == true){
+                $finalResponse = $respond['data']['fetched'];
             }else{
-                $payload = json_encode($payload,true);
-                $respond = $this->getWatchListRecords($payload);
-                if($respond != NULL){
-                    if($respond['status'] == true){
-                        $fetchedData = $respond['data']['fetched'];
-                        array_unshift($finalResponse,$fetchedData);
-                    }
-                }
+                $finalResponse = false;
             }
+        }else{
+            $finalResponse = false;
         }
 
-        foreach ($MCXpayload as $key => $value) {
-            $payload = [
-                'MCX'=>$value
-            ];
-
-            $payload = json_encode($payload,true);
-            $respond = $this->getWatchListRecords($payload);
-            if($respond != NULL){
-                if($respond['status'] == true){
-                    $fetchedData = $respond['data']['fetched'];
-                    array_unshift($finalResponse,$fetchedData);
-                }
-            }else{
-                $payload = json_encode($payload,true);
-                $respond = $this->getWatchListRecords($payload);
-                if($respond != NULL){
-                    if($respond['status'] == true){
-                        $fetchedData = $respond['data']['fetched'];
-                        array_unshift($finalResponse,$fetchedData);
-                    }
-                }
-            }
-        }
-        $finalResponse = call_user_func_array('array_merge', $finalResponse);
-
-        // $zehrodha = ZerodhaInstrument::whereIN('trading_symbol',$allSymbols)->get();
+        // $data = StoreMarketData::whereDate('created_at', now()->today())->where(function($q){
+        //     $q->where('exchange','MCX')->orWhere('exchange','NFO');
+        // })->GROUPBY('token')->get();
+        // dd($data);
         // $MCXpayload = [];
         // $NFOpayload = [];
-        // if($zehrodha != NULL){
-        //     foreach ($zehrodha as $key => $value) {
+        // if($data != NULL){
+        //     foreach ($data as $key => $value) {
         //         if($value->exchange == "MCX"){
-        //             array_push($MCXpayload,$value->exchange_token);
+        //             array_push($MCXpayload,$value->token);
         //         }else if($value->exchange == "NFO"){
-        //             array_push($NFOpayload,$value->exchange_token);
+        //             array_push($NFOpayload,$value->token);
         //         }
         //     }
         // }
 
-        // $payload = [
-        //     'MCX'=>$MCXpayload,
-        //     'NFO'=>$NFOpayload
-        // ];
+        // $MCXpayload = array_unique($MCXpayload);
+        // $NFOpayload = array_unique($NFOpayload);
 
-        // $payload = json_encode($payload,true);
-        // $respond = $this->getWatchListRecords($payload);
-        // if($respond == NULL){
+        // // dd(count($MCXpayload)).'--'.count($NFOpayload);
+
+        // $MCXpayload = array_chunk($MCXpayload, 10);
+        // $NFOpayload = array_chunk($NFOpayload , 10);
+        
+        // $finalResponse = [];
+        // foreach ($NFOpayload as $key => $value) {
+        //     $payload = [
+        //         'NFO'=>$value
+        //     ];
+            
+        //     $payload = json_encode($payload,true);
         //     $respond = $this->getWatchListRecords($payload);
+
+        //     if($respond != NULL){
+        //         if($respond['status'] == true){
+        //             $fetchedData = $respond['data']['fetched'];
+        //             array_unshift($finalResponse,$fetchedData);
+        //         }
+        //     }else{
+        //         $payload = json_encode($payload,true);
+        //         $respond = $this->getWatchListRecords($payload);
+        //         if($respond != NULL){
+        //             if($respond['status'] == true){
+        //                 $fetchedData = $respond['data']['fetched'];
+        //                 array_unshift($finalResponse,$fetchedData);
+        //             }
+        //         }
+        //     }
         // }
+
+        // foreach ($MCXpayload as $key => $value) {
+        //     $payload = [
+        //         'MCX'=>$value
+        //     ];
+
+        //     $payload = json_encode($payload,true);
+        //     $respond = $this->getWatchListRecords($payload);
+        //     if($respond != NULL){
+        //         if($respond['status'] == true){
+        //             $fetchedData = $respond['data']['fetched'];
+        //             array_unshift($finalResponse,$fetchedData);
+        //         }
+        //     }else{
+        //         $payload = json_encode($payload,true);
+        //         $respond = $this->getWatchListRecords($payload);
+        //         if($respond != NULL){
+        //             if($respond['status'] == true){
+        //                 $fetchedData = $respond['data']['fetched'];
+        //                 array_unshift($finalResponse,$fetchedData);
+        //             }
+        //         }
+        //     }
+        // }
+        // $finalResponse = call_user_func_array('array_merge', $finalResponse);
+
+     
         $fullUrl = $request->fullUrl();
 
         if($request->ajax()){
