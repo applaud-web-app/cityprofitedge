@@ -52,7 +52,7 @@
                                     </thead>
                                     <tbody id="watchList">
                                         @isset($finalResponse)
-                                            @if ($finalResponse != NULL)
+                                            @if ($finalResponse != false)
                                                 @foreach ($finalResponse as $item)
                                                     @php $text = "text-danger"; @endphp
                                                     @if ($item['netChange'] > 0)
