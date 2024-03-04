@@ -74,7 +74,9 @@
                                         <td>
                                             {{ showAmount($trx->amount) }}
                                         </td>
-                                        <td>{{ $trx->poolingAccountPortfolio->broker_name }}</td>
+                                        <td> @isset($trx->poolingAccountPortfolio->broker_name)
+                                            {{ $trx->poolingAccountPortfolio->broker_name }}
+                                        @endisset </td>
                                         {{-- <td class="budget">
                                             {{ showAmount($trx->post_balance) }} {{ __($general->cur_text) }}
                                         </td> --}}

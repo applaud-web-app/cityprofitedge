@@ -175,7 +175,7 @@ class UserController extends Controller
 
     public function transactions(Request $request)
     {
-        dd('transactions route');
+        // dd('transactions route');
         $remarks = Transaction::where('remark', '!=', null)->distinct('remark')->get('remark');
         $transactions = Transaction::where('user_id',auth()->id());
 
