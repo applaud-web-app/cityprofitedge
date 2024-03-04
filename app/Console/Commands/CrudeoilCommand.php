@@ -504,7 +504,7 @@ class CrudeoilCommand extends Command
                                             array_push($allLtp_ce,$latestData_ce);
                                             $res_ce[] =  $this->calculateSuperTrend($allLtp_ce,21,3);
                                             $ce_super = array_slice($res_ce[0],-1);
-                                            dd($ce_super);
+                                            // dd($ce_super);
                                             $supertrend_ce = $ce_super[0];
 
                                             // FOR PE
