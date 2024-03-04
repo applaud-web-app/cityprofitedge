@@ -141,10 +141,7 @@
                                         </tbody>
                                     </table>
                                 </div>
-
-                            
                             </div>
-                    
                         </div>
                         <div>
                             @php
@@ -164,9 +161,6 @@
                                     </nav>';
                             @endphp
                         </div>
-
-                    
-
                     </div>
                 </div>
             @else
@@ -222,7 +216,7 @@
                                                 @php $i=1; @endphp
                                                 @forelse($atmData as $val)
                                                         @php
-                                                            $arrData = json_decode($val->data,true);    
+                                                            $arrData = json_decode($val->data,true); 
                                                             $CE = array_slice($arrData['CE'],-5);
                                                             $PE = array_slice($arrData['PE'],-5);
                                                             $Date = array_slice($arrData['Date'],-5);

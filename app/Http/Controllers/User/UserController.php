@@ -236,6 +236,7 @@ class UserController extends Controller
         $remarks = Transaction::where('remark', '!=', null)->distinct('remark')->orderBy('remark')->get('remark');
 
         $transactions = Transaction::where('user_id',auth()->id())->searchable(['trx'])->filter(['trx_type','remark'])->orderBy('id','desc')->paginate(getPaginate());
+
         return view($this->activeTemplate.'user.transactions', compact('pageTitle','transactions','remarks'));
     }
 

@@ -54,7 +54,6 @@
                             <a href="#0">@lang('AutoTrader')</a>
                             <ul class="sub-menu">
                                 <li><a href="{{ route('user.portfolio.top.gainers') }}">@lang('Trade Desk Signal')</a></li>
-                                
                                 <li><a href="{{ route('user.trade-positions') }}">@lang('Trade Position')</a></li>
                                 <li><a href="{{ route('user.order-books') }}">@lang('Order Book')</a></li>
                                 <li><a href="{{ route('user.portfolio.broker-details') }}">@lang('Broker Details')</a></li>
@@ -64,6 +63,7 @@
                         <li class="menu_has_children">
                             <a href="#0">@lang('Portfolios')</a>
                             <ul class="sub-menu">
+                                <li><a href="{{ route('user.stock.portfolios') }}">@lang('Stock Portfolio')</a></li>
                                 <li><a href="{{ route('user.thematic.portfolios') }}">@lang('Thematic Portfolios')</a></li>
                                 <li><a href="{{ route('user.global.stock.portfolio') }}">@lang('Global Stock Portfolio')</a></li>
                                 <li><a href="{{ route('user.fo.portfolio.hedging') }}">@lang('F&O Portfolio-Hedging')</a></li>
