@@ -110,7 +110,7 @@
                                                                 $textColor = "text-danger";
                                                             }
                                                         @endphp
-                                                    <td class="{{$textColor}}" {{$tickSize}}>{{$totalVal * $tickSize}}</td>
+                                                    <td class="{{$textColor}}" {{$tickSize}}>{{round($totalVal * $tickSize,2)}}</td>
                                                     </tr>
                                                     @php
                                                         $total += $totalVal * $tickSize;
@@ -127,7 +127,7 @@
                                     </tbody>
                                 </table>
                                 <div class="d-flex justify-content-end">
-                                    <button class="btn btn-danger">Total Profit : {{$total}}</button>
+                                    <button class="btn btn-danger">Total Profit : {{round($total,2)}}</button>
                                 </div>
                             </div>
                         </div>

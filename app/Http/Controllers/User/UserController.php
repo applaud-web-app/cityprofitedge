@@ -2153,13 +2153,6 @@ class UserController extends Controller
         $netChange = ($totalBuyQuantity * $totalBuyPrice) - ($totalSellPrice * $totalSellQuantity);
         
         $orderId = "WL".strtotime('d-m-y h:i:s').rand(100,10000000).rand(100,10000000);
-       
-        // $payload = [
-        //     $request->exchange=>$request->token,
-        // ];
-        // $getLatestPrice = $this->getWatchListRecords(json_decode($payload));
-
-        // dd($getLatestPrice);
 
         $order = new WatchList;
         $order->order_id = $orderId;
