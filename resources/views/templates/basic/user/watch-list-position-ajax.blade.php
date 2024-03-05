@@ -97,7 +97,7 @@
             </tbody>
         </table>
         <div class="d-flex justify-content-end">
-            <button class="btn btn-danger">Total Profit : {{$total}}</button>
+            <button class="btn btn-danger">Total Profit : {{round($total,2)}}</button>
         </div>
     </div>
 </div>
