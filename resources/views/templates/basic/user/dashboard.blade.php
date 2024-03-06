@@ -399,7 +399,7 @@
                                                 $avgPrice = $portfolioTopGainer->avg_buy_price;
                                                 $change = ($cmp -$avgPrice)/$avgPrice
                                             @endphp
-                                            <td>{{ showAmount($change * 100)  }}</td>
+                                            <td class="{{($change * 100) > 0 ? "text-success" : "text-danger"}}">{{ showAmount($change * 100)  }}</td>
                                         </tr>
                                     @empty
                                         <tr>
@@ -447,7 +447,7 @@
                                                     $avgPrice = $portfolioTopLoser->avg_buy_price;
                                                     $change = ($cmp -$avgPrice)/$avgPrice
                                                 @endphp
-                                            <td>{{ showAmount($change * 100)  }}</td>
+                                            <td class="{{($change * 100) > 0 ? "text-success" : "text-danger"}}">{{ showAmount($change * 100)  }}</td>
                                             </tr>
                                         @empty
                                             <tr>
