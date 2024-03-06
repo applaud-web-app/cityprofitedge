@@ -373,20 +373,34 @@
                             <table class="table custom--table">
                                 <thead>
                                     <tr>
-                                        <th class="text-start">@lang('Symbol')</th>
-                                        <th class="text-start">@lang('LTP')</th>
-                                        <th class="text-start">@lang('Change')</th>
-                                        <th class="text-start">@lang('%Change')</th>
+                                        <th>@lang('Stock Name')</th>
+                                        <th>@lang('Avg Price')</th>
+                                        <th>@lang('CMP')</th>
+                                        <th>@lang('Change%')</th>
                                     </tr>
                                 </thead>
-                                <tbody id="topGainer">
-                                    <tr>
-                                        <td colspan="100%">
-                                            <div class="spinner-border" role="status">
-                                                <span class="sr-only">Loading...</span>
-                                            </div>
-                                        </td>
-                                    </tr>
+                                <tbody>
+                                    @php
+                                    $date = \DB::connection('mysql_pr')->table('LTP')->WHEREIN('symbol',$symbolArray)->pluck('ltp','symbol')->toArray();  
+                                    @endphp
+                                    @forelse($portfolioTopGainers as $portfolioTopGainer)
+                                        @php  $key = isset($date[$portfolioTopGainer->stock_name.'.NS']) ? $date[$portfolioTopGainer->stock_name.'.NS'] : 0;
+                                        @endphp
+                                        <tr>
+                                            <td>
+                                                {{ $portfolioTopGainer->stock_name }}
+                                            </td>
+                                            <td>
+                                                {{ showAmount($portfolioTopGainer->avg_buy_price) }}
+                                            </td>
+                                            <td>{{showAmount($key)}}</td>
+                                            <td>{{ $portfolioTopGainer->change_percentage }}</td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td class="text-muted text-center" colspan="100%">{{ __($emptyMessage) }}</td>
+                                        </tr>
+                                    @endforelse
                                 </tbody>
                             </table>
                         </div>
@@ -401,21 +415,36 @@
                             <table class="table custom--table">
                                 <thead>
                                     <tr>
-                                        <th class="text-start">@lang('Symbol')</th>
-                                        <th class="text-start">@lang('LTP')</th>
-                                        <th class="text-start">@lang('Change')</th>
-                                        <th class="text-start">@lang('%Change')</th>
+                                        <th>@lang('Stock Name')</th>
+                                        <th>@lang('Avg Price')</th>
+                                        <th>@lang('CMP')</th>
+                                        <th>@lang('Change%')</th>
                                     </tr>
                                 </thead>
-                                <tbody id="topLoser">
-                                    <tr>
-                                        <td colspan="100%">
-                                            <div class="spinner-border" role="status">
-                                                <span class="sr-only">Loading...</span>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
+                                <tbody>
+                                    @php
+                                    $date = \DB::connection('mysql_pr')->table('LTP')->WHEREIN('symbol',$symbolArray2)->pluck('ltp','symbol')->toArray();  
+                                    @endphp
+                                    <tbody>
+                                        @forelse($portfolioTopLosers as $portfolioTopLoser)
+                                            @php  $key = isset($date[$portfolioTopLoser->stock_name.'.NS']) ? $date[$portfolioTopLoser->stock_name.'.NS'] : 0;
+                                            @endphp
+                                            <tr>
+                                                <td>
+                                                    {{ $portfolioTopLoser->stock_name }}
+                                                </td>
+                                                <td>
+                                                    {{ showAmount($portfolioTopLoser->avg_buy_price) }}
+                                                </td>
+                                                <td>{{showAmount($key)}}</td>
+                                                <td>{{ $portfolioTopLoser->change_percentage }}</td>
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td class="text-muted text-center" colspan="100%">{{ __($emptyMessage) }}</td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
                             </table>
                         </div>
                     </div>
@@ -463,252 +492,6 @@
 @endif
 
 @endsection
-@push('script')
-<script>
-    // let longIo;
-    // let shortIo; 
-    // let shortCover;
-    // let longWill;
-    // let pcrData;
-    let Toploser;
-    let topgainer;
-   $(document).ready(function(){
-        // FetchLongOIData();
-        // FetchShortOIData();
-        // FetchShortCoveringOIData();
-        // FetchLongUnwilingOIData();
-        // FetchPCRData();
-        FetchTopLoserData();
-        FetchTopGainerData();
-
-        // var longIo = setInterval(() => {
-        //     FetchLongOIData();
-        // }, 10 * 1000);
-
-        // var shortIo = setInterval(() => {
-        //     FetchShortOIData();
-        // }, 10 * 1000);
-
-
-        // var shortCover = setInterval(() => {
-        //     FetchShortCoveringOIData();
-        // }, 10 * 1000);
-
-        // var longWill = setInterval(() => {
-        //     FetchLongUnwilingOIData();
-        // }, 10 * 1000);
-
-        // var pcrData = setInterval(() => {
-        //     FetchPCRData();
-        // }, 10 * 1000);
-
-        var Toploser = setInterval(() => {
-            FetchTopLoserData();
-        }, 10 * 1000);
-
-        var topgainer = setInterval(() => {
-            FetchTopGainerData();
-        }, 10 * 1000);
-        
-    });
-
-    function FetchTopLoserData(){
-        $.get('{{route("get-top-loser-api-data")}}',function(data){
-           if(data['status'] === true){
-                data = data['data'];
-                if(data.length > 0){
-                    var str = "";
-                    for (var i in data) {
-                        if(i>4){
-                            break;
-                        } 
-                        str += `<tr>
-                        <td class="text-start">${data[i].tradingSymbol}</td>
-                        <td class="text-start">${data[i].ltp}</td>
-                        <td class="text-start text-danger">${data[i].netChange}</td>
-                        <td class="text-start text-danger">${data[i].percentChange}</td></tr>`;
-                    }
-                    $("#topLoser").html(str);
-                }else{
-                    $("#topLoser").html('');
-                }
-            }else{
-                $("#topLoser").html('<tr><td colspan="100%">No Response Please Try Again Later</tr></td>');
-                clearInterval(Toploser);
-            }
-        });
-    }
-    
-    function FetchTopGainerData(){
-        $.get('{{route("get-top-gainer-api-data")}}',function(data){
-           if(data['status'] === true){
-            data = data['data'];
-            if(data.length > 0){
-                var str = "";
-                for (var i in data) {
-                    if(i>4){
-                        break;
-                    } 
-                    str += `<tr>
-                       <td class="text-start">${data[i].tradingSymbol}</td>
-                       <td class="text-start">${data[i].ltp}</td>
-                       <td class="text-start text-success">${data[i].netChange}</td>
-                       <td class="text-start text-success">${data[i].percentChange}</td></tr>`;
-                }
-                $("#topGainer").html(str);
-            }else{
-                $("#topGainer").html('');
-            }
-           }else{
-            $("#topGainer").html('<tr><td colspan="100%">No Response Please Try Again Later</tr></td>');
-                clearInterval(topgainer);
-            }
-        });
-    }
-
-    // function FetchPCRData(){
-    //     $.get('{{route("get-pcr-api-data")}}',function(data){
-    //        if(data['status'] === true){
-    //         data = data['data'];
-    //         if(data.length > 0){
-    //             var str = "";
-    //             for (var i in data) {
-    //                 if (data[i].tradingSymbol.indexOf("NIFTY") != -1) {
-    //                     str += `<tr>
-    //                     <td class="text-start">${data[i].tradingSymbol}</td>
-    //                     <td class="text-start">${data[i].pcr}</td>`;
-    //                 }
-    //             }
-    //             $("#pcr").html(str);
-    //         }else{
-    //             $("#pcr").html('');
-    //         }
-    //        }else{
-    //         $("#pcr").html('<tr><td colspan="100%">No Response Please Try Again Later</tr></td>');
-    //             clearInterval(pcrData);
-    //         }
-    //     });
-    // }
-
-    // function FetchLongOIData(){
-    //     $.get('{{route("get-long-build-api-data")}}',function(data){
-    //        if(data['status'] === true){
-    //         data = data['data'];
-    //         if(data.length > 0){
-    //             var str = "";
-    //             for (var i in data) {
-    //                 if(i>4){
-    //                     break;
-    //                 } 
-    //                 str += `<tr>
-    //                    <td class="text-start">${data[i].tradingSymbol}</td>
-    //                    <td class="text-start">${data[i].ltp}</td>
-    //                    <td class="text-start ${data[i].netChange > 0 ? 'text-success' : 'text-danger'}">${data[i].netChange}</td>
-    //                    <td class="text-start ${data[i].percentChange > 0 ? 'text-success' : 'text-danger'}">${data[i].percentChange}</td>
-    //                    <td class="text-start">${Math.trunc(data[i].opnInterest)}</td>
-    //                    <td class="text-start ${data[i].netChangeOpnInterest > 0 ? 'text-success' : 'text-danger'}">${Math.trunc(data[i].netChangeOpnInterest)}</td>`;
-    //             }
-    //             $("#longBuild").html(str);
-    //         }else{
-    //             $("#longBuild").html('');
-    //         }
-    //        }else{
-    //             $("#longBuild").html('<tr><td colspan="100%">No Response Please Try Again Later</tr></td>');
-    //             clearInterval(longIo);
-    //         }
-    //     });
-    // }
-
-    // function FetchShortOIData(){
-    //     $.get('{{route("get-short-build-api-data")}}',function(data){
-    //         if(data['status'] === true){
-    //             data = data['data'];
-    //             if(data.length > 0){
-    //                 var str = "";
-    //                 for (var i in data) {
-    //                     if(i>4){
-    //                         break;
-    //                     } 
-    //                     str += `<tr>
-    //                     <td class="text-start">${data[i].tradingSymbol}</td>
-    //                     <td class="text-start">${data[i].ltp}</td>
-    //                     <td class="text-start ${data[i].netChange > 0 ? 'text-success' : 'text-danger'}">${data[i].netChange}</td>
-    //                     <td class="text-start ${data[i].percentChange > 0 ? 'text-success' : 'text-danger'}">${data[i].percentChange}</td>
-    //                     <td class="text-start">${Math.trunc(data[i].opnInterest)}</td>
-    //                     <td class="text-start ${data[i].netChangeOpnInterest > 0 ? 'text-success' : 'text-danger'}">${Math.trunc(data[i].netChangeOpnInterest)}</td>`;
-    //                 }
-    //                 $("#shortBuild").html(str);
-    //             }else{
-    //                 $("#shortBuild").html('');
-    //             }
-    //         }else{
-    //             $("#shortBuild").html('<tr><td colspan="100%">No Response Please Try Again Later</tr></td>');
-    //             clearInterval(shortIo);
-    //         }
-    //     });
-    // }
-
-    // function FetchShortCoveringOIData(){
-    //     $.get('{{route("get-short-covering-api-data")}}',function(data){
-    //        if(data['status'] === true){
-    //             data = data['data'];
-    //             if(data.length > 0){
-    //                 var str = "";
-    //                 for (var i in data) {
-    //                     if(i>4){
-    //                         break;
-    //                     } 
-    //                     str += `<tr>
-    //                     <td class="text-start">${data[i].tradingSymbol}</td>
-    //                     <td class="text-start">${data[i].ltp}</td>
-    //                     <td class="text-start ${data[i].netChange > 0 ? 'text-success' : 'text-danger'}">${data[i].netChange}</td>
-    //                     <td class="text-start ${data[i].percentChange > 0 ? 'text-success' : 'text-danger'}">${data[i].percentChange}</td>
-    //                     <td class="text-start">${Math.trunc(data[i].opnInterest)}</td>
-    //                     <td class="text-start ${data[i].netChangeOpnInterest > 0 ? 'text-success' : 'text-danger'}">${Math.trunc(data[i].netChangeOpnInterest)}</td>`;
-    //                 }
-    //                 $("#shortCovering").html(str);
-    //             }else{
-    //                 $("#shortCovering").html('');
-    //             }
-    //        }else{
-    //             $("#shortCovering").html('<tr><td colspan="100%">No Response Please Try Again Later</tr></td>');
-    //             clearInterval(shortCover);
-    //         }
-    //     });
-    // }
-
-    // function FetchLongUnwilingOIData(){
-    //     $.get('{{route("get-long-unwilling-api-data")}}',function(data){
-    //         if(data['status'] === true){
-    //             data = data['data'];
-    //             if(data.length > 0){
-    //                 var str = "";
-    //                 for (var i in data) {
-    //                     if(i>4){
-    //                         break;
-    //                     } 
-    //                     str += `<tr>
-    //                     <td class="text-start">${data[i].tradingSymbol}</td>
-    //                     <td class="text-start">${data[i].ltp}</td>
-    //                     <td class="text-start ${data[i].netChange > 0 ? 'text-success' : 'text-danger'}">${data[i].netChange}</td>
-    //                     <td class="text-start ${data[i].percentChange > 0 ? 'text-success' : 'text-danger'}">${data[i].percentChange}</td>
-    //                     <td class="text-start">${Math.trunc(data[i].opnInterest)}</td>
-    //                     <td class="text-start ${data[i].netChangeOpnInterest > 0 ? 'text-success' : 'text-danger'}">${Math.trunc(data[i].netChangeOpnInterest)}</td>`;
-    //                 }
-    //                 $("#longUnwilling").html(str);
-    //             }else{
-    //                 $("#longUnwilling").html('');
-    //             }
-    //         }else{
-    //             $("#longUnwilling").html('<tr><td colspan="100%">No Response Please Try Again Later</tr></td>');
-    //             clearInterval(longWill);
-    //         }
-    //     });
-    // }
-  
-    
-</script>
-@endpush
 @push('script')
 <script>
     (function ($) {
