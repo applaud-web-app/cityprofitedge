@@ -394,7 +394,12 @@
                                                 {{ showAmount($portfolioTopGainer->avg_buy_price) }}
                                             </td>
                                             <td>{{showAmount($key)}}</td>
-                                            <td>{{ $portfolioTopGainer->change_percentage }}</td>
+                                            @php
+                                                $cmp = (float)showAmount($key);
+                                                $avgPrice = (float)showAmount($portfolioTopGainer->avg_buy_price);
+                                                $change = ($cmp -$avgPrice)/$avgPrice
+                                            @endphp
+                                            <td>{{ round($change * 100,2)  }}</td>
                                         </tr>
                                     @empty
                                         <tr>
