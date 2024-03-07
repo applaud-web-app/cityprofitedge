@@ -50,20 +50,10 @@
                                         @php
                                             $total = 0;
                                         @endphp
-                                        @if (isset($respond))
-                                            @if ($respond['status'] == true)
-                                                @php $watchList = $respond['data']['fetched']; @endphp
-                                            @else
-                                                @php $watchList = NULL; @endphp
-                                            @endif
-                                        @else
-                                            @php $watchList = NULL; @endphp
-                                        @endif
                                         @isset($wishlistorder)
-                                            @if (count($wishlistorder) && $watchList != NULL)
+                                            @if (count($wishlistorder))
                                                 @foreach ($wishlistorder as $item)
                                                     @php
-                                                        $key = array_search($item->token, array_column($watchList, 'symbolToken'));
                                                         $angleData = App\Models\AngelApiInstrument::WHERE('token',$item->token)->first();
                                                         $tickSize = 1;
                                                         $buyValue = $item->buy_quantity * $item->buy_price;
@@ -102,10 +92,10 @@
                                                         <td>{{$item->sell_price}}</td> 
                                                         <td>{{$sellValue}}</td>
                                                         <td>{{$item->net_change}}</td>
-                                                        <td>{{$watchList[$key]['ltp']}}</td>
+                                                        <td>{{$item->ltp}}</td>
                                                         @php
                                                             $textColor = "text-success";
-                                                            $totalVal = ($watchList[$key]['ltp'] - $item->buy_price) * $item->buy_quantity;
+                                                            $totalVal = ($item->ltp - $item->buy_price) * $item->buy_quantity;
                                                             if(($totalVal * $tickSize) < 0){
                                                                 $textColor = "text-danger";
                                                             }
@@ -140,20 +130,37 @@
 
 @push('script')
 <script>
+    // $(document).ready(function(){
+    //     function reloadData(){
+    //         $.get('{!!$fullUrl!!}',function(data){
+    //             if(data=='NO_DATA'){
+    //                 reloadData();
+    //                 return;
+    //             }
+    //             $("#pst_hre").html(data);
+    //         });
+    //     }
+
+    //     setInterval(() => {
+    //         reloadData();
+    //     }, 30000);//call every 1/2 minute
+    // })
+
     $(document).ready(function(){
         function reloadData(){
-            $.get('{!!$fullUrl!!}',function(data){
-                if(data=='NO_DATA'){
-                    reloadData();
-                    return;
+            $.get('{!!$fullUrl!!}', function(data){
+                if(data !== 'NO_DATA'){
+                    $("#pst_hre").html(data);
                 }
-                $("#pst_hre").html(data);
+            }).fail(function(){
+                // Handle errors here, such as server unavailability
+                console.error('Failed to fetch data from the server.');
             });
         }
 
-        setInterval(() => {
+        setInterval(function(){
             reloadData();
-        }, 30000);//call every 1/2 minute
-    })
+        }, 30000); // Reload every 30 seconds
+    });
 </script>
 @endpush

@@ -59,7 +59,7 @@
                                                         @php $text = "text-success"; @endphp
                                                     @endif
                                                     <tr>
-                                                        <td class="{{$text}}">{{$item['tradingSymbol']}}</td>
+                                                        <td class="{{$text}}">{{$item['symbol_name']}}</td>
                                                         <td class="{{$text}}">{{$item['exchange']}}</td>
                                                         <td class="{{$text}}">{{$item['ltp']}}</td>
                                                         <td class="{{$text}}">{{$item['open']}}</td>
@@ -71,13 +71,13 @@
                                                         <td class="{{$text}}">{{$item['avgPrice']}}</td>
                                                         <td class="{{$text}}">{{$item['tradeVolume']}}</td>
                                                         <td class="{{$text}}">{{$item['opnInterest']}}</td>
-                                                        <td class="{{$text}}"><button class="py-0 buyModal btn btn-primary btn-sm" data-token="{{$item['symbolToken']}}" data-symbol="{{$item['tradingSymbol']}}" data-ltp="{{$item['ltp']}}" data-price="{{$item['ltp']}}" data-exchange="{{$item['exchange']}}" data-type="BUY" data-bs-toggle="modal" data-bs-target="#buy">BUY</button><button class="py-0 buyModal ms-1 btn btn-danger btn-sm" data-token="{{$item['symbolToken']}}" data-symbol="{{$item['tradingSymbol']}}" data-ltp="{{$item['ltp']}}" data-price="{{$item['ltp']}}" data-exchange="{{$item['exchange']}}" data-type="SELL" data-bs-toggle="modal" data-bs-target="#buy">SELL</button></td>
+                                                        <td class="{{$text}}"><button class="py-0 buyModal btn btn-primary btn-sm" data-token="{{$item['symbolToken']}}" data-symbol="{{$item['symbol_name']}}" data-ltp="{{$item['ltp']}}" data-price="{{$item['ltp']}}" data-exchange="{{$item['exchange']}}" data-type="BUY" data-bs-toggle="modal" data-bs-target="#buy">BUY</button><button class="py-0 buyModal ms-1 btn btn-danger btn-sm" data-token="{{$item['symbolToken']}}" data-symbol="{{$item['symbol_name']}}" data-ltp="{{$item['ltp']}}" data-price="{{$item['ltp']}}" data-exchange="{{$item['exchange']}}" data-type="SELL" data-bs-toggle="modal" data-bs-target="#buy">SELL</button></td>
                                                     </tr>
                                                 @endforeach
                                             @else
                                             <tr>
                                                 <td colspan="100%" class="d-flex justify-content-center text-center">
-                                                    Please Wait Data Is Loading...
+                                                    No Data Found...
                                                 </td>
                                             </tr>
                                             @endif

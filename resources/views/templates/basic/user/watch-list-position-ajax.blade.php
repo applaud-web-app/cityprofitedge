@@ -20,20 +20,10 @@
                 @php
                 $total = 0;
             @endphp
-            @if (isset($respond))
-                @if ($respond['status'] == true)
-                    @php $watchList = $respond['data']['fetched']; @endphp
-                @else
-                    @php $watchList = NULL; @endphp
-                @endif
-            @else
-                @php $watchList = NULL; @endphp
-            @endif
             @isset($wishlistorder)
-                @if (count($wishlistorder) && $watchList != NULL)
+                @if (count($wishlistorder))
                     @foreach ($wishlistorder as $item)
                         @php
-                            $key = array_search($item->token, array_column($watchList, 'symbolToken'));
                             $angleData = App\Models\AngelApiInstrument::WHERE('token',$item->token)->first();
                             $tickSize = 1;
                             $buyValue = $item->buy_quantity * $item->buy_price;
@@ -72,10 +62,10 @@
                             <td>{{$item->sell_price}}</td> 
                             <td>{{$sellValue}}</td>
                             <td>{{$item->net_change}}</td>
-                            <td>{{$watchList[$key]['ltp']}}</td>
+                            <td>{{$item->ltp}}</td>
                             @php
                                 $textColor = "text-success";
-                                $totalVal = ($watchList[$key]['ltp'] - $item->buy_price) * $item->buy_quantity;
+                                $totalVal = ($item->ltp - $item->buy_price) * $item->buy_quantity;
                                 if(($totalVal * $tickSize) < 0){
                                     $textColor = "text-danger";
                                 }
