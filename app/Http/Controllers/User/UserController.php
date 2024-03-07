@@ -2199,7 +2199,7 @@ class UserController extends Controller
             if($respond['status'] == true){
                 $watchList = $respond['data']['fetched'];
                 foreach ($wishlistorder as $item) {
-                    $positionData = WatchTradePosition::where('id',$item->id)->first();
+                    $positionData = WatchTradePosition::where('user_id',$userId)->where('id',$item->id)->first();
                     $key = array_search($item->token, array_column($watchList, 'symbolToken'));
                     $currentLtp = $watchList[$key]['ltp'];
                     $positionData->ltp = $currentLtp;
@@ -2207,6 +2207,8 @@ class UserController extends Controller
                 }
             }
         }
+
+        $wishlistorder = WatchTradePosition::where('user_id',$userId)->orderBy('id','DESC')->paginate(50);
 
         $fullUrl = $request->fullUrl();
         if($request->ajax()){
