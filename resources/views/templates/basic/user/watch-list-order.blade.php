@@ -61,7 +61,7 @@
                                         @else
                                             <tr>
                                                 <td colspan="100%" class="d-flex justify-content-center text-center">
-                                                    Please Wait Data Is Loading...
+                                                    No Data Found...
                                                 </td>
                                             </tr>
                                         @endif
@@ -85,7 +85,6 @@
                 $("#pst_hre").html(data);
             });
         }
-
         setInterval(() => {
             reloadData();
         }, 30000);//call every 1/2 minute

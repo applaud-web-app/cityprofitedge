@@ -36,6 +36,8 @@ use App\Helpers\KiteConnectCls;
 use App\Helpers\AngelConnectCls;
 use App\Jobs\PlaceOmsOrder;
 use App\Traits\AngelApiAuth;
+use App\Models\WishlistData;
+
 class UserController extends Controller
 {
     use AngelApiAuth;
@@ -1922,14 +1924,11 @@ class UserController extends Controller
 
     public function watchList(Request $request){
 
-        $pageTitle = "Watch List";
-        
+        $pageTitle = "Watch List";        
         $symbolArr = ['BANKNIFTY','FINNIFTY','NATURALGAS','NIFTY','MIDCPNIFTY','CRUDEOIL'];
         $todayDate = date("Y-m-d");
-        // $todayDate = date("2024-02-28");
         $stockName = $request->stock_name;
         $timeFrame = $request->time_frame ? : 5;
-        $allSymbols = [];
         $MCXpayload = [];
         $NFOpayload = [];
         foreach ($symbolArr as $key => $v) {
@@ -1945,20 +1944,6 @@ class UserController extends Controller
             }
         }
 
-        // dd($MCXpayload,$NFOpayload);
-
-        // $zehrodha = ZerodhaInstrument::whereIN('trading_symbol',$allSymbols)->get();
-        
-        // if($zehrodha != NULL){
-        //     foreach ($zehrodha as $key => $value) {
-        //         if($value->exchange == "MCX"){
-        //             array_push($MCXpayload,$value->exchange_token);
-        //         }else if($value->exchange == "NFO"){
-        //             array_push($NFOpayload,$value->exchange_token);
-        //         }
-        //     }
-        // }
-
         $payload = [
             'MCX'=>$MCXpayload,
             'NFO'=>$NFOpayload
@@ -1966,6 +1951,7 @@ class UserController extends Controller
 
         $payload = json_encode($payload,true);
         $respond = $this->getWatchListRecords($payload);
+
         if(isset($respond)){
             if($respond['status'] == true){
                 $finalResponse = $respond['data']['fetched'];
@@ -1976,82 +1962,41 @@ class UserController extends Controller
             $finalResponse = false;
         }
 
-        // $data = StoreMarketData::whereDate('created_at', now()->today())->where(function($q){
-        //     $q->where('exchange','MCX')->orWhere('exchange','NFO');
-        // })->GROUPBY('token')->get();
-        // dd($data);
-        // $MCXpayload = [];
-        // $NFOpayload = [];
-        // if($data != NULL){
-        //     foreach ($data as $key => $value) {
-        //         if($value->exchange == "MCX"){
-        //             array_push($MCXpayload,$value->token);
-        //         }else if($value->exchange == "NFO"){
-        //             array_push($NFOpayload,$value->token);
-        //         }
-        //     }
-        // }
+        // Insert Data To Watchlist
+        if($finalResponse != false){
+            foreach ($finalResponse as $key => $value) {
+                $wishlist = new WishlistData;
+                $wishlist->symbol_name = $value['tradingSymbol'];
+                $wishlist->symbolToken = $value['symbolToken'];
+                $wishlist->exchange = $value['exchange'];
+                $wishlist->ltp = $value['ltp'];
+                $wishlist->open = $value['open'];
+                $wishlist->high = $value['high'];
+                $wishlist->low = $value['low'];
+                $wishlist->close = $value['close'];
+                $wishlist->lastTradeQty = $value['lastTradeQty'];
+                $wishlist->exchFeedTime = $value['exchFeedTime'];
+                $wishlist->exchTradeTime = $value['exchTradeTime'];
+                $wishlist->netChange = $value['netChange'];
+                $wishlist->percentChange = $value['percentChange'];
+                $wishlist->avgPrice = $value['avgPrice'];
+                $wishlist->tradeVolume = $value['tradeVolume'];
+                $wishlist->opnInterest = $value['opnInterest'];
+                $wishlist->lowerCircuit = $value['lowerCircuit'];
+                $wishlist->upperCircuit = $value['upperCircuit'];
+                $wishlist->totBuyQuan = $value['totBuyQuan'];
+                $wishlist->totSellQuan = $value['totSellQuan'];
+                $wishlist->WeekLow52 = $value['52WeekLow'];
+                $wishlist->WeekHigh52 = $value['52WeekHigh'];
+                $wishlist->save();
+            }  
+        }   
 
-        // $MCXpayload = array_unique($MCXpayload);
-        // $NFOpayload = array_unique($NFOpayload);
+        $finalResponse = WishlistData::whereDate('created_at', now()->today())->orderBy('id','DESC')->paginate(50);
+        if(!count($finalResponse)){
+            $finalResponse = WishlistData::orderBy('id','DESC')->paginate(50);
+        }
 
-        // // dd(count($MCXpayload)).'--'.count($NFOpayload);
-
-        // $MCXpayload = array_chunk($MCXpayload, 10);
-        // $NFOpayload = array_chunk($NFOpayload , 10);
-        
-        // $finalResponse = [];
-        // foreach ($NFOpayload as $key => $value) {
-        //     $payload = [
-        //         'NFO'=>$value
-        //     ];
-            
-        //     $payload = json_encode($payload,true);
-        //     $respond = $this->getWatchListRecords($payload);
-
-        //     if($respond != NULL){
-        //         if($respond['status'] == true){
-        //             $fetchedData = $respond['data']['fetched'];
-        //             array_unshift($finalResponse,$fetchedData);
-        //         }
-        //     }else{
-        //         $payload = json_encode($payload,true);
-        //         $respond = $this->getWatchListRecords($payload);
-        //         if($respond != NULL){
-        //             if($respond['status'] == true){
-        //                 $fetchedData = $respond['data']['fetched'];
-        //                 array_unshift($finalResponse,$fetchedData);
-        //             }
-        //         }
-        //     }
-        // }
-
-        // foreach ($MCXpayload as $key => $value) {
-        //     $payload = [
-        //         'MCX'=>$value
-        //     ];
-
-        //     $payload = json_encode($payload,true);
-        //     $respond = $this->getWatchListRecords($payload);
-        //     if($respond != NULL){
-        //         if($respond['status'] == true){
-        //             $fetchedData = $respond['data']['fetched'];
-        //             array_unshift($finalResponse,$fetchedData);
-        //         }
-        //     }else{
-        //         $payload = json_encode($payload,true);
-        //         $respond = $this->getWatchListRecords($payload);
-        //         if($respond != NULL){
-        //             if($respond['status'] == true){
-        //                 $fetchedData = $respond['data']['fetched'];
-        //                 array_unshift($finalResponse,$fetchedData);
-        //             }
-        //         }
-        //     }
-        // }
-        // $finalResponse = call_user_func_array('array_merge', $finalResponse);
-
-     
         $fullUrl = $request->fullUrl();
 
         if($request->ajax()){
@@ -2188,6 +2133,7 @@ class UserController extends Controller
                 $watchTradePosition->net_change = $netChange;
                 $watchTradePosition->sell_quantity = $totalSellQuantity;
                 $watchTradePosition->sell_price = $SellavgPrice;
+                $watchTradePosition->ltp = $request->ltp;
                 $watchTradePosition->save();
             }else{
                 $tradePostion = new WatchTradePosition;
@@ -2199,6 +2145,7 @@ class UserController extends Controller
                 $tradePostion->buy_price = $BuyavgPrice;
                 $tradePostion->sell_quantity = $totalSellQuantity;
                 $tradePostion->sell_price = $SellavgPrice;
+                $tradePostion->ltp = $request->ltp;
                 $tradePostion->net_change = $netChange;
                 $tradePostion->save();
             }
@@ -2223,7 +2170,7 @@ class UserController extends Controller
     public function watchListPosition(Request $request){
         $pageTitle = "Watch List Position";
         $userId = \Auth::id();
-        $wishlistorder = WatchTradePosition::where('user_id',$userId)->orderBy('id','DESC')->get();
+        $wishlistorder = WatchTradePosition::where('user_id',$userId)->orderBy('id','DESC')->paginate(50);
 
         $MCXpayload = [];
         $NFOpayload = [];
@@ -2247,15 +2194,29 @@ class UserController extends Controller
         if($respond == NULL){
             $respond = $this->getWatchListRecords($payload);
         }
+
+        if(isset($respond)){
+            if($respond['status'] == true){
+                $watchList = $respond['data']['fetched'];
+                foreach ($wishlistorder as $item) {
+                    $positionData = WatchTradePosition::where('id',$item->id)->first();
+                    $key = array_search($item->token, array_column($watchList, 'symbolToken'));
+                    $currentLtp = $watchList[$key]['ltp'];
+                    $positionData->ltp = $currentLtp;
+                    $positionData->save();
+                }
+            }
+        }
+
         $fullUrl = $request->fullUrl();
         if($request->ajax()){
             if(!empty($respond)){
-                return view($this->activeTemplate . 'user.watch-list-position-ajax',compact('pageTitle','wishlistorder','respond','fullUrl'));
+                return view($this->activeTemplate . 'user.watch-list-position-ajax',compact('pageTitle','wishlistorder','fullUrl'));
             }
             return 'NO_DATA';
         }
 
-        return view($this->activeTemplate . 'user.watch-list-position',compact('pageTitle','wishlistorder','respond','fullUrl'));
+        return view($this->activeTemplate . 'user.watch-list-position',compact('pageTitle','wishlistorder','fullUrl'));
     }
 
 }
