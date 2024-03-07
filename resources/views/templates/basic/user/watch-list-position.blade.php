@@ -109,7 +109,7 @@
                                             @else
                                                 <tr>
                                                     <td colspan="100%" class="d-flex justify-content-center text-center">
-                                                        Please Wait Data Is Loading...
+                                                        No Data Found...
                                                     </td>
                                                 </tr>
                                             @endif
