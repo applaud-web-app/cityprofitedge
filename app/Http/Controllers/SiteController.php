@@ -19,13 +19,32 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use App\Constants\Status;
 use App\Traits\AngelApiAuth;
+use App\Models\OiBuildUp;
+use App\Models\TopPortfolio;
+use App\Models\PcrVolume;
+
 class SiteController extends Controller
 {
     use AngelApiAuth;
-    public function index(){
 
+    // public function storePcrData(){
+
+    //     dd($this->getTopGainerAngleApiData());
+    //     $pcrData = new PcrVolume;
+    //     $pcrData->symbol = "";
+    //     $pcrData->ltp = "";
+    //     $pcrData->save();
+    // }
+
+    public function index(Request $request){
         
-        // dd($this->getMarketData());
+        $getPcrData = PcrVolume::orderBy('id','DESC')->paginate(5);
+        $topGainer = TopPortfolio::orderBy('id','DESC')->where('type','gainer')->paginate(5);
+        $topLoser = TopPortfolio::orderBy('id','DESC')->where('type','loser')->paginate(5);
+        $longBuildUp = OiBuildUp::orderBy('id','DESC')->where('type','long')->paginate(5);
+        $shortBuildUp = OiBuildUp::orderBy('id','DESC')->where('type','short')->paginate(5);
+        $coveringBuildUp = OiBuildUp::orderBy('id','DESC')->where('type','covering')->paginate(5);
+        $unWindingBuildUp = OiBuildUp::orderBy('id','DESC')->where('type','unwinding')->paginate(5);
         $reference = @$_GET['reference'];
         if ($reference) {
             session()->put('reference', $reference);
@@ -33,7 +52,12 @@ class SiteController extends Controller
         $pageTitle = 'Home';
        
         $sections = Page::where('tempname',$this->activeTemplate)->where('slug','/')->first();
-        return view($this->activeTemplate . 'home', compact('pageTitle','sections'));
+        $fullUrl = $request->fullUrl();
+        if($request->ajax()){
+            return view($this->activeTemplate . 'sections.table-ajax', compact('pageTitle','sections','getPcrData','topGainer','topLoser','longBuildUp','shortBuildUp','coveringBuildUp','unWindingBuildUp','fullUrl'));
+        }
+
+        return view($this->activeTemplate . 'home', compact('pageTitle','sections','getPcrData','topGainer','topLoser','longBuildUp','shortBuildUp','coveringBuildUp','unWindingBuildUp','fullUrl'));
     }
 
     public function pages($slug)
@@ -245,7 +269,7 @@ class SiteController extends Controller
 
     public function getTopLoserData(){
         try {
-            return response()->json($this->getTopLoserAngleApiData());
+            $response = response()->json($this->getTopLoserAngleApiData());
         } catch (\Throwable $th) {
            return response()->json(
             [ 'data' => ['status'=>false] ]

@@ -1,10 +1,11 @@
-<section class="pt-100 pb-100">
+<section class="pt-100 pb-100" id="tableSection">
     <div class="container">
         <div class="about-thumb -from-top-wow fadeInUp" data-wow-duration="0.5" data-wow-delay="0.5s" id="faqAccordion">
             <div class="row g-3">
                 <div class="col-lg-4">
                     <div class="d-flex align-items-center">
-                        <h2>Top Gainers</h2><a class="text--base ms-3" href="#">View All</a>
+                        <h2>Top Gainers</h2>
+                        {{-- <a class="text--base ms-3" href="#">View All</a> --}}
                     </div>
                     <div class="custom--card">
                         <div class="card-body p-0">
@@ -19,13 +20,32 @@
                                         </tr>
                                     </thead>
                                     <tbody id="topGainer">
-                                        <tr>
-                                            <td colspan="100%">
-                                                <div class="spinner-border" role="status">
-                                                    <span class="sr-only">Loading...</span>
-                                                </div>
-                                            </td>
-                                        </tr>
+                                        @if (isset($topGainer))
+                                            @if (count($topGainer))
+                                                @foreach ($topGainer as $item)
+                                                    @if ($item->type == "gainer")
+                                                        <tr>
+                                                            <td class="text-start">{{$item->symbol}}</td>
+                                                            <td class="text-start">{{$item->ltp}}</td>
+                                                            <td class="text-start text-success">{{$item->net_change}}</td>
+                                                            <td class="text-start text-success">{{$item->per_change}}</td>
+                                                        </tr>
+                                                    @endif
+                                                @endforeach
+                                            @else
+                                                <tr>
+                                                    <td colspan="100%">
+                                                        <span>No Data Found</span>
+                                                    </td>
+                                                </tr>
+                                            @endif                                            
+                                        @else
+                                            <tr>
+                                                <td colspan="100%">
+                                                    <span>No Data Found</span>
+                                                </td>
+                                            </tr>
+                                        @endif                                        
                                     </tbody>
                                 </table>
                             </div>
@@ -34,7 +54,8 @@
                 </div>
                 <div class="col-lg-4">
                     <div class="d-flex align-items-center">
-                        <h2>Top Losers</h2><a class="text--base ms-3" href="#">View All</a>
+                        <h2>Top Losers</h2>
+                        {{-- <a class="text--base ms-3" href="#">View All</a> --}}
                     </div>
                     <div class="custom--card">
                         <div class="card-body p-0">
@@ -49,13 +70,32 @@
                                         </tr>
                                     </thead>
                                     <tbody id="topLoser">
-                                        <tr>
-                                            <td colspan="100%">
-                                                <div class="spinner-border" role="status">
-                                                    <span class="sr-only">Loading...</span>
-                                                </div>
-                                            </td>
-                                        </tr>
+                                        @if (isset($topLoser))
+                                            @if (count($topLoser))
+                                                @foreach ($topLoser as $item)
+                                                    @if ($item->type == "loser")
+                                                        <tr>
+                                                            <td class="text-start">{{$item->symbol}}</td>
+                                                            <td class="text-start">{{$item->ltp}}</td>
+                                                            <td class="text-start text-danger">{{$item->net_change}}</td>
+                                                            <td class="text-start text-danger">{{$item->per_change}}</td>
+                                                        </tr>
+                                                    @endif
+                                                @endforeach
+                                            @else
+                                                <tr>
+                                                    <td  colspan="100%">
+                                                        <span>No Data Found</span>
+                                                    </td>
+                                                </tr>
+                                            @endif
+                                        @else
+                                            <tr>
+                                                <td  colspan="100%">
+                                                    <span>No Data Found</span>
+                                                </td>
+                                            </tr>
+                                        @endif
                                     </tbody>
                                 </table>
                             </div>
@@ -64,7 +104,8 @@
                 </div>
                 <div class="col-lg-4">
                     <div class="d-flex align-items-center">
-                        <h2>PCR Volume</h2><a class="text--base ms-3" href="#">View All</a>
+                        <h2>PCR Volume</h2>
+                        {{-- <a class="text--base ms-3" href="#">View All</a> --}}
                     </div>
                     <div class="custom--card">
                         <div class="card-body p-0">
@@ -77,13 +118,28 @@
                                         </tr>
                                     </thead>
                                     <tbody id="pcr">
-                                        <tr>
-                                            <td colspan="100%">
-                                                <div class="spinner-border" role="status">
-                                                    <span class="sr-only">Loading...</span>
-                                                </div>
-                                            </td>
-                                        </tr>
+                                        @if (isset($getPcrData))
+                                            @if (count($getPcrData))
+                                                @foreach ($getPcrData as $item)
+                                                    <tr>
+                                                        <td class="text-start">{{$item->symbol}}</td>
+                                                        <td class="text-start">{{$item->pcr}}</td>
+                                                    </tr>
+                                                @endforeach
+                                            @else
+                                                <tr>
+                                                    <td colspan="100%">
+                                                        <span>No Data Found</span>
+                                                    </td>
+                                                </tr>
+                                            @endif
+                                        @else
+                                            <tr>
+                                                <td colspan="100%">
+                                                    <span>No Data Found</span>
+                                                </td>
+                                            </tr>
+                                        @endif
                                     </tbody>
                                 </table>
                             </div>
@@ -92,7 +148,8 @@
                 </div>
                 <div class="col-lg-6">
                     <div class="d-flex align-items-center">
-                        <h2>OI BuildUp - Long</h2><a class="text--base ms-3" href="#">View All</a>
+                        <h2>OI BuildUp - Long</h2>
+                        {{-- <a class="text--base ms-3" href="#">View All</a> --}}
                     </div>
                     <div class="custom--card">
                         <div class="card-body p-0">
@@ -109,13 +166,34 @@
                                         </tr>
                                     </thead>
                                     <tbody id="longBuild">
-                                        <tr>
-                                            <td colspan="100%">
-                                                <div class="spinner-border" role="status">
-                                                    <span class="sr-only">Loading...</span>
-                                                </div>
-                                            </td>
-                                        </tr>
+                                        @if (isset($longBuildUp))
+                                           @if (count($longBuildUp))
+                                               @foreach ($longBuildUp as $item)
+                                                    @if ($item->type == "long")
+                                                        <tr>
+                                                            <td class="text-start">{{$item->symbol}}</td>
+                                                            <td class="text-start">{{$item->ltp}}</td>
+                                                            <td class="text-start {{$item->net_change > 0 ? 'text-success' : 'text-danger'}}">{{$item->net_change}}</td>
+                                                            <td class="text-start {{$item->per_change > 0 ? 'text-success' : 'text-danger'}}">{{$item->per_change}}</td>
+                                                            <td class="text-start">{{$item->oi}}</td>
+                                                            <td class="text-start {{$item->oi_change > 0 ? 'text-success' : 'text-danger'}}">{{$item->oi_change}}</td>
+                                                        </tr>
+                                                    @endif
+                                                @endforeach
+                                           @else
+                                               <tr>
+                                                    <td  colspan="100%">
+                                                        <span>No Data Found</span>
+                                                    </td>
+                                                </tr>
+                                           @endif
+                                        @else
+                                            <tr>
+                                                <td  colspan="100%">
+                                                    <span>No Data Found</span>
+                                                </td>
+                                            </tr>
+                                        @endif
                                     </tbody>
                                 </table>
                             </div>
@@ -124,7 +202,8 @@
                 </div>
                 <div class="col-lg-6">
                     <div class="d-flex align-items-center">
-                        <h2>OI BuildUp - Short</h2><a class="text--base ms-3" href="#">View All</a>
+                        <h2>OI BuildUp - Short</h2>
+                        {{-- <a class="text--base ms-3" href="#">View All</a> --}}
                     </div>
                     <div class="custom--card">
                         <div class="card-body p-0">
@@ -141,13 +220,34 @@
                                         </tr>
                                     </thead>
                                     <tbody id="shortBuild">
-                                        <tr>
-                                            <td colspan="100%">
-                                                <div class="spinner-border" role="status">
-                                                    <span class="sr-only">Loading...</span>
-                                                </div>
-                                            </td>
-                                        </tr>
+                                        @if (isset($shortBuildUp))
+                                            @if (count($shortBuildUp))
+                                                @foreach ($shortBuildUp as $item)
+                                                    @if ($item->type == "short")
+                                                        <tr>
+                                                            <td class="text-start">{{$item->symbol}}</td>
+                                                            <td class="text-start">{{$item->ltp}}</td>
+                                                            <td class="text-start {{$item->net_change > 0 ? 'text-success' : 'text-danger'}}">{{$item->net_change}}</td>
+                                                            <td class="text-start {{$item->per_change > 0 ? 'text-success' : 'text-danger'}}">{{$item->per_change}}</td>
+                                                            <td class="text-start">{{$item->oi}}</td>
+                                                            <td class="text-start {{$item->oi_change > 0 ? 'text-success' : 'text-danger'}}">{{$item->oi_change}}</td>
+                                                        </tr>
+                                                    @endif
+                                                @endforeach
+                                            @else
+                                                <tr>
+                                                    <td  colspan="100%">
+                                                        <span>No Data Found</span>
+                                                    </td>
+                                                </tr>
+                                            @endif
+                                        @else
+                                            <tr>
+                                                <td  colspan="100%">
+                                                    <span>No Data Found</span>
+                                                </td>
+                                            </tr>
+                                        @endif
                                     </tbody>
                                 </table>
                             </div>
@@ -156,7 +256,8 @@
                 </div>
                 <div class="col-lg-6">
                     <div class="d-flex align-items-center">
-                        <h2>OI BuildUp - Short Covering</h2><a class="text--base ms-3" href="#">View All</a>
+                        <h2>OI BuildUp - Short Covering</h2>
+                        {{-- <a class="text--base ms-3" href="#">View All</a> --}}
                     </div>
                     <div class="custom--card">
                         <div class="card-body p-0">
@@ -173,13 +274,34 @@
                                         </tr>
                                     </thead>
                                     <tbody id="shortCovering">
-                                        <tr>
-                                            <td colspan="100%">
-                                                <div class="spinner-border" role="status">
-                                                    <span class="sr-only">Loading...</span>
-                                                </div>
-                                            </td>
-                                        </tr>
+                                        @if (isset($coveringBuildUp))
+                                            @if (count($coveringBuildUp))
+                                               @foreach ($coveringBuildUp as $item)
+                                                    @if ($item->type == "covering")
+                                                        <tr>
+                                                            <td class="text-start">{{$item->symbol}}</td>
+                                                            <td class="text-start">{{$item->ltp}}</td>
+                                                            <td class="text-start {{$item->net_change > 0 ? 'text-success' : 'text-danger'}}">{{$item->net_change}}</td>
+                                                            <td class="text-start {{$item->per_change > 0 ? 'text-success' : 'text-danger'}}">{{$item->per_change}}</td>
+                                                            <td class="text-start">{{$item->oi}}</td>
+                                                            <td class="text-start {{$item->oi_change > 0 ? 'text-success' : 'text-danger'}}">{{$item->oi_change}}</td>
+                                                        </tr>
+                                                    @endif
+                                                @endforeach
+                                           @else
+                                               <tr>
+                                                    <td  colspan="100%">
+                                                        <span>No Data Found</span>
+                                                    </td>
+                                                </tr>
+                                           @endif                                            
+                                        @else
+                                            <tr>
+                                                <td  colspan="100%">
+                                                    <span>No Data Found</span>
+                                                </td>
+                                            </tr>
+                                        @endif
                                     </tbody>
                                 </table>
                             </div>
@@ -188,7 +310,8 @@
                 </div>
                 <div class="col-lg-6">
                     <div class="d-flex align-items-center">
-                        <h2>OI BuildUp - Long Unwinding</h2><a class="text--base ms-3" href="#">View All</a>
+                        <h2>OI BuildUp - Long Unwinding</h2>
+                        {{-- <a class="text--base ms-3" href="#">View All</a> --}}
                     </div>
                     <div class="custom--card">
                         <div class="card-body p-0">
@@ -205,13 +328,34 @@
                                         </tr>
                                     </thead>
                                     <tbody id="longUnwilling">
-                                        <tr>
-                                            <td colspan="100%">
-                                                <div class="spinner-border" role="status">
-                                                    <span class="sr-only">Loading...</span>
-                                                </div>
-                                            </td>
-                                        </tr>
+                                        @if (isset($unWindingBuildUp))
+                                            @if (count($unWindingBuildUp))
+                                                @foreach ($unWindingBuildUp as $item)
+                                                    @if ($item->type == "unwinding")
+                                                        <tr>
+                                                            <td class="text-start">{{$item->symbol}}</td>
+                                                            <td class="text-start">{{$item->ltp}}</td>
+                                                            <td class="text-start {{$item->net_change > 0 ? 'text-success' : 'text-danger'}}">{{$item->net_change}}</td>
+                                                            <td class="text-start {{$item->per_change > 0 ? 'text-success' : 'text-danger'}}">{{$item->per_change}}</td>
+                                                            <td class="text-start">{{$item->oi}}</td>
+                                                            <td class="text-start {{$item->oi_change > 0 ? 'text-success' : 'text-danger'}}">{{$item->oi_change}}</td>
+                                                        </tr>
+                                                    @endif
+                                                @endforeach
+                                            @else
+                                                <tr>
+                                                    <td colspan="100%">
+                                                        <span>No Data Found</span>
+                                                    </td>
+                                                </tr>
+                                            @endif
+                                        @else
+                                            <tr>
+                                                <td colspan="100%">
+                                                    <span>No Data Found</span>
+                                                </td>
+                                            </tr>
+                                        @endif
                                     </tbody>
                                 </table>
                             </div>
@@ -224,7 +368,26 @@
 </section>
 
 @push('script')
+
 <script>
+    $(document).ready(function(){
+        function reloadData(){
+            $.get('{!!$fullUrl!!}',function(data){
+                if(data=='NO_DATA'){
+                    reloadData();
+                    return;
+                }
+                $("#tableSection").html(data);
+            });
+        }
+    
+        setInterval(() => {
+            reloadData();
+        }, 15000);//call every 1/2 minute
+    });
+</script>
+
+{{-- <script>
     let longIo;
     let shortIo; 
     let shortCover;
@@ -467,5 +630,5 @@
     }
   
     
-</script>
+</script> --}}
 @endpush
