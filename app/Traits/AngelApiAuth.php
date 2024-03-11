@@ -150,125 +150,125 @@ trait AngelApiAuth
         return $errData;
     }
 
-    public function getTopLoserAngleApiData(){
-        $jwtToken =  $this->generate_access_token();
-        $errData = [];
-        if($jwtToken!=null){
-            $curl = curl_init();
-            curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://apiconnect.angelbroking.com/rest/secure/angelbroking/marketData/v1/gainersLosers',
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => '{
-                "datatype": "PercPriceLosers",
-                "expirytype": "NEAR"
-            }',
-            CURLOPT_HTTPHEADER => array(
-                'X-UserType: USER',
-                'X-SourceID: WEB',
-                'X-PrivateKey: '.$this->apiKey,
-                'X-ClientLocalIP: '.$this->clientLocalIp,
-                'X-ClientPublicIP: '.$this->clientPublicIp,
-                'X-MACAddress: '.$this->macAddress,
-                'Content-Type: application/json',
-                'Authorization: Bearer '.$jwtToken
-            ),
-            ));
+    // public function getTopLoserAngleApiData(){
+    //     $jwtToken =  $this->generate_access_token();
+    //     $errData = [];
+    //     if($jwtToken!=null){
+    //         $curl = curl_init();
+    //         curl_setopt_array($curl, array(
+    //         CURLOPT_URL => 'https://apiconnect.angelbroking.com/rest/secure/angelbroking/marketData/v1/gainersLosers',
+    //         CURLOPT_RETURNTRANSFER => true,
+    //         CURLOPT_ENCODING => '',
+    //         CURLOPT_MAXREDIRS => 10,
+    //         CURLOPT_TIMEOUT => 0,
+    //         CURLOPT_FOLLOWLOCATION => true,
+    //         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    //         CURLOPT_CUSTOMREQUEST => 'POST',
+    //         CURLOPT_POSTFIELDS => '{
+    //             "datatype": "PercPriceLosers",
+    //             "expirytype": "NEAR"
+    //         }',
+    //         CURLOPT_HTTPHEADER => array(
+    //             'X-UserType: USER',
+    //             'X-SourceID: WEB',
+    //             'X-PrivateKey: '.$this->apiKey,
+    //             'X-ClientLocalIP: '.$this->clientLocalIp,
+    //             'X-ClientPublicIP: '.$this->clientPublicIp,
+    //             'X-MACAddress: '.$this->macAddress,
+    //             'Content-Type: application/json',
+    //             'Authorization: Bearer '.$jwtToken
+    //         ),
+    //         ));
 
-            $response = curl_exec($curl);
-            $err = curl_error($curl);
-            curl_close($curl);
-            if ($err) {
-                return $errData;
-            }
-            $errData = json_decode($response,true);
-            return $errData;
-        }
-        return $errData;
-    }   
+    //         $response = curl_exec($curl);
+    //         $err = curl_error($curl);
+    //         curl_close($curl);
+    //         if ($err) {
+    //             return $errData;
+    //         }
+    //         $errData = json_decode($response,true);
+    //         return $errData;
+    //     }
+    //     return $errData;
+    // }   
     
-    public function getTopGainerAngleApiData(){
-        $jwtToken =  $this->generate_access_token();
-        $errData = [];
-        if($jwtToken!=null){
-            $curl = curl_init();
-            curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://apiconnect.angelbroking.com/rest/secure/angelbroking/marketData/v1/gainersLosers',
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => '{
-                "datatype": "PercPriceGainers",
-                "expirytype": "NEAR"
-            }',
-            CURLOPT_HTTPHEADER => array(
-                'X-UserType: USER',
-                'X-SourceID: WEB',
-                'X-PrivateKey: '.$this->apiKey,
-                'X-ClientLocalIP: '.$this->clientLocalIp,
-                'X-ClientPublicIP: '.$this->clientPublicIp,
-                'X-MACAddress: '.$this->macAddress,
-                'Content-Type: application/json',
-                'Authorization: Bearer '.$jwtToken
-            ),
-            ));
+    // public function getTopGainerAngleApiData(){
+    //     $jwtToken =  $this->generate_access_token();
+    //     $errData = [];
+    //     if($jwtToken!=null){
+    //         $curl = curl_init();
+    //         curl_setopt_array($curl, array(
+    //         CURLOPT_URL => 'https://apiconnect.angelbroking.com/rest/secure/angelbroking/marketData/v1/gainersLosers',
+    //         CURLOPT_RETURNTRANSFER => true,
+    //         CURLOPT_ENCODING => '',
+    //         CURLOPT_MAXREDIRS => 10,
+    //         CURLOPT_TIMEOUT => 0,
+    //         CURLOPT_FOLLOWLOCATION => true,
+    //         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    //         CURLOPT_CUSTOMREQUEST => 'POST',
+    //         CURLOPT_POSTFIELDS => '{
+    //             "datatype": "PercPriceGainers",
+    //             "expirytype": "NEAR"
+    //         }',
+    //         CURLOPT_HTTPHEADER => array(
+    //             'X-UserType: USER',
+    //             'X-SourceID: WEB',
+    //             'X-PrivateKey: '.$this->apiKey,
+    //             'X-ClientLocalIP: '.$this->clientLocalIp,
+    //             'X-ClientPublicIP: '.$this->clientPublicIp,
+    //             'X-MACAddress: '.$this->macAddress,
+    //             'Content-Type: application/json',
+    //             'Authorization: Bearer '.$jwtToken
+    //         ),
+    //         ));
 
-            $response = curl_exec($curl);
-            $err = curl_error($curl);
-            curl_close($curl);
-            if ($err) {
-                return $errData;
-            }
-            $errData = json_decode($response,true);
-            return $errData;
-        }
-        return $errData;
-    }   
+    //         $response = curl_exec($curl);
+    //         $err = curl_error($curl);
+    //         curl_close($curl);
+    //         if ($err) {
+    //             return $errData;
+    //         }
+    //         $errData = json_decode($response,true);
+    //         return $errData;
+    //     }
+    //     return $errData;
+    // }   
 
 
-    public function getPCRApiDatas(){
-        $jwtToken =  $this->generate_access_token();
-        $errData = [];
-        if($jwtToken!=null){
-            $curl = curl_init();
-            curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://apiconnect.angelbroking.com/rest/secure/angelbroking/marketData/v1/putCallRatio',
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'GET',
-            CURLOPT_HTTPHEADER => array(
-                'X-UserType: USER',
-                'X-SourceID: WEB',
-                'X-PrivateKey: '.$this->apiKey,
-                'X-ClientLocalIP: '.$this->clientLocalIp,
-                'X-ClientPublicIP: '.$this->clientPublicIp,
-                'X-MACAddress: '.$this->macAddress,
-                'Content-Type: application/json',
-                'Authorization: Bearer '.$jwtToken
-            ),
-            ));
+    // public function getPCRApiDatas(){
+    //     $jwtToken =  $this->generate_access_token();
+    //     $errData = [];
+    //     if($jwtToken!=null){
+    //         $curl = curl_init();
+    //         curl_setopt_array($curl, array(
+    //         CURLOPT_URL => 'https://apiconnect.angelbroking.com/rest/secure/angelbroking/marketData/v1/putCallRatio',
+    //         CURLOPT_RETURNTRANSFER => true,
+    //         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    //         CURLOPT_CUSTOMREQUEST => 'GET',
+    //         CURLOPT_HTTPHEADER => array(
+    //             'X-UserType: USER',
+    //             'X-SourceID: WEB',
+    //             'X-PrivateKey: '.$this->apiKey,
+    //             'X-ClientLocalIP: '.$this->clientLocalIp,
+    //             'X-ClientPublicIP: '.$this->clientPublicIp,
+    //             'X-MACAddress: '.$this->macAddress,
+    //             'Content-Type: application/json',
+    //             'Authorization: Bearer '.$jwtToken
+    //         ),
+    //         ));
 
-            $response = curl_exec($curl);
-            // dd($response);
-            $err = curl_error($curl);
-            curl_close($curl);
-            if ($err) {
-                return $errData;
-            }
-            $errData = json_decode($response,true);
-            return $errData;
-        }
-        return $errData;
-    }
+    //         $response = curl_exec($curl);
+    //         // dd($response);
+    //         $err = curl_error($curl);
+    //         curl_close($curl);
+    //         if ($err) {
+    //             return $errData;
+    //         }
+    //         $errData = json_decode($response,true);
+    //         return $errData;
+    //     }
+    //     return $errData;
+    // }
 
     public function getLongBuildData(){
         $jwtToken =  $this->generate_access_token();
