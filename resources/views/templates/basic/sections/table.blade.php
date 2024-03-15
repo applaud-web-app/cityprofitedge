@@ -369,7 +369,7 @@
 
 @push('script')
 
-{{-- <script>
+<script>
     $(document).ready(function(){
         function reloadData(){
             $.get('{!!$fullUrl!!}',function(data){
@@ -385,7 +385,7 @@
             reloadData();
         }, 15000);//call every 1/2 minute
     });
-</script> --}}
+</script>
 
 {{-- <script>
     let longIo;
