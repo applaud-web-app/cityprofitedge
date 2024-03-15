@@ -11,6 +11,8 @@ use App\Models\User;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\Paginator;
 use App\Constants\Status;
+use Illuminate\Support\Facades\Cache;
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -43,13 +45,17 @@ class AppServiceProvider extends ServiceProvider
         //     }
         // }
 
+        $languages = Cache::rememberForever('languages', function () {
+            return Language::all();
+        });
+
         $general = gs();
         $activeTemplate = activeTemplate();
 
         $viewShare['general'] = $general;
         $viewShare['activeTemplate'] = $activeTemplate;
         $viewShare['activeTemplateTrue'] = activeTemplate(true);
-        $viewShare['language'] = Language::get();
+        $viewShare['language'] = $languages;
         $viewShare['emptyMessage'] = 'Data not found';
         view()->share($viewShare);
 
