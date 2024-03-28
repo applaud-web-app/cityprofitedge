@@ -479,6 +479,7 @@ function sendVia($implode = false){
 
 function allTradeSymbols(){
     $data = \DB::connection('mysql_rm')->select('SHOW TABLES');
+    dd($data);
     $arr = [];
     foreach($data as $vl){
         $arr[] = $vl->Tables_in_PMS_Datastore;
