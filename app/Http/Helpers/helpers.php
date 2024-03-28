@@ -488,7 +488,7 @@ function allTradeSymbols(){
 }
 
 function allTradeTimeFrames(){
-    return [1,3,5];
+    return [1,3,5,15,20];
 }
 
 function strategyNames(){
