@@ -121,8 +121,8 @@
                                                             <td>{{$arrData['PE'][$k]}}</td>
                                                             <td>{{$arrData['vwap_CE_signal'][$k]}}</td>
                                                             <td>{{$arrData['vwap_PE_signal'][$k]}}</td>
-                                                            <td>{{$arrData['CE_consolidated'][$k]}}</td>
-                                                            <td>{{$arrData['PE_consolidated'][$k]}}</td>
+                                                            <td>{{isset($arrData['CE_consolidated']) ? $arrData['CE_consolidated'][$k] : '-'}}</td>
+                                                            <td>{{isset($arrData['PE_consolidated']) ? $arrData['PE_consolidated'][$k] : '-'}}</td>
                                                             <td>{{$arrData['close_CE'][$k]}}</td>
                                                             <td>{{$arrData['close_PE'][$k]}}</td>
                                                             <td>{{$arrData['BUY_Action'][$k]}}</td>
@@ -226,8 +226,8 @@
                                                             $Strategy_name = array_slice($arrData['Strategy_name'],-5);
                                                             $vwap_CE_signal = array_slice($arrData['vwap_CE_signal'],-5);
                                                             $vwap_PE_signal = array_slice($arrData['vwap_PE_signal'],-5);
-                                                            $CE_consolidated = array_slice($arrData['CE_consolidated'],-5);
-                                                            $PE_consolidated = array_slice($arrData['PE_consolidated'],-5);
+                                                            $CE_consolidated = isset($arrData['CE_consolidated']) ? array_slice($arrData['CE_consolidated'],-5) : [];
+                                                            $PE_consolidated = isset($arrData['PE_consolidated']) ? array_slice($arrData['PE_consolidated'],-5) : [];
                                                             $close_CE = array_slice($arrData['close_CE'],-5);
                                                             $close_PE = array_slice($arrData['close_PE'],-5);
                                                         @endphp
@@ -240,8 +240,8 @@
                                                                 <td>{{$PE[$k]}}</td>
                                                                 <td>{{$vwap_CE_signal[$k]}}</td>
                                                                 <td>{{$vwap_PE_signal[$k]}}</td>
-                                                                <td>{{$CE_consolidated[$k]}}</td>
-                                                                <td>{{$PE_consolidated[$k]}}</td>
+                                                                <td>{{isset($CE_consolidated[$k]) ? $CE_consolidated[$k] : '-'}}</td>
+                                                                <td>{{isset($PE_consolidated[$k]) ? $PE_consolidated[$k] : '-'}}</td>
                                                                 <td>{{$close_CE[$k]}}</td>
                                                                 <td>{{$close_PE[$k]}}</td>
                                                                 <td>{{$BUY_Action[$k]}}</td>
