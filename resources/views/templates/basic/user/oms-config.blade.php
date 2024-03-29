@@ -167,6 +167,11 @@
                             @foreach (allTradeSymbols() as $item)
                                 <option value="{{$item}}">{{$item}}</option>
                             @endforeach
+
+                            @foreach (allTradeSymbolsNew() as $item)
+                                <option value="{{$item}}" selected>{{$item}}</option>
+                            @endforeach
+                            
                         </select>
                     </div>
 
