@@ -25,7 +25,7 @@
                 <div class="col-lg-3 form-group">
                     <label>@lang('TimeFrame')</label>
                     <select name="time_frame" class="form--control">
-                       @foreach (allTradeTimeFrames() as $item)
+                       @foreach (allTradeTimeFramesNew() as $item)
                            <option value="{{$item}}" {{$item==$timeFrame ? 'selected':''}}>{{$item}}</option>
                        @endforeach
                     </select>
