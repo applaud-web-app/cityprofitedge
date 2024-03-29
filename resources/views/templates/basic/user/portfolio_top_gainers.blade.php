@@ -167,6 +167,9 @@
                 
                 @foreach($symbolArr as $v)
                     @php 
+                    if(!in_array($v,['CRUDEOIL','BANKNIFTY','FINNIFTY','SILVER'])){
+                        continue;
+                    }
                     if($v == "LTP"){
 
                     }else{
