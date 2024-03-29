@@ -8,6 +8,10 @@
 
 <section class="pt-100 pb-100">
     <div class="container content-container">
+              <div class="mb-1">
+                <a href="{{url('user/portfolio-top-gainers')}}" class="btn btn--base">Index Options</a> 
+                <a href="{{url('user/portfolio-top-gainers-stock')}}" class="btn btn--base">Stock Options</a> 
+             </div>
         <form action="" class="transparent-form mb-3">
             <div class="row">
                 <div class="col-lg-3 form-group">
