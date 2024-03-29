@@ -15,7 +15,7 @@
                     <select name="stock_name" class="form--control" id="">
                         <option value="">Select Symbol  Name</option>
                         @foreach ($symbolArr as $v)
-                            @if(in_array($v,['CRUDEOIL','BANKNIFTY','FINNIFTY','SILVER','NIFTY','MIDCPNIFTY','NATURALGAS','SILVER','GOLD']))
+                            @if(!in_array($v,['CRUDEOIL','BANKNIFTY','FINNIFTY','SILVER','NIFTY','MIDCPNIFTY','NATURALGAS','SILVER','GOLD']))
                                 <option value="{{$v}}" {{$v==$stockName ? 'selected':''}}>{{$v}}</option>
                              @endif
                         @endforeach
@@ -169,7 +169,7 @@
                 
                 @foreach($symbolArr as $v)
                     @php 
-                    if(!in_array($v,['CRUDEOIL','BANKNIFTY','FINNIFTY','SILVER','NIFTY','MIDCPNIFTY','NATURALGAS','SILVER','GOLD'])){
+                    if(in_array($v,['CRUDEOIL','BANKNIFTY','FINNIFTY','SILVER','NIFTY','MIDCPNIFTY','NATURALGAS','SILVER','GOLD'])){
                         continue;
                     }
                     if($v == "LTP"){
