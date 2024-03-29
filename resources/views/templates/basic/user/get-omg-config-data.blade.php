@@ -13,9 +13,6 @@
                     @foreach (allTradeSymbols() as $item)
                         <option value="{{$item}}" {{$omgData->symbol_name==$item ? 'selected' : ''}}>{{$item}}</option>
                     @endforeach
-                  @foreach (allTradeSymbolsNew() as $item)
-                        <option value="{{$item}}" {{$omgData->symbol_name==$item ? 'selected' : ''}}>{{$item}}</option>
-                    @endforeach
                 </select>
                 <input type="hidden" name="id" value="{{$omgData->id}}">
             </div>
@@ -25,6 +22,9 @@
                 <select name="signal_tf_up" class="form--control" required="" id="signal_tf_up">
                     <option value="">Select Signal TF</option>
                     @foreach (allTradeTimeFrames() as $item)
+                        <option value="{{$item}}" {{$omgData->signal_tf==$item ? 'selected' : ''}}>{{$item}}</option>
+                    @endforeach
+                    @foreach (allTradeTimeFramesNew() as $item)
                         <option value="{{$item}}" {{$omgData->signal_tf==$item ? 'selected' : ''}}>{{$item}}</option>
                     @endforeach
                 </select>
