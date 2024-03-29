@@ -595,6 +595,26 @@ class UserController extends Controller
         return view($this->activeTemplate . 'user.portfolio_top_gainers', compact('pageTitle', 'portfolioTopGainers','symbolArr','todayDate','timeFrame','stockName','fullUrl'));
     }
 
+
+    public function portfolioTopGainersStock(Request $request)
+    {
+
+        $fullUrl =  $request->fullUrl();
+        $pageTitle = 'Trade Desk Signal(Stock)';
+        $portfolioTopGainers = [];
+       
+        $todayDate = date("Y-m-d");
+        // $todayDate = "2024-02-16";
+        $stockName = $request->stock_name;
+        $timeFrame = $request->time_frame ? : 15;
+        $symbolArr = allTradeSymbols();
+        if($request->ajax()){
+            return view($this->activeTemplate . 'user.portfolio_top_gainers_ajax_stock', compact('pageTitle', 'portfolioTopGainers','todayDate','timeFrame','stockName','fullUrl','symbolArr'));
+        }
+        
+        return view($this->activeTemplate . 'user.portfolio_top_gainers_stock', compact('pageTitle', 'portfolioTopGainers','symbolArr','todayDate','timeFrame','stockName','fullUrl'));
+    }
+
     public function brokerDetails(){
         $data['pageTitle'] = 'Broker Details';
         $data['broker_data'] = BrokerApi::where('user_id',auth()->user()->id)->get();
