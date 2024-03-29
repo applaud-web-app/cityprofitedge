@@ -39,7 +39,7 @@
                     <button class="btn btn--base w-100" type="submit"><i class="las la-filter"></i> @lang('Filter')</button>
                 </div>
                 <div class="col-lg-3 col-md-3 col-6 form-group mt-auto">
-                    <a href="{{url('/user/portfolio-top-gainers')}}" class="btn btn--base w-100"><i class="las la-redo-alt"></i> @lang('Refresh')</a>
+                    <a href="{{url('/user/portfolio-top-gainers-stock')}}" class="btn btn--base w-100"><i class="las la-redo-alt"></i> @lang('Refresh')</a>
                 </div>
             </div>
         </form>
