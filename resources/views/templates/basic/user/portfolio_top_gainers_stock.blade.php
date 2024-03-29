@@ -12,10 +12,10 @@
             <div class="custom--nav-tabs mb-3">
                 <ul class="nav ">
                     <li class="nav-item">
-                        <a href="{{url('user/portfolio-top-gainers')}}" class="btn btn--base">Index Options</a> 
+                        <a class="nav-link " href="{{url('user/portfolio-top-gainers')}}">Index Options</a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{url('user/portfolio-top-gainers-stock')}}" class="btn btn--base">Stock Options</a> 
+                        <a class="nav-link " href="{{url('user/portfolio-top-gainers-stock')}}">Stock Options</a>
                     </li>
                 </ul>
             </div>
