@@ -15,7 +15,9 @@
                     <select name="stock_name" class="form--control" id="">
                         <option value="">Select Symbol  Name</option>
                         @foreach ($symbolArr as $v)
-                            <option value="{{$v}}" {{$v==$stockName ? 'selected':''}}>{{$v}}</option>
+                            @if(!in_array($v,['CRUDEOIL','BANKNIFTY','FINNIFTY','SILVER','NIFTY','MIDCPNIFTY','NATURALGAS','SILVER','GOLD']))
+                                <option value="{{$v}}" {{$v==$stockName ? 'selected':''}}>{{$v}}</option>
+                             @endif
                         @endforeach
                     </select>
                     {{-- <input type="text" name="search" value="" class="form--control" placeholder="@lang('Stock Name')"> --}}
