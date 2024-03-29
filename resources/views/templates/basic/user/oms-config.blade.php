@@ -168,9 +168,6 @@
                                 <option value="{{$item}}">{{$item}}</option>
                             @endforeach
 
-                            @foreach (allTradeSymbolsNew() as $item)
-                                <option value="{{$item}}" selected>{{$item}}</option>
-                            @endforeach
                             
                         </select>
                     </div>
@@ -180,7 +177,10 @@
                         <select name="signal_tf" class="form--control" required="" id="signal_tf">
                             <option value="">Select Signal TF</option>
                             @foreach (allTradeTimeFrames() as $item)
-                                <option value="{{$item}}" {{$item==5 ? 'selected':''}}>{{$item}}</option>
+                                <option value="{{$item}}">{{$item}}</option>
+                            @endforeach
+                             @foreach (allTradeTimeFramesNew() as $item)
+                                <option value="{{$item}}" {{$item==15 ? 'selected':''}}>{{$item}}</option>
                             @endforeach
                         </select>
                     </div>
