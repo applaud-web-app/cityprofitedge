@@ -15,7 +15,7 @@
                         <a class="nav-link " href="{{url('user/portfolio-top-gainers')}}">Index Options</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link " href="{{url('user/portfolio-top-gainers-stock')}}">Stock Options</a>
+                        <a class="nav-link active" href="{{url('user/portfolio-top-gainers-stock')}}">Stock Options</a>
                     </li>
                 </ul>
             </div>
