@@ -9,8 +9,16 @@
 <section class="pt-100 pb-100">
     <div class="container content-container">
         <div class="mb-1">
-            <a href="{{url('user/portfolio-top-gainers')}}" class="btn btn--base">Index Options</a> 
-            <a href="{{url('user/portfolio-top-gainers-stock')}}" class="btn btn--base">Stock Options</a> 
+            <div class="custom--nav-tabs mb-3">
+                <ul class="nav ">
+                    <li class="nav-item">
+                        <a href="{{url('user/portfolio-top-gainers')}}" class="btn btn--base">Index Options</a> 
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{url('user/portfolio-top-gainers-stock')}}" class="btn btn--base">Stock Options</a> 
+                    </li>
+                </ul>
+            </div>
         </div>
       
         <form action="" class="transparent-form mb-3">
