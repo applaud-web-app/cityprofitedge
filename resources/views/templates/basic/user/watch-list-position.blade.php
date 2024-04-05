@@ -59,27 +59,27 @@
                                                         $buyValue = $item->buy_quantity * $item->buy_price;
                                                         $sellValue = $item->sell_quantity * $item->sell_price;
                                                         if (isset($angleData)) {
-                                                            if($angleData->name == "CRUDEOIL"){
-                                                                $buyValue = $buyValue*100;
-                                                                $sellValue = $sellValue*100;
-                                                                $tickSize = $angleData['lotsize'];
-                                                            }else if($angleData->name == "GOLD"){
-                                                                $buyValue = $buyValue*10;
-                                                                $sellValue = $sellValue*10;
-                                                                $tickSize = $angleData['lotsize'];
-                                                            }else if($angleData->name == "NATURALGAS"){
-                                                                $buyValue = $buyValue*1250;
-                                                                $sellValue = $sellValue*1250;
-                                                                $tickSize = $angleData['lotsize'];
-                                                            }else if($angleData->name == "SILVER"){
-                                                                $buyValue = $buyValue*5;
-                                                                $sellValue = $sellValue*5;
-                                                                $tickSize = $angleData['lotsize'];
-                                                            }else{
+                                                            // if($angleData->name == "CRUDEOIL"){
+                                                            //     $buyValue = $buyValue*100;
+                                                            //     $sellValue = $sellValue*100;
+                                                            //     $tickSize = $angleData['lotsize'];
+                                                            // }else if($angleData->name == "GOLD"){
+                                                            //     $buyValue = $buyValue*10;
+                                                            //     $sellValue = $sellValue*10;
+                                                            //     $tickSize = $angleData['lotsize'];
+                                                            // }else if($angleData->name == "NATURALGAS"){
+                                                            //     $buyValue = $buyValue*1250;
+                                                            //     $sellValue = $sellValue*1250;
+                                                            //     $tickSize = $angleData['lotsize'];
+                                                            // }else if($angleData->name == "SILVER"){
+                                                            //     $buyValue = $buyValue*5;
+                                                            //     $sellValue = $sellValue*5;
+                                                            //     $tickSize = $angleData['lotsize'];
+                                                            // }else{
                                                                 $buyValue = $buyValue*$angleData->tick_size;
                                                                 $sellValue = $sellValue*$angleData->tick_size;
                                                                 $tickSize = $angleData['lotsize'];
-                                                            }
+                                                            // }
                                                         }
                                                     @endphp
                                                     <tr>
@@ -91,19 +91,22 @@
                                                         <td>{{$item->sell_quantity}}</td>
                                                         <td>{{$item->sell_price}}</td> 
                                                         <td>{{$sellValue}}</td>
-                                                        <td>{{$item->net_change}}</td>
-                                                        <td>{{$item->ltp}}</td>
                                                         @php
+                                                            $netChange = $item->ltp/($item->ltp - $item->buy_price);
+                                                        @endphp
+                                                        <td>{{$netChange}}</td>
+                                                        <td>{{$item->ltp}}</td>
+                                                        @php                                                            
+                                                            $mtm  = $item->ltp - ($item->buy_quantity*$tickSize*$item->buy_price);
                                                             $textColor = "text-success";
-                                                            $totalVal = ($item->ltp - $item->buy_price) * $item->buy_quantity;
-                                                            if(($totalVal * $tickSize) < 0){
+                                                            if(($mtm) < 0){
                                                                 $textColor = "text-danger";
                                                             }
                                                         @endphp
-                                                    <td class="{{$textColor}}" {{$tickSize}}>{{round($totalVal * $tickSize,2)}}</td>
+                                                    <td class="{{$textColor}}" {{$tickSize}}>{{round($mtm,2)}}</td>
                                                     </tr>
                                                     @php
-                                                        $total += $totalVal * $tickSize;
+                                                        $total += $mtm;
                                                     @endphp
                                                 @endforeach
                                             @else
