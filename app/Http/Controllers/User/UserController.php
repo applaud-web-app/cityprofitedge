@@ -2241,4 +2241,15 @@ class UserController extends Controller
         return view($this->activeTemplate . 'user.watch-list-position',compact('pageTitle','wishlistorder','fullUrl'));
     }
 
+
+    public function optionStatergy(){
+        $pageTitle = "Option Statergies";
+        return view($this->activeTemplate . 'user.option-statergy',compact('pageTitle'));
+    }
+
+    public function stratergyDetails(){
+        $pageTitle = "Stratergy Details";
+        return view($this->activeTemplate . 'user.stratergies-details',compact('pageTitle'));
+    }
+
 }

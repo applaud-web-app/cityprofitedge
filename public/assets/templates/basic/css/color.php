@@ -102,3 +102,7 @@ if (!$secondColor OR !checkhexcolor2($secondColor)) {
 .form--control:focus {
     box-shadow: 0 0 5px <?php echo $color; ?>59;
 }
+
+.statergy-pannel-header{
+    background-color: <?php echo $color; ?>;
+}

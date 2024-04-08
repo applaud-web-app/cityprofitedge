@@ -173,6 +173,7 @@ Route::middleware('admin')->group(function () {
             Route::post('upload', 'uploadMetalsPortfolios')->name('upload');
 
             Route::post('delete', 'deleteMetalsPortfolio')->name('delete');
+
         });
     });
 
@@ -192,6 +193,7 @@ Route::middleware('admin')->group(function () {
 
         });
 
+
         // Portfolio Top Losers
         Route::group(['as' => 'top-losers.', 'prefix' => 'top-losers'], function() {
             Route::get('/', 'allTopLosers')->name('all');
@@ -204,6 +206,12 @@ Route::middleware('admin')->group(function () {
             Route::post('delete', 'deleteTopLoser')->name('delete');
             Route::get('get-stock-name', 'getTopLosers')->name('get-stock-name');
             Route::post('remove-stock-portfolio', 'removeTopLosers')->name('remove-stock-portfolio');
+        });
+
+        
+        Route::group(['as' => 'strategy.', 'prefix' => 'strategy'], function() {
+            Route::get('/', 'allstrategy')->name('all');
+            Route::get('add', 'addstrategy')->name('add.page');
         });
     });
 

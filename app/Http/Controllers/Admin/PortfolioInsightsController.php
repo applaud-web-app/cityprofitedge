@@ -291,4 +291,18 @@ class PortfolioInsightsController extends Controller
         $notify[] = ['success', 'Portfolio Top Loser deleted successfully'];
         return back()->withNotify($notify);
     }
+
+
+    //========= option statergy ============ //
+    public function allstrategy(Request $request)
+    {
+        $pageTitle = 'All Strategy';
+        return view('admin.insights.strategy.all', compact('pageTitle'));
+    }
+    public function addstrategy(Request $request)
+    {
+        $pageTitle = 'All Strategy';
+        return view('admin.insights.strategy.add', compact('pageTitle'));
+    }
+
 }
