@@ -379,7 +379,7 @@
                                         <th>@lang('Change%')</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                {{--<tbody>
                                     @php
                                     $date = \DB::connection('mysql_pr')->table('LTP')->WHEREIN('symbol',$symbolArray)->pluck('ltp','symbol')->toArray();  
                                     @endphp
@@ -406,7 +406,7 @@
                                             <td class="text-muted text-center" colspan="100%">{{ __($emptyMessage) }}</td>
                                         </tr>
                                     @endforelse
-                                </tbody>
+                                </tbody>--}}
                             </table>
                         </div>
                     </div>
@@ -426,7 +426,7 @@
                                         <th>@lang('Change%')</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                {{--<tbody>
                                     @php
                                     $date = \DB::connection('mysql_pr')->table('LTP')->WHEREIN('symbol',$symbolArray2)->pluck('ltp','symbol')->toArray();  
                                     @endphp
@@ -454,7 +454,7 @@
                                                 <td class="text-muted text-center" colspan="100%">{{ __($emptyMessage) }}</td>
                                             </tr>
                                         @endforelse
-                                    </tbody>
+                                    </tbody>--}}
                             </table>
                         </div>
                     </div>
