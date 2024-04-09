@@ -1,11 +1,15 @@
 @extends('admin.layouts.app')
-
+<style>
+    .note-toolbar .note-insert {
+     display: none !important;
+     }
+ </style>
 @section('panel')
   <!-- include summernote css/js -->
   
      
             <div>
-                <form action="{{ route('admin.portfolio-insights.top-losers.add.submit')}}" method="POST">
+                <form action="{{ route('admin.portfolio-insights.strategy.create')}}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="row">
                         <div class="col-xl-12 mt-xl-0">
@@ -15,43 +19,43 @@
                                         <div class="col-xxl-12">
                                             <div class="form-group">
                                                 <label>@lang('Strategy Name')</label>
-                                                <input type="text" class="form-control" name="stock_name" required value="">
+                                                <input type="text" class="form-control" name="strategy_name" required >
                                             </div>
                                         </div>
                                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
                                             <div class="form-group">
                                                 <label>@lang('legs')</label>
-                                                <input type="text" class="form-control" name="legs" required value="">
+                                                <input type="text" class="form-control" name="legs" required>
                                             </div>
                                         </div>
                                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
                                             <div class="form-group">
                                                 <label>@lang('Risk')</label>
-                                                <input type="text" class="form-control" name="cmp" required value="">
+                                                <input type="text" class="form-control" name="risk" required >
                                             </div>
                                         </div>
                                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
                                             <div class="form-group">
                                                 <label>@lang('Prof.')</label>
-                                                <input type="text" class="form-control" name="change_percentage" required value="">
+                                                <input type="text" class="form-control" name="profit" required>
                                             </div>
                                         </div>
 
                                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
                                             <div class="form-group">
                                                 <label>@lang('Image.')</label>
-                                                <input type="file" class="form-control" name="image" required value="">
+                                                <input type="file" class="form-control" name="strategy_image" required >
                                             </div>
                                         </div>
 
                                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
                                             <div class="form-group">
                                                 <label>@lang('Type')</label>
-                                                <select name="" class="form-control" id="" required>
-                                                    <option value="">@lang('Bullish')</option>
-                                                    <option value="">@lang('Bearish')</option>
-                                                    <option value="">@lang('Volatile')</option>
-                                                    <option value="">@lang('Oscillate')</option>
+                                                <select name="market_trend" class="form-control" id="" required>
+                                                    <option value="Bullish">@lang('Bullish')</option>
+                                                    <option value="Bearish">@lang('Bearish')</option>
+                                                    <option value="Volatile">@lang('Volatile')</option>
+                                                    <option value="Oscillate">@lang('Oscillate')</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -59,9 +63,9 @@
                                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
                                             <div class="form-group">
                                                 <label>@lang('Status')</label>
-                                                <select name="" class="form-control" id="" required>
-                                                    <option value="">@lang('Enable')</option>
-                                                    <option value="">@lang('Disable')</option>
+                                                <select name="strategy_status" class="form-control" id="" required>
+                                                    <option value="Enable">@lang('Enable')</option>
+                                                    <option value="Disable">@lang('Disable')</option>
                                                    
                                                 </select>
                                             </div>
@@ -71,7 +75,7 @@
                                            
                                             <div class="form-group">
                                                 <label>@lang('Description')</label>
-                                                <textarea class="form-control" name="change_percentage" id="summernote" required value="" ></textarea>
+                                                <textarea class="form-control" name="description" id="summernote" required></textarea>
                                             </div>
 
                                         </div>

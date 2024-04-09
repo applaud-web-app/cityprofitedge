@@ -35,8 +35,10 @@ use App\Models\ZerodhaInstrument;
 use App\Helpers\KiteConnectCls;
 use App\Helpers\AngelConnectCls;
 use App\Jobs\PlaceOmsOrder;
+use App\Models\Strategy;
 use App\Traits\AngelApiAuth;
 use App\Models\WishlistData;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -2244,12 +2246,17 @@ class UserController extends Controller
 
     public function optionStatergy(){
         $pageTitle = "Option Statergies";
-        return view($this->activeTemplate . 'user.option-statergy',compact('pageTitle'));
+        $records = Strategy::where('is_deleted',1)->where('strategy_status','Enable')->get();
+        $groupedRecords  = $records->groupBy('market_trend');
+        // dd($list);
+        return view($this->activeTemplate . 'user.option-statergy',compact('pageTitle','groupedRecords'));
     }
 
-    public function stratergyDetails(){
+    public function stratergyDetails($id){
         $pageTitle = "Stratergy Details";
-        return view($this->activeTemplate . 'user.stratergies-details',compact('pageTitle'));
+        $data=Strategy::where('id',$id)->first();
+        $related = Strategy::where('is_deleted',1)->where('strategy_status','Enable')->where('market_trend',$data->market_trend)->whereNotIn('id',[$id])->get();
+        return view($this->activeTemplate . 'user.stratergies-details',compact('pageTitle','data','related'));
     }
 
 }

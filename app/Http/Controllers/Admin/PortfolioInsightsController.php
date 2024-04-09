@@ -9,6 +9,7 @@ use App\Imports\PortfolioTopGainerDataImport;
 use App\Imports\PortfolioTopLoserDataImport;
 use App\Models\PortfolioTopGainer;
 use App\Models\PortfolioTopLoser;
+use App\Models\Strategy;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -297,7 +298,8 @@ class PortfolioInsightsController extends Controller
     public function allstrategy(Request $request)
     {
         $pageTitle = 'All Strategy';
-        return view('admin.insights.strategy.all', compact('pageTitle'));
+        $data=Strategy::where('is_deleted',1)->get();
+        return view('admin.insights.strategy.all', compact('pageTitle','data'));
     }
     public function addstrategy(Request $request)
     {
@@ -305,4 +307,108 @@ class PortfolioInsightsController extends Controller
         return view('admin.insights.strategy.add', compact('pageTitle'));
     }
 
+    public function createstrategy(Request $request)
+    {
+        $request->validate([
+            'strategy_name' => 'required',
+            "legs"=>'required',
+            "risk"=>'required',
+            "profit"=>'required',
+            "strategy_image"=>'required',
+            "market_trend"=>"required",
+            "strategy_status"=>"required",
+            "description"=>'required'
+        ]);
+
+        
+        $data=$request->except('_token');
+        $file = $request->strategy_image;
+        $imageName = "Strategy-" . rand().".".$file->extension();
+        $file->move(public_path('assets/images/strategy/') , $imageName);  
+        $data['strategy_image']  = $imageName; 
+        $execute=Strategy::create($data);
+        if($execute)
+        {
+            $notify[]=['success','Strategy created Successfully'];
+            return redirect()->route('admin.portfolio-insights.strategy.all')->withNotify($notify);
+        }
+        else
+        {
+            $notify[] = ['error', 'Strategy could not be Created'];
+            return back()->withNotify($notify);
+        }
+    }
+    public function editStrategy($id)
+    {
+        $pageTitle="Edit Strategy";
+        $data=Strategy::where('id',$id)->first();
+        return view('admin.insights.strategy.edit',compact('data','pageTitle'));
+    }
+    
+    public function postEdit(Request $request,$id)
+    {
+        $data=$request->except("_token","files");
+        // dd($data);
+        $content = $request->description;
+        // 
+        // $dom = new \DomDocument();
+        // $previously = libxml_use_internal_errors(true);
+        // $dom->loadHtml($content, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+        // $imageFile = $dom->getElementsByTagName('img');
+    //    foreach($imageFile as $item => $image){
+    //        $dta = $image->getAttribute('src');
+    //        list($type, $dta) = explode(';', $dta);
+    //        list(, $dta)      = explode(',', $dta);
+    //        $imgeData = base64_decode($dta);
+    //        $image_name= "/assets/images/strategy".time().$item.'.png';
+    //        $path = public_path() . $image_name;
+    //        file_put_contents($path, $imgeData);
+    //        $image->removeAttribute('src');
+    //        $image->setAttribute('src', $image_name);
+    //     }
+    //     $content = $dom->saveHTML();
+
+        if ($request->has('strategy_image')) {
+            $file = $request->strategy_image;
+            $imageName =  "Strategy-".rand().".".$file->extension();
+            $existingImage = Strategy::where('id',$id)->select('strategy_image')->first();
+            if ($existingImage->strategy_image!=NULL || $existingImage->strategy_image!='') 
+            {
+                if(file_exists(public_path('assets/images/strategy/'.$existingImage->strategy_image)))
+                {   
+                    unlink(public_path('assets/images/strategy/'.$existingImage->strategy_image));
+                }
+            }
+            $file->move(public_path('assets/images/strategy/') , $imageName); 
+            $data['strategy_image']=$imageName;            
+        }
+
+        // $data['description'] = $content;
+        $execute=Strategy::where('id',$id)->update($data);
+        if($execute)
+        {
+            $notify[]=['success','Strategy updated Successfully'];
+            return redirect()->route('admin.portfolio-insights.strategy.all')->withNotify($notify);
+        }
+        else
+        {
+            $notify[] = ['error', 'Strategy could not be updated'];
+            return back()->withNotify($notify);
+        }
+    }
+
+    public function deleteStrategy($id)
+    {
+        $execute=Strategy::where('id',$id)->update(['is_deleted'=>0]);
+        if($execute)
+        {
+            $notify[]=['success','Strategy deleted Successfully'];
+            return redirect()->route('admin.portfolio-insights.strategy.all')->withNotify($notify);
+        }
+        else
+        {
+            $notify[] = ['error', 'Strategy could not be deleted'];
+            return back()->withNotify($notify);
+        }
+    }
 }

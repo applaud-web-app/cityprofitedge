@@ -212,6 +212,10 @@ Route::middleware('admin')->group(function () {
         Route::group(['as' => 'strategy.', 'prefix' => 'strategy'], function() {
             Route::get('/', 'allstrategy')->name('all');
             Route::get('add', 'addstrategy')->name('add.page');
+            Route::post('post-add','createstrategy')->name('create');
+            Route::get('edit-strategy/{id}','editStrategy')->name('edit');
+            Route::post('post-edit/{id}','postEdit')->name('postedit');
+            Route::get('delete-strategy/{id}','deleteStrategy')->name('delete');
         });
     });
 

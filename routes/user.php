@@ -48,7 +48,7 @@ Route::middleware('auth')->name('user.')->group(function () {
             Route::controller('UserController')->group(function(){
                 Route::get('dashboard', 'home')->name('home');
                 Route::get('option-startegies', 'optionStatergy')->name('optionStatergy');
-                Route::get('stratergies-details', 'stratergyDetails')->name('stratergyDetails');
+                Route::get('stratergies-details/{id}', 'stratergyDetails')->name('stratergyDetails');
                 Route::get('watch-list', 'watchList')->name('watchList');
                 Route::get('watch-list-order', 'watchListOrder')->name('watchListOrder');
                 Route::get('watch-list-position', 'watchListPosition')->name('watchListPosition');
