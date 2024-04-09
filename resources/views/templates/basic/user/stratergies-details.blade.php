@@ -7,13 +7,13 @@
             <h2 class="section-title">@isset($data->strategy_name) {{$data->strategy_name}} @endisset Strategy</h2>
         </div>
 
-        <div class="row">
-            <div class="col-lg-6 col-md-6 col-12">
+        <div class="row" style="height: 500px;">
+            <div class="col-lg-6 col-md-6 col-12"  style="height: 100%; overflow: hidden;">
                 <div class="details-img">
                     <img src="{{asset('assets/images/strategy/'.$data->strategy_image.'')}}" alt="" class="img-fluid w-100 border">
                 </div>
             </div>
-            <div class="col-lg-6 col-md-6 col-12">
+            <div class="col-lg-6 col-md-6 col-12" style="height: 100%; overflow-y: scroll;">
                 <div class="stratergy-details-description">
                     <h4>Strategy</h4>
                     <p>@isset($data->strategy_name){{$data->strategy_name}}@endisset</p>
