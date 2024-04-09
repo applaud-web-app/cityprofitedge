@@ -314,7 +314,7 @@ class PortfolioInsightsController extends Controller
             "legs"=>'required',
             "risk"=>'required',
             "profit"=>'required',
-            "strategy_image"=>'required',
+            "strategy_image"=>'required|mimes:png,jpg,jpeg',
             "market_trend"=>"required",
             "strategy_status"=>"required",
             "description"=>'required'
@@ -348,7 +348,6 @@ class PortfolioInsightsController extends Controller
     public function postEdit(Request $request,$id)
     {
         $data=$request->except("_token","files");
-        // dd($data);
         $content = $request->description;
         // 
         // $dom = new \DomDocument();

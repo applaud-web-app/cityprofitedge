@@ -42,9 +42,10 @@
                                         </div>
 
                                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                                            
                                             <div class="form-group">
-                                                <label>@lang('Image.')</label>
-                                                <input type="file" class="form-control" name="strategy_image" required >
+                                                <label>@lang('Image.')</label><label class="" for="strategy_image"><code>Img type must be : JPG, JPEG & PNG</code></label><br>
+                                                <input type="file" class="form-control" name="strategy_image" required accept="image/*">
                                             </div>
                                         </div>
 

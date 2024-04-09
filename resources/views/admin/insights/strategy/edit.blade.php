@@ -45,12 +45,14 @@
                                 </div>
 
                                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                                    <label class="" for="strategy_image"><code>Img type must be : JPG, JPEG & PNG</code></label><br>
                                     @isset($data->strategy_image)
                                         <img style="height:50px" src="{{asset('assets/images/strategy/'.$data->strategy_image.'')}}" alt="@isset($data->strategy_name){{$data->strategy_name}}@endisset">
                                     @endisset
+                                   
                                     <div class="form-group">
                                         <label>@lang('Image.')</label>
-                                        <input type="file" class="form-control" name="strategy_image">
+                                        <input type="file" class="form-control" name="strategy_image" accept="image/*">
                                     </div>
                                 </div>
 
