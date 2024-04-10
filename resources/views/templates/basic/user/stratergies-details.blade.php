@@ -43,7 +43,7 @@
         <div class="row">
             @if(!$related->isEmpty())
                 <div class="col-lg-12 col-md-12 col-12">
-                    <h4 class="text-decoration-underline mb-3">Related Stratergies</h4>
+                    <h3 class="mb-3">Related Stratergies</h3>
                     <div class="d-flex flex-wrap">
                             @foreach ($related as $similar)
                                 <a href="{{route('user.stratergyDetails',$similar->id)}}" class="badge bg-light px-3 py-1  text-dark fw-light me-1 mb-1">{{$similar->strategy_name}}</a>
