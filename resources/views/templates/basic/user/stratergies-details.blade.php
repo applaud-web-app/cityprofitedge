@@ -15,17 +15,25 @@
             </div>
             <div class="col-lg-6 col-md-6 col-12" style="height: 100%; overflow-y: scroll;">
                 <div class="stratergy-details-description">
-                    <h4>Strategy</h4>
-                    <p>@isset($data->strategy_name){{$data->strategy_name}}@endisset</p>
-                    <h4>Strategy Legs</h4>
-                    <p>@isset($data->legs){{$data->legs}}@endisset</p>
-                    <h4>Strategy Risk</h4>
-                    <p>@isset($data->risk){{$data->risk}}@endisset</p>
-                    <h4>Profit Percent</h4>
-                    <p>@isset($data->profit){{$data->profit}}@endisset</p>
+                    <div class="row">
+                        <div class="col-lg-6 mb-3">
+                            <h4>Strategy</h4>
+                            <p>@isset($data->strategy_name){{$data->strategy_name}}@endisset</p>
+                            <h4 class="mt-3">Strategy Legs</h4>
+                            <p>@isset($data->legs){{$data->legs}}@endisset</p>
+                        </div>
+                        <div class="col-lg-6 mb-3">
+                            <h4>Strategy Risk</h4>
+                            <p>@isset($data->risk){{$data->risk}}@endisset</p>
+                            <h4 class="mt-3">Profit Percent</h4>
+                            <p>@isset($data->profit){{$data->profit}}@endisset</p>
+                        </div>
+                    </div>
+                    
+                    
                     <h4>Strategy Type</h4>
                     <p>@isset($data->market_trend){{$data->market_trend}}@endisset</p>
-                    <h4>About Strategy</h4>
+                    <h4 class="mt-3">About Strategy</h4>
                     <p>@isset($data->description){!! trim($data->description, 'firstlast') !!}@endisset</p>
                 </div>
             </div>
