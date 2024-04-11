@@ -275,6 +275,8 @@ Route::middleware('admin')->group(function () {
         Route::post('/add', 'add')->name('add');
         Route::post('/update', 'update')->name('update');
         Route::post('/status/{id}', 'status')->name('status');
+        Route::get('/set-fibonaci-variables', 'setFibonaciVariables');
+        Route::post('/store-fibonaci-variables', 'storeFibonaciVariables');
     });
 
     // Signal

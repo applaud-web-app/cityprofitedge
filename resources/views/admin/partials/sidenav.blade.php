@@ -29,6 +29,15 @@
                         <span class="menu-title">@lang('Manage Product')</span>
                     </a>
                 </li>
+                
+                <li class="sidebar-menu-item {{menuActive('admin.package.set-fibonaci-variables')}}">
+                    <a href="{{url('admin/package/set-fibonaci-variables')}}" class="nav-link"
+                       data-default-url="{{url('admin/package/set-fibonaci-variables')}}">
+                        <i class="menu-icon las la-box"></i>
+                        <span class="menu-title">@lang('Fibonaci Variable')</span>
+                    </a>
+                </li>
+
 
                 <li class="sidebar-menu-item sidebar-dropdown">
                     <a href="javascript:void(0)" class="{{menuActive('admin.users*',3)}}">

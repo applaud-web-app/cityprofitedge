@@ -5,6 +5,7 @@ use App\Models\OmsConfig;
 use App\Helpers\KiteConnectCls;
 use App\Models\OrderBook;
 use App\Models\AngelApiInstrument;
+use App\Models\SiteVariable;
 
 class OmsConfigCron{
     
@@ -25,7 +26,16 @@ class OmsConfigCron{
     }
 
     public function getCeLimitPrice($high,$low,$per,$type,$closePrice,$tickSize){
-        // echo $high.'--'.$low.'--'.$per.'--'.$closePrice;die;
+        $fibonaciData = SiteVariable::select('content')->where('value','fibonaci')->first();
+        $fDada = json_decode($fibonaciData->content);
+        if($per=='38.20'){
+            $per = $fDada->percentage_one;
+        }elseif($per=='50'){
+            $per = $fDada->percentage_two;
+        }else{
+            $per = $fDada->percentage_three;
+        }
+
         $diff = ($high - $low) * ($per/100);
         if($type=="BUY"){
             $price = $closePrice - $diff;
@@ -37,6 +47,15 @@ class OmsConfigCron{
     }
 
     public function getPeLimitPrice($high,$low,$per,$type,$closePrice,$tickSize){
+        $fibonaciData = SiteVariable::select('content')->where('value','fibonaci')->first();
+        $fDada = json_decode($fibonaciData->content);
+        if($per=='38.20'){
+            $per = $fDada->percentage_one;
+        }elseif($per=='50'){
+            $per = $fDada->percentage_two;
+        }else{
+            $per = $fDada->percentage_three;
+        }
         $diff = ($high - $low) * ($per/100);
         if($type=="BUY"){
             $price = $closePrice - $diff;
