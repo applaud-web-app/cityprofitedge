@@ -8,22 +8,21 @@
 
 <section class="pt-100 pb-100">
     <div class="container content-container">
-        <div class="mb-1">
-            <div class="custom--nav-tabs mb-3">
-                <ul class="nav ">
-                    <li class="nav-item">
-                        <a class="nav-link " href="{{url('user/portfolio-top-gainers')}}">Index Options</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="{{url('user/portfolio-top-gainers-stock')}}">Stock Options</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{url('user/portfolio-greeks')}}">Greeks Options</a>
-                    </li>
-                </ul>
+              <div class="mb-1">
+                <div class="custom--nav-tabs mb-3">
+                    <ul class="nav ">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url('user/portfolio-top-gainers')}}">Index Options</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url('user/portfolio-top-gainers-stock')}}">Stock Options</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{{url('user/portfolio-greeks')}}">Greeks Options</a>
+                        </li>
+                    </ul>
+                </div>
             </div>
-        </div>
-      
         <form action="" class="transparent-form mb-3">
             <div class="row">
                 <div class="col-lg-3 form-group">
@@ -31,7 +30,7 @@
                     <select name="stock_name" class="form--control" id="">
                         <option value="">Select Symbol  Name</option>
                         @foreach ($symbolArr as $v)
-                            @if(!in_array($v,['CRUDEOIL','BANKNIFTY','FINNIFTY','SILVER','NIFTY','MIDCPNIFTY','NATURALGAS','SILVER','GOLD']))
+                            @if(in_array($v,['CRUDEOIL','BANKNIFTY','FINNIFTY','SILVER','NIFTY','MIDCPNIFTY','NATURALGAS','SILVER','GOLD']))
                                 <option value="{{$v}}" {{$v==$stockName ? 'selected':''}}>{{$v}}</option>
                              @endif
                         @endforeach
@@ -41,7 +40,7 @@
                 <div class="col-lg-3 form-group">
                     <label>@lang('TimeFrame')</label>
                     <select name="time_frame" class="form--control">
-                       @foreach (allTradeTimeFramesNew() as $item)
+                       @foreach (allTradeTimeFrames() as $item)
                            <option value="{{$item}}" {{$item==$timeFrame ? 'selected':''}}>{{$item}}</option>
                        @endforeach
                     </select>
@@ -50,7 +49,7 @@
                     <button class="btn btn--base w-100" type="submit"><i class="las la-filter"></i> @lang('Filter')</button>
                 </div>
                 <div class="col-lg-3 col-md-3 col-6 form-group mt-auto">
-                    <a href="{{url('/user/portfolio-top-gainers-stock')}}" class="btn btn--base w-100"><i class="las la-redo-alt"></i> @lang('Refresh')</a>
+                    <a href="{{url('/user/portfolio-greeks')}}" class="btn btn--base w-100"><i class="las la-redo-alt"></i> @lang('Refresh')</a>
                 </div>
             </div>
         </form>
@@ -80,19 +79,16 @@
                                                 <th>TIME</th>
                                                 <th>CE Symbol Name</th>
                                                 <th>PE Symbol Name</th>
-                                                <th>VWAP CE</th>
-                                                <th>VWAP PE</th>
-                                                <th>OI CE</th>
-                                                <th>OI PE</th>
-                                                <th>CE CLOSE PRICE</th>
-                                                <th>PE CLOSE PRICE</th>
-                                                <th>BUY ACTION</th>
-                                                <th>SELL ACTION</th>
-                                                <th>STRATEGY NAME</th>
-                                                <th>CE_ST</th>
-                                                <th>PE_ST</th>
-                                                <th>CE_ST_Status</th>
-                                                <th>PE_ST_Status</th>
+                                                <th>CE IV</th>
+                                                <th>PE IV</th>
+                                                <th>CE Delta</th>
+                                                <th>PE Delta</th>
+                                                <th>CE Theta</th>
+                                                <th>PE Theta</th>
+                                                <th>CE Vega</th>
+                                                <th>PE Vega</th>
+                                                <th>CE Gamma</th>
+                                                <th>PE Gamma</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -110,28 +106,12 @@
                                                 $itemsPerPage = 100;
                                                 $currentPage =  isset($_GET['page']) ? $_GET['page'] : 1;
                                             @endphp
-
-
                                             @forelse($atmData as $val)
                                                     @php
                                                         $arrData = json_decode($val->data,true);  
                                                         $totalItems = count($arrData['Date']);
                                                         // dd($arrData['Date']);
                                                         $currentItems = array_slice($arrData['Date'], ($currentPage - 1) * $itemsPerPage, $itemsPerPage);
-
-                                                        // $CE = $arrData['CE'];
-                                                        // $PE = $arrData['PE'];
-                                                        // $Date = $arrData['Date'];
-                                                        // $time = $arrData['time'];
-                                                        // $BUY_Action = $arrData['BUY_Action'];
-                                                        // $SELL_Action = $arrData['SELL_Action'];
-                                                        // $Strategy_name = $arrData['Strategy_name'];
-                                                        // $vwap_CE_signal = $arrData['vwap_CE_signal'];
-                                                        // $vwap_PE_signal = $arrData['vwap_PE_signal'];
-                                                        // $CE_consolidated = $arrData['CE_consolidated'];
-                                                        // $PE_consolidated = $arrData['PE_consolidated'];
-                                                        // $close_CE = $arrData['close_CE'];
-                                                        // $close_PE = $arrData['close_PE'];
                                                         $k = ($currentPage - 1) * $itemsPerPage;
                                                     @endphp
                                                     @foreach ($currentItems as $item)
@@ -141,19 +121,17 @@
                                                             <td>{{$arrData['time'][$k]}}</td>
                                                             <td>{{$arrData['CE'][$k]}}</td>
                                                             <td>{{$arrData['PE'][$k]}}</td>
-                                                            <td>{{$arrData['vwap_CE_signal'][$k]}}</td>
-                                                            <td>{{$arrData['vwap_PE_signal'][$k]}}</td>
-                                                            <td>{{isset($arrData['CE_consolidated']) ? $arrData['CE_consolidated'][$k] : '-'}}</td>
-                                                            <td>{{isset($arrData['PE_consolidated']) ? $arrData['PE_consolidated'][$k] : '-'}}</td>
-                                                            <td>{{$arrData['close_CE'][$k]}}</td>
-                                                            <td>{{$arrData['close_PE'][$k]}}</td>
-                                                            <td>{{$arrData['BUY_Action'][$k]}}</td>
-                                                            <td>{{$arrData['SELL_Action'][$k]}}</td>
-                                                            <td>{{$arrData['Strategy_name'][$k]}}</td>
-                                                            <td>{{$arrData['SUPERTREND_CE'][$k]}}</td>
-                                                            <td>{{$arrData['SUPERTREND_PE'][$k]}}</td>
-                                                            <td>{{$arrData['SUPERTREND_SIGNAL_STATUS_CE'][$k]}}</td>
-                                                            <td>{{$arrData['SUPERTREND_SIGNAL_STATUS_PE'][$k]}}</td>
+                                                            <td>{{$arrData['CE_IV'][$k]}}</td>
+                                                            <td>{{$arrData['PE_IV'][$k]}}</td>
+                                                            <td>{{$arrData['CE_Delta'][$k]}}</td>
+                                                            <td>{{$arrData['PE_Delta'][$k]}}</td>
+                                                            <td>{{$arrData['CE_Theta'][$k]}}</td>
+                                                            <td>{{$arrData['PE_Theta'][$k]}}</td>
+                                                            <td>{{$arrData['CE_Vega'][$k]}}</td>
+                                                            <td>{{$arrData['PE_Vega'][$k]}}</td>
+                                                            <td>{{$arrData['CE_Gamma'][$k]}}</td>
+                                                            <td>{{$arrData['PE_Gamma'][$k]}}</td>
+                                                           
                                                         </tr>
                                                         @php
                                                             $k++;
@@ -179,7 +157,7 @@
                                 @if($i == $currentPage)
                                     <li class="page-item active" aria-current="page"><span class="page-link">{{$i}}</span></li>
                                 @else
-                                <li class="page-item"><a class="page-link" href="{{url('user/http://127.0.0.1:8000/user/portfolio-top-gainers-stock?stock_name='.$stockName.'&time_frame='.$timeFrame.'&page='.$i.'')}}">{{$i}}</a></li>
+                                <li class="page-item"><a class="page-link" href="{{url('user/portfolio-greeks?stock_name='.$stockName.'&time_frame='.$timeFrame.'&page='.$i.'')}}">{{$i}}</a></li>
                                 @endif
                             @endfor
                             @php     
@@ -193,13 +171,14 @@
                 
                 @foreach($symbolArr as $v)
                     @php 
-                    if(in_array($v,['CRUDEOIL','BANKNIFTY','FINNIFTY','SILVER','NIFTY','MIDCPNIFTY','NATURALGAS','SILVER','GOLD'])){
+                    if(!in_array($v,['CRUDEOIL','BANKNIFTY','FINNIFTY','SILVER','NIFTY','MIDCPNIFTY','NATURALGAS','SILVER','GOLD'])){
                         continue;
                     }
                     if($v == "LTP"){
 
                     }else{
                         $data = \DB::connection('mysql_rm')->table($v)->select('*')->where(['date'=>$todayDate,'timeframe'=>$timeFrame])->get(); 
+                        // dd($data);
                         // if(count($data)==0){
                         //     $data = \DB::connection('mysql_rm')->table($stockName)->select('*')->where(['timeframe'=>$timeFrame])->get();
                         // }
@@ -222,19 +201,16 @@
                                                     <th>TIME</th>
                                                     <th>CE Symbol Name</th>
                                                     <th>PE Symbol Name</th>
-                                                    <th>VWAP CE</th>
-                                                    <th>VWAP PE</th>
-                                                    <th>OI CE</th>
-                                                    <th>OI PE</th>
-                                                    <th>CE CLOSE PRICE</th>
-                                                    <th>PE CLOSE PRICE</th>
-                                                    <th>BUY ACTION</th>
-                                                    <th>SELL ACTION</th>
-                                                    <th>STRATEGY NAME</th>
-                                                    <th>CE_ST</th>
-                                                    <th>PE_ST</th>
-                                                    <th>CE_ST_Status</th>
-                                                    <th>PE_ST_Status</th>
+                                                    <th>CE IV</th>
+                                                    <th>PE IV</th>
+                                                    <th>CE Delta</th>
+                                                    <th>PE Delta</th>
+                                                    <th>CE Theta</th>
+                                                    <th>PE Theta</th>
+                                                    <th>CE Vega</th>
+                                                    <th>PE Vega</th>
+                                                    <th>CE Gamma</th>
+                                                    <th>PE Gamma</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -250,23 +226,22 @@
                                                 @forelse($atmData as $val)
                                                         @php
                                                             $arrData = json_decode($val->data,true); 
+                                                            // dd($arrData);
                                                             $CE = array_slice($arrData['CE'],-5);
                                                             $PE = array_slice($arrData['PE'],-5);
                                                             $Date = array_slice($arrData['Date'],-5);
                                                             $time = array_slice($arrData['time'],-5);
-                                                            $BUY_Action = array_slice($arrData['BUY_Action'],-5);
-                                                            $SELL_Action = array_slice($arrData['SELL_Action'],-5);
-                                                            $Strategy_name = array_slice($arrData['Strategy_name'],-5);
-                                                            $vwap_CE_signal = array_slice($arrData['vwap_CE_signal'],-5);
-                                                            $vwap_PE_signal = array_slice($arrData['vwap_PE_signal'],-5);
-                                                            $CE_consolidated = isset($arrData['CE_consolidated']) ? array_slice($arrData['CE_consolidated'],-5) : [];
-                                                            $PE_consolidated = isset($arrData['PE_consolidated']) ? array_slice($arrData['PE_consolidated'],-5) : [];
-                                                            $close_CE = array_slice($arrData['close_CE'],-5);
-                                                            $close_PE = array_slice($arrData['close_PE'],-5);
-                                                            $SUPERTREND_CE = array_slice($arrData['SUPERTREND_CE'],-5);
-                                                            $SUPERTREND_PE = array_slice($arrData['SUPERTREND_PE'],-5);
-                                                            $SUPERTREND_SIGNAL_STATUS_CE = array_slice($arrData['SUPERTREND_SIGNAL_STATUS_CE'],-5);
-                                                            $SUPERTREND_SIGNAL_STATUS_PE = array_slice($arrData['SUPERTREND_SIGNAL_STATUS_PE'],-5);
+                                                            $CEIV = array_slice($arrData['CE_IV'],-5);
+                                                            $PEIV = array_slice($arrData['PE_IV'],-5);
+                                                            $CEDelta = array_slice($arrData['CE_Delta'],-5);
+                                                            $PEDelta = array_slice($arrData['PE_Delta'],-5);
+                                                            $CETheta = array_slice($arrData['CE_Theta'],-5);
+                                                            $PETheta = array_slice($arrData['PE_Theta'],-5);
+                                                            $CEVega = array_slice($arrData['CE_Vega'],-5);
+                                                            $PEVega = array_slice($arrData['PE_Vega'],-5);
+                                                            $CEGamma = array_slice($arrData['CE_Gamma'],-5);
+                                                            $PEGamma = array_slice($arrData['PE_Gamma'],-5);
+                                                            
                                                         @endphp
                                                         @foreach ($CE as $k=>$item)
                                                             <tr>
@@ -275,19 +250,17 @@
                                                                 <td>{{$time[$k]}}</td>
                                                                 <td>{{$item}}</td>
                                                                 <td>{{$PE[$k]}}</td>
-                                                                <td>{{$vwap_CE_signal[$k]}}</td>
-                                                                <td>{{$vwap_PE_signal[$k]}}</td>
-                                                                <td>{{isset($CE_consolidated[$k]) ? $CE_consolidated[$k] : '-'}}</td>
-                                                                <td>{{isset($PE_consolidated[$k]) ? $PE_consolidated[$k] : '-'}}</td>
-                                                                <td>{{$close_CE[$k]}}</td>
-                                                                <td>{{$close_PE[$k]}}</td>
-                                                                <td>{{$BUY_Action[$k]}}</td>
-                                                                <td>{{$SELL_Action[$k]}}</td>
-                                                                <td>{{$Strategy_name[$k]}}</td>
-                                                                <td>{{$SUPERTREND_CE[$k]}}</td>
-                                                                <td>{{$SUPERTREND_PE[$k]}}</td>
-                                                                <td>{{$SUPERTREND_SIGNAL_STATUS_CE[$k]}}</td>
-                                                                <td>{{$SUPERTREND_SIGNAL_STATUS_PE[$k]}}</td>
+                                                                <td>{{$CEIV[$k]}}</td>
+                                                                <td>{{$PEIV[$k]}}</td>
+                                                                <td>{{$CEDelta[$k]}}</td>
+                                                                <td>{{$PEDelta[$k]}}</td>
+                                                                <td>{{$CETheta[$k]}}</td>
+                                                                <td>{{$PETheta[$k]}}</td>
+                                                                <td>{{$CEVega[$k]}}</td>
+                                                                <td>{{$PEVega[$k]}}</td>
+                                                                <td>{{$CEGamma[$k]}}</td>
+                                                                <td>{{$PEGamma[$k]}}</td>
+
                                                             </tr>
                                                         @endforeach
                                                 @empty
@@ -312,15 +285,15 @@
 
 @push('script')
 <script>
-    function reloadData(){
-        $.get('{!!$fullUrl!!}',function(data){
-            $("#pst_hre").html(data);
-        });
-    }
+    // function reloadData(){
+    //     $.get('{!!$fullUrl!!}',function(data){
+    //         $("#pst_hre").html(data);
+    //     });
+    // }
 
-    setInterval(() => {
-        reloadData();
-    }, 30000);//call every 1/2 minute
+    // setInterval(() => {
+    //     reloadData();
+    // }, 30000);//call every 1/2 minute
     
 </script>
 @endpush

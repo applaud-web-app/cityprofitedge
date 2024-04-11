@@ -587,6 +587,7 @@ class UserController extends Controller
        
         $todayDate = date("Y-m-d");
         // $todayDate = "2024-02-16";
+          // $todayDate = "2024-04-03";
         $stockName = $request->stock_name;
         $timeFrame = $request->time_frame ? : 5;
         $symbolArr = allTradeSymbols();
@@ -595,6 +596,21 @@ class UserController extends Controller
         }
         
         return view($this->activeTemplate . 'user.portfolio_top_gainers', compact('pageTitle', 'portfolioTopGainers','symbolArr','todayDate','timeFrame','stockName','fullUrl'));
+    }
+
+    public function portfolioGreeks(Request $request)
+    {
+
+        $fullUrl =  $request->fullUrl();
+        $pageTitle = 'Greeks Desk Signal';
+        $portfolioTopGainers = [];
+       
+        $todayDate = date("Y-m-d");
+        // $todayDate = "2024-04-03";
+        $stockName = $request->stock_name;
+        $timeFrame = $request->time_frame ? : 5;
+        $symbolArr = allTradeSymbols();        
+        return view($this->activeTemplate . 'user.portfolio-greeks', compact('pageTitle', 'portfolioTopGainers','symbolArr','todayDate','timeFrame','stockName','fullUrl'));
     }
 
 

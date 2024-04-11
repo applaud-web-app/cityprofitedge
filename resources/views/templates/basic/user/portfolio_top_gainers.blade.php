@@ -17,6 +17,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{url('user/portfolio-top-gainers-stock')}}">Stock Options</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url('user/portfolio-greeks')}}">Greeks Options</a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -85,6 +88,10 @@
                                                 <th>BUY ACTION</th>
                                                 <th>SELL ACTION</th>
                                                 <th>STRATEGY NAME</th>
+                                                <th>CE_ST</th>
+                                                <th>PE_ST</th>
+                                                <th>CE_ST_Status</th>
+                                                <th>PE_ST_Status</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -142,6 +149,10 @@
                                                             <td>{{$arrData['BUY_Action'][$k]}}</td>
                                                             <td>{{$arrData['SELL_Action'][$k]}}</td>
                                                             <td>{{$arrData['Strategy_name'][$k]}}</td>
+                                                            <td>{{$arrData['SUPERTREND_CE'][$k]}}</td>
+                                                            <td>{{$arrData['SUPERTREND_PE'][$k]}}</td>
+                                                            <td>{{$arrData['SUPERTREND_SIGNAL_STATUS_CE'][$k]}}</td>
+                                                            <td>{{$arrData['SUPERTREND_SIGNAL_STATUS_PE'][$k]}}</td>
                                                         </tr>
                                                         @php
                                                             $k++;
@@ -219,6 +230,10 @@
                                                     <th>BUY ACTION</th>
                                                     <th>SELL ACTION</th>
                                                     <th>STRATEGY NAME</th>
+                                                    <th>CE_ST</th>
+                                                    <th>PE_ST</th>
+                                                    <th>CE_ST_Status</th>
+                                                    <th>PE_ST_Status</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -247,6 +262,13 @@
                                                             $PE_consolidated = isset($arrData['PE_consolidated']) ? array_slice($arrData['PE_consolidated'],-5) : [];
                                                             $close_CE = array_slice($arrData['close_CE'],-5);
                                                             $close_PE = array_slice($arrData['close_PE'],-5);
+                                                            
+                                                            $SUPERTREND_CE = array_slice($arrData['SUPERTREND_CE'],-5);
+                                                            $SUPERTREND_PE = array_slice($arrData['SUPERTREND_PE'],-5);
+                                                            $SUPERTREND_SIGNAL_STATUS_CE = array_slice($arrData['SUPERTREND_SIGNAL_STATUS_CE'],-5);
+                                                            $SUPERTREND_SIGNAL_STATUS_PE = array_slice($arrData['SUPERTREND_SIGNAL_STATUS_PE'],-5);
+
+
                                                         @endphp
                                                         @foreach ($CE as $k=>$item)
                                                             <tr>
@@ -264,6 +286,10 @@
                                                                 <td>{{$BUY_Action[$k]}}</td>
                                                                 <td>{{$SELL_Action[$k]}}</td>
                                                                 <td>{{$Strategy_name[$k]}}</td>
+                                                                <td>{{$SUPERTREND_CE[$k]}}</td>
+                                                                <td>{{$SUPERTREND_PE[$k]}}</td>
+                                                                <td>{{$SUPERTREND_SIGNAL_STATUS_CE[$k]}}</td>
+                                                                <td>{{$SUPERTREND_SIGNAL_STATUS_PE[$k]}}</td>
                                                             </tr>
                                                         @endforeach
                                                 @empty
