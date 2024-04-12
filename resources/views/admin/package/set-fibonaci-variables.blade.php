@@ -118,6 +118,61 @@
         </div>
     </div>
 
+
+    <div class="col-lg-12 mt-3">
+        <div class="card b-radius--10 ">
+            <div class="card-header">         
+                       <h4>Charge and Tax Calculations</h4>
+            </div>
+            <div class="card-body ">
+                <form action="{{url('admin/package/store-charge-tax-variables')}}" method="post" method="post">
+                    @csrf
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="fixed">Fixed</label>
+                                <input type="text" name="fixed" id="fixed" class="form-control" required value="{{$taxData->fixed}}">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="tax">Tax(%)</label>
+                                <input type="text" name="tax" id="tax" class="form-control" required value="{{$taxData->tax}}">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="other">Other(%)</label>
+                                <input type="text" name="other" id="other" class="form-control" required value="{{$taxData->other}}">
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="debit">Debit(%)</label>
+                                <input type="text" name="debit" id="debit" class="form-control" required value="{{$taxData->debit}}">
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="credit">Credit(%)</label>
+                                <input type="text" name="credit" id="credit" class="form-control" required value="{{$taxData->credit}}">
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-12">
+                            <button type="submit" class="btn btn-primary">
+                                Save
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+           
+        </div>
+    </div>
+
 </div>
 
 @endsection

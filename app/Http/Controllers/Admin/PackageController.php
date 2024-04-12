@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Package;
 use App\Models\SiteVariable;
+use App\Traits\AngelApiAuth;
 class PackageController extends Controller{
+    use AngelApiAuth;
     public function all(){
         $pageTitle = 'Manage Product';
         $packages = Package::paginate(getPaginate());
@@ -77,6 +79,7 @@ class PackageController extends Controller{
     }
 
     public function setFibonaciVariables(){
+        dd($this->generate_access_token());
         $pageTitle = 'Site Variables';
         $data = SiteVariable::pluck('content','value')->toArray();
         $percentData = (object)[
@@ -95,13 +98,23 @@ class PackageController extends Controller{
             'client_public_ip'=>'',
             'mac_address'=>'',
         ];
+        $taxData = (object)[
+            'fixed'=>'',
+            'tax'=>'',
+            'other'=>'',
+            'debit'=>'',
+            'credit'=>'',
+        ];
         if(isset($data['fibonaci'])){
             $percentData = json_decode($data['fibonaci']);
         }
         if(isset($data['angel_api'])){
             $angeApiData = json_decode($data['angel_api']);
         }
-        return view('admin.package.set-fibonaci-variables', compact('pageTitle','percentData','angeApiData' ));
+        if(isset($data['charge_tax'])){
+            $taxData = json_decode($data['charge_tax']);
+        }
+        return view('admin.package.set-fibonaci-variables', compact('pageTitle','percentData','angeApiData','taxData' ));
     }
 
     public function storeFibonaciVariables(Request $request){
@@ -180,6 +193,41 @@ class PackageController extends Controller{
             $obj->save();
         }
         $notify[] = ['success', 'Angel Api variables updated successfully'];
+        return redirect('admin/package/set-fibonaci-variables')->withNotify($notify);
+    }
+
+    public function storeChargeTaxVariables(Request $request){
+        $request->validate([
+            'fixed'=>'required',
+            'tax'=>'required',
+            'other'=>'required',
+            'debit'=>'required',
+            'credit'=>'required',
+        ]);
+        $checkExist = SiteVariable::select('id')->where('value','charge_tax')->first();
+        if($checkExist){
+            SiteVariable::where('id',$checkExist->id)->update([
+                'content'=> json_encode([
+                    'fixed'=>$request->fixed,
+                    'tax'=>$request->tax,
+                    'other'=>$request->other,
+                    'debit'=>$request->debit,
+                    'credit'=>$request->credit,
+                ])
+            ]);
+        }else{
+            $obj = new SiteVariable();
+            $obj->value = 'charge_tax';
+            $obj->content = json_encode([
+                'fixed'=>$request->fixed,
+                'tax'=>$request->tax,
+                'other'=>$request->other,
+                'debit'=>$request->debit,
+                'credit'=>$request->credit,
+            ]);
+            $obj->save();
+        }
+        $notify[] = ['success', 'Charge Tax variables updated successfully'];
         return redirect('admin/package/set-fibonaci-variables')->withNotify($notify);
     }
 

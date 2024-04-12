@@ -278,6 +278,7 @@ Route::middleware('admin')->group(function () {
         Route::get('/set-fibonaci-variables', 'setFibonaciVariables');
         Route::post('/store-fibonaci-variables', 'storeFibonaciVariables');
         Route::post('/store-angel-api-variables', 'storeAngelApiVariables');
+        Route::post('/store-charge-tax-variables', 'storeChargeTaxVariables');
     });
 
     // Signal
