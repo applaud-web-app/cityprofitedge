@@ -4,6 +4,7 @@ namespace App\Traits;
 use App\Models\AngelApiInstrument;
 use App\Models\AngleHistoricalApi;
 use App\Models\LTP_ROUNDOFF;
+use App\Models\SiteVariable;
 use App\Models\TradeDeskSignal;
 
 use Illuminate\Support\LazyCollection;
@@ -32,15 +33,31 @@ trait AngelApiAuth
     // private $clientPublicIp = '122.161.67.85';
     // private $macAddress = '14-85-7F-92-D0-B0';
 
-    private $accountUserName =  "S812602";
-    private $accountPassword = "Awesome@999";
-    private $apiSecret = "f93763da-b20d-4b60-b617-faedb0c50be9";
-    private $apiKey = "vmqLJyfh";
-    private $pin = "1979";
-    private $totp_secret = "MT6FFHP6GBXDNG7TIOIRQQL7RY";
-    private $clientLocalIp = '192.168.1.31';
-    private $clientPublicIp = '122.161.67.85';
-    private $macAddress = '14-85-7F-92-D0-B0';
+    private $accountUserName;
+    private $accountPassword;
+    private $apiSecret;
+    private $apiKey;
+    private $pin;
+    private $totp_secret;
+    private $clientLocalIp;
+    private $clientPublicIp;
+    private $macAddress;
+
+    public function __construct(){
+        $data = SiteVariable::where('value','angel_api')->first();
+        $angelData = json_decode($data->content);
+        $this->accountUserName = $angelData->account_user_name;
+        $this->accountPassword = $angelData->account_password;
+        $this->apiSecret = $angelData->api_secret_key;
+        $this->apiKey = $angelData->api_key;
+        $this->pin = $angelData->security_pin;
+        $this->totp_secret = $angelData->totp;
+        $this->clientLocalIp = $angelData->client_local_ip;
+        $this->clientPublicIp = $angelData->client_public_ip;
+        $this->macAddress = $angelData->mac_address;
+    }
+
+
 
     public function get_totp_token()
     {

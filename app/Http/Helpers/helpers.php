@@ -521,3 +521,9 @@ function calculatePyramids($numbertodivise,$no){
 function allTradeSymbolsNew(){
     return ['BANKNIFTY','CRUDEOIL','FINNIFTY','MIDCPNIFTY','NATURALGAS','NIFTY'];
 }
+
+function angelApiVariable(){
+    $data = SiteVariable::where('value','angel_api')->first();
+    $angelData = json_decode($data->content);
+    return $angelData;
+}

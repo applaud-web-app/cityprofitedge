@@ -34,7 +34,7 @@
                     <a href="{{url('admin/package/set-fibonaci-variables')}}" class="nav-link"
                        data-default-url="{{url('admin/package/set-fibonaci-variables')}}">
                         <i class="menu-icon las la-box"></i>
-                        <span class="menu-title">@lang('Fibonaci Variable')</span>
+                        <span class="menu-title">@lang('Site Variables')</span>
                     </a>
                 </li>
 

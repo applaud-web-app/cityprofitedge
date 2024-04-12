@@ -6,9 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Package;
 use App\Models\SiteVariable;
-
+use App\Traits\AngelApiAuth;
 class PackageController extends Controller{
-
+    use AngelApiAuth;
     public function all(){
         $pageTitle = 'Manage Product';
         $packages = Package::paginate(getPaginate());
@@ -79,17 +79,31 @@ class PackageController extends Controller{
     }
 
     public function setFibonaciVariables(){
-        $pageTitle = 'Set Fibonaci Variables';
-        $data = SiteVariable::select('content')->where('value','fibonaci')->first();
+        $pageTitle = 'Site Variables';
+        $data = SiteVariable::pluck('content','value')->toArray();
         $percentData = (object)[
             'percentage_one'=>'',
             'percentage_two'=>'',
             'percentage_three'=>'',
         ];
-        if($data){
-            $percentData = json_decode($data->content);
+        $angeApiData = (object)[
+            'account_user_name'=>'',
+            'account_password'=>'',
+            'api_key'=>'',
+            'api_secret_key'=>'',
+            'security_pin'=>'',
+            'totp'=>'',
+            'client_local_ip'=>'',
+            'client_public_ip'=>'',
+            'mac_address'=>'',
+        ];
+        if(isset($data['fibonaci'])){
+            $percentData = json_decode($data['fibonaci']);
         }
-        return view('admin.package.set-fibonaci-variables', compact('pageTitle','percentData' ));
+        if(isset($data['angel_api'])){
+            $angeApiData = json_decode($data['angel_api']);
+        }
+        return view('admin.package.set-fibonaci-variables', compact('pageTitle','percentData','angeApiData' ));
     }
 
     public function storeFibonaciVariables(Request $request){
@@ -117,7 +131,58 @@ class PackageController extends Controller{
             ]);
             $obj->save();
         }
-        return redirect('admin/package/set-fibonaci-variables');
+        $notify[] = ['success', 'Fibonaci variables updated successfully'];
+        return redirect('admin/package/set-fibonaci-variables')->withNotify($notify);
+    }
+
+    public function storeAngelApiVariables(Request $request){
+        $request->validate([
+            // 'broker_name'=>'required',
+            'account_user_name'=>'required',
+            'account_password'=>'required',
+            'api_key'=>'required',
+            'api_secret_key'=>'required',
+            'security_pin'=>'required',
+            'totp'=>'required',
+            'client_local_ip'=>'required',
+            'client_public_ip'=>'required',
+            'mac_address'=>'required',
+        ]);
+        $checkExist = SiteVariable::select('id')->where('value','angel_api')->first();
+        if($checkExist){
+            SiteVariable::where('id',$checkExist->id)->update([
+                'content'=> json_encode([
+                    // 'broker_name'=>$request->broker_name,
+                    'account_user_name'=>$request->account_user_name,
+                    'account_password'=>$request->account_password,
+                    'api_key'=>$request->api_key,
+                    'api_secret_key'=>$request->api_secret_key,
+                    'security_pin'=>$request->security_pin,
+                    'totp'=>$request->totp,
+                    'client_local_ip'=>$request->client_local_ip,
+                    'client_public_ip'=>$request->client_public_ip,
+                    'mac_address'=>$request->mac_address,
+                ])
+            ]);
+        }else{
+            $obj = new SiteVariable();
+            $obj->value = 'angel_api';
+            $obj->content = json_encode([
+                // 'broker_name'=>$request->broker_name,
+                'account_user_name'=>$request->account_user_name,
+                'account_password'=>$request->account_password,
+                'api_key'=>$request->api_key,
+                'api_secret_key'=>$request->api_secret_key,
+                'security_pin'=>$request->security_pin,
+                'totp'=>$request->totp,
+                'client_local_ip'=>$request->client_local_ip,
+                'client_public_ip'=>$request->client_public_ip,
+                'mac_address'=>$request->mac_address,
+            ]);
+            $obj->save();
+        }
+        $notify[] = ['success', 'Angel Api variables updated successfully'];
+        return redirect('admin/package/set-fibonaci-variables')->withNotify($notify);
     }
 
 }

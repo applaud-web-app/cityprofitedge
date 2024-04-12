@@ -182,9 +182,7 @@ class UserController extends Controller
         $symbolArray2 = [];
         foreach ($portfolioTopLosers as $val) {
            array_push($symbolArray2 , $val['stock_name'].".NS");
-        }
-
-
+        }        
         return view($this->activeTemplate . 'user.dashboard', compact('pageTitle', 'user', 'totalDeposit', 'totalTrx', 'latestTrx', 'totalSignal', 'portfolioTopGainers', 'portfolioTopLosers','stockPortFolio','globalStockPortFolio','foglobalStockPortFolio','metalsPortFolio','totalInvestedAmount','totalCurrentAmount','datesArr','buyArr','currArr','chrtArr','symbolArray','symbolArray2'));
     }
 

@@ -277,6 +277,7 @@ Route::middleware('admin')->group(function () {
         Route::post('/status/{id}', 'status')->name('status');
         Route::get('/set-fibonaci-variables', 'setFibonaciVariables');
         Route::post('/store-fibonaci-variables', 'storeFibonaciVariables');
+        Route::post('/store-angel-api-variables', 'storeAngelApiVariables');
     });
 
     // Signal
