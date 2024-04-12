@@ -135,7 +135,7 @@
 @push('script')
 <script>
     function reloadData(){
-        $.get('{!!$fullUrl!!}',function(data){
+        $.get('{{url("user/order-books-ajax?".(isset($_SERVER["QUERY_STRING"]) ? $_SERVER["QUERY_STRING"] : ''))}}',function(data){
             $("#pst_hre").html(data);
         });
     }

@@ -313,7 +313,7 @@
 @push('script')
 <script>
     function reloadData(){
-        $.get('{!!$fullUrl!!}',function(data){
+        $.get('{{url("user/portfolio-top-gainers-stock-ajx?".(isset($_SERVER["QUERY_STRING"]) ? $_SERVER["QUERY_STRING"] : ''))}}',function(data){
             $("#pst_hre").html(data);
         });
     }

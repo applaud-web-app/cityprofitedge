@@ -212,7 +212,7 @@ $("#heatmap-1").CalendarHeatmap(data, {
 </script>
 <script>
     function reloadData(){
-        $.get('{!!$fullUrl!!}',function(data){
+        $.get('{{url("user/trade-book-ajax?".(isset($_SERVER["QUERY_STRING"]) ? $_SERVER["QUERY_STRING"] : ''))}}',function(data){
             $("#pst_hre").html(data);
         });
     }

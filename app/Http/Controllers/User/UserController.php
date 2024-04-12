@@ -578,7 +578,6 @@ class UserController extends Controller
 
     public function portfolioTopGainers(Request $request)
     {
-
         $fullUrl =  $request->fullUrl();
         $pageTitle = 'Trade Desk Signal';
         $portfolioTopGainers = [];
@@ -589,12 +588,27 @@ class UserController extends Controller
         $stockName = $request->stock_name;
         $timeFrame = $request->time_frame ? : 5;
         $symbolArr = allTradeSymbols();
-        if($request->ajax()){
-            return view($this->activeTemplate . 'user.portfolio_top_gainers_ajax', compact('pageTitle', 'portfolioTopGainers','todayDate','timeFrame','stockName','fullUrl','symbolArr'));
-        }
-        
+        // if($request->ajax()){
+        //     return view($this->activeTemplate . 'user.portfolio_top_gainers_ajax', compact('pageTitle', 'portfolioTopGainers','todayDate','timeFrame','stockName','fullUrl','symbolArr'));
+        // }
         return view($this->activeTemplate . 'user.portfolio_top_gainers', compact('pageTitle', 'portfolioTopGainers','symbolArr','todayDate','timeFrame','stockName','fullUrl'));
     }
+
+    public function portfolioTopGainersAjx(Request $request)
+    {
+
+        $fullUrl =  $request->fullUrl();
+        $pageTitle = 'Trade Desk Signal';
+        $portfolioTopGainers = [];
+        $todayDate = date("Y-m-d");
+        $stockName = $request->stock_name;
+        $timeFrame = $request->time_frame ? : 5;
+        $symbolArr = allTradeSymbols();
+        return view($this->activeTemplate . 'user.portfolio_top_gainers_ajax', compact('pageTitle', 'portfolioTopGainers','todayDate','timeFrame','stockName','fullUrl','symbolArr'));
+    }
+
+
+
 
     public function portfolioGreeks(Request $request)
     {
@@ -629,6 +643,17 @@ class UserController extends Controller
         }
         
         return view($this->activeTemplate . 'user.portfolio_top_gainers_stock', compact('pageTitle', 'portfolioTopGainers','symbolArr','todayDate','timeFrame','stockName','fullUrl'));
+    }
+
+    public function portfolioTopGainersStockAjx(Request $request){
+        $fullUrl =  $request->fullUrl();
+        $pageTitle = 'Trade Desk Signal(Stock)';
+        $portfolioTopGainers = [];
+        $todayDate = date("Y-m-d");
+        $stockName = $request->stock_name;
+        $timeFrame = $request->time_frame ? : 15;
+        $symbolArr = allTradeSymbols();
+        return view($this->activeTemplate . 'user.portfolio_top_gainers_ajax_stock', compact('pageTitle', 'portfolioTopGainers','todayDate','timeFrame','stockName','fullUrl','symbolArr'));
     }
 
     public function brokerDetails(){
@@ -748,11 +773,125 @@ class UserController extends Controller
 
         $data['order_data'] = $orderData;
         $data['fullUrl'] = $fullUrl;
-        if($request->ajax()){
+        // if($request->ajax()){
             
-            return view($this->activeTemplate . 'user.order_books_ajax',$data);
-        }
+        //     return view($this->activeTemplate . 'user.order_books_ajax',$data);
+        // }
         return view($this->activeTemplate . 'user.order_books',$data);
+    }
+
+    public function orderBooksAjax(Request $request){
+        $fullUrl =  $request->fullUrl();
+        $data['pageTitle'] = 'Order Boook';
+        $broker_data = BrokerApi::where('user_id',auth()->user()->id)->get();
+        $data['broker_data'] = $broker_data;
+        $brokerId = 0;
+        $orderData = [];
+        $filterBrokderD = $broker_data;
+
+        if(!empty($request->broker_name)){
+            foreach($broker_data as $vl){
+                if($vl->id==$request->broker_name){
+                    $filterBrokderD = [];
+                    $filterBrokderD[] = $vl;
+                    $brokerId = $vl->id;
+                    // echo'true<br>';
+                    break;
+                }
+            }
+            if($request->broker_name=="OMS_ORDERS"){
+                $filterBrokderD = [];
+                $brokerId = 'OMS_ORDERS';
+            }
+        }
+
+        $data['brokerId'] = $brokerId;
+
+        if(empty($request->broker_name) || $request->broker_name=="OMS_ORDERS"){
+            $orderData['OMS CONFIG'] = OrderBook::select('*')->where('user_id',auth()->user()->id)->paginate(50);
+        }
+
+        
+        foreach($filterBrokderD as $userData){
+            if($userData->client_type=='Zerodha'){
+                $orderData[$userData->account_user_name.' ('.$userData->client_name.')'] = [];
+            }elseif($userData->client_type=='Angel'){
+                $param = [
+                    'accountUserName'=>$userData->account_user_name,
+                    'apiKey'=>$userData->api_key,
+                    'pin'=>$userData->security_pin,
+                    'totp_secret'=>$userData->totp,
+                ];
+                $angelObj = new AngelConnectCls($param);
+                $angelTokenArr = $angelObj->generate_access_token();
+                if(is_null($angelTokenArr)){
+                    $orderData[$userData->account_user_name.' ('.$userData->client_name.')'] = [];
+                }else{
+                    
+                    // echo $angelTokenArr['token'];die;
+                    $tokenA = $angelTokenArr['token'];
+                    $clientLocalIp = $angelTokenArr['clientLocalIp'];
+                    $clientPublicIp = $angelTokenArr['clientPublicIp'];
+                    $macAddress = $angelTokenArr['macAddress'];
+                    $httpHeaders = array(
+                        'X-UserType: USER',
+                        'X-SourceID: WEB',
+                        'X-PrivateKey: '.$userData->api_key,
+                        'X-ClientLocalIP: '.$clientLocalIp,
+                        'X-ClientPublicIP: '.$clientPublicIp,
+                        'X-MACAddress: '.$macAddress,
+                        'Content-Type: application/json',
+                        'Authorization: Bearer '.$tokenA
+                    );
+                    $fDada = [];
+    
+                    $curl = curl_init();
+                    curl_setopt_array($curl, array(
+                        CURLOPT_URL => 'https://apiconnect.angelbroking.com/rest/secure/angelbroking/order/v1/getOrderBook',
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_ENCODING => '',
+                        CURLOPT_MAXREDIRS => 10,
+                        CURLOPT_TIMEOUT => 0,
+                        CURLOPT_FOLLOWLOCATION => true,
+                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                        CURLOPT_CUSTOMREQUEST => 'GET',
+                        CURLOPT_HTTPHEADER => $httpHeaders,
+                    ));
+                    $response = curl_exec($curl);
+                    curl_close($curl);
+                    $dataArr = json_decode($response);
+                    // dd($dataArr);
+                    if($dataArr!=null && isset($dataArr->status) &&  $dataArr->status==true){
+                        if(!is_null($dataArr->data)){
+                            foreach($dataArr->data as $vl){
+                                $fDada[] = (object)[
+                                    "variety"=> $vl->variety,
+                                    "ordertype"=> $vl->ordertype,
+                                    "producttype"=> $vl->producttype,
+                                    "duration"=> $vl->duration,
+                                    "price"=> $vl->price,
+                                    "quantity"=> $vl->quantity,
+                                    "tradingsymbol"=> $vl->tradingsymbol,
+                                    "transactiontype"=> $vl->transactiontype,
+                                    "lotsize"=> $vl->lotsize,
+                                    "averageprice"=> $vl->averageprice,
+                                    "orderid"=> $vl->orderid,
+                                    "status"=> $vl->status,
+                                    "orderstatus"=> $vl->orderstatus,
+                                    "updatetime"=> $vl->updatetime,
+                                ];
+                            }
+                        }
+                    }
+                    $orderData[$userData->account_user_name.' ('.$userData->client_name.')'] = $fDada;
+                }
+               
+            }
+        }
+
+        $data['order_data'] = $orderData;
+        $data['fullUrl'] = $fullUrl;
+        return view($this->activeTemplate . 'user.order_books_ajax',$data);
     }
 
     
@@ -967,10 +1106,41 @@ class UserController extends Controller
         $datas = Ledger::select('bought_date as date', \DB::raw('COUNT(*) as count'))->where('user_id',auth()->user()->id)->whereYear('bought_date', $currentYear)->groupBy('bought_date')->orderBy('bought_date')->get();
 
         // dd($datas);
-        if($request->ajax()){
-            return view($this->activeTemplate . 'user.trade-book-ajax',$data,compact('Ledger','stock','datas'));
-        }
+        // if($request->ajax()){
+        //     return view($this->activeTemplate . 'user.trade-book-ajax',$data,compact('Ledger','stock','datas'));
+        // }
         return view($this->activeTemplate . 'user.trade-book',$data,compact('Ledger','stock','datas'));
+    }
+
+    public function tradeBookAjax(Request $request){
+        $pageTitle = 'Trade Book';
+        $data['pageTitle'] = $pageTitle;
+        $data['fullUrl'] = $request->fullUrl();
+        
+        if(!empty($request->buyDate) && $request->buyDate!='all'){
+            $array = explode('/' ,$request->buyDate);
+            $dataFrom = $array[0];
+            $dateTo = $array[1];
+        }
+
+        $Ledger = Ledger::where('user_id',auth()->user()->id);
+        if(!empty($request->symbol) && $request->symbol!='all'){
+            $Ledger->where('stock_name',$request->symbol);
+        }
+        if(empty($request->symbol) && $request->symbol!='all' && empty($request->buyDate) && $request->buyDate!='all'){
+            $Ledger->whereBetween('bought_date', [Carbon::now()->subMonth(6), Carbon::now()]);
+        }
+        if(!empty($request->buyDate) && $request->buyDate!='all'){
+            $Ledger->whereBetween('bought_date',[$dataFrom,$dateTo]);
+        }
+        $Ledger = $Ledger->get();
+
+        $stock = Ledger::select('stock_name')->where('user_id',auth()->user()->id)->get();
+
+
+        $currentYear = date('Y');
+        $datas = Ledger::select('bought_date as date', \DB::raw('COUNT(*) as count'))->where('user_id',auth()->user()->id)->whereYear('bought_date', $currentYear)->groupBy('bought_date')->orderBy('bought_date')->get();
+        return view($this->activeTemplate . 'user.trade-book-ajax',$data,compact('Ledger','stock','datas'));
     }
 
     public function getStockName(){
@@ -1127,6 +1297,138 @@ class UserController extends Controller
         return view($this->activeTemplate . 'user.pl-reports',$data,compact('combinedArray','allData'));
     }
 
+    public function plReportsAjax(Request $request){
+        $fullUrl = $request->fullUrl();
+        $pageTitle = 'PL Reports';
+        $data['pageTitle'] = $pageTitle;
+        $data['fullUrl'] = $request->fullUrl();
+
+        $segments = "all";
+        $type = "all";
+        $symbol = 'all';
+        $buyDate = 'all';
+        $array = [];  
+
+        if(!empty($request->buyDate) && $request->buyDate!='all'){
+            $array = explode('/' ,$request->buyDate);
+            $dataFrom = $array[0];
+            $dateTo = $array[1];
+        }
+
+        $Ledger = Ledger::select(['*', 'bought_date as buy_date'])->where('user_id',auth()->user()->id);
+        if(!empty($request->symbol) && $request->symbol!='all'){
+            $Ledger->where('stock_name',$request->symbol);
+        }
+        if(empty($request->symbol) && $request->symbol!='all' && empty($request->type) && $request->type!='all' && empty($request->symbol) && $request->symbol!='all'  && empty($request->buyDate) && $request->buyDate!='all'){
+            $Ledger->whereBetween('bought_date', [Carbon::now()->subMonth(6), Carbon::now()]);
+        }
+        if(!empty($request->buyDate) && $request->buyDate!='all'){
+            $Ledger->whereBetween('bought_date',[$dataFrom,$dateTo]);
+        }
+        $Ledger = $Ledger->get();
+
+
+        $MetalsPortfolio = MetalsPortfolio::where('user_id',auth()->user()->id);
+        if(!empty($request->symbol) && $request->symbol!='all'){
+            $MetalsPortfolio->where('stock_name',$request->symbol);
+        }
+        if(empty($request->symbol) && $request->symbol!='all' && empty($request->type) && $request->type!='all' && empty($request->symbol) && $request->symbol!='all'  && empty($request->buyDate) && $request->buyDate!='all'){
+            $MetalsPortfolio->whereBetween('buy_date', [Carbon::now()->subMonth(6), Carbon::now()]);
+        }
+        if(!empty($request->buyDate) && $request->buyDate!='all'){
+            $MetalsPortfolio->whereBetween('buy_date',[$dataFrom,$dateTo]);
+        }
+        $MetalsPortfolio = $MetalsPortfolio->get();
+
+
+        $FOPortfolios = FOPortfolios::where('user_id',auth()->user()->id);
+        if(!empty($request->symbol) && $request->symbol!='all'){
+            $FOPortfolios->where('stock_name',$request->symbol);
+        }
+        if(empty($request->symbol) && $request->symbol!='all' && empty($request->type) && $request->type!='all' && empty($request->symbol) && $request->symbol!='all'  && empty($request->buyDate) && $request->buyDate!='all'){
+            $FOPortfolios->whereBetween('buy_date', [Carbon::now()->subMonth(6), Carbon::now()]);
+        }
+        if(!empty($request->buyDate) && $request->buyDate!='all'){
+            $FOPortfolios->whereBetween('buy_date',[$dataFrom,$dateTo]);
+        }
+        $FOPortfolios = $FOPortfolios->get();
+
+
+        $GlobalStockPortfolio = GlobalStockPortfolio::where('user_id',auth()->user()->id);
+        if(!empty($request->symbol) && $request->symbol!='all'){
+            $GlobalStockPortfolio->where('stock_name',$request->symbol);
+        }
+        if(empty($request->symbol) && $request->symbol!='all' && empty($request->type) && $request->type!='all' && empty($request->symbol) && $request->symbol!='all'  && empty($request->buyDate) && $request->buyDate!='all'){
+            $GlobalStockPortfolio->whereBetween('buy_date', [Carbon::now()->subMonth(6), Carbon::now()]);
+        }
+        if(!empty($request->buyDate) && $request->buyDate!='all'){
+            $GlobalStockPortfolio->whereBetween('buy_date',[$dataFrom,$dateTo]);
+        }
+        $GlobalStockPortfolio = $GlobalStockPortfolio->get();
+
+
+        $StockPortfolio = StockPortfolio::where('user_id',auth()->user()->id);
+        if(!empty($request->symbol) && $request->symbol!='all'){
+            $StockPortfolio->where('stock_name',$request->symbol);
+        }
+        if(empty($request->symbol) && $request->symbol!='all' && empty($request->type) && $request->type!='all' && empty($request->symbol) && $request->symbol!='all'  && empty($request->buyDate) && $request->buyDate!='all'){
+            $StockPortfolio->whereBetween('buy_date', [Carbon::now()->subMonth(6), Carbon::now()]);
+        }
+        if(!empty($request->buyDate) && $request->buyDate!='all'){
+            $StockPortfolio->whereBetween('buy_date',[$dataFrom,$dateTo]);
+        }
+        $StockPortfolio = $StockPortfolio->get();
+
+        // Type = Realised (Lagyer) , Unrelized = (Except Lagyer)
+        if(!empty($request->type) && $request->type!='all'){
+            if($request->type == "unrealized"){
+                if(!empty($request->segments) && $request->segments!='all'){
+                    if($request->segments == "global"){
+                        $combinedArray = array_merge($GlobalStockPortfolio->toArray());
+                    }else if($request->segments == "fQ"){
+                        $combinedArray = array_merge($FOPortfolios->toArray());
+                    }else if($request->segments == "metals"){
+                        $combinedArray = array_merge($MetalsPortfolio->toArray());
+                    }else if($request->segments == "stock"){
+                        $combinedArray = array_merge($StockPortfolio->toArray());
+                    }
+                }else{
+                    $combinedArray = array_merge($MetalsPortfolio->toArray(), $FOPortfolios->toArray(), $GlobalStockPortfolio->toArray() , $StockPortfolio->toArray());
+                }
+            }else{
+                // Merge All Data
+                if($request->segments=='all'){
+                  $combinedArray = array_merge($Ledger->toArray());
+                }else{
+                    $combinedArray = [];
+                }
+
+            }
+        }else{
+            // Merge All Data
+            if(!empty($request->segments) && $request->segments!='all'){
+                if($request->segments == "global"){
+                    $combinedArray = array_merge($GlobalStockPortfolio->toArray());
+                }else if($request->segments == "fQ"){
+                    $combinedArray = array_merge($FOPortfolios->toArray());
+                }else if($request->segments == "metals"){
+                    $combinedArray = array_merge($MetalsPortfolio->toArray());
+                }else if($request->segments == "stock"){
+                    $combinedArray = array_merge($StockPortfolio->toArray());
+                }
+            }else{
+                $combinedArray = array_merge($Ledger->toArray(), $MetalsPortfolio->toArray(), $FOPortfolios->toArray(), $GlobalStockPortfolio->toArray() , $StockPortfolio->toArray());
+            }
+        }
+
+        // Sort Data
+        $dates = array_column($combinedArray, 'buy_date');
+        array_multisort($dates, SORT_ASC, $combinedArray);
+
+        $allData = $this->getStockName();
+        return view($this->activeTemplate . 'user.pl-reports-ajax',$data,compact('combinedArray','allData')); 
+    }
+
     public function omsConfig(){
         $pageTitle = 'OMS CONFIG';
         $data['pageTitle'] = $pageTitle;
@@ -1135,6 +1437,8 @@ class UserController extends Controller
         $data['omsData'] = OmsConfig::where('user_id',auth()->user()->id)->with('broker:id,client_name')->paginate(50);
         return view($this->activeTemplate . 'user.oms-config',$data);
     }
+
+    
 
     public function getPeCeSymbolNames(Request $request){
         $symbol = $request->symbol;

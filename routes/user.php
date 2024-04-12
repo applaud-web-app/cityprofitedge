@@ -75,8 +75,12 @@ Route::middleware('auth')->name('user.')->group(function () {
                 Route::get('fo-portfolio-hedging', 'foPortfolioHedging')->name('fo.portfolio.hedging');
                 Route::get('metals-portfolio', 'metalsPortfolio')->name('metals.portfolio');
                 Route::get('portfolio-top-gainers', 'portfolioTopGainers')->name('portfolio.top.gainers');
+                Route::get('portfolio-top-gainers-ajx', 'portfolioTopGainersAjx')->name('portfolio.top.gainers-ajx');
+
+
                 Route::get('portfolio-greeks', 'portfolioGreeks');
                 Route::get('portfolio-top-gainers-stock', 'portfolioTopGainersStock')->name('portfolio.top.gainers-stock');
+                Route::get('portfolio-top-gainers-stock-ajx', 'portfolioTopGainersStockAjx')->name('portfolio.top.gainers-stock-ajx');
                 Route::get('portfolio-top-losers', 'portfolioTopLosers')->name('portfolio.top.losers');
                 Route::get('broker-details', 'brokerDetails')->name('portfolio.broker-details');
                 Route::post('store-broker-details', 'storeBrokerDetails')->name('portfolio.store-broker-details');
@@ -84,13 +88,18 @@ Route::middleware('auth')->name('user.')->group(function () {
                 Route::get('get-broker-details/{id}', 'getBrokerDetails')->name('portfolio.get-broker-details');
                 Route::post('remove-broker-details/{id}', 'removeBrokerDetails')->name('portfolio.remove-broker-details');
                 Route::get('trade-book','tradeBook')->name('trade-book');
+                Route::get('trade-book-ajax','tradeBookAjax')->name('trade-book-ajax');
+
                 Route::get('fetch-trade-record','fetchTradeRecord')->name('fetch-trade-book');
                 Route::get('store-ohlc-record','storenewData')->name('store-ohlc-record');
                 Route::get('pl-reports','plReports')->name('pl-reports');
+                Route::get('pl-reports-ajax','plReportsAjax')->name('pl-reports-ajax');
 
                 Route::get('attachment-download/{fil_hash}','attachmentDownload')->name('attachment.download');
 
                 Route::get('oms-config', 'omsConfig')->name('portfolio.oms-config');
+
+
                 Route::post('store-oms-config', 'storeOmsConfig')->name('portfolio.store-oms-config');
                 Route::post('update-oms-config', 'updateOmsConfig')->name('portfolio.update-oms-config');
                 Route::post('get-pe-ce-symbol-names', 'getPeCeSymbolNames');
@@ -98,6 +107,7 @@ Route::middleware('auth')->name('user.')->group(function () {
                 Route::post('remove-oms-config', 'removeOmsConfig')->name('portfolio.remove-oms-config');
 
                 Route::get('order-books', 'orderBooks')->name('order-books');
+                Route::get('order-books-ajax', 'orderBooksAjax')->name('order-books-ajax');
                 Route::get('trade-positions', 'tradePositions')->name('trade-positions');
 
             });
