@@ -6,9 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Package;
 use App\Models\SiteVariable;
-use App\Traits\AngelApiAuth;
 class PackageController extends Controller{
-    use AngelApiAuth;
     public function all(){
         $pageTitle = 'Manage Product';
         $packages = Package::paginate(getPaginate());
