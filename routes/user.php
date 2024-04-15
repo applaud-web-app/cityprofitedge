@@ -59,6 +59,7 @@ Route::middleware('auth')->name('user.')->group(function () {
                 Route::get('signals', 'signals')->name('signals');
                 Route::get('referrals', 'referrals')->name('referrals');
                 Route::get('option-analysis', 'OptionAnalysis')->name('option-analysis');
+                Route::get('option-analysis-ajax', 'OptionAnalysisAjax')->name('option-analysis-ajax');
 
                 //2FA
                 Route::get('twofactor', 'show2faForm')->name('twofactor');
