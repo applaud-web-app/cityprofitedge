@@ -31,11 +31,14 @@
         
     }
   }
-
+  /* .custom--card .card-header{
+    color: #fff !important;
+  } */
 </style>
 @endpush
 <section class="pt-100 pb-100">
     <div class="container-fluid" id="pst_hre">
+      <form method="GET" class="d-flex align-items-center flex-wrap ">
         <div class="row">
             {{-- First Graph Start --}}
             {{-- @php
@@ -70,7 +73,7 @@
                 <div class="custom--card">
                     <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
                         <h5 class="card-title">@lang('Option Analysis 1')</h5>
-                        <div class="filter-box d-flex">
+                        <div class="filter-box filter_dropdown d-flex">
                           <form method="GET" class="d-flex align-items-center flex-wrap filter_dropdown">
                             <div class="mx-1">
                               <select name="symbol1" class="form-select" id="symbol1">
@@ -193,9 +196,9 @@
                           <h5 class="card-title mb-0"  data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="right"  title="Open Interest CE/PE Signals indicate trading opportunities based on the open interest of Call Options (CE) and Put Options (PE) contracts. When there's a significant divergence between the open interest of CE and PE, it can signal a potential trading opportunity. A valid trading signal occurs when Call Options (CE) indicate bullish sentiment while Put Options (PE) suggest bearish sentiment. It is opportune to enter a trade when these signals align in this manner.">@lang('Option Analysis - Open Interest CE/PE Signals') </h5>
                           <small class="text-warning">Y- ClosePrice, X - Time</small>
                         </div>
-                        <div class="filter-box d-flex">
-                          <form method="GET" class="d-flex align-items-center flex-wrap filter_dropdown">
-                            <div class="mx-1">
+                        <div class="filter-box filter_dropdown d-flex">
+                          {{-- <form method="GET" class="d-flex align-items-center flex-wrap filter_dropdown"> --}}
+                            <div class="mx-1"> 
                               <select name="symbol2" class="form-select" id="symbol2">
                                 <option value="" disabled="" selected>Symbol Name</option>
                                 @foreach ($symbolArr as $item)
@@ -229,7 +232,7 @@
                             <div class="mx-1">
                               <a href="{{url('/user/option-analysis')}}" class="btn btn-sm btn--base w-100 py-2" ><i class="las la-filter"></i> @lang('Refresh')</a>
                             </div>
-                          </form>
+                          {{-- </form> --}}
                         </div>
                     </div>
                     <div class="card-body chart2">
@@ -312,8 +315,8 @@
                           <h5 class="card-title mb-0"  data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="right"  title="VWAP CE/PE Signals refer to trading signals derived from the Volume Weighted Average Price (VWAP) specifically for Call Options (CE) and Put Options (PE) contracts in a given market. VWAP is a technical analysis tool that calculates the average price of a security over a specified period, weighted by trading volume. Traders often use VWAP to identify trends, support, and resistance levels in the market. A valid trading signal occurs when Call Options (CE) indicate bullish sentiment while Put Options (PE) suggest bearish sentiment. It is opportune to enter a trade when these signals align in this manner.">@lang('Option Analysis - VWAP CE/PE Signals') </h5>
                           <small class="text-warning">Y- ClosePrice, X - Time</small>
                        </div>
-                        <div class="filter-box d-flex">
-                          <form method="GET" class="d-flex align-items-center flex-wrap filter_dropdown">
+                        <div class="filter-box filter_dropdown d-flex">
+                          {{-- <form method="GET" class="d-flex align-items-center flex-wrap filter_dropdown"> --}}
                             <div class="mx-1">
                               <select name="symbol3" class="form-select" id="symbol3">
                                 <option value="" disabled="" selected>Symbol Name</option>
@@ -348,7 +351,7 @@
                             <div class="mx-1">
                               <a href="{{url('/user/option-analysis')}}" class="btn btn-sm btn--base w-100 py-2" ><i class="las la-filter"></i> @lang('Refresh')</a>
                             </div>
-                          </form>
+                          {{-- </form> --}}
                         </div>
                     </div>
                     <div class="card-body chart2">
@@ -438,8 +441,8 @@
                       A valid trading signal occurs when Call Options (CE) indicate bullish sentiment while Put Options (PE) suggest bearish sentiment. It is opportune to enter a trade when these signals align in this manner.">@lang('Open Interest CE/PE Crossovers') </h5>
                       <small class="text-warning" >Y- Open Interest, X - Time</small>
                    </div>
-                    <div class="filter-box d-flex">
-                      <form method="GET" class="d-flex align-items-center flex-wrap filter_dropdown">
+                    <div class="filter-box filter_dropdown d-flex">
+                      {{-- <form method="GET" class="d-flex align-items-center flex-wrap filter_dropdown"> --}}
                         <div class="mx-1">
                           <select name="symbol4" class="form-select" id="symbol4">
                             <option value="" disabled="" selected>Symbol Name</option>
@@ -474,7 +477,7 @@
                         <div class="mx-1">
                           <a href="{{url('/user/option-analysis')}}" class="btn btn-sm btn--base w-100 py-2" ><i class="las la-filter"></i> @lang('Refresh')</a>
                         </div>
-                      </form>
+                      {{-- </form> --}}
                     </div>
                 </div>
                 <div class="card-body chart2">
@@ -612,8 +615,8 @@
                       <h5 class="card-title mb-0"  data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="right" title="Open interest reflects active options contracts. The net change is the current minus previous open interest. Bullish: CE's net increase over PE indicates optimism for asset's rise. Bearish: PE's significant increase over CE signals pessimism for asset's decline.">@lang('Open Interest CE/PE Net Change') </h5>
                       <small class="text-warning">Y- Open Interest, X - Time</small>
                     </div>
-                    <div class="filter-box d-flex">
-                      <form method="GET" class="d-flex align-items-center flex-wrap filter_dropdown">
+                    <div class="filter-box filter_dropdown d-flex">
+                      {{-- <form method="GET" class="d-flex align-items-center flex-wrap filter_dropdown"> --}}
                         <div class="mx-1">
                           <select name="symbol5" class="form-select" id="symbol5">
                             <option value="" disabled="" selected>Symbol Name</option>
@@ -658,6 +661,7 @@
         </div>
           {{-- Fifth Graph End --}}
         </div>
+      </form>
     </div>
 </section>
 @endsection
@@ -1044,8 +1048,14 @@
       offsetY: 0,
     }
   };
-  var chart = new ApexCharts(document.querySelector("#apex-analysis-chart3"), options);
-  chart.render();
+
+  
+  @if ($time2 != NULL)
+    var chart = new ApexCharts(document.querySelector("#apex-analysis-chart3"), options);
+    chart.render();
+  @else
+  $('#apex-analysis-chart3').html('NO DATA FOUND');  
+  @endif  
 </script>
 
 <script>
@@ -1110,8 +1120,14 @@
       offsetY: 0,
     }
   };
+ 
+
+  @if ($time3 != NULL)
   var chart = new ApexCharts(document.querySelector("#apex-analysis-chart4"), options);
   chart.render();
+  @else
+  $('#apex-analysis-chart4').html('NO DATA FOUND');  
+  @endif  
 </script>
 
 
@@ -1178,8 +1194,14 @@
       offsetY: 0,
     }
   };
+  
+
+  @if ($time4 != NULL)
   var chart = new ApexCharts(document.querySelector("#apex-analysis-chart5"), options);
   chart.render();
+  @else
+  $('#apex-analysis-chart5').html('NO DATA FOUND');  
+  @endif  
 </script>
 
 
@@ -1249,8 +1271,14 @@
       offsetY: 0,
     }
   };
+
+
+  @if ($time5 != NULL)
   var chart = new ApexCharts(document.querySelector("#apex-analysis-chart6"), options);
   chart.render();
+  @else
+  $('#apex-analysis-chart6').html('NO DATA FOUND');  
+  @endif 
 </script>
 
 <script>
