@@ -52,12 +52,33 @@ class SiteController extends Controller
         $pageTitle = 'Home';
        
         $sections = Page::where('tempname',$this->activeTemplate)->where('slug','/')->first();
+
+        // dd($sections);
         $fullUrl = $request->fullUrl();
-        if($request->ajax()){
-            return view($this->activeTemplate . 'sections.table-ajax', compact('pageTitle','sections','getPcrData','topGainer','topLoser','longBuildUp','shortBuildUp','coveringBuildUp','unWindingBuildUp','fullUrl'));
-        }
+        // if($request->ajax()){
+        //     return view($this->activeTemplate . 'sections.table-ajax', compact('pageTitle','sections','getPcrData','topGainer','topLoser','longBuildUp','shortBuildUp','coveringBuildUp','unWindingBuildUp','fullUrl'));
+        // }
 
         return view($this->activeTemplate . 'home', compact('pageTitle','sections','getPcrData','topGainer','topLoser','longBuildUp','shortBuildUp','coveringBuildUp','unWindingBuildUp','fullUrl'));
+    }
+
+    public function indexAjax(Request $request){
+        $getPcrData = PcrVolume::orderBy('id','DESC')->paginate(5);
+        $topGainer = TopPortfolio::orderBy('id','DESC')->where('type','gainer')->paginate(5);
+        $topLoser = TopPortfolio::orderBy('id','DESC')->where('type','loser')->paginate(5);
+        $longBuildUp = OiBuildUp::orderBy('id','DESC')->where('type','long')->paginate(5);
+        $shortBuildUp = OiBuildUp::orderBy('id','DESC')->where('type','short')->paginate(5);
+        $coveringBuildUp = OiBuildUp::orderBy('id','DESC')->where('type','covering')->paginate(5);
+        $unWindingBuildUp = OiBuildUp::orderBy('id','DESC')->where('type','unwinding')->paginate(5);
+        $reference = @$_GET['reference'];
+        if ($reference) {
+            session()->put('reference', $reference);
+        }
+        $pageTitle = 'Home';
+       
+        $sections = Page::where('tempname',$this->activeTemplate)->where('slug','/')->first();
+        $fullUrl = $request->fullUrl();
+        return view($this->activeTemplate . 'sections.table-ajax', compact('pageTitle','sections','getPcrData','topGainer','topLoser','longBuildUp','shortBuildUp','coveringBuildUp','unWindingBuildUp','fullUrl'));
     }
 
     public function pages($slug)

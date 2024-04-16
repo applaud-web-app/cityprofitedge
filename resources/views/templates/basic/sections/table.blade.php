@@ -372,7 +372,7 @@
 <script>
     $(document).ready(function(){
         function reloadData(){
-            $.get('{!!$fullUrl!!}',function(data){
+            $.get('{!!url("index-ajax")!!}',function(data){
                 if(data=='NO_DATA'){
                     reloadData();
                     return;

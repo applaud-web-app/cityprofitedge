@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', 'SiteController@index')->name('home');
+Route::get('/index-ajax', 'SiteController@indexAjax')->name('home-ajax');
 
 Route::get('get-market-data', 'SiteController@getMarketData')->name('get-market-data');
 Route::get('get-top-loser-api-data', 'SiteController@getTopLoserData')->name('get-top-loser-api-data');
