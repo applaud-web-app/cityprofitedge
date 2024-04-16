@@ -110,14 +110,18 @@
                                                     @php
                                                         $arrData = json_decode($val->data,true);  
                                                         $totalItems = count($arrData['Date']);
-                                                        // dd($arrData['Date']);
-                                                        $currentItems = array_slice($arrData['Date'], ($currentPage - 1) * $itemsPerPage, $itemsPerPage);
-                                                        $k = ($currentPage - 1) * $itemsPerPage;
+
+                                                        $newArr = array_reverse($arrData['Date'],true);
+                                                        $currentItems = array_slice($newArr, ($currentPage - 1) * $itemsPerPage, $itemsPerPage,true);
+                                                      
                                                     @endphp
-                                                    @foreach ($currentItems as $item)
+                                                    @foreach ($currentItems as $k=>$item)
+                                                        @php
+                                                        //    echo $k;die;
+                                                        @endphp
                                                         <tr>
                                                             {{-- <td>{{$i++}}</td> --}}
-                                                            <td>{{date("d-M-Y",($arrData['Date'][$k]/1000))}}</td>
+                                                            <td>{{date("d-M-Y",($item/1000))}}</td>
                                                             <td>{{$arrData['time'][$k]}}</td>
                                                             <td>{{$arrData['CE'][$k]}}</td>
                                                             <td>{{$arrData['PE'][$k]}}</td>
@@ -134,7 +138,7 @@
                                                            
                                                         </tr>
                                                         @php
-                                                            $k++;
+                                                            // $k++;
                                                         @endphp
                                                     @endforeach
                                             @empty
