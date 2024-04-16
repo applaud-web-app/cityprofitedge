@@ -180,8 +180,8 @@
             @empty
              @php
                 $time2 = "";
-                $CE = "";
-                $PE = "";
+                $CE = ["NO DATA"];
+                $PE = ["NO DATA"];
                 $close_CE2 = "";
                 $close_PE2 = "";
              @endphp
@@ -302,8 +302,8 @@
               $close_PE3 = "";
               $close_CE3 = "";
               $time3 = "";
-              $CE3 = "";
-              $PE3 = "";
+              $CE3 = ["NO DATA"];
+              $PE3 = ["NO DATA"];
             @endphp
             @endforelse 
             <div class="col-lg-12 mb-3">
@@ -425,8 +425,8 @@
               $OI_PE4 = "";
               $OI_CE4 = "";
               $time4 = "";
-              $CE4 = "";
-              $PE4 = "";
+              $CE4 = ["NO DATA"];
+              $PE4 = ["NO DATA"];
             @endphp
             @endforelse 
            
@@ -600,8 +600,8 @@
                 $CE_NETCHANGE_5 = "";
                 $PE_NETCHANGE_5 = "";
                 $time5 = "";
-                $CE5 = "";
-                $PE5 = "";
+                $CE5 = ["NO DATA"];
+                $PE5 = ["NO DATA"];
             @endphp
             @endforelse 
             
