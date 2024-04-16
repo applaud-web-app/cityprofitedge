@@ -787,36 +787,39 @@ $mergedArray5 = array_merge($newArr15, $newArr25);
 {{-- ce-red.pe-green --}}
 @php
     $data2 = [];
-    foreach($mergedArray2 as $key => $value){
-      if($value['text'] == "Bearish"){
-        $background = "#FF0000";
-        $color = "#fff";
-      }else if($value['text'] == "Bullish"){
-        $background = "#00bf63";
-        $color = "#000";
-      }else{
-        $background = "yellow";
-        $color = "#000";
+    if ($mergedArray2 != NULL) {
+      
+      foreach($mergedArray2 as $key => $value){
+        if($value['text'] == "Bearish"){
+          $background = "#FF0000";
+          $color = "#fff";
+        }else if($value['text'] == "Bullish"){
+          $background = "#00bf63";
+          $color = "#000";
+        }else{
+          $background = "yellow";
+          $color = "#000";
+        }
+        $data2[] = [
+          "x"=>$value['time'],
+          "y"=>$value['price'],
+          "marker"=>[
+            'size'=>6,
+            "fillColor"=> "#FFF",
+            "strokeColor"=> "transparent",
+            "radius"=> 2
+          ],
+          "label"=> [
+              "borderColor"=> $background,
+              "offsetY"=> 0,
+              "style"=> [
+                "color"=> $color,
+                "background"=> $background
+              ],
+              "text"=> $value['text']
+          ]
+        ];
       }
-      $data2[] = [
-        "x"=>$value['time'],
-        "y"=>$value['price'],
-        "marker"=>[
-          'size'=>6,
-          "fillColor"=> "#FFF",
-          "strokeColor"=> "transparent",
-          "radius"=> 2
-        ],
-        "label"=> [
-            "borderColor"=> $background,
-            "offsetY"=> 0,
-            "style"=> [
-              "color"=> $color,
-              "background"=> $background
-            ],
-            "text"=> $value['text']
-        ]
-      ];
     }
     
 @endphp
@@ -824,6 +827,7 @@ $mergedArray5 = array_merge($newArr15, $newArr25);
 
 @php
     $data3 = [];
+   if($mergedArray3 != NULL){
     foreach($mergedArray3 as $key => $value){
       if($value['text'] == "Bearish"){
         $background = "#FF0000";
@@ -855,10 +859,12 @@ $mergedArray5 = array_merge($newArr15, $newArr25);
         ]
       ];
     }
+   }
 @endphp
 
 @php
     $data4 = [];
+   if($mergedArray4 != NULL){
     foreach($mergedArray4 as $key => $value){
       if($value['text'] == "Bearish"){
         $background = "#FF0000";
@@ -890,11 +896,13 @@ $mergedArray5 = array_merge($newArr15, $newArr25);
         ]
       ];
     }
+   }
 @endphp
 
 
 @php
     $data5 = [];
+   if($mergedArray5 != NULL){
     foreach($mergedArray5 as $key => $value){
       if($value['color'] == "#00bf63"){ // CE  // Green
         $color = "#000";
@@ -943,10 +951,21 @@ $mergedArray5 = array_merge($newArr15, $newArr25);
 
     }
 
+   }
     
 @endphp
 
 {{-- Apex Chart 2 --}}
+@if ($data2 == NULL)
+    @php
+        $close_CE2 = [];
+        $close_PE2 = [];
+        $time2 = [];
+        $CE2 = [];
+        $PE2 = [];
+        $data2 = [];
+    @endphp
+@endif
 <script>
   var series =
   {
