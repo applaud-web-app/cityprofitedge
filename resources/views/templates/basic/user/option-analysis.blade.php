@@ -983,291 +983,274 @@
 
 {{-- Apex Chart 2 --}}
 <script>
-  if ($time2 == "") {
-    document.querySelector("#apex-analysis-chart3").innerHTML = "No new data available for today";
-  }else{
-    var series =
-    {
-      "monthDataSeries1": {
-        "prices": <?= json_encode($close_CE2) ?>,
-        "dates": <?= json_encode($time2); ?>
-      },
-      "monthDataSeries2": {
-        "prices": <?= json_encode($close_PE2) ?>,
-        "dates": <?= json_encode($time2); ?>
-      }
+  var series =
+  {
+    "monthDataSeries1": {
+      "prices": <?= json_encode($close_CE2) ?>,
+      "dates": <?= json_encode($time2); ?>
+    },
+    "monthDataSeries2": {
+      "prices": <?= json_encode($close_PE2) ?>,
+      "dates": <?= json_encode($time2); ?>
     }
-    var options = {
-      annotations: {
-        points: {!!json_encode($data2)!!}
-      },
-      chart: {
-        height: 400,
-        foreColor: '#E4E4E4',
-        type: "line",
-        id: "areachart-2",
-        zoom: {
-          enabled: false
-        },
-        toolbar: {
-          show: false, 
-        }
-      },
-      dataLabels: {
+  }
+  var options = {
+    annotations: {
+      points: {!!json_encode($data2)!!}
+    },
+    chart: {
+      height: 400,
+      foreColor: '#E4E4E4',
+      type: "line",
+      id: "areachart-2",
+      zoom: {
         enabled: false
       },
-      stroke: {
-        curve: "straight",
-        width:2
-      },
-      colors: ['#00bf63','#FF0000'],
-      series: [
-        {
-          name: {!! json_encode($CE2[0]) !!},
-          data: series.monthDataSeries1.prices,
-        },
-        {
-          name: {!! json_encode($PE2[0]) !!},
-          data: series.monthDataSeries2.prices
-        }
-      ],
-      tooltip: {
-        enabled: true,
-        theme: 'dark',
-      },
-      labels: series.monthDataSeries1.dates,
-      xaxis: {
-          type: "category",
-          categories: <?= json_encode($time2); ?>,
-      },noData: {
-        text: "NO DATA FOUND",
-        align: 'center',
-        verticalAlign: 'middle',
-        offsetX: 0,
-        offsetY: 0,
+      toolbar: {
+        show: false, 
       }
-    };
-    var chart = new ApexCharts(document.querySelector("#apex-analysis-chart3"), options);
-    chart.render();
-  }
+    },
+    dataLabels: {
+      enabled: false
+    },
+    stroke: {
+      curve: "straight",
+      width:2
+    },
+    colors: ['#00bf63','#FF0000'],
+    series: [
+      {
+        name: {!! json_encode($CE2[0]) !!},
+        data: series.monthDataSeries1.prices,
+      },
+      {
+        name: {!! json_encode($PE2[0]) !!},
+        data: series.monthDataSeries2.prices
+      }
+    ],
+    tooltip: {
+      enabled: true,
+      theme: 'dark',
+    },
+    labels: series.monthDataSeries1.dates,
+    xaxis: {
+        type: "category",
+        categories: <?= json_encode($time2); ?>,
+    },noData: {
+      text: "NO DATA FOUND",
+      align: 'center',
+      verticalAlign: 'middle',
+      offsetX: 0,
+      offsetY: 0,
+    }
+  };
+  var chart = new ApexCharts(document.querySelector("#apex-analysis-chart3"), options);
+  chart.render();
 </script>
 
 <script>
-  if ($time3 == "") {
-    document.querySelector("#apex-analysis-chart4").innerHTML = "No new data available for today";
-  }else{
-    var series =
-    {
-      "monthDataSeries1": {
-        "prices": <?= json_encode($close_CE3) ?>,
-        "dates": <?= json_encode($time3); ?>
-      },
-      "monthDataSeries2": {
-        "prices": <?= json_encode($close_PE3) ?>,
-        "dates": <?= json_encode($time3); ?>
-      }
+  var series =
+  {
+    "monthDataSeries1": {
+      "prices": <?= json_encode($close_CE3) ?>,
+      "dates": <?= json_encode($time3); ?>
+    },
+    "monthDataSeries2": {
+      "prices": <?= json_encode($close_PE3) ?>,
+      "dates": <?= json_encode($time3); ?>
     }
-    var options = {
-      annotations: {
-        points: {!!json_encode($data3)!!}
-      },
-      chart: {
-        height: 400,
-        foreColor: '#E4E4E4',
-        type: "line",
-        id: "areachart-2",
-        zoom: {
-          enabled: false
-        },
-        toolbar: {
-          show: false, 
-        }
-      },
-      dataLabels: {
+  }
+  var options = {
+    annotations: {
+      points: {!!json_encode($data3)!!}
+    },
+    chart: {
+      height: 400,
+      foreColor: '#E4E4E4',
+      type: "line",
+      id: "areachart-2",
+      zoom: {
         enabled: false
       },
-      stroke: {
-        curve: "straight",
-        width:2
-      },
-      colors: ['#00bf63','#FF0000'],
-      series: [
-        {
-          name: {!! json_encode($CE3[0]) !!},
-          data: series.monthDataSeries1.prices,
-        },
-        {
-          name: {!! json_encode($PE3[0]) !!},
-          data: series.monthDataSeries2.prices
-        }
-      ],
-      tooltip: {
-        enabled: true,
-        theme: 'dark',
-      },
-      labels: series.monthDataSeries1.dates,
-      xaxis: {
-        type: "category",
-        categories: <?= json_encode($time3); ?>,
-      },noData: {
-        text: "NO DATA FOUND",
-        align: 'center',
-        verticalAlign: 'middle',
-        offsetX: 0,
-        offsetY: 0,
+      toolbar: {
+        show: false, 
       }
-    };
-    var chart = new ApexCharts(document.querySelector("#apex-analysis-chart4"), options);
-    chart.render();
-  }
+    },
+    dataLabels: {
+      enabled: false
+    },
+    stroke: {
+      curve: "straight",
+      width:2
+    },
+    colors: ['#00bf63','#FF0000'],
+    series: [
+      {
+        name: {!! json_encode($CE3[0]) !!},
+        data: series.monthDataSeries1.prices,
+      },
+      {
+        name: {!! json_encode($PE3[0]) !!},
+        data: series.monthDataSeries2.prices
+      }
+    ],
+    tooltip: {
+      enabled: true,
+      theme: 'dark',
+    },
+    labels: series.monthDataSeries1.dates,
+    xaxis: {
+      type: "category",
+      categories: <?= json_encode($time3); ?>,
+    },noData: {
+      text: "NO DATA FOUND",
+      align: 'center',
+      verticalAlign: 'middle',
+      offsetX: 0,
+      offsetY: 0,
+    }
+  };
+  var chart = new ApexCharts(document.querySelector("#apex-analysis-chart4"), options);
+  chart.render();
 </script>
 
 
 
 <script>
-  if ($time4 == "") {
-    document.querySelector("#apex-analysis-chart5").innerHTML = "No new data available for today";
-  }else{
-    var series =
-    {
-      "monthDataSeries1": {
-        "prices": <?= json_encode($OI_CE4) ?>,
-        "dates": <?= json_encode($time4); ?>
-      },
-      "monthDataSeries2": {
-        "prices": <?= json_encode($OI_PE4) ?>,
-        "dates": <?= json_encode($time4); ?>
-      }
+  var series =
+  {
+    "monthDataSeries1": {
+      "prices": <?= json_encode($OI_CE4) ?>,
+      "dates": <?= json_encode($time4); ?>
+    },
+    "monthDataSeries2": {
+      "prices": <?= json_encode($OI_PE4) ?>,
+      "dates": <?= json_encode($time4); ?>
     }
-    var options = {
-      annotations: {
-        points: {!!json_encode($data4)!!}
-      },
-      chart: {
-        height: 400,
-        foreColor: '#E4E4E4',
-        type: "line",
-        id: "areachart-2",
-        zoom: {
-          enabled: false
-        },
-        toolbar: {
-          show: false, 
-        }
-      },
-      dataLabels: {
+  }
+  var options = {
+    annotations: {
+      points: {!!json_encode($data4)!!}
+    },
+    chart: {
+      height: 400,
+      foreColor: '#E4E4E4',
+      type: "line",
+      id: "areachart-2",
+      zoom: {
         enabled: false
       },
-      stroke: {
-        curve: "straight",
-        width:2
-      },
-      colors: ['#00bf63','#FF0000'],
-      series: [
-        {
-          name: {!! json_encode($CE4[0]) !!},
-          data: series.monthDataSeries1.prices,
-        },
-        {
-          name: {!! json_encode($PE4[0]) !!},
-          data: series.monthDataSeries2.prices
-        }
-      ],
-      tooltip: {
-        enabled: true,
-        theme: 'dark',
-      },
-      labels: series.monthDataSeries1.dates,
-      xaxis: {
-        type: "category",
-        categories: <?= json_encode($time4); ?>,
-      },noData: {
-        text: "NO DATA FOUND",
-        align: 'center',
-        verticalAlign: 'middle',
-        offsetX: 0,
-        offsetY: 0,
+      toolbar: {
+        show: false, 
       }
-    };
-    var chart = new ApexCharts(document.querySelector("#apex-analysis-chart5"), options);
-    chart.render();
-  }
+    },
+    dataLabels: {
+      enabled: false
+    },
+    stroke: {
+      curve: "straight",
+      width:2
+    },
+    colors: ['#00bf63','#FF0000'],
+    series: [
+      {
+        name: {!! json_encode($CE4[0]) !!},
+        data: series.monthDataSeries1.prices,
+      },
+      {
+        name: {!! json_encode($PE4[0]) !!},
+        data: series.monthDataSeries2.prices
+      }
+    ],
+    tooltip: {
+      enabled: true,
+      theme: 'dark',
+    },
+    labels: series.monthDataSeries1.dates,
+    xaxis: {
+      type: "category",
+      categories: <?= json_encode($time4); ?>,
+    },noData: {
+      text: "NO DATA FOUND",
+      align: 'center',
+      verticalAlign: 'middle',
+      offsetX: 0,
+      offsetY: 0,
+    }
+  };
+  var chart = new ApexCharts(document.querySelector("#apex-analysis-chart5"), options);
+  chart.render();
 </script>
 
 
 <script>
-  if ($time5 == "") {
-    document.querySelector("#apex-analysis-chart6").innerHTML = "No new data available for today";
-  }else{
-      var series =
-    {
-      "monthDataSeries1": {
-        "prices": <?= json_encode($CE_NETCHANGE_5) ?>,
-        "dates": <?= json_encode($time5); ?>
-      },
-      "monthDataSeries2": {
-        "prices": <?= json_encode($PE_NETCHANGE_5) ?>,
-        "dates": <?= json_encode($time5); ?>
-      }
+  var series =
+  {
+    "monthDataSeries1": {
+      "prices": <?= json_encode($CE_NETCHANGE_5) ?>,
+      "dates": <?= json_encode($time5); ?>
+    },
+    "monthDataSeries2": {
+      "prices": <?= json_encode($PE_NETCHANGE_5) ?>,
+      "dates": <?= json_encode($time5); ?>
     }
-    var options = {
-      annotations: {
-        xaxis: {!!json_encode($data5)!!}
-      },
-      chart: {
-        height: 400,
-        foreColor: '#E4E4E4',
-        type: "bar",
-        id: "areachart-2",
-        zoom: {
-          enabled: false
-        },
-        toolbar: {
-          show: false, 
-        },
-      },plotOptions: {
-        bar: {
-          columnWidth: '50%',
-        },
-      },
-      dataLabels: {
+  }
+  var options = {
+    annotations: {
+      xaxis: {!!json_encode($data5)!!}
+    },
+    chart: {
+      height: 400,
+      foreColor: '#E4E4E4',
+      type: "bar",
+      id: "areachart-2",
+      zoom: {
         enabled: false
       },
-      stroke: {
-        curve: "straight",
-        width:2
+      toolbar: {
+        show: false, 
       },
-      colors: ['#00bf63','#FF0000'],
-      series: [
-        {
-          name: {!! json_encode($CE5[0]) !!},
-          data: series.monthDataSeries1.prices,
-        },
-        {
-          name: {!! json_encode($PE5[0]) !!},
-          data: series.monthDataSeries2.prices
-        }
-      ],
-      tooltip: {
-        enabled: true,
-        theme: 'dark',
+    },plotOptions: {
+      bar: {
+        columnWidth: '50%',
       },
-      labels: series.monthDataSeries1.dates,
-      xaxis: {
-        type: "category",
-        categories: <?= json_encode($time5); ?>,
-      },noData: {
-        text: "NO DATA FOUND",
-        align: 'center',
-        verticalAlign: 'middle',
-        offsetX: 0,
-        offsetY: 0,
+    },
+    dataLabels: {
+      enabled: false
+    },
+    stroke: {
+      curve: "straight",
+      width:2
+    },
+    colors: ['#00bf63','#FF0000'],
+    series: [
+      {
+        name: {!! json_encode($CE5[0]) !!},
+        data: series.monthDataSeries1.prices,
+      },
+      {
+        name: {!! json_encode($PE5[0]) !!},
+        data: series.monthDataSeries2.prices
       }
-    };
-    var chart = new ApexCharts(document.querySelector("#apex-analysis-chart6"), options);
-    chart.render();
-  }
- 
+    ],
+    tooltip: {
+      enabled: true,
+      theme: 'dark',
+    },
+    labels: series.monthDataSeries1.dates,
+    xaxis: {
+      type: "category",
+      categories: <?= json_encode($time5); ?>,
+    },noData: {
+      text: "NO DATA FOUND",
+      align: 'center',
+      verticalAlign: 'middle',
+      offsetX: 0,
+      offsetY: 0,
+    }
+  };
+  var chart = new ApexCharts(document.querySelector("#apex-analysis-chart6"), options);
+  chart.render();
 </script>
 
 <script>
