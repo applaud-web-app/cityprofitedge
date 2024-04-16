@@ -1103,7 +1103,13 @@
     xaxis: {
       type: "category",
       categories: <?= json_encode($time3); ?>,
-    },
+    },noData: {
+      text: "NO DATA FOUND",
+      align: 'center',
+      verticalAlign: 'middle',
+      offsetX: 0,
+      offsetY: 0,
+    }
   };
   var chart = new ApexCharts(document.querySelector("#apex-analysis-chart4"), options);
   chart.render();
@@ -1165,7 +1171,13 @@
     xaxis: {
       type: "category",
       categories: <?= json_encode($time4); ?>,
-    },
+    },noData: {
+      text: "NO DATA FOUND",
+      align: 'center',
+      verticalAlign: 'middle',
+      offsetX: 0,
+      offsetY: 0,
+    }
   };
   var chart = new ApexCharts(document.querySelector("#apex-analysis-chart5"), options);
   chart.render();
@@ -1230,7 +1242,13 @@
     xaxis: {
       type: "category",
       categories: <?= json_encode($time5); ?>,
-    },
+    },noData: {
+      text: "NO DATA FOUND",
+      align: 'center',
+      verticalAlign: 'middle',
+      offsetX: 0,
+      offsetY: 0,
+    }
   };
   var chart = new ApexCharts(document.querySelector("#apex-analysis-chart6"), options);
   chart.render();
