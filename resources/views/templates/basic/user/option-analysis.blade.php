@@ -180,8 +180,8 @@
             @empty
              @php
                 $time2 = "";
-                $CE = ["NO DATA"];
-                $PE = ["NO DATA"];
+                $CE2 = ["NO DATA"];
+                $PE2 = ["NO DATA"];
                 $close_CE2 = "";
                 $close_PE2 = "";
              @endphp
