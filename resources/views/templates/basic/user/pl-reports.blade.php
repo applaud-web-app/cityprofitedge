@@ -221,7 +221,7 @@
 </script>
 <script>
     function reloadData(){
-        $.get('{{url("user/pl-reports-ajax?".(isset($_SERVER["QUERY_STRING"]) ? $_SERVER["QUERY_STRING"] : ''))}}',function(data){
+        $.get('{!!url("user/pl-reports-ajax?".(isset($_SERVER["QUERY_STRING"]) ? $_SERVER["QUERY_STRING"] : ''))!!}',function(data){
             $("#pst_hre").html(data);
         });
     }

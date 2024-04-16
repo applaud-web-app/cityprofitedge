@@ -78,8 +78,6 @@
           </div>
       </div> --}}
       {{-- First Graph Start --}}
-
-
       {{-- Second Graph Start --}}
       @php
           $atmData2 = [];
@@ -626,10 +624,10 @@
 
 
 
-@push('script')
+{{-- @push('script') --}}
 
-<script src="{{ asset('assets/admin/js/vendor/apexcharts.min.js') }}"></script>
-<script src="{{ asset('assets/admin/js/vendor/chart.js.2.8.0.js') }}"></script>
+{{-- <script src="{{ asset('assets/admin/js/vendor/apexcharts.min.js') }}"></script>
+<script src="{{ asset('assets/admin/js/vendor/chart.js.2.8.0.js') }}"></script> --}}
 <script>
 // var options = {
     
@@ -1241,5 +1239,3 @@
   $('#apex-analysis-chart6').html('NO DATA FOUND');  
   @endif 
 </script>
-
-@endpush

@@ -1283,7 +1283,7 @@
 
 <script>
     function reloadData(){
-        $.get('{{url("user/option-analysis-ajax?".(isset($_SERVER["QUERY_STRING"]) ? $_SERVER["QUERY_STRING"] : ''))}}',function(data){
+        $.get('{!!url("user/option-analysis-ajax?".(isset($_SERVER["QUERY_STRING"]) ? $_SERVER["QUERY_STRING"] : ''))!!}',function(data){
             $("#pst_hre").html(data);
         });
     }
