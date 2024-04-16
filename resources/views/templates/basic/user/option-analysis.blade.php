@@ -127,7 +127,8 @@
             @php $i=1; @endphp
             @forelse($atmData2 as $val)
               @php
-                  $arrData2 = json_decode($val->data,true);   
+                  $arrData2 = json_decode($val->data,true); 
+                  dd($arrData2);  
                   $CE2 = array_slice($arrData2['CE'],-1);
                   $PE2 = array_slice($arrData2['PE'],-1);
                   $Date2 = array_slice($arrData2['Date'],-40);
