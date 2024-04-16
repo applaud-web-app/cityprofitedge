@@ -128,7 +128,6 @@
             @forelse($atmData2 as $val)
               @php
                   $arrData2 = json_decode($val->data,true); 
-                  dd($arrData2);  
                   $CE2 = array_slice($arrData2['CE'],-1);
                   $PE2 = array_slice($arrData2['PE'],-1);
                   $Date2 = array_slice($arrData2['Date'],-40);
@@ -138,9 +137,7 @@
                   $close_CE2 = array_slice($arrData2['close_CE'],-40);
                   $close_PE2 = array_slice($arrData2['close_PE'],-40); 
               @endphp
-            @empty
-            @endforelse  
-            @php
+              @php
               $time2 = array_map(function ($k , $y) use($Date2){
                   return date("d-M-Y",($Date2[$k]/1000)).', '.date("g:i a", strtotime($y));
               },array_keys($Date2) , $time2);
@@ -175,7 +172,10 @@
                 }
               }
               $mergedArray2 = array_merge($newArr12, $newArr22);
-            @endphp
+              @endphp
+            @empty
+            @endforelse  
+           
             <div class="col-lg-12 mb-3">
                 <div class="custom--card">
                     <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
@@ -251,8 +251,6 @@
                   $close_CE3 = array_slice($arrData3['close_CE'],-40);
                   $close_PE3 = array_slice($arrData3['close_PE'],-40);
               @endphp
-            @empty
-            @endforelse 
             @php
               $time3 = array_map(function ($k , $y) use($Date3){
                   return date("d-M-Y",($Date3[$k]/1000)).', '.date("g:i a", strtotime($y));
@@ -289,6 +287,8 @@
               }
               $mergedArray3 = array_merge($newArr13, $newArr23);
             @endphp
+            @empty
+            @endforelse 
             <div class="col-lg-12 mb-3">
                 <div class="custom--card">
                     <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
@@ -367,44 +367,46 @@
                   $OI_CE4 = array_slice($arrData4['oi_CE'],-40);
                   $OI_PE4 = array_slice($arrData4['oi_PE'],-40);
               @endphp
+
+@php
+$time4 = array_map(function ($k , $y) use($Date4){
+    return date("d-M-Y",($Date4[$k]/1000)).', '.date("g:i a", strtotime($y));
+},array_keys($Date4) , $time4);
+
+$ceArray4 = array();
+$newArr14 = [];
+
+foreach($time4 as $i=>$y){
+  if(!in_array($vwap_CE_signal4[$i],$ceArray4)){
+    $ceArray4 = [];
+    array_push($ceArray4,$vwap_CE_signal4[$i]);
+    $newArr14[] = [
+        'time'=>$y,
+        'price'=>$OI_CE4[$i],
+        'text'=>$vwap_CE_signal4[$i],
+    ];
+  }
+}
+
+$PeArray4 = array();
+$newArr24 = [];
+
+foreach($time4 as $i=>$y){
+  if(!in_array($vwap_PE_signal4[$i],$PeArray4)){
+    $PeArray4 = [];
+    array_push($PeArray4,$vwap_PE_signal4[$i]);
+    $newArr24[] = [
+        'time'=>$y,
+        'price'=>$OI_PE4[$i],
+        'text'=>$vwap_PE_signal4[$i],
+    ];
+  }
+}
+$mergedArray4 = array_merge($newArr14, $newArr24);
+@endphp
             @empty
             @endforelse 
-            @php
-            $time4 = array_map(function ($k , $y) use($Date4){
-                return date("d-M-Y",($Date4[$k]/1000)).', '.date("g:i a", strtotime($y));
-            },array_keys($Date4) , $time4);
-
-            $ceArray4 = array();
-            $newArr14 = [];
-
-            foreach($time4 as $i=>$y){
-              if(!in_array($vwap_CE_signal4[$i],$ceArray4)){
-                $ceArray4 = [];
-                array_push($ceArray4,$vwap_CE_signal4[$i]);
-                $newArr14[] = [
-                    'time'=>$y,
-                    'price'=>$OI_CE4[$i],
-                    'text'=>$vwap_CE_signal4[$i],
-                ];
-              }
-            }
-
-            $PeArray4 = array();
-            $newArr24 = [];
-
-            foreach($time4 as $i=>$y){
-              if(!in_array($vwap_PE_signal4[$i],$PeArray4)){
-                $PeArray4 = [];
-                array_push($PeArray4,$vwap_PE_signal4[$i]);
-                $newArr24[] = [
-                    'time'=>$y,
-                    'price'=>$OI_PE4[$i],
-                    'text'=>$vwap_PE_signal4[$i],
-                ];
-              }
-            }
-            $mergedArray4 = array_merge($newArr14, $newArr24);
-            @endphp
+           
         <div class="col-lg-12 mb-3">
             <div class="custom--card">
                 <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
@@ -528,51 +530,53 @@
                   //   return $res;
                   // },array_keys($OI_PE5) ,  $OI_PE5);
               @endphp
+
+@php
+if(count($atmData5)){
+$time5 = array_map(function ($y) {
+    return date("g:i a", strtotime($y));
+},$time5);
+
+$ceArray5 = array();
+$newArr15 = [];
+
+foreach($time5 as $i=>$y){
+  if(!in_array($vwap_CE_signal5[$i],$ceArray5)){
+    $ceArray5 = [];
+    array_push($ceArray5,$vwap_CE_signal5[$i]);
+    $newArr15[] = [
+        'time'=>$y,
+        'price'=>$CE_NETCHANGE_5[$i],
+        'text'=>$vwap_CE_signal5[$i],
+        'color'=>'#00bf63'
+    ];
+  }
+}
+
+$PeArray5 = array();
+$newArr25 = [];
+
+foreach($time5 as $i=>$y){
+  if(!in_array($vwap_PE_signal5[$i],$PeArray5)){
+    $PeArray5 = [];
+    array_push($PeArray5,$vwap_PE_signal5[$i]);
+    $newArr25[] = [
+        'time'=>$y,
+        'price'=>$PE_NETCHANGE_5[$i],
+        'text'=>$vwap_PE_signal5[$i],
+        'color'=>'#FF0000'
+    ];
+  }
+}
+$mergedArray5 = array_merge($newArr15, $newArr25);
+}else{
+  $mergedArray5 = [];
+}
+
+@endphp
             @empty
             @endforelse 
-            @php
-              if(count($atmData5)){
-              $time5 = array_map(function ($y) {
-                  return date("g:i a", strtotime($y));
-              },$time5);
-
-              $ceArray5 = array();
-              $newArr15 = [];
-
-              foreach($time5 as $i=>$y){
-                if(!in_array($vwap_CE_signal5[$i],$ceArray5)){
-                  $ceArray5 = [];
-                  array_push($ceArray5,$vwap_CE_signal5[$i]);
-                  $newArr15[] = [
-                      'time'=>$y,
-                      'price'=>$CE_NETCHANGE_5[$i],
-                      'text'=>$vwap_CE_signal5[$i],
-                      'color'=>'#00bf63'
-                  ];
-                }
-              }
-
-              $PeArray5 = array();
-              $newArr25 = [];
-
-              foreach($time5 as $i=>$y){
-                if(!in_array($vwap_PE_signal5[$i],$PeArray5)){
-                  $PeArray5 = [];
-                  array_push($PeArray5,$vwap_PE_signal5[$i]);
-                  $newArr25[] = [
-                      'time'=>$y,
-                      'price'=>$PE_NETCHANGE_5[$i],
-                      'text'=>$vwap_PE_signal5[$i],
-                      'color'=>'#FF0000'
-                  ];
-                }
-              }
-              $mergedArray5 = array_merge($newArr15, $newArr25);
-            }else{
-                $mergedArray5 = [];
-              }
-              
-          @endphp
+            
         <div class="col-lg-12 mb-3">
             <div class="custom--card">
                 <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
