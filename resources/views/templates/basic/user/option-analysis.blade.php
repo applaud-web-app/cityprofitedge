@@ -983,7 +983,7 @@
 
 {{-- Apex Chart 2 --}}
 <script>
-  if ($data2 == NULL) {
+  if ($time2 == "") {
     document.querySelector("#apex-analysis-chart3").innerHTML = "No new data available for today";
   }else{
     var series =
@@ -1053,7 +1053,7 @@
 </script>
 
 <script>
-  if ($data3 == NULL) {
+  if ($time3 == "") {
     document.querySelector("#apex-analysis-chart4").innerHTML = "No new data available for today";
   }else{
     var series =
@@ -1125,7 +1125,7 @@
 
 
 <script>
-  if ($data4 == NULL) {
+  if ($time4 == "") {
     document.querySelector("#apex-analysis-chart5").innerHTML = "No new data available for today";
   }else{
     var series =
@@ -1196,7 +1196,7 @@
 
 
 <script>
-  if ($data5 == NULL) {
+  if ($time5 == "") {
     document.querySelector("#apex-analysis-chart6").innerHTML = "No new data available for today";
   }else{
       var series =
