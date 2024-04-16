@@ -115,6 +115,8 @@
                 </div>
             </div> --}}
             {{-- First Graph Start --}}
+
+
             {{-- Second Graph Start --}}
             @php
                 $atmData2 = [];
@@ -137,6 +139,7 @@
                   $close_CE2 = array_slice($arrData2['close_CE'],-40);
                   $close_PE2 = array_slice($arrData2['close_PE'],-40); 
               @endphp
+
               @php
               $time2 = array_map(function ($k , $y) use($Date2){
                   return date("d-M-Y",($Date2[$k]/1000)).', '.date("g:i a", strtotime($y));
@@ -173,9 +176,16 @@
               }
               $mergedArray2 = array_merge($newArr12, $newArr22);
               @endphp
+
             @empty
+             @php
+                $time2 = "";
+                $CE2 = ["NO DATA"];
+                $PE2 = ["NO DATA"];
+                $close_CE2 = "";
+                $close_PE2 = "";
+             @endphp
             @endforelse  
-           
             <div class="col-lg-12 mb-3">
                 <div class="custom--card">
                     <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
@@ -288,6 +298,13 @@
               $mergedArray3 = array_merge($newArr13, $newArr23);
             @endphp
             @empty
+            @php
+              $close_PE3 = "";
+              $close_CE3 = "";
+              $time3 = "";
+              $CE3 = ["NO DATA"];
+              $PE3 = ["NO DATA"];
+            @endphp
             @endforelse 
             <div class="col-lg-12 mb-3">
                 <div class="custom--card">
@@ -367,44 +384,50 @@
                   $OI_CE4 = array_slice($arrData4['oi_CE'],-40);
                   $OI_PE4 = array_slice($arrData4['oi_PE'],-40);
               @endphp
+              @php
+              $time4 = array_map(function ($k , $y) use($Date4){
+                  return date("d-M-Y",($Date4[$k]/1000)).', '.date("g:i a", strtotime($y));
+              },array_keys($Date4) , $time4);
 
-@php
-$time4 = array_map(function ($k , $y) use($Date4){
-    return date("d-M-Y",($Date4[$k]/1000)).', '.date("g:i a", strtotime($y));
-},array_keys($Date4) , $time4);
+              $ceArray4 = array();
+              $newArr14 = [];
 
-$ceArray4 = array();
-$newArr14 = [];
+              foreach($time4 as $i=>$y){
+                if(!in_array($vwap_CE_signal4[$i],$ceArray4)){
+                  $ceArray4 = [];
+                  array_push($ceArray4,$vwap_CE_signal4[$i]);
+                  $newArr14[] = [
+                      'time'=>$y,
+                      'price'=>$OI_CE4[$i],
+                      'text'=>$vwap_CE_signal4[$i],
+                  ];
+                }
+              }
 
-foreach($time4 as $i=>$y){
-  if(!in_array($vwap_CE_signal4[$i],$ceArray4)){
-    $ceArray4 = [];
-    array_push($ceArray4,$vwap_CE_signal4[$i]);
-    $newArr14[] = [
-        'time'=>$y,
-        'price'=>$OI_CE4[$i],
-        'text'=>$vwap_CE_signal4[$i],
-    ];
-  }
-}
+              $PeArray4 = array();
+              $newArr24 = [];
 
-$PeArray4 = array();
-$newArr24 = [];
-
-foreach($time4 as $i=>$y){
-  if(!in_array($vwap_PE_signal4[$i],$PeArray4)){
-    $PeArray4 = [];
-    array_push($PeArray4,$vwap_PE_signal4[$i]);
-    $newArr24[] = [
-        'time'=>$y,
-        'price'=>$OI_PE4[$i],
-        'text'=>$vwap_PE_signal4[$i],
-    ];
-  }
-}
-$mergedArray4 = array_merge($newArr14, $newArr24);
-@endphp
+              foreach($time4 as $i=>$y){
+                if(!in_array($vwap_PE_signal4[$i],$PeArray4)){
+                  $PeArray4 = [];
+                  array_push($PeArray4,$vwap_PE_signal4[$i]);
+                  $newArr24[] = [
+                      'time'=>$y,
+                      'price'=>$OI_PE4[$i],
+                      'text'=>$vwap_PE_signal4[$i],
+                  ];
+                }
+              }
+              $mergedArray4 = array_merge($newArr14, $newArr24);
+              @endphp
             @empty
+            @php
+              $OI_PE4 = "";
+              $OI_CE4 = "";
+              $time4 = "";
+              $CE4 = ["NO DATA"];
+              $PE4 = ["NO DATA"];
+            @endphp
             @endforelse 
            
         <div class="col-lg-12 mb-3">
@@ -530,51 +553,56 @@ $mergedArray4 = array_merge($newArr14, $newArr24);
                   //   return $res;
                   // },array_keys($OI_PE5) ,  $OI_PE5);
               @endphp
+              @php
+              if(count($atmData5)){
+              $time5 = array_map(function ($y) {
+                  return date("g:i a", strtotime($y));
+              },$time5);
 
-@php
-if(count($atmData5)){
-$time5 = array_map(function ($y) {
-    return date("g:i a", strtotime($y));
-},$time5);
+              $ceArray5 = array();
+              $newArr15 = [];
 
-$ceArray5 = array();
-$newArr15 = [];
+              foreach($time5 as $i=>$y){
+                if(!in_array($vwap_CE_signal5[$i],$ceArray5)){
+                  $ceArray5 = [];
+                  array_push($ceArray5,$vwap_CE_signal5[$i]);
+                  $newArr15[] = [
+                      'time'=>$y,
+                      'price'=>$CE_NETCHANGE_5[$i],
+                      'text'=>$vwap_CE_signal5[$i],
+                      'color'=>'#00bf63'
+                  ];
+                }
+              }
 
-foreach($time5 as $i=>$y){
-  if(!in_array($vwap_CE_signal5[$i],$ceArray5)){
-    $ceArray5 = [];
-    array_push($ceArray5,$vwap_CE_signal5[$i]);
-    $newArr15[] = [
-        'time'=>$y,
-        'price'=>$CE_NETCHANGE_5[$i],
-        'text'=>$vwap_CE_signal5[$i],
-        'color'=>'#00bf63'
-    ];
-  }
-}
+              $PeArray5 = array();
+              $newArr25 = [];
 
-$PeArray5 = array();
-$newArr25 = [];
-
-foreach($time5 as $i=>$y){
-  if(!in_array($vwap_PE_signal5[$i],$PeArray5)){
-    $PeArray5 = [];
-    array_push($PeArray5,$vwap_PE_signal5[$i]);
-    $newArr25[] = [
-        'time'=>$y,
-        'price'=>$PE_NETCHANGE_5[$i],
-        'text'=>$vwap_PE_signal5[$i],
-        'color'=>'#FF0000'
-    ];
-  }
-}
-$mergedArray5 = array_merge($newArr15, $newArr25);
-}else{
-  $mergedArray5 = [];
-}
-
-@endphp
+              foreach($time5 as $i=>$y){
+                if(!in_array($vwap_PE_signal5[$i],$PeArray5)){
+                  $PeArray5 = [];
+                  array_push($PeArray5,$vwap_PE_signal5[$i]);
+                  $newArr25[] = [
+                      'time'=>$y,
+                      'price'=>$PE_NETCHANGE_5[$i],
+                      'text'=>$vwap_PE_signal5[$i],
+                      'color'=>'#FF0000'
+                  ];
+                }
+              }
+              $mergedArray5 = array_merge($newArr15, $newArr25);
+              }else{
+                $mergedArray5 = [];
+              }
+            @endphp
             @empty
+            @php
+                $CE_NETCHANGE_5 = "";
+                $PE_NETCHANGE_5 = "";
+                $time5 = "";
+                $CE5 = ["NO DATA"];
+                $PE5 = ["NO DATA"];
+            @endphp
             @endforelse 
             
         <div class="col-lg-12 mb-3">
@@ -787,8 +815,7 @@ $mergedArray5 = array_merge($newArr15, $newArr25);
 {{-- ce-red.pe-green --}}
 @php
     $data2 = [];
-    if ($mergedArray2 != NULL) {
-      
+    if (isset($mergedArray2)) {
       foreach($mergedArray2 as $key => $value){
         if($value['text'] == "Bearish"){
           $background = "#FF0000";
@@ -820,51 +847,51 @@ $mergedArray5 = array_merge($newArr15, $newArr25);
           ]
         ];
       }
-    }
+   }
     
 @endphp
 
 
 @php
     $data3 = [];
-   if($mergedArray3 != NULL){
-    foreach($mergedArray3 as $key => $value){
-      if($value['text'] == "Bearish"){
-        $background = "#FF0000";
-        $color = "#fff";
-      }else if($value['text'] == "Bullish"){
-        $background = "#00bf63";
-        $color = "#000";
-      }else{
-        $background = "yellow";
-        $color = "#000";
+    if (isset($mergedArray3)) {
+      foreach($mergedArray3 as $key => $value){
+        if($value['text'] == "Bearish"){
+          $background = "#FF0000";
+          $color = "#fff";
+        }else if($value['text'] == "Bullish"){
+          $background = "#00bf63";
+          $color = "#000";
+        }else{
+          $background = "yellow";
+          $color = "#000";
+        }
+        $data3[] = [
+          "x"=>$value['time'],
+          "y"=>$value['price'],
+          "marker"=>[
+            'size'=>6,
+            "fillColor"=> "#FFF",
+            "strokeColor"=> "transparent",
+            "radius"=> 2
+          ],
+          "label"=> [
+              "borderColor"=> $background,
+              "offsetY"=> 0,
+              "style"=> [
+                "color"=> $color,
+                "background"=> $background
+              ],
+              "text"=> $value['text']
+          ]
+        ];
       }
-      $data3[] = [
-        "x"=>$value['time'],
-        "y"=>$value['price'],
-        "marker"=>[
-          'size'=>6,
-          "fillColor"=> "#FFF",
-          "strokeColor"=> "transparent",
-          "radius"=> 2
-        ],
-        "label"=> [
-            "borderColor"=> $background,
-            "offsetY"=> 0,
-            "style"=> [
-              "color"=> $color,
-              "background"=> $background
-            ],
-            "text"=> $value['text']
-        ]
-      ];
     }
-   }
 @endphp
 
 @php
     $data4 = [];
-   if($mergedArray4 != NULL){
+   if (isset($mergedArray4)) {
     foreach($mergedArray4 as $key => $value){
       if($value['text'] == "Bearish"){
         $background = "#FF0000";
@@ -902,8 +929,8 @@ $mergedArray5 = array_merge($newArr15, $newArr25);
 
 @php
     $data5 = [];
-   if($mergedArray5 != NULL){
-    foreach($mergedArray5 as $key => $value){
+    if (isset($mergedArray5)) {
+      foreach($mergedArray5 as $key => $value){
       if($value['color'] == "#00bf63"){ // CE  // Green
         $color = "#000";
         if($value['text'] == "Bearish"){
@@ -950,22 +977,12 @@ $mergedArray5 = array_merge($newArr15, $newArr25);
       }      
 
     }
+    }
 
-   }
     
 @endphp
 
 {{-- Apex Chart 2 --}}
-@if ($data2 == NULL)
-    @php
-        $close_CE2 = [];
-        $close_PE2 = [];
-        $time2 = [];
-        $CE2 = [];
-        $PE2 = [];
-        $data2 = [];
-    @endphp
-@endif
 <script>
   var series =
   {
@@ -1020,7 +1037,13 @@ $mergedArray5 = array_merge($newArr15, $newArr25);
     xaxis: {
         type: "category",
         categories: <?= json_encode($time2); ?>,
-    },
+    },noData: {
+      text: "NO DATA FOUND",
+      align: 'center',
+      verticalAlign: 'middle',
+      offsetX: 0,
+      offsetY: 0,
+    }
   };
   var chart = new ApexCharts(document.querySelector("#apex-analysis-chart3"), options);
   chart.render();
@@ -1080,7 +1103,13 @@ $mergedArray5 = array_merge($newArr15, $newArr25);
     xaxis: {
       type: "category",
       categories: <?= json_encode($time3); ?>,
-    },
+    },noData: {
+      text: "NO DATA FOUND",
+      align: 'center',
+      verticalAlign: 'middle',
+      offsetX: 0,
+      offsetY: 0,
+    }
   };
   var chart = new ApexCharts(document.querySelector("#apex-analysis-chart4"), options);
   chart.render();
@@ -1142,7 +1171,13 @@ $mergedArray5 = array_merge($newArr15, $newArr25);
     xaxis: {
       type: "category",
       categories: <?= json_encode($time4); ?>,
-    },
+    },noData: {
+      text: "NO DATA FOUND",
+      align: 'center',
+      verticalAlign: 'middle',
+      offsetX: 0,
+      offsetY: 0,
+    }
   };
   var chart = new ApexCharts(document.querySelector("#apex-analysis-chart5"), options);
   chart.render();
@@ -1207,7 +1242,13 @@ $mergedArray5 = array_merge($newArr15, $newArr25);
     xaxis: {
       type: "category",
       categories: <?= json_encode($time5); ?>,
-    },
+    },noData: {
+      text: "NO DATA FOUND",
+      align: 'center',
+      verticalAlign: 'middle',
+      offsetX: 0,
+      offsetY: 0,
+    }
   };
   var chart = new ApexCharts(document.querySelector("#apex-analysis-chart6"), options);
   chart.render();
