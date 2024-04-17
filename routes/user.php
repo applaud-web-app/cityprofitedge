@@ -50,6 +50,7 @@ Route::middleware('auth')->name('user.')->group(function () {
                 Route::get('option-startegies', 'optionStatergy')->name('optionStatergy');
                 Route::get('stratergies-details/{id}', 'stratergyDetails')->name('stratergyDetails');
                 Route::get('watch-list', 'watchList')->name('watchList');
+                Route::get('watch-list-ajax', 'watchListAjax')->name('watchListAjax');
                 Route::get('watch-list-order', 'watchListOrder')->name('watchListOrder');
                 Route::get('watch-list-position', 'watchListPosition')->name('watchListPosition');
                 // Route::post('fetch-watch-list-data','fetchwatchList')->name('fetchwatchList');

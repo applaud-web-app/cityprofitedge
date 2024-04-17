@@ -2395,6 +2395,88 @@ class UserController extends Controller
         return view($this->activeTemplate . 'user.watch-list',compact('pageTitle','finalResponse','fullUrl'));
     }
 
+    public function watchListAjax(Request $request){
+        $pageTitle = "Watch List";        
+        $symbolArr = ['BANKNIFTY','FINNIFTY','NATURALGAS','NIFTY','MIDCPNIFTY','CRUDEOIL'];
+        $todayDate = date("Y-m-d");
+        $stockName = $request->stock_name;
+        $timeFrame = $request->time_frame ? : 5;
+        $MCXpayload = [];
+        $NFOpayload = [];
+        foreach ($symbolArr as $key => $v) {
+            $data =  \DB::table(strtolower($v))->select(['symbol_ce', 'symbol_pe','token_ce','token_pe','exchange'])->groupBy(['symbol_ce', 'symbol_pe'])->whereDate('created_at', now()->today())->where('atm',0)->get();
+            foreach ($data as $key => $value) {
+                if($value->exchange == "MCX"){
+                    array_push($MCXpayload,$value->token_ce);
+                    array_push($MCXpayload,$value->token_pe);
+                }else if($value->exchange == "NFO"){
+                    array_push($NFOpayload,$value->token_ce);
+                    array_push($NFOpayload,$value->token_pe);
+                }
+            }
+        }
+
+        $payload = [
+            'MCX'=>$MCXpayload,
+            'NFO'=>$NFOpayload
+        ];
+
+        $payload = json_encode($payload,true);
+        $respond = $this->getWatchListRecords($payload);
+
+        if(isset($respond)){
+            if($respond['status'] == true){
+                $finalResponse = $respond['data']['fetched'];
+            }else{
+                $finalResponse = false;
+            }
+        }else{
+            $finalResponse = false;
+        }
+
+        // Insert Data To Watchlist
+        if($finalResponse != false){
+            foreach ($finalResponse as $key => $value) {
+                $wishlist = new WishlistData;
+                $wishlist->symbol_name = $value['tradingSymbol'];
+                $wishlist->symbolToken = $value['symbolToken'];
+                $wishlist->exchange = $value['exchange'];
+                $wishlist->ltp = $value['ltp'];
+                $wishlist->open = $value['open'];
+                $wishlist->high = $value['high'];
+                $wishlist->low = $value['low'];
+                $wishlist->close = $value['close'];
+                $wishlist->lastTradeQty = $value['lastTradeQty'];
+                $wishlist->exchFeedTime = $value['exchFeedTime'];
+                $wishlist->exchTradeTime = $value['exchTradeTime'];
+                $wishlist->netChange = $value['netChange'];
+                $wishlist->percentChange = $value['percentChange'];
+                $wishlist->avgPrice = $value['avgPrice'];
+                $wishlist->tradeVolume = $value['tradeVolume'];
+                $wishlist->opnInterest = $value['opnInterest'];
+                $wishlist->lowerCircuit = $value['lowerCircuit'];
+                $wishlist->upperCircuit = $value['upperCircuit'];
+                $wishlist->totBuyQuan = $value['totBuyQuan'];
+                $wishlist->totSellQuan = $value['totSellQuan'];
+                $wishlist->WeekLow52 = $value['52WeekLow'];
+                $wishlist->WeekHigh52 = $value['52WeekHigh'];
+                $wishlist->save();
+            }  
+        }   
+
+        $finalResponse = WishlistData::whereDate('created_at', now()->today())->orderBy('id','DESC')->paginate(50);
+        if(!count($finalResponse)){
+            $finalResponse = WishlistData::orderBy('id','DESC')->paginate(50);
+        }
+
+        $fullUrl = $request->fullUrl();
+        if(!empty($finalResponse)){
+            return view($this->activeTemplate . 'user.watch-list-ajax',compact('pageTitle','fullUrl','finalResponse'));
+        }
+        return 'NO_DATA';
+        
+    }
+
     // public function fetchwatchList(Request $request){
         // dd(json_encode($request->all()));
         // try {
