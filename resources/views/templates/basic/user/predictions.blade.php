@@ -49,7 +49,7 @@
                                                 <thead>
                                                     <tr>
                                                         
-                                                        <th>AI/ML Model Name</th>
+                                                        <th>AI/ML Predictions</th>
                                                         <th>Open</th>
                                                         <th>High </th>
                                                         <th>Low</th>

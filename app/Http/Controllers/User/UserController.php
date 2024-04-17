@@ -2719,9 +2719,9 @@ class UserController extends Controller
     }
 
     public function predictions(Request $request){
-        $data['pageTitle'] = "Predictions";
-        $fromDate = date("Y-m-d");
-        $toDate = date("Y-m-d");
+        $data['pageTitle'] = "AI/ML PREDICTIONS";
+        $fromDate = date("Y-m-d",strtotime('+ 1 day'));
+        $toDate = date("Y-m-d",strtotime('+ 1 day'));
         if(!empty($request->from_date)){
             $fromDate = date("Y-m-d",strtotime($request->from_date));
         }
