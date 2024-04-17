@@ -62,6 +62,8 @@ Route::middleware('auth')->name('user.')->group(function () {
                 Route::get('option-analysis', 'OptionAnalysis')->name('option-analysis');
                 Route::get('option-analysis-ajax', 'OptionAnalysisAjax')->name('option-analysis-ajax');
 
+                Route::get('predictions', 'predictions')->name('predictions');
+                
                 //2FA
                 Route::get('twofactor', 'show2faForm')->name('twofactor');
                 Route::post('twofactor/enable', 'create2fa')->name('twofactor.enable');

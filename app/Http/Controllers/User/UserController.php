@@ -2696,11 +2696,59 @@ class UserController extends Controller
         return view($this->activeTemplate . 'user.option-statergy',compact('pageTitle','groupedRecords'));
     }
 
+
+
     public function stratergyDetails($id){
         $pageTitle = "Stratergy Details";
         $data=Strategy::where('id',$id)->first();
         $related = Strategy::where('is_deleted',1)->where('strategy_status','Enable')->where('market_trend',$data->market_trend)->whereNotIn('id',[$id])->get();
         return view($this->activeTemplate . 'user.stratergies-details',compact('pageTitle','data','related'));
     }
+
+    public function getDatesBetweenDates($start_date, $end_date) {
+        $dates = array();
+        $current_date = new \DateTime($start_date);
+        $end_date = new \DateTime($end_date);
+    
+        while ($current_date <= $end_date) {
+            $dates[] = $current_date->format('Y-m-d');
+            $current_date->modify('+1 day');
+        }
+    
+        return $dates;
+    }
+
+    public function predictions(Request $request){
+        $data['pageTitle'] = "Predictions";
+        $fromDate = date("Y-m-d");
+        $toDate = date("Y-m-d");
+        if(!empty($request->from_date)){
+            $fromDate = date("Y-m-d",strtotime($request->from_date));
+        }
+        if(!empty($request->to_date)){
+            $toDate = date("Y-m-d",strtotime($request->to_date));
+        }
+        $selSymbol = '';
+        $dates = $this->getDatesBetweenDates($fromDate,$toDate);
+        $alData = \DB::connection('mysql_rm')->table('Predictions')->select('*')->whereIn('predicted_date',$dates);
+        if(!empty($request->symbol)){
+            $alData->where('symbol',$request->symbol);
+            $selSymbol = $request->symbol;
+        }
+        $alData = $alData->get();
+        
+        $symbolsArr = \DB::connection('mysql_rm')->table('Predictions')->select('symbol')->groupBy('symbol')->pluck('symbol');
+        $newArr = [];
+        foreach($alData as $val){
+            $newArr[$val->predicted_date][$val->symbol][] = $val;
+        }
+        $data['data'] = $newArr;
+        $data['fromDate'] = $fromDate;
+        $data['toDate'] = $toDate;
+        $data['selSymbol'] = $selSymbol;
+        $data['symbolArr'] = $symbolsArr;
+        return view($this->activeTemplate . 'user.predictions',$data);
+    }
+
 
 }

@@ -29,6 +29,7 @@
                                 <li><a href="{{ route('user.option-analysis') }}">@lang('All Graph')</a></li>
                                 <li><a href="{{ route('user.ledgers') }}">@lang('Expiry Trading')</a></li>
                                 <li><a href="{{ route('user.optionStatergy') }}">@lang('Option Strategies')</a></li>
+                                <li><a href="{{ route('user.predictions') }}">@lang('Predictions')</a></li>
                                 
                             </ul>
                         </li>
