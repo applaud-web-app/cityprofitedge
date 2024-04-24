@@ -45,6 +45,8 @@ class SiteController extends Controller
         $shortBuildUp = OiBuildUp::orderBy('id','DESC')->where('type','short')->paginate(5);
         $coveringBuildUp = OiBuildUp::orderBy('id','DESC')->where('type','covering')->paginate(5);
         $unWindingBuildUp = OiBuildUp::orderBy('id','DESC')->where('type','unwinding')->paginate(5);
+        $todayDate = date('d-m-Y',strtotime('-1Day'));
+        $fdProData = \DB::connection('mysql_rm')->table('FII DII PRO')->select('*')->where('date',$todayDate)->get(); 
         $reference = @$_GET['reference'];
         if ($reference) {
             session()->put('reference', $reference);
@@ -59,7 +61,7 @@ class SiteController extends Controller
         //     return view($this->activeTemplate . 'sections.table-ajax', compact('pageTitle','sections','getPcrData','topGainer','topLoser','longBuildUp','shortBuildUp','coveringBuildUp','unWindingBuildUp','fullUrl'));
         // }
 
-        return view($this->activeTemplate . 'home', compact('pageTitle','sections','getPcrData','topGainer','topLoser','longBuildUp','shortBuildUp','coveringBuildUp','unWindingBuildUp','fullUrl'));
+        return view($this->activeTemplate . 'home', compact('pageTitle','sections','getPcrData','topGainer','topLoser','longBuildUp','shortBuildUp','coveringBuildUp','unWindingBuildUp','fullUrl','fdProData'));
     }
 
     public function indexAjax(Request $request){
@@ -70,6 +72,8 @@ class SiteController extends Controller
         $shortBuildUp = OiBuildUp::orderBy('id','DESC')->where('type','short')->paginate(5);
         $coveringBuildUp = OiBuildUp::orderBy('id','DESC')->where('type','covering')->paginate(5);
         $unWindingBuildUp = OiBuildUp::orderBy('id','DESC')->where('type','unwinding')->paginate(5);
+        $todayDate = date('d-m-Y',strtotime('-1Day'));
+        $fdProData = \DB::connection('mysql_rm')->table('FII DII PRO')->select('*')->where('date',$todayDate)->get(); 
         $reference = @$_GET['reference'];
         if ($reference) {
             session()->put('reference', $reference);
@@ -78,7 +82,7 @@ class SiteController extends Controller
        
         $sections = Page::where('tempname',$this->activeTemplate)->where('slug','/')->first();
         $fullUrl = $request->fullUrl();
-        return view($this->activeTemplate . 'sections.table-ajax', compact('pageTitle','sections','getPcrData','topGainer','topLoser','longBuildUp','shortBuildUp','coveringBuildUp','unWindingBuildUp','fullUrl'));
+        return view($this->activeTemplate . 'sections.table-ajax', compact('pageTitle','sections','getPcrData','topGainer','topLoser','longBuildUp','shortBuildUp','coveringBuildUp','unWindingBuildUp','fullUrl','fdProData'));
     }
 
     public function pages($slug)
