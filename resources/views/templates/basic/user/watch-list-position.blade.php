@@ -148,7 +148,7 @@
 
     $(document).ready(function(){
         function reloadData(){
-            $.get('{!!$fullUrl!!}', function(data){
+            $.get('{!!url("user/watch-list-position-ajax")!!}', function(data){
                 if(data !== 'NO_DATA'){
                     $("#pst_hre").html(data);
                 }

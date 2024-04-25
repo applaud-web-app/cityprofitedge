@@ -52,7 +52,9 @@ Route::middleware('auth')->name('user.')->group(function () {
                 Route::get('watch-list', 'watchList')->name('watchList');
                 Route::get('watch-list-ajax', 'watchListAjax')->name('watchListAjax');
                 Route::get('watch-list-order', 'watchListOrder')->name('watchListOrder');
+                Route::get('watch-list-order-ajax', 'watchListOrderAjax')->name('watchListOrderAjax');
                 Route::get('watch-list-position', 'watchListPosition')->name('watchListPosition');
+                Route::get('watch-list-position-ajax', 'watchListPositionAjax')->name('watchListPositionAjax');
                 // Route::post('fetch-watch-list-data','fetchwatchList')->name('fetchwatchList');
                 Route::post('buy-watch-list-stock','buywishlist')->name('buyWatchListStock');
                 Route::post('purchase/package', 'purchasePackage')->name('purchase.package');

@@ -2633,6 +2633,14 @@ class UserController extends Controller
         return view($this->activeTemplate . 'user.watch-list-order',compact('pageTitle','wishlistorder','fullUrl'));
     }
 
+    public function watchListOrderAjax(Request $request){
+        $pageTitle = "Watch List Order";
+        $userId = \Auth::id();
+        $wishlistorder = WatchList::where('user_id',$userId)->orderBy('id','DESC')->get();
+        $fullUrl = $request->fullUrl();
+        return view($this->activeTemplate . 'user.watch-list-order-ajax',compact('pageTitle','wishlistorder','fullUrl'));
+    }
+
     public function watchListPosition(Request $request){
         $pageTitle = "Watch List Position";
         $userId = \Auth::id();
@@ -2677,14 +2685,56 @@ class UserController extends Controller
         $wishlistorder = WatchTradePosition::where('user_id',$userId)->orderBy('id','DESC')->paginate(50);
 
         $fullUrl = $request->fullUrl();
-        if($request->ajax()){
-            if(!empty($respond)){
-                return view($this->activeTemplate . 'user.watch-list-position-ajax',compact('pageTitle','wishlistorder','fullUrl'));
+        
+        return view($this->activeTemplate . 'user.watch-list-position',compact('pageTitle','wishlistorder','fullUrl'));
+    }
+
+
+    public function watchListPositionAjax(Request $request){
+        $pageTitle = "Watch List Position";
+        $userId = \Auth::id();
+        $wishlistorder = WatchTradePosition::where('user_id',$userId)->orderBy('id','DESC')->paginate(50);
+
+        $MCXpayload = [];
+        $NFOpayload = [];
+        if($wishlistorder != NULL){
+            foreach ($wishlistorder as $key => $value) {
+                if($value->exchange == "MCX"){
+                    array_push($MCXpayload,$value->token);
+                }else if($value->exchange == "NFO"){
+                    array_push($NFOpayload,$value->token);
+                }
             }
-            return 'NO_DATA';
         }
 
-        return view($this->activeTemplate . 'user.watch-list-position',compact('pageTitle','wishlistorder','fullUrl'));
+        $payload = [
+            'MCX'=>$MCXpayload,
+            'NFO'=>$NFOpayload
+        ];
+        $payload = json_encode($payload,true);
+        $respond = $this->getWatchListRecords($payload);
+
+        if($respond == NULL){
+            $respond = $this->getWatchListRecords($payload);
+        }
+
+        if(isset($respond)){
+            if($respond['status'] == true){
+                $watchList = $respond['data']['fetched'];
+                foreach ($wishlistorder as $item) {
+                    $positionData = WatchTradePosition::where('user_id',$userId)->where('id',$item->id)->first();
+                    $key = array_search($item->token, array_column($watchList, 'symbolToken'));
+                    $currentLtp = $watchList[$key]['ltp'];
+                    $positionData->ltp = $currentLtp;
+                    $positionData->save();
+                }
+            }
+        }
+
+        $wishlistorder = WatchTradePosition::where('user_id',$userId)->orderBy('id','DESC')->paginate(50);
+
+        $fullUrl = $request->fullUrl();
+        return view($this->activeTemplate . 'user.watch-list-position-ajax',compact('pageTitle','wishlistorder','fullUrl'));
     }
 
 

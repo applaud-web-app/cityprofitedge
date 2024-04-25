@@ -81,7 +81,7 @@
 <script>
     $(document).ready(function(){
         function reloadData(){
-            $.get('{!!$fullUrl!!}',function(data){
+            $.get('{!!url("user/watch-list-order-ajax")!!}',function(data){
                 $("#pst_hre").html(data);
             });
         }
