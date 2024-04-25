@@ -46,7 +46,7 @@ class SiteController extends Controller
         $coveringBuildUp = OiBuildUp::orderBy('id','DESC')->where('type','covering')->paginate(5);
         $unWindingBuildUp = OiBuildUp::orderBy('id','DESC')->where('type','unwinding')->paginate(5);
         $todayDate = date('d-m-Y',strtotime('-1Day'));
-        $fdProData = \DB::connection('mysql_rm')->table('FII DII PRO')->select('*')->where('date',$todayDate)->get(); 
+        $fdProData = \DB::connection('mysql_rm')->table('FII DII PRO')->select('*')->where('client_type','!=','total')->where('date',$todayDate)->get(); 
         $reference = @$_GET['reference'];
         if ($reference) {
             session()->put('reference', $reference);
@@ -73,7 +73,7 @@ class SiteController extends Controller
         $coveringBuildUp = OiBuildUp::orderBy('id','DESC')->where('type','covering')->paginate(5);
         $unWindingBuildUp = OiBuildUp::orderBy('id','DESC')->where('type','unwinding')->paginate(5);
         $todayDate = date('d-m-Y',strtotime('-1Day'));
-        $fdProData = \DB::connection('mysql_rm')->table('FII DII PRO')->select('*')->where('date',$todayDate)->get(); 
+        $fdProData = \DB::connection('mysql_rm')->table('FII DII PRO')->select('*')->where('client_type','!=','total')->where('date',$todayDate)->get(); 
         $reference = @$_GET['reference'];
         if ($reference) {
             session()->put('reference', $reference);
