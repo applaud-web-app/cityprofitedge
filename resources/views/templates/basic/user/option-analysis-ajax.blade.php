@@ -58,9 +58,10 @@
                      <div class="mx-1">
                         <select name="timeframe1" class="form-select" id="timeframe1">
                           <option value="" disabled="" selected>Time Frame</option>
-                          <option value="1" {{$timeFrame1 == 1 ? 'selected' : ''}}>1</option>
-                          <option value="3" {{$timeFrame1 == 3 ? 'selected' : ''}}>3</option>
-                          <option value="5" {{$timeFrame1 == 5 ? 'selected' : ''}}>5</option>
+                               @foreach(allTradeTimeFrames() as $vl)
+                                        <option value="{{$vl}}" {{$timeFrame1 == $vl ? 'selected' : ''}}>{{$vl}}</option>
+                                    @endforeach
+                         
                           </select>
                       </div>
                       <div class="mx-1">
@@ -179,9 +180,10 @@
                      <div class="mx-1">
                         <select name="timeframe2" class="form-select" id="timeframe2">
                           <option value="" disabled="" selected>Time Frame</option>
-                          <option value="1" {{$timeFrame2 == 1 ? 'selected' : ''}}>1</option>
-                          <option value="3" {{$timeFrame2 == 3 ? 'selected' : ''}}>3</option>
-                          <option value="5" {{$timeFrame2 == 5 ? 'selected' : ''}}>5</option>
+                               @foreach(allTradeTimeFrames() as $vl)
+                                        <option value="{{$vl}}" {{$timeFrame2 == $vl ? 'selected' : ''}}>{{$vl}}</option>
+                                    @endforeach
+                       
                           </select>
                       </div>
                       <div class="mx-1">
