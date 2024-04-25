@@ -52,7 +52,7 @@
                                 }
                             }
                         @endphp
-                        <tr>
+                          <tr>
                             <td>{{($item->created_at)->format('d-M, Y H:i:s')}}</td>
                             <td>{{$item->symbol}}</td>
                             <td>{{$item->buy_quantity}}</td>
@@ -61,19 +61,23 @@
                             <td>{{$item->sell_quantity}}</td>
                             <td>{{$item->sell_price}}</td> 
                             <td>{{$sellValue}}</td>
-                            <td>{{$item->net_change}}</td>
+                            @php
+                                $netChange = $item->ltp/($item->ltp-$item->buy_price);
+                            @endphp
+                            <td>{{round($netChange,2)}}</td>
                             <td>{{$item->ltp}}</td>
                             @php
                                 $textColor = "text-success";
-                                $totalVal = ($item->ltp - $item->buy_price) * $item->buy_quantity;
-                                if(($totalVal * $tickSize) < 0){
+                                $mtn = $item->ltp - ($item->buy_quantity*$tickSize*$item->buy_price);
+                                if(($mtn) < 0){
                                     $textColor = "text-danger";
                                 }
+                               
                             @endphp
-                        <td class="{{$textColor}}" {{$tickSize}}>{{round($totalVal * $tickSize,2)}}</td>
+                        <td class="{{$textColor}}">{{round($mtn,2)}}</td>
                         </tr>
                         @php
-                            $total += $totalVal * $tickSize;
+                            $total += $mtn;
                         @endphp
                     @endforeach
                 @else
