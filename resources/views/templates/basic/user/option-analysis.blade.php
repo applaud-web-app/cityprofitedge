@@ -98,6 +98,9 @@
                            <div class="mx-1">
                               <select name="timeframe1" class="form-select" id="timeframe1">
                                 <option value="" disabled="" selected>Time Frame</option>
+                                @foreach(allTradeTimeFrames() as $vl)
+                                    <option value="{{$vl}}" {{$timeFrame1 == $vl ? 'selected' : ''}}>{{$vl}}</option>
+                                @endforeach
                                 <option value="1" {{$timeFrame1 == 1 ? 'selected' : ''}}>1</option>
                                 <option value="3" {{$timeFrame1 == 3 ? 'selected' : ''}}>3</option>
                                 <option value="5" {{$timeFrame1 == 5 ? 'selected' : ''}}>5</option>
