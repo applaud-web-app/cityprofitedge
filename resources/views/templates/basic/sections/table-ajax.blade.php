@@ -361,37 +361,44 @@
                     </div>
                 </div>
             </div>
-            {{-- START --}}
-            <div class="col-lg-6">
-                <div class="d-flex align-items-center">
-                    <h2>FII DII PRO</h2>
-                    {{-- <a class="text--base ms-3" href="#">View All</a> --}}
-                </div>
-                <div class="custom--card">
-                    <div class="card-body p-0">
-                        <div class="table-responsive--md table-responsive">
-                            <table class="table custom--table text-nowrap">
-                                <thead>
-                                    <tr>
-                                        <th class="text-start text-uppercase">@lang('Date')</th>
-                                        <th class="text-start text-uppercase">@lang('Client Type')</th>
-                                        <th class="text-start text-uppercase">@lang('future index view')</th>
-                                        <th class="text-start text-uppercase">@lang('net future index view')</th>
-                                        <th class="text-start text-uppercase">@lang('market status future index')</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @if (isset($fdProData))
-                                        @if (count($fdProData))
-                                            @foreach ($fdProData as $item)
-                                            <tr>
-                                                <td class="text-start">{{$item->date}}</td>
-                                                <td class="text-start">{{$item->client_type}}</td>
-                                                <td class="text-start">{{$item->future_index_view}}</td>
-                                                <td class="text-start">{{$item->net_future_index_view}}</td>
-                                                <td class="text-start">{{$item->market_status_future_index}}</td>
-                                            </tr>
-                                            @endforeach
+             {{-- START --}}
+                <div class="col-lg-6">
+                    <div class="d-flex align-items-center">
+                        <h2>FII DII PRO-FUT Index Analysis</h2>
+                        {{-- <a class="text--base ms-3" href="#">View All</a> --}}
+                    </div>
+                    <div class="custom--card">
+                        <div class="card-body p-0">
+                            <div class="table-responsive--md table-responsive">
+                                <table class="table custom--table text-nowrap">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-start text-uppercase">@lang('Date')</th>
+                                            <th class="text-start text-uppercase">@lang('Client Type')</th>
+                                            <th class="text-start text-uppercase">@lang('fut idx view')</th>
+                                            <th class="text-start text-uppercase">@lang('net fut idx view')</th>
+                                            <th class="text-start text-uppercase">@lang('market Outlook fut idx')</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if (isset($fdProData))
+                                            @if (count($fdProData))
+                                                @foreach ($fdProData as $item)
+                                                <tr>
+                                                    <td class="text-start">{{$item->date}}</td>
+                                                    <td class="text-start">{{$item->client_type}}</td>
+                                                    <td class="text-start">{{$item->future_index_view}}</td>
+                                                    <td class="text-start">{{$item->net_future_index_view}}</td>
+                                                    <td class="text-start">{{$item->market_status_future_index}}</td>
+                                                </tr>
+                                                @endforeach
+                                            @else
+                                                <tr>
+                                                    <td colspan="100%">
+                                                        <span>No Data Found</span>
+                                                    </td>
+                                                </tr>
+                                            @endif
                                         @else
                                             <tr>
                                                 <td colspan="100%">
@@ -399,49 +406,49 @@
                                                 </td>
                                             </tr>
                                         @endif
-                                    @else
-                                        <tr>
-                                            <td colspan="100%">
-                                                <span>No Data Found</span>
-                                            </td>
-                                        </tr>
-                                    @endif
-                                </tbody>
-                            </table>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="d-flex align-items-center">
-                    <h2>FII DII PRO CE</h2>
-                    {{-- <a class="text--base ms-3" href="#">View All</a> --}}
-                </div>
-                <div class="custom--card">
-                    <div class="card-body p-0">
-                        <div class="table-responsive--md table-responsive">
-                            <table class="table custom--table text-nowrap">
-                                <thead>
-                                    <tr>
-                                        <th class="text-start text-uppercase">@lang('Date')</th>
-                                        <th class="text-start text-uppercase">@lang('Client Type')</th>
-                                        <th class="text-start text-uppercase">@lang('option index ce view')</th>
-                                        <th class="text-start text-uppercase">@lang('net index ce view')</th>
-                                        <th class="text-start text-uppercase">@lang('market status index ce')</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @if (isset($fdProData))
-                                        @if (count($fdProData))
-                                            @foreach ($fdProData as $item)
-                                            <tr>
-                                                <td class="text-start">{{$item->date}}</td>
-                                                <td class="text-start">{{$item->client_type}}</td>
-                                                <td class="text-start">{{$item->option_index_ce_view}}</td>
-                                                <td class="text-start">{{$item->net_index_ce_view}}</td>
-                                                <td class="text-start">{{$item->market_status_index_ce}}</td>
-                                            </tr>
-                                            @endforeach
+                <div class="col-lg-6">
+                    <div class="d-flex align-items-center">
+                        <h2>FII DII PRO CE-Option Analysis</h2>
+                        {{-- <a class="text--base ms-3" href="#">View All</a> --}}
+                    </div>
+                    <div class="custom--card">
+                        <div class="card-body p-0">
+                            <div class="table-responsive--md table-responsive">
+                                <table class="table custom--table text-nowrap">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-start text-uppercase">@lang('Date')</th>
+                                            <th class="text-start text-uppercase">@lang('Client Type')</th>
+                                            <th class="text-start text-uppercase">@lang('opt idx ce view')</th>
+                                            <th class="text-start text-uppercase">@lang('net idx ce view')</th>
+                                            <th class="text-start text-uppercase">@lang('market Outlook idx ce')</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if (isset($fdProData))
+                                            @if (count($fdProData))
+                                                @foreach ($fdProData as $item)
+                                                <tr>
+                                                    <td class="text-start">{{$item->date}}</td>
+                                                    <td class="text-start">{{$item->client_type}}</td>
+                                                    <td class="text-start">{{$item->option_index_ce_view}}</td>
+                                                    <td class="text-start">{{$item->net_index_ce_view}}</td>
+                                                    <td class="text-start">{{$item->market_status_index_ce}}</td>
+                                                </tr>
+                                                @endforeach
+                                            @else
+                                                <tr>
+                                                    <td colspan="100%">
+                                                        <span>No Data Found</span>
+                                                    </td>
+                                                </tr>
+                                            @endif
                                         @else
                                             <tr>
                                                 <td colspan="100%">
@@ -449,49 +456,49 @@
                                                 </td>
                                             </tr>
                                         @endif
-                                    @else
-                                        <tr>
-                                            <td colspan="100%">
-                                                <span>No Data Found</span>
-                                            </td>
-                                        </tr>
-                                    @endif
-                                </tbody>
-                            </table>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="d-flex align-items-center">
-                    <h2>FII DII PRO PE</h2>
-                    {{-- <a class="text--base ms-3" href="#">View All</a> --}}
-                </div>
-                <div class="custom--card">
-                    <div class="card-body p-0">
-                        <div class="table-responsive--md table-responsive">
-                            <table class="table custom--table text-nowrap">
-                                <thead>
-                                    <tr>
-                                        <th class="text-start text-uppercase">@lang('Date')</th>
-                                        <th class="text-start text-uppercase">@lang('Client Type')</th>
-                                        <th class="text-start text-uppercase">@lang('option index pe view')</th>
-                                        <th class="text-start text-uppercase">@lang('net index pe view')</th>
-                                        <th class="text-start text-uppercase">@lang('market status index pe')</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @if (isset($fdProData))
-                                        @if (count($fdProData))
-                                            @foreach ($fdProData as $item)
-                                            <tr>
-                                                <td class="text-start">{{$item->date}}</td>
-                                                <td class="text-start">{{$item->client_type}}</td>
-                                                <td class="text-start">{{$item->option_index_pe_view}}</td>
-                                                <td class="text-start">{{$item->net_index_pe_view}}</td>
-                                                <td class="text-start">{{$item->market_status_index_pe}}</td>
-                                            </tr>
-                                            @endforeach
+                <div class="col-lg-6">
+                    <div class="d-flex align-items-center">
+                        <h2>FII DII PRO PE-Option Analysis</h2>
+                        {{-- <a class="text--base ms-3" href="#">View All</a> --}}
+                    </div>
+                    <div class="custom--card">
+                        <div class="card-body p-0">
+                            <div class="table-responsive--md table-responsive">
+                                <table class="table custom--table text-nowrap">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-start text-uppercase">@lang('Date')</th>
+                                            <th class="text-start text-uppercase">@lang('Client Type')</th>
+                                            <th class="text-start text-uppercase">@lang('opt idx pe view')</th>
+                                            <th class="text-start text-uppercase">@lang('net idx pe view')</th>
+                                            <th class="text-start text-uppercase">@lang('market Outlook idx pe')</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if (isset($fdProData))
+                                            @if (count($fdProData))
+                                                @foreach ($fdProData as $item)
+                                                <tr>
+                                                    <td class="text-start">{{$item->date}}</td>
+                                                    <td class="text-start">{{$item->client_type}}</td>
+                                                    <td class="text-start">{{$item->option_index_pe_view}}</td>
+                                                    <td class="text-start">{{$item->net_index_pe_view}}</td>
+                                                    <td class="text-start">{{$item->market_status_index_pe}}</td>
+                                                </tr>
+                                                @endforeach
+                                            @else
+                                                <tr>
+                                                    <td colspan="100%">
+                                                        <span>No Data Found</span>
+                                                    </td>
+                                                </tr>
+                                            @endif
                                         @else
                                             <tr>
                                                 <td colspan="100%">
@@ -499,19 +506,12 @@
                                                 </td>
                                             </tr>
                                         @endif
-                                    @else
-                                        <tr>
-                                            <td colspan="100%">
-                                                <span>No Data Found</span>
-                                            </td>
-                                        </tr>
-                                    @endif
-                                </tbody>
-                            </table>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
             {{-- END --}}
         </div>
     </div>
