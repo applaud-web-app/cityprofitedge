@@ -489,7 +489,7 @@ function allTradeSymbols(){
 }
 
 function allTradeTimeFrames(){
-    return [1,3,5];
+    return [5,10,15];
 }
 
 function allTradeTimeFramesNew(){
