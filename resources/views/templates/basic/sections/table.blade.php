@@ -365,7 +365,7 @@
                 {{-- START --}}
                 <div class="col-lg-6">
                     <div class="d-flex align-items-center">
-                        <h2>FII DII PRO</h2>
+                        <h2>FII DII PRO-FUT Index Analysis</h2>
                         {{-- <a class="text--base ms-3" href="#">View All</a> --}}
                     </div>
                     <div class="custom--card">
@@ -376,9 +376,9 @@
                                         <tr>
                                             <th class="text-start text-uppercase">@lang('Date')</th>
                                             <th class="text-start text-uppercase">@lang('Client Type')</th>
-                                            <th class="text-start text-uppercase">@lang('future index view')</th>
-                                            <th class="text-start text-uppercase">@lang('net future index view')</th>
-                                            <th class="text-start text-uppercase">@lang('market status future index')</th>
+                                            <th class="text-start text-uppercase">@lang('fut idx view')</th>
+                                            <th class="text-start text-uppercase">@lang('net fut idx view')</th>
+                                            <th class="text-start text-uppercase">@lang('market Outlook fut idx')</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -415,7 +415,7 @@
                 </div>
                 <div class="col-lg-6">
                     <div class="d-flex align-items-center">
-                        <h2>FII DII PRO CE</h2>
+                        <h2>FII DII PRO CE-Option Analysis</h2>
                         {{-- <a class="text--base ms-3" href="#">View All</a> --}}
                     </div>
                     <div class="custom--card">
@@ -426,9 +426,9 @@
                                         <tr>
                                             <th class="text-start text-uppercase">@lang('Date')</th>
                                             <th class="text-start text-uppercase">@lang('Client Type')</th>
-                                            <th class="text-start text-uppercase">@lang('option index ce view')</th>
-                                            <th class="text-start text-uppercase">@lang('net index ce view')</th>
-                                            <th class="text-start text-uppercase">@lang('market status index ce')</th>
+                                            <th class="text-start text-uppercase">@lang('opt idx ce view')</th>
+                                            <th class="text-start text-uppercase">@lang('net idx ce view')</th>
+                                            <th class="text-start text-uppercase">@lang('market Outlook idx ce')</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -465,7 +465,7 @@
                 </div>
                 <div class="col-lg-6">
                     <div class="d-flex align-items-center">
-                        <h2>FII DII PRO PE</h2>
+                        <h2>FII DII PRO PE-Option Analysis</h2>
                         {{-- <a class="text--base ms-3" href="#">View All</a> --}}
                     </div>
                     <div class="custom--card">
@@ -476,9 +476,9 @@
                                         <tr>
                                             <th class="text-start text-uppercase">@lang('Date')</th>
                                             <th class="text-start text-uppercase">@lang('Client Type')</th>
-                                            <th class="text-start text-uppercase">@lang('option index pe view')</th>
-                                            <th class="text-start text-uppercase">@lang('net index pe view')</th>
-                                            <th class="text-start text-uppercase">@lang('market status index pe')</th>
+                                            <th class="text-start text-uppercase">@lang('opt idx pe view')</th>
+                                            <th class="text-start text-uppercase">@lang('net idx pe view')</th>
+                                            <th class="text-start text-uppercase">@lang('market Outlook idx pe')</th>
                                         </tr>
                                     </thead>
                                     <tbody>
