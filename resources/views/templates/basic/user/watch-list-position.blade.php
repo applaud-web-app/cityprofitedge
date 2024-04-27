@@ -104,9 +104,9 @@
                                                             $textColor = "text-success";
                                                             $mtn = $item->ltp - $buyValue;
                                                             if($item->type == "BUY"){
-                                                                $mtn = $item->ltp - $buyValue;
+                                                                $mtn = ($item->ltp*$item->buy_quantity*$tickSize) - $buyValue;
                                                             }else if($item->type == "SELL"){
-                                                                $mtn = $item->ltp - $sellValue;
+                                                                $mtn = ($item->ltp*$item->buy_quantity*$tickSize) - $sellValue;
                                                             }
                                                             if(($mtn) < 0){
                                                                 $textColor = "text-danger";
