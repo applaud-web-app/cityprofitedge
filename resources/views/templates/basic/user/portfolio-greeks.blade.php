@@ -181,6 +181,10 @@
                     if($v == "LTP"){
 
                     }else{
+                        $dataLast = \DB::connection('mysql_rm')->table($v)->select('date')->where(['timeframe'=>$timeFrame])->orderBy('id','DESC')->first();
+                        if($dataLast){
+                            $todayDate = $dataLast->date;
+                        }
                         $data = \DB::connection('mysql_rm')->table($v)->select('*')->where(['date'=>$todayDate,'timeframe'=>$timeFrame])->get(); 
                         // dd($data);
                         // if(count($data)==0){
