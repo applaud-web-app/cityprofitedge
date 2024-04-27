@@ -2350,6 +2350,18 @@ class UserController extends Controller
         if($request->order_type == "limit"){
             $status = "pending";
         }
+
+        // / CHECK CONDITION FOR SELL
+        if($value->type == "SELL"){
+            $watchTradePosition = WatchTradePosition::Where('token',$request->token)->WHERE('user_id',$userId)->where('type','BUY')->first();
+            if($watchTradePosition){
+                if($watchTradePosition->buy_quantity < $request->quantity){
+                    $notify[] = ['error', 'You Donot Have Enough Quantity To Sell...'];
+                    return redirect()->back()->withNotify($notify);
+                }
+            }
+        }
+
         // Check For Previous BUY OR SELL FOR A PARTICULAR STOCK
         $makeAvgPrice = WatchList::WHERE('status','executed')->Where('token',$request->token)->WHERE('user_id',$userId)->get();
         $totalBuyPrice = 0;
