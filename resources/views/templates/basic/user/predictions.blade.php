@@ -33,63 +33,63 @@
                     </div>
                 </form>
                 <div class="row mt-3">
-                @forelse ($data as $key=>$itemArr)
-                    @foreach($itemArr as $k=>$value)
-                       
-                            <div class="col-lg-12 mt-3">
-                                <div class="custom--card">
-                                    <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
-                                        <h5 class="card-title mb-0" >{{$k}} <span class="text--base">({{date("d-M-Y",strtotime($key))}}) </span></h5>
-                                        {{-- <button class="btn btn-sm btn--base py-2" type="submit">Get All <i class="las la-long-arrow-alt-right"></i> </button> --}}
-                                
-                                    </div>
-                                    <div class="card-body p-0">
-                                        <div class="table-responsive--md table-responsive">
-                                            <table class="table custom--table text-nowrap">
-                                                <thead>
-                                                    <tr>
-                                                        
-                                                        <th>AI/ML Model Name</th>
-                                                        <th>Open</th>
-                                                        <th>High </th>
-                                                        <th>Low</th>
-                                                        <th>Close</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @foreach ($value as $item)
-                                                        <tr>
-                                                            <td>{{$item->model}}</td>
-                                                            <td>{{$item->open}}</td>
-                                                            <td>{{$item->high}}</td>
-                                                            <td>{{$item->low}}</td>
-                                                            <td>{{$item->close}}</td>
-                                                        </tr>
-                                                    @endforeach
-                                                    
-                                                                                            
-                                                </tbody>
-                                            </table>
+                    @forelse ($data as $key=>$itemArr)
+                        @foreach($itemArr as $k=>$value)
+                        
+                                <div class="col-lg-12 mt-3">
+                                    <div class="custom--card">
+                                        <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
+                                            <h5 class="card-title mb-0" >{{$k}} <span class="text--base">({{date("d-M-Y",strtotime($key))}}) </span></h5>
+                                            {{-- <button class="btn btn-sm btn--base py-2" type="submit">Get All <i class="las la-long-arrow-alt-right"></i> </button> --}}
+                                    
                                         </div>
-                                    </div>
+                                        <div class="card-body p-0">
+                                            <div class="table-responsive--md table-responsive">
+                                                <table class="table custom--table text-nowrap">
+                                                    <thead>
+                                                        <tr>
+                                                            
+                                                            <th>AI/ML Model Name</th>
+                                                            <th>Open</th>
+                                                            <th>High </th>
+                                                            <th>Low</th>
+                                                            <th>Close</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach ($value as $item)
+                                                            <tr>
+                                                                <td>{{$item->model}}</td>
+                                                                <td>{{$item->open}}</td>
+                                                                <td>{{$item->high}}</td>
+                                                                <td>{{$item->low}}</td>
+                                                                <td>{{$item->close}}</td>
+                                                            </tr>
+                                                        @endforeach
+                                                        
+                                                                                                
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                </div>
+                        @endforeach
+
+                    @empty
+
+                        <div class="col-lg-12 mt-3">
+                            <div class="custom--card">
+                                <div class="card-body p-0">
+                                    <h4 class="my-5 text-center text-danger">NO DATA</h4>
+                                </div>
                             </div>
-                    @endforeach
+                        </div> 
 
-                @empty
-
-                <div class="col-lg-12 mt-3">
-                    <div class="custom--card">
-                        <div class="card-body p-0">
-                            <h4 class="my-5 text-center text-danger">NO DATA</h4>
-                        </div>
-                    </div>
-                </div> 
-
-                @endforelse
-            </div>
+                    @endforelse
                 
 
 
-        </div>
+                </div>
+    </div>
     </div>
 @endsection

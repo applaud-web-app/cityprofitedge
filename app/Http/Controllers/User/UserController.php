@@ -2772,6 +2772,13 @@ class UserController extends Controller
         $data['pageTitle'] = "AI/ML PREDICTIONS";
         $fromDate = date("Y-m-d",strtotime('+ 1 day'));
         $toDate = date("Y-m-d",strtotime('+ 1 day'));
+
+        $alDataSS = \DB::connection('mysql_rm')->table('Predictions')->select('predicted_date')->orderBy('id','DESC')->first();
+        if($alDataSS){
+            $fromDate = date("Y-m-d",strtotime($alDataSS->predicted_date));
+            $toDate = date("Y-m-d",strtotime($alDataSS->predicted_date));
+        }
+
         if(!empty($request->from_date)){
             $fromDate = date("Y-m-d",strtotime($request->from_date));
         }
