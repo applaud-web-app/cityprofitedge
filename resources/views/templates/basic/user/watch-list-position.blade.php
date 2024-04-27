@@ -76,8 +76,8 @@
                                                                 $sellValue = $sellValue*5;
                                                                 $tickSize = $angleData['lotsize'];
                                                             }else{
-                                                                $buyValue = $buyValue*$angleData->tick_size;
-                                                                $sellValue = $sellValue*$angleData->tick_size;
+                                                                $buyValue = $buyValue*$angleData['lotsize'];
+                                                                $sellValue = $sellValue*$angleData['lotsize'];
                                                                 $tickSize = $angleData['lotsize'];
                                                             }
                                                         }
@@ -92,7 +92,12 @@
                                                         <td>{{$item->sell_price}}</td> 
                                                         <td>{{$sellValue}}</td>
                                                         @php
-                                                            $netChange = $item->ltp/($item->ltp-$item->buy_price);
+                                                            if ($item->ltp-$item->buy_price == 0) {
+                                                                $netChange = 0;
+                                                            }else{
+                                                                $netChange = $item->ltp/($item->ltp-$item->buy_price);
+                                                            }
+                                                           
                                                         @endphp
                                                         <td>{{round($netChange,2)}}</td>
                                                         <td>{{$item->ltp}}</td>
