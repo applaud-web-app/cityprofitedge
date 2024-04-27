@@ -106,7 +106,7 @@
                                                             if($item->type == "BUY"){
                                                                 $mtn = ($item->ltp*$item->buy_quantity*$tickSize) - $buyValue;
                                                             }else if($item->type == "SELL"){
-                                                                $mtn = ($item->ltp*$item->buy_quantity*$tickSize) - $sellValue;
+                                                                $mtn = $sellValue - ($item->ltp*$item->buy_quantity*$tickSize);
                                                             }
                                                             if(($mtn) < 0){
                                                                 $textColor = "text-danger";
