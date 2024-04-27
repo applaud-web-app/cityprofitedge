@@ -54,7 +54,7 @@
                                             @if (count($wishlistorder))
                                                 @foreach ($wishlistorder as $item)
                                                     @php
-                                                        $angleData = App\Models\AngelApiInstrument::WHERE('token',$item->token)->first();
+                                                        $angleData = App\Models\AngelApiInstrument::WHERE('token',$item->token)->orderBy('id','DESC')->first();
                                                         $tickSize = 1;
                                                         $buyValue = $item->buy_quantity * $item->buy_price;
                                                         $sellValue = $item->sell_quantity * $item->sell_price;
@@ -83,7 +83,7 @@
                                                         }
                                                     @endphp
                                                     <tr>
-                                                        <td>{{($item->created_at)->format('d-M, Y H:i:s')}}</td>
+                                                        <td data-token="{{$item->token}}" data-lotsize="{{$tickSize}}">{{($item->created_at)->format('d-M, Y H:i:s')}}</td>
                                                         <td>{{$item->symbol}}</td>
                                                         <td>{{$item->buy_quantity}}</td>
                                                         <td>{{$item->buy_price}}</td>
@@ -97,7 +97,6 @@
                                                             }else{
                                                                 $netChange = $item->ltp/($item->ltp-$item->buy_price);
                                                             }
-                                                           
                                                         @endphp
                                                         <td>{{round($netChange,2)}}</td>
                                                         <td>{{$item->ltp}}</td>
