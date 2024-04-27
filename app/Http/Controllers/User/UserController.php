@@ -2352,7 +2352,7 @@ class UserController extends Controller
         }
 
         // / CHECK CONDITION FOR SELL
-        if($value->type == "SELL"){
+        if($request->type == "SELL"){
             $watchTradePosition = WatchTradePosition::Where('token',$request->token)->WHERE('user_id',$userId)->where('type','BUY')->first();
             if($watchTradePosition){
                 if($watchTradePosition->buy_quantity < $request->quantity){
