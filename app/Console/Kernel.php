@@ -44,6 +44,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('angel_pcr:every_day')->everyMinute()->sendOutputTo('command23_output.log');
 
 
+        // WATCH LIST CRONS
+        $schedule->command('watch-list-data:every_minute')->everyMinute()->sendOutputTo('command25_output.log');
 
     }
 

@@ -72,7 +72,11 @@
                             <td>{{$item->ltp}}</td>
                             @php
                                 $textColor = "text-success";
-                                $mtn = $item->ltp - ($item->buy_quantity*$tickSize*$item->buy_price);
+                                if($item->type == "BUY"){
+                                    $mtn = $item->ltp - $buyValue;
+                                }else if($item->type == "SELL"){
+                                    $mtn = $item->ltp - $sellValue;
+                                }
                                 if(($mtn) < 0){
                                     $textColor = "text-danger";
                                 }
