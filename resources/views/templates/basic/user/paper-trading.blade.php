@@ -21,7 +21,7 @@
                             <table class="table custom--table text-nowrap">
                                 <thead>
                                     <tr>
-                                        <th>@lang('Date')</th>
+                                        <th>@lang('TXN Date')</th>
                                         <th>@lang('Symbol')</th>
                                         <th>@lang('NSE Symbol')</th>
                                         <th>@lang('Expiry')</th>
@@ -57,13 +57,24 @@
                                             <td>{{ $trade->atm_status }}</td>
                                             <td>{{ $trade->ce }}</td>
                                             <td>{{ $trade->pe }}</td>
+                                            @php
+                                                $ce_textColor = "text-success";
+                                                if ($trade->ce_entry_price > $trade->ce_ltp ) {
+                                                    $ce_textColor = "text-danger";
+                                                }
+
+                                                $pe_textColor = "text-success";
+                                                if ($trade->pe_entry_price > $trade->pe_ltp ) {
+                                                    $pe_textColor = "text-danger";
+                                                }
+                                            @endphp
                                             <td>{{ $trade->ce_entry_price }}</td>
                                             <td>{{ $trade->pe_entry_price }}</td>
-                                            <td>{{ $trade->ce_ltp }}</td>
-                                            <td>{{ $trade->pe_ltp }}</td>
+                                            <td class="{{$ce_textColor}}">{{ $trade->ce_ltp }}</td>
+                                            <td class="{{$pe_textColor}}">{{ $trade->pe_ltp }}</td>
                                             <td>{{ $trade->combined_premium_ce_pe*$trade->lot_size }}</td>
                                             @php
-                                                $mtm = (($trade->ce_ltp+$trade->pe_ltp)*$trade->lot_size)-$trade->combined_premium_ce_pe;
+                                                $mtm = (($trade->ce_ltp+$trade->pe_ltp)*$trade->lot_size)-($trade->combined_premium_ce_pe*$trade->lot_size);
                                                 $target = "";
                                             @endphp
                                             <td>{{ $mtm }}</td>
