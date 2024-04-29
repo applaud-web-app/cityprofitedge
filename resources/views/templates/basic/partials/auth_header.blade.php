@@ -21,7 +21,7 @@
                                 <li><a href="{{ route('user.watchList') }}">@lang('Watch List')</a></li>
                                <li><a href="{{ route('user.ledgers') }}">@lang('Option Strategies View')</a></li>
                                  
-                                 <li><a href="{{ route('user.paperTrading') }}">@lang('Paper Trading')</a></li>                                
+                                 <li><a href="{{ route('user.paperTrading') }}">@lang('Expiry2Expiry Trading View')</a></li>                                
                             </ul>
                         </li>
                         <li class="menu_has_children">

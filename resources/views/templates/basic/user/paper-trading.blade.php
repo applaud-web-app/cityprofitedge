@@ -61,7 +61,7 @@
                                             <td>{{ $trade->pe_entry_price }}</td>
                                             <td>{{ $trade->ce_ltp }}</td>
                                             <td>{{ $trade->pe_ltp }}</td>
-                                            <td>{{ $trade->combined_premium_ce_pe }}</td>
+                                            <td>{{ $trade->combined_premium_ce_pe*$trade->lot_size }}</td>
                                             @php
                                                 $mtm = (($trade->ce_ltp+$trade->pe_ltp)*$trade->lot_size)-$trade->combined_premium_ce_pe;
                                                 $target = "";
