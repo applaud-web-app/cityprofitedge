@@ -19,8 +19,9 @@
                             <a href="#0">@lang('Learn2Trade')</a>
                             <ul class="sub-menu">
                                 <li><a href="{{ route('user.watchList') }}">@lang('Watch List')</a></li>
-                                <li><a href="{{ route('user.ledgers') }}">@lang('Option Strategies')</a></li>
-                                
+                               <li><a href="{{ route('user.ledgers') }}">@lang('Option Strategies View')</a></li>
+                                 
+                                 <li><a href="{{ route('user.paperTrading') }}">@lang('Paper Trading')</a></li>                                
                             </ul>
                         </li>
                         <li class="menu_has_children">
@@ -72,6 +73,12 @@
                                 <li><a href="{{ route('user.metals.portfolio') }}">@lang('Metals Portfolio (Gold & Silver)')</a></li>
                             </ul>
                         </li>
+                        {{-- <li class="menu_has_children">
+                            <a href="#0">@lang('Paper Trading')</a>
+                            <ul class="sub-menu">
+                                <li><a href="{{ route('user.paperTrading') }}">@lang('Paper Trading')</a></li>
+                            </ul>
+                        </li> --}}
                        
 
                         {{-- <li class="menu_has_children">

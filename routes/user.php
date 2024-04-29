@@ -65,6 +65,10 @@ Route::middleware('auth')->name('user.')->group(function () {
                 Route::get('option-analysis-ajax', 'OptionAnalysisAjax')->name('option-analysis-ajax');
 
                 Route::get('predictions', 'predictions')->name('predictions');
+
+                // PAPER TRADING
+                Route::get('/paper-trading','paperTrading')->name('paperTrading');
+                Route::get('/paper-trading-ajax','paperTradingAjax')->name('paperTradingAjax');
                 
                 //2FA
                 Route::get('twofactor', 'show2faForm')->name('twofactor');

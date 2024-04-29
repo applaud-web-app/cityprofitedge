@@ -2719,4 +2719,31 @@ class UserController extends Controller
     }
 
 
+    // Paper Trading
+    public function paperTrading(Request $request){
+        $pageTitle = "Paper Trading";
+        $todayDate = date("Y-m-d");
+        $paperTrade = \DB::connection('mysql_rm')->table('Paper Trade')->select('*')->orderBy('id','DESC')->where(['date'=>$todayDate])->paginate(50); 
+        if(!count($paperTrade)){
+            $paperTrade = \DB::connection('mysql_rm')->table('Paper Trade')->select('*')->orderBy('id','DESC')->paginate(50); 
+        }
+        $fullUrl = $request->fullUrl();
+        if($request->ajax()){
+            return view($this->activeTemplate . 'user.watch-list-order-ajax',compact('pageTitle','wishlistorder','fullUrl'));
+        }
+
+        return view($this->activeTemplate . 'user.paper-trading',compact('pageTitle','paperTrade','fullUrl'));
+    }
+
+    public function paperTradingAjax(Request $request){
+        $pageTitle = "Paper Trading";
+        $todayDate = date("Y-m-d");
+        $paperTrade = \DB::connection('mysql_rm')->table('Paper Trade')->select('*')->orderBy('id','DESC')->where(['date'=>$todayDate])->paginate(50); 
+        if(!count($paperTrade)){
+            $paperTrade = \DB::connection('mysql_rm')->table('Paper Trade')->select('*')->orderBy('id','DESC')->paginate(50); 
+        }
+        $fullUrl = $request->fullUrl();
+        return view($this->activeTemplate . 'user.paper-trading-ajax',compact('pageTitle','paperTrade','fullUrl'));
+    }
+
 }

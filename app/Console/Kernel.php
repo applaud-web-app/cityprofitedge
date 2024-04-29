@@ -46,6 +46,7 @@ class Kernel extends ConsoleKernel
 
         // WATCH LIST CRONS
         $schedule->command('watch-list-data:every_minute')->everyMinute()->sendOutputTo('command25_output.log');
+        $schedule->command('paper_trading:every_minute')->everyMinute()->sendOutputTo('command26_output.log');
 
     }
 
