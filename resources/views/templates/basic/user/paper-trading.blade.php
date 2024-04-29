@@ -31,9 +31,7 @@
                                         <th>@lang('Lot Size')</th>
                                         <th>@lang('Atm Status')</th>
                                         <th>@lang('Ce')</th>
-                                        <th>@lang('Ce Token')</th>
                                         <th>@lang('Pe')</th>
-                                        <th>@lang('Pe Token')</th>
                                         <th>@lang('Ce Entry Price')</th>
                                         <th>@lang('pe Entry Price')</th>
                                         <th>@lang('Ce Ltp')</th>
@@ -58,9 +56,7 @@
                                             <td>{{ $trade->lot_size }}</td>
                                             <td>{{ $trade->atm_status }}</td>
                                             <td>{{ $trade->ce }}</td>
-                                            <td>{{ $trade->ce_token }}</td>
                                             <td>{{ $trade->pe }}</td>
-                                            <td>{{ $trade->pe_token }}</td>
                                             <td>{{ $trade->ce_entry_price }}</td>
                                             <td>{{ $trade->pe_entry_price }}</td>
                                             <td>{{ $trade->ce_ltp }}</td>
