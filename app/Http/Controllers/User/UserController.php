@@ -618,11 +618,26 @@ class UserController extends Controller
         $portfolioTopGainers = [];
        
         $todayDate = date("Y-m-d");
-        // $todayDate = "2024-04-03";
         $stockName = $request->stock_name;
         $timeFrame = $request->time_frame ? : 5;
         $symbolArr = allTradeSymbols();        
         return view($this->activeTemplate . 'user.portfolio-greeks', compact('pageTitle', 'portfolioTopGainers','symbolArr','todayDate','timeFrame','stockName','fullUrl'));
+    }
+
+    public function portfolioGreeksGraphs(Request $request){
+        $fullUrl =  $request->fullUrl();
+        $pageTitle = 'Greeks Desk Signal';
+        $portfolioTopGainers = [];
+       
+        $todayDate = date("Y-m-d");
+        $stockName = $request->stock_name;
+        $timeFrame = $request->time_frame ? : 5;
+        $symbolArr = allTradeSymbols();   
+        
+        
+       
+
+        return view($this->activeTemplate . 'user.portfolio-greeks-graphs', compact('pageTitle', 'portfolioTopGainers','symbolArr','todayDate','timeFrame','stockName','fullUrl'));
     }
 
 

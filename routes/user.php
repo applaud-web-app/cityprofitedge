@@ -89,6 +89,7 @@ Route::middleware('auth')->name('user.')->group(function () {
 
 
                 Route::get('portfolio-greeks', 'portfolioGreeks');
+                Route::get('portfolio-greeks-graphs','portfolioGreeksGraphs');
                 Route::get('portfolio-top-gainers-stock', 'portfolioTopGainersStock')->name('portfolio.top.gainers-stock');
                 Route::get('portfolio-top-gainers-stock-ajx', 'portfolioTopGainersStockAjx')->name('portfolio.top.gainers-stock-ajx');
                 Route::get('portfolio-top-losers', 'portfolioTopLosers')->name('portfolio.top.losers');
