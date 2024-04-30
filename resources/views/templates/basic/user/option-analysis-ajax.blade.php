@@ -546,3 +546,619 @@
     {{-- Fifth Graph End --}}
   </div>
 </form>
+
+
+
+<script src="{{ asset('assets/admin/js/vendor/apexcharts.min.js') }}"></script>
+<script src="{{ asset('assets/admin/js/vendor/chart.js.2.8.0.js') }}"></script>
+<script>
+// var options = {
+    
+//     series: [{
+//     name: 'ATM-1',
+//     data: []
+//   }, {
+//     name: 'ATM',
+//     data: []
+//   }, {
+//     name: 'ATM+1',
+//     data: []
+//   }],
+//     chart: {
+//     type: 'bar',
+//     foreColor: '#e4e4e4',
+//     height: 400,
+//     toolbar: {
+//         show: false,
+       
+//     }
+//   },
+//   plotOptions: {
+//     bar: {
+//       horizontal: false,
+//       columnWidth: '40%',
+//       endingShape: 'rounded'
+//     },
+//   },
+//   dataLabels: {
+//     enabled: false
+//   },
+//   stroke: {
+//     show: true,
+//     width: 2,
+//     colors: ['transparent']
+//   },
+//   xaxis: {
+//     type: "category",
+//     categories: [],
+//   },
+//   yaxis: {
+//     title: {
+//       text: '$ (thousands)'
+//     }
+//   },
+//   fill: {
+//     opacity: 1
+//   },
+//   tooltip: {
+//     enabled: true,
+//     theme: 'dark',
+          
+//     y: {
+//       formatter: function (val) {
+//         return "$ " + val + " thousands"
+//       }
+//     }
+//   }
+//   };
+
+//   var chart = new ApexCharts(document.querySelector("#apex-analysis-chart"), options);
+//   chart.render();
+
+//   apex charts 2
+
+// var options = {
+//           series: [{
+//             name: "Session Duration",
+//             data: [45, 52, 38, 24, 33, 26, 21, 20, 6, 8, 15, 10,14]
+//           },
+//           {
+//             name: "Page Views",
+//             data: [35, 41, 62, 42, 13, 18, 29, 37, 36, 51, 32, 35,45]
+//           },
+//           {
+//             name: 'Total Visits',
+//             data: [87, 57, 74, 99, 75, 38, 62, 47, 82, 56, 45, 47, 65]
+//           }
+//         ],
+//           chart: {
+//           height: 400,
+//           foreColor: '#e4e4e4',
+//           type: 'line',
+//           zoom: {
+//             enabled: false
+//           },
+//         },
+//         dataLabels: {
+//           enabled: false
+//         },
+//         stroke: {
+//           width: [5, 7, 5],
+//           curve: 'straight',
+//           dashArray: [0, 8, 5]
+//         },
+       
+//         legend: {
+//           tooltipHoverFormatter: function(val, opts) {
+//             return val + ' - <strong>' + opts.w.globals.series[opts.seriesIndex][opts.dataPointIndex] + '</strong>'
+//           }
+//         },
+//         markers: {
+//           size: 0,
+//           hover: {
+//             sizeOffset: 6
+//           }
+//         },
+//         xaxis: {
+//           categories: ['01 Jan', '02 Jan', '03 Jan', '04 Jan', '05 Jan', '06 Jan', '07 Jan', '08 Jan', '09 Jan',
+//             '10 Jan', '11 Jan', '12 Jan','13 Jan'
+//           ],
+//         },
+//         tooltip: {
+//             enabled: true,
+//     theme: 'dark',
+//           y: [
+//             {
+//               title: {
+//                 formatter: function (val) {
+//                   return val + " (mins)"
+//                 }
+//               }
+//             },
+//             {
+//               title: {
+//                 formatter: function (val) {
+//                   return val + " per session"
+//                 }
+//               }
+//             },
+//             {
+//               title: {
+//                 formatter: function (val) {
+//                   return val;
+//                 }
+//               }
+//             }
+//           ]
+//         },
+    
+//         };
+
+//         var chart = new ApexCharts(document.querySelector("#apex-analysis-chart2"), options);
+//         chart.render();
+</script>
+{{-- ce-red.pe-green --}}
+@php
+    $data2 = [];
+    if (isset($mergedArray2)) {
+      foreach($mergedArray2 as $key => $value){
+        if($value['text'] == "Bearish"){
+          $background = "#FF0000";
+          $color = "#fff";
+        }else if($value['text'] == "Bullish"){
+          $background = "#00bf63";
+          $color = "#000";
+        }else{
+          $background = "yellow";
+          $color = "#000";
+        }
+        $data2[] = [
+          "x"=>$value['time'],
+          "y"=>$value['price'],
+          "marker"=>[
+            'size'=>6,
+            "fillColor"=> "#FFF",
+            "strokeColor"=> "transparent",
+            "radius"=> 2
+          ],
+          "label"=> [
+              "borderColor"=> $background,
+              "offsetY"=> 0,
+              "style"=> [
+                "color"=> $color,
+                "background"=> $background
+              ],
+              "text"=> $value['text']
+          ]
+        ];
+      }
+   }
+    
+@endphp
+
+
+@php
+    $data3 = [];
+    if (isset($mergedArray3)) {
+      foreach($mergedArray3 as $key => $value){
+        if($value['text'] == "Bearish"){
+          $background = "#FF0000";
+          $color = "#fff";
+        }else if($value['text'] == "Bullish"){
+          $background = "#00bf63";
+          $color = "#000";
+        }else{
+          $background = "yellow";
+          $color = "#000";
+        }
+        $data3[] = [
+          "x"=>$value['time'],
+          "y"=>$value['price'],
+          "marker"=>[
+            'size'=>6,
+            "fillColor"=> "#FFF",
+            "strokeColor"=> "transparent",
+            "radius"=> 2
+          ],
+          "label"=> [
+              "borderColor"=> $background,
+              "offsetY"=> 0,
+              "style"=> [
+                "color"=> $color,
+                "background"=> $background
+              ],
+              "text"=> $value['text']
+          ]
+        ];
+      }
+    }
+@endphp
+
+@php
+    $data4 = [];
+   if (isset($mergedArray4)) {
+    foreach($mergedArray4 as $key => $value){
+      if($value['text'] == "Bearish"){
+        $background = "#FF0000";
+        $color = "#fff";
+      }else if($value['text'] == "Bullish"){
+        $background = "#00bf63";
+        $color = "#000";
+      }else{
+        $background = "yellow";
+        $color = "#000";
+      }
+      $data4[] = [
+        "x"=>$value['time'],
+        "y"=>$value['price'],
+        "marker"=>[
+          'size'=>6,
+          "fillColor"=> "#FFF",
+          "strokeColor"=> "transparent",
+          "radius"=> 2
+        ],
+        "label"=> [
+            "borderColor"=> $background,
+            "offsetY"=> 0,
+            "style"=> [
+              "color"=> $color,
+              "background"=> $background
+            ],
+            "text"=> $value['text']
+        ]
+      ];
+    }
+   }
+@endphp
+
+
+@php
+    $data5 = [];
+    if (isset($mergedArray5)) {
+      foreach($mergedArray5 as $key => $value){
+      if($value['color'] == "#00bf63"){ // CE  // Green
+        $color = "#000";
+        if($value['text'] == "Bearish"){
+          $color = "#fff";
+        }
+        $data5[] = [
+            "x"=>$value['time'],
+            "borderColor"=>$value['color'],
+            "label"=>[
+              "borderColor"=>"transparent",
+              "style"=>[
+                "color"=>$color,
+                "background"=>$value['color'],
+              ],
+              "orientation"=>"horizontal",
+              "text"=>$value['text']
+            ]
+        ];
+
+        
+      }else if($value['color'] == "#FF0000"){ // PE
+
+        $color = "#000";
+        if($value['text'] == "Bearish"){
+          $color = "#fff";
+        }
+
+        $data5[] = [
+            "x"=>$value['time'],
+            "borderColor"=>$value['color'],
+            "label"=>[
+              "borderColor"=>"transparent",
+              "style"=>[
+                "color"=>$color,
+                "background"=>$value['color'],
+              ],
+              "text"=>$value['text']
+            ]
+        ];
+
+      }else{
+        $background = "yellow";
+        $color = "#000";
+      }      
+
+    }
+    }
+
+    
+@endphp
+
+{{-- Apex Chart 2 --}}
+<script>
+  var series =
+  {
+    "monthDataSeries1": {
+      "prices": <?= json_encode($close_CE2) ?>,
+      "dates": <?= json_encode($time2); ?>
+    },
+    "monthDataSeries2": {
+      "prices": <?= json_encode($close_PE2) ?>,
+      "dates": <?= json_encode($time2); ?>
+    }
+  }
+  var options = {
+    annotations: {
+      points: {!!json_encode($data2)!!}
+    },
+    chart: {
+      height: 400,
+      foreColor: '#E4E4E4',
+      type: "line",
+      id: "areachart-2",
+      zoom: {
+        enabled: false
+      },
+      toolbar: {
+        show: false, 
+      }
+    },
+    dataLabels: {
+      enabled: false
+    },
+    stroke: {
+      curve: "straight",
+      width:2
+    },
+    colors: ['#00bf63','#FF0000'],
+    series: [
+      {
+        name: {!! json_encode($CE2[0]) !!},
+        data: series.monthDataSeries1.prices,
+      },
+      {
+        name: {!! json_encode($PE2[0]) !!},
+        data: series.monthDataSeries2.prices
+      }
+    ],
+    tooltip: {
+      enabled: true,
+      theme: 'dark',
+    },
+    labels: series.monthDataSeries1.dates,
+    xaxis: {
+        type: "category",
+        categories: <?= json_encode($time2); ?>,
+    },noData: {
+      text: "NO DATA FOUND",
+      align: 'center',
+      verticalAlign: 'middle',
+      offsetX: 0,
+      offsetY: 0,
+    }
+  };
+
+  
+  @if ($time2 != NULL)
+    var chart = new ApexCharts(document.querySelector("#apex-analysis-chart3"), options);
+    chart.render();
+  @else
+  $('#apex-analysis-chart3').html('NO DATA FOUND');  
+  @endif  
+</script>
+
+<script>
+  var series =
+  {
+    "monthDataSeries1": {
+      "prices": <?= json_encode($close_CE3) ?>,
+      "dates": <?= json_encode($time3); ?>
+    },
+    "monthDataSeries2": {
+      "prices": <?= json_encode($close_PE3) ?>,
+      "dates": <?= json_encode($time3); ?>
+    }
+  }
+  var options = {
+    annotations: {
+      points: {!!json_encode($data3)!!}
+    },
+    chart: {
+      height: 400,
+      foreColor: '#E4E4E4',
+      type: "line",
+      id: "areachart-2",
+      zoom: {
+        enabled: false
+      },
+      toolbar: {
+        show: false, 
+      }
+    },
+    dataLabels: {
+      enabled: false
+    },
+    stroke: {
+      curve: "straight",
+      width:2
+    },
+    colors: ['#00bf63','#FF0000'],
+    series: [
+      {
+        name: {!! json_encode($CE3[0]) !!},
+        data: series.monthDataSeries1.prices,
+      },
+      {
+        name: {!! json_encode($PE3[0]) !!},
+        data: series.monthDataSeries2.prices
+      }
+    ],
+    tooltip: {
+      enabled: true,
+      theme: 'dark',
+    },
+    labels: series.monthDataSeries1.dates,
+    xaxis: {
+      type: "category",
+      categories: <?= json_encode($time3); ?>,
+    },noData: {
+      text: "NO DATA FOUND",
+      align: 'center',
+      verticalAlign: 'middle',
+      offsetX: 0,
+      offsetY: 0,
+    }
+  };
+ 
+
+  @if ($time3 != NULL)
+  var chart = new ApexCharts(document.querySelector("#apex-analysis-chart4"), options);
+  chart.render();
+  @else
+  $('#apex-analysis-chart4').html('NO DATA FOUND');  
+  @endif  
+</script>
+
+
+
+<script>
+  var series =
+  {
+    "monthDataSeries1": {
+      "prices": <?= json_encode($OI_CE4) ?>,
+      "dates": <?= json_encode($time4); ?>
+    },
+    "monthDataSeries2": {
+      "prices": <?= json_encode($OI_PE4) ?>,
+      "dates": <?= json_encode($time4); ?>
+    }
+  }
+  var options = {
+    annotations: {
+      points: {!!json_encode($data4)!!}
+    },
+    chart: {
+      height: 400,
+      foreColor: '#E4E4E4',
+      type: "line",
+      id: "areachart-2",
+      zoom: {
+        enabled: false
+      },
+      toolbar: {
+        show: false, 
+      }
+    },
+    dataLabels: {
+      enabled: false
+    },
+    stroke: {
+      curve: "straight",
+      width:2
+    },
+    colors: ['#00bf63','#FF0000'],
+    series: [
+      {
+        name: {!! json_encode($CE4[0]) !!},
+        data: series.monthDataSeries1.prices,
+      },
+      {
+        name: {!! json_encode($PE4[0]) !!},
+        data: series.monthDataSeries2.prices
+      }
+    ],
+    tooltip: {
+      enabled: true,
+      theme: 'dark',
+    },
+    labels: series.monthDataSeries1.dates,
+    xaxis: {
+      type: "category",
+      categories: <?= json_encode($time4); ?>,
+    },noData: {
+      text: "NO DATA FOUND",
+      align: 'center',
+      verticalAlign: 'middle',
+      offsetX: 0,
+      offsetY: 0,
+    }
+  };
+  
+
+  @if ($time4 != NULL)
+  var chart = new ApexCharts(document.querySelector("#apex-analysis-chart5"), options);
+  chart.render();
+  @else
+  $('#apex-analysis-chart5').html('NO DATA FOUND');  
+  @endif  
+</script>
+
+
+<script>
+  var series =
+  {
+    "monthDataSeries1": {
+      "prices": <?= json_encode($CE_NETCHANGE_5) ?>,
+      "dates": <?= json_encode($time5); ?>
+    },
+    "monthDataSeries2": {
+      "prices": <?= json_encode($PE_NETCHANGE_5) ?>,
+      "dates": <?= json_encode($time5); ?>
+    }
+  }
+  var options = {
+    annotations: {
+      xaxis: {!!json_encode($data5)!!}
+    },
+    chart: {
+      height: 400,
+      foreColor: '#E4E4E4',
+      type: "bar",
+      id: "areachart-2",
+      zoom: {
+        enabled: false
+      },
+      toolbar: {
+        show: false, 
+      },
+    },plotOptions: {
+      bar: {
+        columnWidth: '50%',
+      },
+    },
+    dataLabels: {
+      enabled: false
+    },
+    stroke: {
+      curve: "straight",
+      width:2
+    },
+    colors: ['#00bf63','#FF0000'],
+    series: [
+      {
+        name: {!! json_encode($CE5[0]) !!},
+        data: series.monthDataSeries1.prices,
+      },
+      {
+        name: {!! json_encode($PE5[0]) !!},
+        data: series.monthDataSeries2.prices
+      }
+    ],
+    tooltip: {
+      enabled: true,
+      theme: 'dark',
+    },
+    labels: series.monthDataSeries1.dates,
+    xaxis: {
+      type: "category",
+      categories: <?= json_encode($time5); ?>,
+    },noData: {
+      text: "NO DATA FOUND",
+      align: 'center',
+      verticalAlign: 'middle',
+      offsetX: 0,
+      offsetY: 0,
+    }
+  };
+
+
+  @if ($time5 != NULL)
+  var chart = new ApexCharts(document.querySelector("#apex-analysis-chart6"), options);
+  chart.render();
+  @else
+  $('#apex-analysis-chart6').html('NO DATA FOUND');  
+  @endif 
+</script>
