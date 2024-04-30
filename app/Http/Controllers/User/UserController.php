@@ -2699,18 +2699,19 @@ class UserController extends Controller
         }
         $selSymbol = '';
         $dates = $this->getDatesBetweenDates($fromDate,$toDate);
-        $alData = \DB::connection('mysql_rm')->table('Predictions')->select('*')->whereIn('predicted_date',$dates);
+        $alData = \DB::connection('mysql_rm')->table('Predictions')->select('*')->where('atm_status','ATM')->whereIn('predicted_date',$dates);
         if(!empty($request->symbol)){
-            $alData->where('symbol',$request->symbol);
+            $alData->where('main_symbol',$request->symbol);
             $selSymbol = $request->symbol;
         }
         $alData = $alData->get();
         
-        $symbolsArr = \DB::connection('mysql_rm')->table('Predictions')->select('symbol')->groupBy('symbol')->pluck('symbol');
+        $symbolsArr = \DB::connection('mysql_rm')->table('Predictions')->select('main_symbol')->groupBy('main_symbol')->pluck('main_symbol');
         $newArr = [];
         foreach($alData as $val){
-            $newArr[$val->predicted_date][$val->symbol][] = $val;
+            $newArr[$val->predicted_date][$val->main_symbol][$val->model][] = $val;
         }
+        // dd($newArr);
         $data['data'] = $newArr;
         $data['fromDate'] = $fromDate;
         $data['toDate'] = $toDate;
