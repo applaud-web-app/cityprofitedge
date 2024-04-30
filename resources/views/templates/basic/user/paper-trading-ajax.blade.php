@@ -60,11 +60,11 @@
                             $target = "";
                         @endphp
                         <td>{{ $mtm }}</td>
-                        @if ($trade->combined_premium_ce_pe == $trade->ce_ltp)
+                        @if ($trade->combined_premium_ce_pe <= $trade->ce_ltp)
                             @php
                                 $target = "CE Target Achieved";
                             @endphp
-                        @elseif($trade->combined_premium_ce_pe == $trade->pe_ltp)
+                        @elseif($trade->combined_premium_ce_pe <= $trade->pe_ltp)
                             @php
                                 $target = "PE Target Achieved";
                             @endphp
