@@ -191,6 +191,47 @@
               @endphp
             @endforelse  
             <div class="col-lg-12 mb-3">
+
+              <div class="filter-box filter_dropdown d-flex">
+                {{-- <form method="GET" class="d-flex align-items-center flex-wrap filter_dropdown"> --}}
+                  <div class="mx-1"> 
+                    <select name="symbol2" class="form-select" id="symbol2">
+                      <option value="" disabled="" selected>Symbol Name</option>
+                      @foreach ($symbolArr as $item)
+                        <option value="{{$item}}" {{$item == $table2 ? "selected" : ""}}>{{$item}}</option>
+                      @endforeach
+                    </select>
+                  </div>
+                  <div class="mx-1">
+                    <select name="atmRange2" class="form-select" id="atmRange2">
+                      <option value="" disabled="" selected>Strike</option>
+                      @for ($i = -3; $i <= 3; $i++)
+                        @if ($i == 0)
+                          <option value="ATM" {{$Atmtype2 == "ATM" ? "selected" : ""}} >ATM</option>
+                        @else
+                          <option value="ATM{{$i > 0 ? '+'.$i : $i}}" {{$Atmtype2 == "ATM".($i > 0 ? '+'.$i : $i) ? "selected" : ""}} >ATM {{$i > 0 ? '+'.$i : $i}}</option>
+                        @endif
+                      @endfor
+                  </select>
+                 </div>
+                 <div class="mx-1">
+                    <select name="timeframe2" class="form-select" id="timeframe2">
+                      <option value="" disabled="" selected>Time Frame</option>
+                        @foreach(allTradeTimeFrames() as $vl)
+                              <option value="{{$vl}}" {{$timeFrame2 == $vl ? 'selected' : ''}}>{{$vl}}</option>
+                          @endforeach
+                      
+                      </select>
+                  </div>
+                  <div class="mx-1">
+                    <button class="btn btn-sm btn--base w-100 py-2" type="submit"><i class="las la-filter"></i> @lang('Filter')</button>
+                  </div>
+                  <div class="mx-1">
+                    <a href="{{url('/user/option-analysis')}}" class="btn btn-sm btn--base w-100 py-2" ><i class="las la-filter"></i> @lang('Refresh')</a>
+                  </div>
+                {{-- </form> --}}
+              </div>
+
                 <div class="custom--card">
                     <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
                         <div>
@@ -199,7 +240,7 @@
                         </div>
                         <div class="filter-box filter_dropdown d-flex">
                           {{-- <form method="GET" class="d-flex align-items-center flex-wrap filter_dropdown"> --}}
-                            <div class="mx-1"> 
+                            {{-- <div class="mx-1"> 
                               <select name="symbol2" class="form-select" id="symbol2">
                                 <option value="" disabled="" selected>Symbol Name</option>
                                 @foreach ($symbolArr as $item)
@@ -219,7 +260,7 @@
                                 @endfor
                             </select>
                            </div>
-                           <div class="mx-1">
+                           <div class="mx-1"> --}}
                               <select name="timeframe2" class="form-select" id="timeframe2">
                                 <option value="" disabled="" selected>Time Frame</option>
                                   @foreach(allTradeTimeFrames() as $vl)
@@ -319,7 +360,7 @@
                        </div>
                         <div class="filter-box filter_dropdown d-flex">
                           {{-- <form method="GET" class="d-flex align-items-center flex-wrap filter_dropdown"> --}}
-                            <div class="mx-1">
+                            {{-- <div class="mx-1">
                               <select name="symbol3" class="form-select" id="symbol3">
                                 <option value="" disabled="" selected>Symbol Name</option>
                                 @foreach ($symbolArr as $item)
@@ -338,8 +379,8 @@
                                   @endif
                                 @endfor
                             </select>
-                           </div>
-                           <div class="mx-1">
+                           </div> --}}
+                           {{-- <div class="mx-1">
                               <select name="timeframe3" class="form-select" id="timeframe3">
                                 <option value="" disabled="" selected>Time Frame</option>
                                      @foreach(allTradeTimeFrames() as $vl)
@@ -353,7 +394,7 @@
                             </div>
                             <div class="mx-1">
                               <a href="{{url('/user/option-analysis')}}" class="btn btn-sm btn--base w-100 py-2" ><i class="las la-filter"></i> @lang('Refresh')</a>
-                            </div>
+                            </div> --}}
                           {{-- </form> --}}
                         </div>
                     </div>
@@ -446,15 +487,15 @@
                    </div>
                     <div class="filter-box filter_dropdown d-flex">
                       {{-- <form method="GET" class="d-flex align-items-center flex-wrap filter_dropdown"> --}}
-                        <div class="mx-1">
+                        {{-- <div class="mx-1">
                           <select name="symbol4" class="form-select" id="symbol4">
                             <option value="" disabled="" selected>Symbol Name</option>
                             @foreach ($symbolArr as $item)
                               <option value="{{$item}}" {{$item == $table4 ? "selected" : ""}}>{{$item}}</option>
                             @endforeach
                           </select>
-                        </div>
-                        <div class="mx-1">
+                        </div> --}}
+                        {{-- <div class="mx-1">
                           <select name="atmRange4" class="form-select" id="atmRange4">
                             <option value="" disabled="" selected>Strike</option>
                             @for ($i = -3; $i <= 3; $i++)
@@ -465,8 +506,8 @@
                               @endif
                             @endfor
                         </select>
-                       </div>
-                       <div class="mx-1">
+                       </div> --}}
+                       {{-- <div class="mx-1">
                           <select name="timeframe4" class="form-select" id="timeframe4">
                             <option value="" disabled="" selected>Time Frame</option>
                                  @foreach(allTradeTimeFrames() as $vl)
@@ -480,7 +521,7 @@
                         </div>
                         <div class="mx-1">
                           <a href="{{url('/user/option-analysis')}}" class="btn btn-sm btn--base w-100 py-2" ><i class="las la-filter"></i> @lang('Refresh')</a>
-                        </div>
+                        </div> --}}
                       {{-- </form> --}}
                     </div>
                 </div>
@@ -621,7 +662,7 @@
                     </div>
                     <div class="filter-box filter_dropdown d-flex">
                       {{-- <form method="GET" class="d-flex align-items-center flex-wrap filter_dropdown"> --}}
-                        <div class="mx-1">
+                        {{-- <div class="mx-1">
                           <select name="symbol5" class="form-select" id="symbol5">
                             <option value="" disabled="" selected>Symbol Name</option>
                             @foreach ($symbolArr as $item)
@@ -640,8 +681,8 @@
                               @endif
                             @endfor
                         </select>
-                        </div>
-                        <div class="mx-1">
+                        </div> --}}
+                        {{-- <div class="mx-1">
                           <select name="timeframe5" class="form-select" id="timeframe5">
                             <option value="" disabled="" selected>Time Frame</option>
                                  @foreach(allTradeTimeFrames() as $vl)
@@ -655,8 +696,8 @@
                         </div>
                         <div class="mx-1">
                           <a href="{{url('/user/option-analysis')}}" class="btn btn-sm btn--base w-100 py-2" ><i class="las la-filter"></i> @lang('Refresh')</a>
-                        </div>
-                      </form>
+                        </div> --}}
+                      {{-- </form> --}}
                     </div>
                 </div>
                 <div class="card-body chart2">

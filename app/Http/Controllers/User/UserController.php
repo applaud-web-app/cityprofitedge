@@ -1668,23 +1668,23 @@ class UserController extends Controller
         $table1 =  $request->symbol1 ?? "CRUDEOIL";
         $timeFrame1 = $request->timeframe1 ? : 5;
         // For Chart 2
-        $Atmtype2 = $request->atmRange2 ?? "ATM";
-        $table2 =  $request->symbol2 ?? "CRUDEOIL";
-        $timeFrame2 = $request->timeframe2 ? : 5;
+        $Atmtype2 = $Atmtype1;
+        $table2 =  $table1;
+        $timeFrame2 = $timeFrame1;
         // For Chart 3
-        $Atmtype3 = $request->atmRange3 ?? "ATM";
-        $table3 =  $request->symbol3 ?? "CRUDEOIL";
-        $timeFrame3 = $request->timeframe3 ? : 5;
+        $Atmtype3 = $Atmtype1;
+        $table3 =  $table1;
+        $timeFrame3 = $timeFrame1;
 
         // For Chart 4
-        $Atmtype4 = $request->atmRange4 ?? "ATM";
+        $Atmtype4 = $Atmtype1;
         $table4 =  $request->symbol4 ?? "CRUDEOIL";
         $timeFrame4 = $request->timeframe4 ? : 5;
 
         // For Chart 5
-        $Atmtype5 = $request->atmRange5 ?? "ATM";
-        $table5 =  $request->symbol5 ?? "CRUDEOIL";
-        $timeFrame5 = $request->timeframe5 ? : 5;
+        $Atmtype5 = $Atmtype1;
+        $table5 =  $table1;
+        $timeFrame5 = $timeFrame1;
 
         $todayDate = date("Y-m-d");
         // $Symdata = \DB::connection('mysql_rm')->table($symbol)->select('*')->where(['date'=>
@@ -1716,23 +1716,23 @@ class UserController extends Controller
         $table1 =  $request->symbol1 ?? "CRUDEOIL";
         $timeFrame1 = $request->timeframe1 ? : 5;
         // For Chart 2
-        $Atmtype2 = $request->atmRange2 ?? "ATM";
-        $table2 =  $request->symbol2 ?? "CRUDEOIL";
-        $timeFrame2 = $request->timeframe2 ? : 5;
+        $Atmtype2 = $Atmtype1;
+        $table2 =  $table1;
+        $timeFrame2 = $timeFrame1;
         // For Chart 3
-        $Atmtype3 = $request->atmRange3 ?? "ATM";
-        $table3 =  $request->symbol3 ?? "CRUDEOIL";
-        $timeFrame3 = $request->timeframe3 ? : 5;
+        $Atmtype3 = $Atmtype1;
+        $table3 =  $table1;
+        $timeFrame3 = $timeFrame1;
 
         // For Chart 4
-        $Atmtype4 = $request->atmRange4 ?? "ATM";
+        $Atmtype4 = $Atmtype1;
         $table4 =  $request->symbol4 ?? "CRUDEOIL";
         $timeFrame4 = $request->timeframe4 ? : 5;
 
         // For Chart 5
-        $Atmtype5 = $request->atmRange5 ?? "ATM";
-        $table5 =  $request->symbol5 ?? "CRUDEOIL";
-        $timeFrame5 = $request->timeframe5 ? : 5;
+        $Atmtype5 = $Atmtype1;
+        $table5 =  $table1;
+        $timeFrame5 = $timeFrame1;
 
         $todayDate = date("Y-m-d");
         // $Symdata = \DB::connection('mysql_rm')->table($symbol)->select('*')->where(['date'=>
