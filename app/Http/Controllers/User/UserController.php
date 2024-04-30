@@ -1678,8 +1678,8 @@ class UserController extends Controller
 
         // For Chart 4
         $Atmtype4 = $Atmtype1;
-        $table4 =  $request->symbol4 ?? "CRUDEOIL";
-        $timeFrame4 = $request->timeframe4 ? : 5;
+        $table4 =  $table1;
+        $timeFrame4 = $timeFrame1;
 
         // For Chart 5
         $Atmtype5 = $Atmtype1;
@@ -1726,8 +1726,8 @@ class UserController extends Controller
 
         // For Chart 4
         $Atmtype4 = $Atmtype1;
-        $table4 =  $request->symbol4 ?? "CRUDEOIL";
-        $timeFrame4 = $request->timeframe4 ? : 5;
+        $table4 =  $table1;
+        $timeFrame4 = $timeFrame1;
 
         // For Chart 5
         $Atmtype5 = $Atmtype1;
