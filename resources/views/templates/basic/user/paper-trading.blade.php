@@ -23,11 +23,8 @@
                                     <tr>
                                         <th>@lang('TXN Date')</th>
                                         <th>@lang('Symbol')</th>
-                                        <th>@lang('NSE Symbol')</th>
                                         <th>@lang('Expiry')</th>
-                                        <th>@lang('Exchange')</th>
                                         <th>@lang('Transaction Type')</th>
-                                        <th>@lang('Index Token')</th>
                                         <th>@lang('Lot Size')</th>
                                         <th>@lang('Atm Status')</th>
                                         <th>@lang('Ce')</th>
@@ -48,11 +45,8 @@
                                                 <strong>{{showDate($trade->date)}}</strong>
                                             </td>
                                             <td>{{ $trade->symbol }}</td>
-                                            <td>{{ $trade->nse_symbol }}</td>
                                             <td>{{ showDate($trade->expiry) }}</td>
-                                            <td>{{ $trade->exchange }}</td>
                                             <td>{{ $trade->transaction_type }}</td>
-                                            <td>{{ $trade->index_token }}</td>
                                             <td>{{ $trade->lot_size }}</td>
                                             <td>{{ $trade->atm_status }}</td>
                                             <td>{{ $trade->ce }}</td>
