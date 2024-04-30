@@ -31,13 +31,97 @@
         
     }
   }
+  /* .custom--card .card-header{
+    color: #fff !important;
+  } */
 </style>
 @endpush
 <section class="pt-100 pb-100">
     <div class="container-fluid" id="pst_hre">
       <form method="GET" class="d-flex align-items-center flex-wrap ">
         <div class="row">
-            
+            {{-- First Graph Start --}}
+            {{-- @php
+              $atmData1 = [];
+              foreach($data1 as $vvl){
+                if(isset($vvl->atm) && $vvl->atm==$Atmtype1){
+                    $atmData1[] = $vvl;
+                }
+              }
+            @endphp
+            @php $i=1; @endphp
+            @forelse($atmData1 as $val)
+              @php
+                  $arrData1 = json_decode($val->data,true);   
+                  $CE1 = array_slice($arrData1['CE'],-1);
+                  $PE1 = array_slice($arrData1['PE'],-1);
+                  $Date1 = array_slice($arrData1['Date'],-40);
+                  $time1 = array_slice($arrData1['time'],-40);
+                  $CE_consolidated1 = array_slice($arrData1['CE_consolidated'],-40);
+                  $PE_consolidated1 = array_slice($arrData1['PE_consolidated'],-40);
+                  $close_CE1 = array_slice($arrData1['close_CE'],-40);
+                  $close_PE1 = array_slice($arrData1['close_PE'],-40); 
+              @endphp
+            @empty
+            @endforelse  
+            @php
+              $time1 = array_map(function ($k , $y) use($Date1){
+                  return date("d-M-Y",($Date1[$k]/1000)).', '.date("g:i a", strtotime($y));
+              },array_keys($Date1) , $time1);
+            @endphp --}}
+            {{-- <div class="col-lg-12 mb-3">
+                <div class="custom--card">
+                    <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
+                        <h5 class="card-title">@lang('Option Analysis 1')</h5>
+                        <div class="filter-box filter_dropdown d-flex">
+                          <form method="GET" class="d-flex align-items-center flex-wrap filter_dropdown">
+                            <div class="mx-1">
+                              <select name="symbol1" class="form-select" id="symbol1">
+                                <option value="" disabled="" selected>Symbol Name</option>
+                                @foreach ($symbolArr as $item)
+                                  <option value="{{$item}}" {{$item == $table1 ? "selected" : ""}}>{{$item}}</option>
+                                @endforeach
+                              </select>
+                            </div>
+                            <div class="mx-1">
+                              <select name="atmRange1" class="form-select" id="atmRange1">
+                                <option value="" disabled="" selected>Strike</option>
+                                @for ($i = -3; $i <= 3; $i++)
+                                  @if ($i == 0)
+                                    <option value="ATM" {{$Atmtype1 == "ATM" ? "selected" : ""}} >ATM</option>
+                                  @else
+                                    <option value="ATM{{$i > 0 ? '+'.$i : $i}}" {{$Atmtype1 == "ATM".($i > 0 ? '+'.$i : $i) ? "selected" : ""}} >ATM {{$i > 0 ? '+'.$i : $i}}</option>
+                                  @endif
+                                @endfor
+                            </select>
+                           </div>
+                           <div class="mx-1">
+                              <select name="timeframe1" class="form-select" id="timeframe1">
+                                <option value="" disabled="" selected>Time Frame</option>
+                                   @foreach(allTradeTimeFrames() as $vl)
+                                        <option value="{{$vl}}" {{$timeFrame1 == $vl ? 'selected' : ''}}>{{$vl}}</option>
+                                    @endforeach
+                             
+                                </select>
+                            </div>
+                            <div class="mx-1">
+                              <button class="btn btn-sm btn--base w-100 py-2" type="submit"><i class="las la-filter"></i> @lang('Filter')</button>
+                            </div>
+                            <div class="mx-1">
+                              <a href="{{url('/user/option-analysis')}}" class="btn btn-sm btn--base w-100 py-2" ><i class="las la-filter"></i> @lang('Refresh')</a>
+                            </div>
+                          </form>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="apex-analysis-chart" style="width: 100%;"></div>
+                    </div>
+                </div>
+            </div> --}}
+            {{-- First Graph Start --}}
+
+
+            {{-- Second Graph Start --}}
             @php
                 $atmData2 = [];
                 foreach($data2 as $vvl){
@@ -107,6 +191,47 @@
               @endphp
             @endforelse  
             <div class="col-lg-12 mb-3">
+
+              <div class="filter-box filter_dropdown d-flex">
+                {{-- <form method="GET" class="d-flex align-items-center flex-wrap filter_dropdown"> --}}
+                  <div class="mx-1"> 
+                    <select name="symbol2" class="form-select" id="symbol2">
+                      <option value="" disabled="" selected>Symbol Name</option>
+                      @foreach ($symbolArr as $item)
+                        <option value="{{$item}}" {{$item == $table2 ? "selected" : ""}}>{{$item}}</option>
+                      @endforeach
+                    </select>
+                  </div>
+                  <div class="mx-1">
+                    <select name="atmRange2" class="form-select" id="atmRange2">
+                      <option value="" disabled="" selected>Strike</option>
+                      @for ($i = -3; $i <= 3; $i++)
+                        @if ($i == 0)
+                          <option value="ATM" {{$Atmtype2 == "ATM" ? "selected" : ""}} >ATM</option>
+                        @else
+                          <option value="ATM{{$i > 0 ? '+'.$i : $i}}" {{$Atmtype2 == "ATM".($i > 0 ? '+'.$i : $i) ? "selected" : ""}} >ATM {{$i > 0 ? '+'.$i : $i}}</option>
+                        @endif
+                      @endfor
+                  </select>
+                 </div>
+                 <div class="mx-1">
+                    <select name="timeframe2" class="form-select" id="timeframe2">
+                      <option value="" disabled="" selected>Time Frame</option>
+                        @foreach(allTradeTimeFrames() as $vl)
+                              <option value="{{$vl}}" {{$timeFrame2 == $vl ? 'selected' : ''}}>{{$vl}}</option>
+                          @endforeach
+                      
+                      </select>
+                  </div>
+                  <div class="mx-1">
+                    <button class="btn btn-sm btn--base w-100 py-2" type="submit"><i class="las la-filter"></i> @lang('Filter')</button>
+                  </div>
+                  <div class="mx-1">
+                    <a href="{{url('/user/option-analysis')}}" class="btn btn-sm btn--base w-100 py-2" ><i class="las la-filter"></i> @lang('Refresh')</a>
+                  </div>
+                {{-- </form> --}}
+              </div>
+
                 <div class="custom--card">
                     <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
                         <div>
@@ -115,7 +240,7 @@
                         </div>
                         <div class="filter-box filter_dropdown d-flex">
                           {{-- <form method="GET" class="d-flex align-items-center flex-wrap filter_dropdown"> --}}
-                            <div class="mx-1"> 
+                            {{-- <div class="mx-1"> 
                               <select name="symbol2" class="form-select" id="symbol2">
                                 <option value="" disabled="" selected>Symbol Name</option>
                                 @foreach ($symbolArr as $item)
@@ -135,7 +260,7 @@
                                 @endfor
                             </select>
                            </div>
-                           <div class="mx-1">
+                           <div class="mx-1"> --}}
                               <select name="timeframe2" class="form-select" id="timeframe2">
                                 <option value="" disabled="" selected>Time Frame</option>
                                   @foreach(allTradeTimeFrames() as $vl)
@@ -254,8 +379,8 @@
                                   @endif
                                 @endfor
                             </select>
-                           </div>
-                           <div class="mx-1">
+                           </div> --}}
+                           {{-- <div class="mx-1">
                               <select name="timeframe3" class="form-select" id="timeframe3">
                                 <option value="" disabled="" selected>Time Frame</option>
                                      @foreach(allTradeTimeFrames() as $vl)
@@ -369,8 +494,8 @@
                               <option value="{{$item}}" {{$item == $table4 ? "selected" : ""}}>{{$item}}</option>
                             @endforeach
                           </select>
-                        </div>
-                        <div class="mx-1">
+                        </div> --}}
+                        {{-- <div class="mx-1">
                           <select name="atmRange4" class="form-select" id="atmRange4">
                             <option value="" disabled="" selected>Strike</option>
                             @for ($i = -3; $i <= 3; $i++)
@@ -380,9 +505,9 @@
                                 <option value="ATM{{$i > 0 ? '+'.$i : $i}}" {{$Atmtype4 == "ATM".($i > 0 ? '+'.$i : $i) ? "selected" : ""}} >ATM {{$i > 0 ? '+'.$i : $i}}</option>
                               @endif
                             @endfor
-                          </select>
-                       </div>
-                       <div class="mx-1">
+                        </select>
+                       </div> --}}
+                       {{-- <div class="mx-1">
                           <select name="timeframe4" class="form-select" id="timeframe4">
                             <option value="" disabled="" selected>Time Frame</option>
                                  @foreach(allTradeTimeFrames() as $vl)
@@ -555,9 +680,9 @@
                                 <option value="ATM{{$i > 0 ? '+'.$i : $i}}" {{$Atmtype5 == "ATM".($i > 0 ? '+'.$i : $i) ? "selected" : ""}} >ATM {{$i > 0 ? '+'.$i : $i}}</option>
                               @endif
                             @endfor
-                          </select>
-                        </div>
-                        <div class="mx-1">
+                        </select>
+                        </div> --}}
+                        {{-- <div class="mx-1">
                           <select name="timeframe5" class="form-select" id="timeframe5">
                             <option value="" disabled="" selected>Time Frame</option>
                                  @foreach(allTradeTimeFrames() as $vl)
