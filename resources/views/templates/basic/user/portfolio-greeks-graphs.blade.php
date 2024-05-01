@@ -131,10 +131,25 @@
                             array_keys($DATE_NOW),
                             $TIME_NOW,
                         );
-                        $tableData[$stockName]['CE'] = array_slice($arrData['CE'],40);
-                        $tableData[$stockName]['PE'] = array_slice($arrData['PE'],40);
+                        $tableData[$stockName]['CE'] = array_slice(,40);
+                        $tableData[$stockName]['PE'] = array_slice(,40);
                         $tableData[$stockName]['CE_Delta'] = array_slice($arrData['CE_Delta'],40);
                         $tableData[$stockName]['PE_Delta'] = array_slice($arrData['PE_Delta'],40);
+
+                        $tableData[$stockName]['CE'] = array_slice($arrData['CE'],40);
+                        $tableData[$stockName]['PE'] = array_slice($arrData['PE'],40);
+                        // FOR CE
+                        $tableData[$stockName]['CE_IV'] = array_slice($CEIV,40);
+                        $tableData[$stockName]['CE_Delta'] = array_slice($CEDelta,40);
+                        $tableData[$stockName]['CE_Theta'] = array_slice($CETheta,40);
+                        $tableData[$stockName]['CE_Vega'] = array_slice($CEVega,40);
+                        $tableData[$stockName]['CE_Gamma'] = array_slice($CEGamma,40);
+                        // FOR PE
+                        $tableData[$stockName]['PE_IV'] = array_slice($PEIV,40);
+                        $tableData[$stockName]['PE_Delta'] = array_slice($PEDelta,40);
+                        $tableData[$stockName]['PE_Theta'] = array_slice($PETheta,40);
+                        $tableData[$stockName]['PE_Vega'] = array_slice($PEVega,40);
+                        $tableData[$stockName]['PE_Gamma'] = array_slice($PEGamma,40);
                     @endphp
                 @else
                     @foreach ($symbolArr as $v)
@@ -184,20 +199,20 @@
                         @forelse($atmData as $val)
                             @php
                                 $arrData = json_decode($val->data, true);
-                                $CE = array_slice($arrData['CE'], -5);
-                                $PE = array_slice($arrData['PE'], -5);
-                                $Date = array_slice($arrData['Date'], -5);
-                                $time = array_slice($arrData['time'], -5);
-                                $CEIV = array_slice($arrData['CE_IV'], -5);
-                                $PEIV = array_slice($arrData['PE_IV'], -5);
-                                $CEDelta = array_slice($arrData['CE_Delta'], -5);
-                                $PEDelta = array_slice($arrData['PE_Delta'], -5);
-                                $CETheta = array_slice($arrData['CE_Theta'], -5);
-                                $PETheta = array_slice($arrData['PE_Theta'], -5);
-                                $CEVega = array_slice($arrData['CE_Vega'], -5);
-                                $PEVega = array_slice($arrData['PE_Vega'], -5);
-                                $CEGamma = array_slice($arrData['CE_Gamma'], -5);
-                                $PEGamma = array_slice($arrData['PE_Gamma'], -5);
+                                $CE = array_slice($arrData['CE'], -20);
+                                $PE = array_slice($arrData['PE'], -20);
+                                $Date = array_slice($arrData['Date'], -20);
+                                $time = array_slice($arrData['time'], -20);
+                                $CEIV = array_slice($arrData['CE_IV'], -20);
+                                $PEIV = array_slice($arrData['PE_IV'], -20);
+                                $CEDelta = array_slice($arrData['CE_Delta'], -20);
+                                $PEDelta = array_slice($arrData['PE_Delta'], -20);
+                                $CETheta = array_slice($arrData['CE_Theta'], -20);
+                                $PETheta = array_slice($arrData['PE_Theta'], -20);
+                                $CEVega = array_slice($arrData['CE_Vega'], -20);
+                                $PEVega = array_slice($arrData['PE_Vega'], -20);
+                                $CEGamma = array_slice($arrData['CE_Gamma'], -20);
+                                $PEGamma = array_slice($arrData['PE_Gamma'], -20);
                             @endphp
                             @php
                                 $tableData[$v]['time'] = array_map(
@@ -210,8 +225,18 @@
 
                                 $tableData[$v]['CE'] = $CE;
                                 $tableData[$v]['PE'] = $PE;
+
+                                $tableData[$v]['CE_IV'] = $CEIV;
                                 $tableData[$v]['CE_Delta'] = $CEDelta;
+                                $tableData[$v]['CE_Theta'] = $CETheta;
+                                $tableData[$v]['CE_Vega'] = $CEVega;
+                                $tableData[$v]['CE_Gamma'] = $CEGamma;
+                                // FOR PE
+                                $tableData[$v]['PE_IV'] = $PEIV;
                                 $tableData[$v]['PE_Delta'] = $PEDelta;
+                                $tableData[$v]['PE_Theta'] = $PETheta;
+                                $tableData[$v]['PE_Vega'] = $PEVega;
+                                $tableData[$v]['PE_Gamma'] = $PEGamma;
                             @endphp
                         @empty
                             @php
@@ -229,11 +254,67 @@
                         <div class="col-lg-12">
                             <div class="custom--card card">
                                 <div class="card-header">
-                                    <h6 class="card-title">{{ $key }}</h6>
+                                    <h6 class="card-title">{{ $key }} <span class="text-warning">(CE-DELTA / PE-DELTA)</span></h6>
                                 </div>
                                 <div class="card-body p-0">
                                     <div class="card-body chart2">
-                                        <div id="apex-analysis-chart{{ $loop->index }}" style="width: 100%;"></div>
+                                        <div id="apex-analysis-chart-delta{{ $loop->index }}" style="width: 100%; min-height: 415px;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-5">
+                        <div class="col-lg-12">
+                            <div class="custom--card card">
+                                <div class="card-header">
+                                    <h6 class="card-title">{{ $key }} <span class="text-warning">(CE-IV / PE-IV)</span></h6>
+                                </div>
+                                <div class="card-body p-0">
+                                    <div class="card-body chart2">
+                                        <div id="apex-analysis-chart-iv{{ $loop->index }}" style="width: 100%; min-height: 415px;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-5">
+                        <div class="col-lg-12">
+                            <div class="custom--card card">
+                                <div class="card-header">
+                                    <h6 class="card-title">{{ $key }} <span class="text-warning">(CE-THETA / PE-THETA)</span></h6>
+                                </div>
+                                <div class="card-body p-0">
+                                    <div class="card-body chart2">
+                                        <div id="apex-analysis-chart-theta{{ $loop->index }}" style="width: 100%; min-height: 415px;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-5">
+                        <div class="col-lg-12">
+                            <div class="custom--card card">
+                                <div class="card-header">
+                                    <h6 class="card-title">{{ $key }} <span class="text-warning">(CE-VEGA / PE-VEGA)</span></h6>
+                                </div>
+                                <div class="card-body p-0">
+                                    <div class="card-body chart2">
+                                        <div id="apex-analysis-chart-vega{{ $loop->index }}" style="width: 100%; min-height: 415px;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-5">
+                        <div class="col-lg-12">
+                            <div class="custom--card card">
+                                <div class="card-header">
+                                    <h6 class="card-title">{{ $key }} <span class="text-warning">(CE-GAMMA / PE-GAMMA)</span></h6>
+                                </div>
+                                <div class="card-body p-0">
+                                    <div class="card-body chart2">
+                                        <div id="apex-analysis-chart-gamma{{ $loop->index }}" style="width: 100%; min-height: 415px;"></div>
                                     </div>
                                 </div>
                             </div>
@@ -251,7 +332,6 @@
     <script src="{{ asset('assets/admin/js/vendor/apexcharts.min.js') }}"></script>
     <script src="{{ asset('assets/admin/js/vendor/chart.js.2.8.0.js') }}"></script>
     @isset($tableData)
-        @php $i =0; @endphp
         @foreach ($tableData as $key => $item)
             <script>
                 var series = {
@@ -311,7 +391,251 @@
                         offsetY: 0,
                     }
                 };
-                var chart = new ApexCharts(document.querySelector("#apex-analysis-chart" + {{ $i++ }} + ""), options);
+                var chart = new ApexCharts(document.querySelector("#apex-analysis-chart-delta" + {{ $loop->index }} + ""), options);
+                chart.render();
+            </script>
+            <script>
+                var series = {
+                    "monthDataSeries1": {
+                        "prices": <?= json_encode($item['CE_IV']) ?>,
+                        "dates": <?= json_encode($item['time']) ?>
+                    },
+                    "monthDataSeries2": {
+                        "prices": <?= json_encode($item['PE_IV']) ?>,
+                        "dates": <?= json_encode($item['time']) ?>
+                    }
+                }
+                var options = {
+                    chart: {
+                        height: 400,
+                        foreColor: '#E4E4E4',
+                        type: "line",
+                        id: "areachart-2",
+                        zoom: {
+                            enabled: false
+                        },
+                        toolbar: {
+                            show: false,
+                        }
+                    },
+                    dataLabels: {
+                        enabled: false
+                    },
+                    stroke: {
+                        curve: "straight",
+                        width: 2
+                    },
+                    colors: ['#00bf63', '#FF0000'],
+                    series: [{
+                            name: {!! json_encode($item['CE'][0]) !!},
+                            data: series.monthDataSeries1.prices,
+                        },
+                        {
+                            name: {!! json_encode($item['PE'][0]) !!},
+                            data: series.monthDataSeries2.prices
+                        }
+                    ],
+                    tooltip: {
+                        enabled: true,
+                        theme: 'dark',
+                    },
+                    labels: series.monthDataSeries1.dates,
+                    xaxis: {
+                        type: "category",
+                        categories: <?= json_encode($item['time']) ?>,
+                    },
+                    noData: {
+                        text: "NO DATA FOUND",
+                        align: 'center',
+                        verticalAlign: 'middle',
+                        offsetX: 0,
+                        offsetY: 0,
+                    }
+                };
+                var chart = new ApexCharts(document.querySelector("#apex-analysis-chart-iv" + {{ $loop->index }} + ""), options);
+                chart.render();
+            </script>
+            <script>
+                var series = {
+                    "monthDataSeries1": {
+                        "prices": <?= json_encode($item['CE_Theta']) ?>,
+                        "dates": <?= json_encode($item['time']) ?>
+                    },
+                    "monthDataSeries2": {
+                        "prices": <?= json_encode($item['PE_Theta']) ?>,
+                        "dates": <?= json_encode($item['time']) ?>
+                    }
+                }
+                var options = {
+                    chart: {
+                        height: 400,
+                        foreColor: '#E4E4E4',
+                        type: "line",
+                        id: "areachart-2",
+                        zoom: {
+                            enabled: false
+                        },
+                        toolbar: {
+                            show: false,
+                        }
+                    },
+                    dataLabels: {
+                        enabled: false
+                    },
+                    stroke: {
+                        curve: "straight",
+                        width: 2
+                    },
+                    colors: ['#00bf63', '#FF0000'],
+                    series: [{
+                            name: {!! json_encode($item['CE'][0]) !!},
+                            data: series.monthDataSeries1.prices,
+                        },
+                        {
+                            name: {!! json_encode($item['PE'][0]) !!},
+                            data: series.monthDataSeries2.prices
+                        }
+                    ],
+                    tooltip: {
+                        enabled: true,
+                        theme: 'dark',
+                    },
+                    labels: series.monthDataSeries1.dates,
+                    xaxis: {
+                        type: "category",
+                        categories: <?= json_encode($item['time']) ?>,
+                    },
+                    noData: {
+                        text: "NO DATA FOUND",
+                        align: 'center',
+                        verticalAlign: 'middle',
+                        offsetX: 0,
+                        offsetY: 0,
+                    }
+                };
+                var chart = new ApexCharts(document.querySelector("#apex-analysis-chart-theta" + {{ $loop->index }} + ""), options);
+                chart.render();
+            </script>
+            <script>
+                var series = {
+                    "monthDataSeries1": {
+                        "prices": <?= json_encode($item['CE_Vega']) ?>,
+                        "dates": <?= json_encode($item['time']) ?>
+                    },
+                    "monthDataSeries2": {
+                        "prices": <?= json_encode($item['PE_Vega']) ?>,
+                        "dates": <?= json_encode($item['time']) ?>
+                    }
+                }
+                var options = {
+                    chart: {
+                        height: 400,
+                        foreColor: '#E4E4E4',
+                        type: "line",
+                        id: "areachart-2",
+                        zoom: {
+                            enabled: false
+                        },
+                        toolbar: {
+                            show: false,
+                        }
+                    },
+                    dataLabels: {
+                        enabled: false
+                    },
+                    stroke: {
+                        curve: "straight",
+                        width: 2
+                    },
+                    colors: ['#00bf63', '#FF0000'],
+                    series: [{
+                            name: {!! json_encode($item['CE'][0]) !!},
+                            data: series.monthDataSeries1.prices,
+                        },
+                        {
+                            name: {!! json_encode($item['PE'][0]) !!},
+                            data: series.monthDataSeries2.prices
+                        }
+                    ],
+                    tooltip: {
+                        enabled: true,
+                        theme: 'dark',
+                    },
+                    labels: series.monthDataSeries1.dates,
+                    xaxis: {
+                        type: "category",
+                        categories: <?= json_encode($item['time']) ?>,
+                    },
+                    noData: {
+                        text: "NO DATA FOUND",
+                        align: 'center',
+                        verticalAlign: 'middle',
+                        offsetX: 0,
+                        offsetY: 0,
+                    }
+                };
+                var chart = new ApexCharts(document.querySelector("#apex-analysis-chart-vega" + {{ $loop->index }} + ""), options);
+                chart.render();
+            </script>
+            <script>
+                var series = {
+                    "monthDataSeries1": {
+                        "prices": <?= json_encode($item['CE_Gamma']) ?>,
+                        "dates": <?= json_encode($item['time']) ?>
+                    },
+                    "monthDataSeries2": {
+                        "prices": <?= json_encode($item['PE_Gamma']) ?>,
+                        "dates": <?= json_encode($item['time']) ?>
+                    }
+                }
+                var options = {
+                    chart: {
+                        height: 400,
+                        foreColor: '#E4E4E4',
+                        type: "line",
+                        id: "areachart-2",
+                        zoom: {
+                            enabled: false
+                        },
+                        toolbar: {
+                            show: false,
+                        }
+                    },
+                    dataLabels: {
+                        enabled: false
+                    },
+                    stroke: {
+                        curve: "straight",
+                        width: 2
+                    },
+                    colors: ['#00bf63', '#FF0000'],
+                    series: [{
+                            name: {!! json_encode($item['CE'][0]) !!},
+                            data: series.monthDataSeries1.prices,
+                        },
+                        {
+                            name: {!! json_encode($item['PE'][0]) !!},
+                            data: series.monthDataSeries2.prices
+                        }
+                    ],
+                    tooltip: {
+                        enabled: true,
+                        theme: 'dark',
+                    },
+                    labels: series.monthDataSeries1.dates,
+                    xaxis: {
+                        type: "category",
+                        categories: <?= json_encode($item['time']) ?>,
+                    },
+                    noData: {
+                        text: "NO DATA FOUND",
+                        align: 'center',
+                        verticalAlign: 'middle',
+                        offsetX: 0,
+                        offsetY: 0,
+                    }
+                };
+                var chart = new ApexCharts(document.querySelector("#apex-analysis-chart-gamma" + {{ $loop->index }} + ""), options);
                 chart.render();
             </script>
         @endforeach
