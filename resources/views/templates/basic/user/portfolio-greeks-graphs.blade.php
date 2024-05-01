@@ -118,38 +118,64 @@
                                 $itemsPerPage,
                                 true,
                             );
+                            // dd($arrData);
                         @endphp
                     @empty
                     @endforelse
                     @php
-                        $DATE_NOW = array_slice($arrData['Date'],40);
-                        $TIME_NOW = array_slice($arrData['time'],40);
-                        $tableData[$stockName]['time'] = array_map(
+                        // $DATE_NOW = array_slice($arrData['Date'],40);
+                        // $TIME_NOW = array_slice($arrData['time'],40);
+                        // $tableData[$stockName]['time'] = array_map(
+                        //     function ($k, $y) use ($DATE_NOW) {
+                        //         return date('d-M-Y', $DATE_NOW[$k] / 1000) . ', ' . date('g:i a', strtotime($y));
+                        //     },
+                        //     array_keys($DATE_NOW),
+                        //     $TIME_NOW,
+                        // );
+                        // $tableData[$stockName]['CE'] = array_slice(,40);
+                        // $tableData[$stockName]['PE'] = array_slice(,40);
+                        // $tableData[$stockName]['CE_Delta'] = array_slice($arrData['CE_Delta'],40);
+                        // $tableData[$stockName]['PE_Delta'] = array_slice($arrData['PE_Delta'],40);
+
+                        // $tableData[$stockName]['CE'] = array_slice($arrData['CE'],40);
+                        // $tableData[$stockName]['PE'] = array_slice($arrData['PE'],40);
+                        // // FOR CE
+                        // $tableData[$stockName]['CE_IV'] = array_slice($CEIV,40);
+                        // $tableData[$stockName]['CE_Delta'] = array_slice($CEDelta,40);
+                        // $tableData[$stockName]['CE_Theta'] = array_slice($CETheta,40);
+                        // $tableData[$stockName]['CE_Vega'] = array_slice($CEVega,40);
+                        // $tableData[$stockName]['CE_Gamma'] = array_slice($CEGamma,40);
+                        // // FOR PE
+                        // $tableData[$stockName]['PE_IV'] = array_slice($PEIV,40);
+                        // $tableData[$stockName]['PE_Delta'] = array_slice($PEDelta,40);
+                        // $tableData[$stockName]['PE_Theta'] = array_slice($PETheta,40);
+                        // $tableData[$stockName]['PE_Vega'] = array_slice($PEVega,40);
+                        // $tableData[$stockName]['PE_Gamma'] = array_slice($PEGamma,40);
+
+                        $DATE_NOW = array_slice($arrData['Date'],20);
+                        $TIME_NOW = array_slice($arrData['time'],20);
+                        $tableData[$v]['time'] = array_map(
                             function ($k, $y) use ($DATE_NOW) {
                                 return date('d-M-Y', $DATE_NOW[$k] / 1000) . ', ' . date('g:i a', strtotime($y));
                             },
                             array_keys($DATE_NOW),
                             $TIME_NOW,
                         );
-                        $tableData[$stockName]['CE'] = array_slice(,40);
-                        $tableData[$stockName]['PE'] = array_slice(,40);
-                        $tableData[$stockName]['CE_Delta'] = array_slice($arrData['CE_Delta'],40);
-                        $tableData[$stockName]['PE_Delta'] = array_slice($arrData['PE_Delta'],40);
 
-                        $tableData[$stockName]['CE'] = array_slice($arrData['CE'],40);
-                        $tableData[$stockName]['PE'] = array_slice($arrData['PE'],40);
-                        // FOR CE
-                        $tableData[$stockName]['CE_IV'] = array_slice($CEIV,40);
-                        $tableData[$stockName]['CE_Delta'] = array_slice($CEDelta,40);
-                        $tableData[$stockName]['CE_Theta'] = array_slice($CETheta,40);
-                        $tableData[$stockName]['CE_Vega'] = array_slice($CEVega,40);
-                        $tableData[$stockName]['CE_Gamma'] = array_slice($CEGamma,40);
+                        $tableData[$stockName]['CE'] = array_slice($arrData['CE'],20);
+                        $tableData[$stockName]['PE'] = array_slice($arrData['PE'],20);
+
+                        $tableData[$stockName]['CE_IV'] = array_slice($arrData['CE_IV'],20);
+                        $tableData[$stockName]['CE_Delta'] = array_slice($arrData['CE_Delta'],20);
+                        $tableData[$stockName]['CE_Theta'] = array_slice($arrData['CE_Theta'],20);
+                        $tableData[$stockName]['CE_Vega'] = array_slice($arrData['CE_Vega'],20);
+                        $tableData[$stockName]['CE_Gamma'] = array_slice($arrData['CE_Gamma'],20);
                         // FOR PE
-                        $tableData[$stockName]['PE_IV'] = array_slice($PEIV,40);
-                        $tableData[$stockName]['PE_Delta'] = array_slice($PEDelta,40);
-                        $tableData[$stockName]['PE_Theta'] = array_slice($PETheta,40);
-                        $tableData[$stockName]['PE_Vega'] = array_slice($PEVega,40);
-                        $tableData[$stockName]['PE_Gamma'] = array_slice($PEGamma,40);
+                        $tableData[$stockName]['PE_IV'] = array_slice($arrData['PE_IV'],20);
+                        $tableData[$stockName]['PE_Delta'] = array_slice($arrData['PE_Delta'],20);
+                        $tableData[$stockName]['PE_Theta'] = array_slice($arrData['PE_Theta'],20);
+                        $tableData[$stockName]['PE_Vega'] = array_slice($arrData['PE_Vega'],20);
+                        $tableData[$stockName]['PE_Gamma'] = array_slice($arrData['PE_Gamma'],20);
                     @endphp
                 @else
                     @foreach ($symbolArr as $v)

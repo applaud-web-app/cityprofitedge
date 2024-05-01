@@ -34,7 +34,7 @@
 </style>
 @endpush
 <section class="pt-100 pb-100">
-    <div class="mb-1">
+    <div class="container-fluid mb-1">
         <div class="custom--nav-tabs border-0 mb-3">
             <ul class="nav d-flex justify-content-end">
                 <li class="nav-item">
