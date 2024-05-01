@@ -21,12 +21,12 @@ class Kernel extends ConsoleKernel
         $schedule->command('zerodha_instrument:insert')->dailyAt('08:30')->sendOutputTo('command4_output.log');
         $schedule->command('place_limit_ordre:limitOrder')->everyMinute()->sendOutputTo('command7_output.log');
 
-        // Don't Remove 
+        // NO NEED (REMOVED)
         // $schedule->command('angleHistorical:every_minute')->everyMinute()->sendOutputTo('command3_output.log');
         // $schedule->command('store_market_data:store_data')->everyMinute()->sendOutputTo('command6_output.log');
 
 
-        // New Crons
+        // NO NEED (REMOVED)
         // $schedule->command('crudeoil:every_minute')->everyMinute()->sendOutputTo('command10_output.log');
         // $schedule->command('banknifty:every_minute')->everyMinute()->sendOutputTo('command11_output.log');
         // $schedule->command('finifty:every_minute')->everyMinute()->sendOutputTo('command12_output.log');
@@ -47,6 +47,7 @@ class Kernel extends ConsoleKernel
         // WATCH LIST CRONS
         $schedule->command('watch-list-data:every_minute')->everyMinute()->sendOutputTo('command25_output.log');
         $schedule->command('paper_trading:every_minute')->everyMinute()->sendOutputTo('command26_output.log');
+        $schedule->command('store_strength_data:every_fifteen_minute')->everyFifteenMinutes()->sendOutputTo('command27_output.log');
 
     }
 

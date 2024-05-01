@@ -38,16 +38,46 @@ use App\Jobs\PlaceOmsOrder;
 use App\Models\Strategy;
 use App\Traits\AngelApiAuth;
 use App\Models\WishlistData;
+use App\Models\StengthTb;
 use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
     use AngelApiAuth;
 
-    public function home()
+    public function home(Request $request)
     {
         $user = auth()->user();
         $pageTitle = 'Dashboard';
+
+        $StrengthsymbolArr = ['CRUDEOIL','BANKNIFTY','FINNIFTY','NIFTY','MIDCPNIFTY','NATURALGAS'];
+        $strengthData = StengthTb::orderBy('id','DESC')->whereDate('created_at', now()->today());
+        $atmRange = "";
+        $stock_name = "";
+        if($request->atm_type != NULL){
+            $atmRange = $request->atm_type;
+            $strengthData =  $strengthData->where('atm',$atmRange);
+        }
+
+        if($request->stock_name != NULL){
+            $stock_name = $request->stock_name;
+            $strengthData =  $strengthData->where('symbol_name',$stock_name);
+        }        
+        $strengthData = $strengthData->get();
+        if(count($strengthData) <= 0){
+            $strengthData = StengthTb::orderBy('id','DESC');
+            if($request->atm_type != NULL){
+                $atmRange = $request->atm_type;
+                $strengthData =  $strengthData->where('atm',$atmRange);
+            }
+    
+            if($request->stock_name != NULL){
+                $stock_name = $request->stock_name;
+                $strengthData = $strengthData->where('symbol_name',$stock_name);
+            } 
+
+            $strengthData = $strengthData->paginate(30);
+        }
         
         $totalTrx = Transaction::where('user_id', $user->id)->count();
         $totalSignal = SignalHistory::where('user_id', $user->id)->count();
@@ -182,8 +212,200 @@ class UserController extends Controller
         $symbolArray2 = [];
         foreach ($portfolioTopLosers as $val) {
            array_push($symbolArray2 , $val['stock_name'].".NS");
+        }     
+        
+        $fullUrl = $request->fullUrl();
+        if($request->ajax()){
+            if($request->ajax()){
+                if(!empty($strengthData)){
+                    return view($this->activeTemplate . 'user.dashboard-ajax',compact('pageTitle', 'user', 'totalDeposit', 'totalTrx', 'latestTrx', 'totalSignal', 'portfolioTopGainers', 'portfolioTopLosers','stockPortFolio','globalStockPortFolio','foglobalStockPortFolio','metalsPortFolio','totalInvestedAmount','totalCurrentAmount','datesArr','buyArr','currArr','chrtArr','symbolArray','symbolArray2','strengthData','StrengthsymbolArr','atmRange','stock_name','fullUrl'));
+                }
+                return 'NO_DATA';
+            }   
+            return 'NO_DATA';
+        }
+
+
+        return view($this->activeTemplate . 'user.dashboard', compact('pageTitle', 'user', 'totalDeposit', 'totalTrx', 'latestTrx', 'totalSignal', 'portfolioTopGainers', 'portfolioTopLosers','stockPortFolio','globalStockPortFolio','foglobalStockPortFolio','metalsPortFolio','totalInvestedAmount','totalCurrentAmount','datesArr','buyArr','currArr','chrtArr','symbolArray','symbolArray2','strengthData','StrengthsymbolArr','atmRange','stock_name','fullUrl'));
+    }
+
+    public function homeajax(Request $request)
+    {
+        $user = auth()->user();
+        $pageTitle = 'Dashboard';
+
+        $StrengthsymbolArr = ['CRUDEOIL','BANKNIFTY','FINNIFTY','NIFTY','MIDCPNIFTY','NATURALGAS'];
+        $strengthData = StengthTb::orderBy('id','DESC')->whereDate('created_at', now()->today());
+        $atmRange = "";
+        $stock_name = "";
+        if($request->atm_type != NULL){
+            $atmRange = $request->atm_type;
+            $strengthData =  $strengthData->where('atm',$atmRange);
+        }
+
+        if($request->stock_name != NULL){
+            $stock_name = $request->stock_name;
+            $strengthData =  $strengthData->where('symbol_name',$stock_name);
         }        
-        return view($this->activeTemplate . 'user.dashboard', compact('pageTitle', 'user', 'totalDeposit', 'totalTrx', 'latestTrx', 'totalSignal', 'portfolioTopGainers', 'portfolioTopLosers','stockPortFolio','globalStockPortFolio','foglobalStockPortFolio','metalsPortFolio','totalInvestedAmount','totalCurrentAmount','datesArr','buyArr','currArr','chrtArr','symbolArray','symbolArray2'));
+        $strengthData = $strengthData->get();
+        if(count($strengthData) <= 0){
+            $strengthData = StengthTb::orderBy('id','DESC');
+            if($request->atm_type != NULL){
+                $atmRange = $request->atm_type;
+                $strengthData =  $strengthData->where('atm',$atmRange);
+            }
+    
+            if($request->stock_name != NULL){
+                $stock_name = $request->stock_name;
+                $strengthData = $strengthData->where('symbol_name',$stock_name);
+            } 
+
+            $strengthData = $strengthData->paginate(30);
+        }
+        
+        $totalTrx = Transaction::where('user_id', $user->id)->count();
+        $totalSignal = SignalHistory::where('user_id', $user->id)->count();
+        $latestTrx = Transaction::where('user_id', $user->id)->orderBy('id', 'DESC')->limit(10)->get();
+        $totalDeposit = Deposit::where('user_id', $user->id)->where('status', Status::PAYMENT_SUCCESS)->sum('amount');
+        $portfolioTopGainers = PortfolioTopGainer::all();
+        $portfolioTopLosers = PortfolioTopLoser::all();
+
+        $date1 = date("Y-m-01");
+        $date2 = date("Y-m-t");
+        $stockPortFolioBuyVal = 0;
+        $stockPortFolioCurrVal = 0;
+
+        $investGraphArr = [];
+
+        $stockPortFolio =  StockPortfolio::select(\DB::raw('SUM(quantity*buy_price) as buy_value'),\DB::raw('SUM(quantity*cmp) as current_value'),\DB::raw('DATE_FORMAT(buy_date,"%M-%Y") as buy_date'))->where('user_id',$user->id)->groupBy('buy_date')->get();
+
+        foreach($stockPortFolio as $v){
+            $investGraphArr[$v->buy_date] = [
+                'buy_value'=>$v->buy_value,
+                'current_value'=>$v->current_value
+            ];
+            $stockPortFolioBuyVal += $v->buy_value;
+            $stockPortFolioCurrVal += $v->current_value;
+        }
+
+        $stockPortFolio->buy_value = $stockPortFolioBuyVal;
+        $stockPortFolio->current_value = $stockPortFolioCurrVal;
+
+        $globalstockPortFolioBuyVal = 0;
+        $globalstockPortFolioCurrVal = 0;
+
+
+        $globalStockPortFolio =  GlobalStockPortFolio::select(\DB::raw('SUM(quantity*buy_price) as buy_value'),\DB::raw('SUM(quantity*cmp) as current_value'),\DB::raw('DATE_FORMAT(buy_date,"%M-%Y") as buy_date'))->where('user_id',$user->id)->groupBy('buy_date')->get();
+        foreach($globalStockPortFolio as $v){
+            if(isset($investGraphArr[$v->buy_date])){
+                $investGraphArr[$v->buy_date] = [
+                    'buy_value'=>$v->buy_value + $investGraphArr[$v->buy_date]['buy_value'],
+                    'current_value'=>$v->current_value + $investGraphArr[$v->buy_date]['current_value']
+                ];
+            }else{
+                $investGraphArr[$v->buy_date] = [
+                    'buy_value'=>$v->buy_value,
+                    'current_value'=>$v->current_value
+                ];
+            }            
+            $globalstockPortFolioBuyVal += $v->buy_value;
+            $globalstockPortFolioCurrVal += $v->current_value;
+        }
+        $globalStockPortFolio->buy_value = $globalstockPortFolioBuyVal;
+        $globalStockPortFolio->current_value = $globalstockPortFolioCurrVal;
+
+
+        $foglobalstockPortFolioBuyVal = 0;
+        $foglobalstockPortFolioCurrVal = 0;
+
+
+        $foglobalStockPortFolio =  FOPortfolios::select(\DB::raw('SUM(quantity*buy_price) as buy_value'),\DB::raw('SUM(quantity*cmp) as current_value'),\DB::raw('DATE_FORMAT(buy_date,"%M-%Y") as buy_date'))->where('user_id',$user->id)->groupBy('buy_date')->get();
+        foreach($foglobalStockPortFolio as $v){
+            if(isset($investGraphArr[$v->buy_date])){
+                $investGraphArr[$v->buy_date] = [
+                    'buy_value'=>$v->buy_value + $investGraphArr[$v->buy_date]['buy_value'],
+                    'current_value'=>$v->current_value + $investGraphArr[$v->buy_date]['current_value']
+                ];
+            }else{
+                $investGraphArr[$v->buy_date] = [
+                    'buy_value'=>$v->buy_value,
+                    'current_value'=>$v->current_value
+                ];
+            }            
+            $foglobalstockPortFolioBuyVal += $v->buy_value;
+            $foglobalstockPortFolioCurrVal += $v->current_value;
+        }
+
+
+        $foglobalStockPortFolio->buy_value = $foglobalstockPortFolioBuyVal;
+        $foglobalStockPortFolio->current_value = $foglobalstockPortFolioCurrVal;
+
+
+        $metalsPortFolioBuyVal = 0;
+        $metalsPortFolioCurrVal = 0;
+
+
+        $metalsPortFolio =  MetalsPortfolio::select(\DB::raw('SUM(quantity*buy_price) as buy_value'),\DB::raw('SUM(quantity*cmp) as current_value'),\DB::raw('DATE_FORMAT(buy_date,"%M-%Y") as buy_date'))->where('user_id',$user->id)->groupBy('buy_date')->get();
+
+        foreach($metalsPortFolio as $v){
+            if(isset($investGraphArr[$v->buy_date])){
+                $investGraphArr[$v->buy_date] = [
+                    'buy_value'=>$v->buy_value + $investGraphArr[$v->buy_date]['buy_value'],
+                    'current_value'=>$v->current_value + $investGraphArr[$v->buy_date]['current_value']
+                ];
+            }else{
+                $investGraphArr[$v->buy_date] = [
+                    'buy_value'=>$v->buy_value,
+                    'current_value'=>$v->current_value
+                ];
+            }            
+            $metalsPortFolioBuyVal += $v->buy_value;
+            $metalsPortFolioCurrVal += $v->current_value;
+        }
+
+        $metalsPortFolio->buy_value = $metalsPortFolioBuyVal;
+        $metalsPortFolio->current_value = $metalsPortFolioCurrVal;
+
+
+        $totalInvestedAmount = $stockPortFolio->buy_value + $globalStockPortFolio->buy_value + $foglobalStockPortFolio->buy_value + $metalsPortFolio->buy_value;
+        $totalCurrentAmount = $stockPortFolio->current_value + $globalStockPortFolio->current_value + $foglobalStockPortFolio->current_value + $metalsPortFolio->current_value;
+
+        $buyArr = [];
+        $currArr = [];
+        $datesArr = [];
+
+        if(!empty($investGraphArr)){
+           
+            $datesArr = array_keys($investGraphArr);
+            $datesArr = array_map(function($kk){
+                return date("M-Y",strtotime($kk));
+            },$datesArr);
+            $buyArr = array_column($investGraphArr,'buy_value');
+            $currArr = array_column($investGraphArr,'current_value');
+        }
+
+        $chrtArr = [
+            $stockPortFolio->buy_value,$metalsPortFolio->buy_value,$globalStockPortFolio->buy_value,$foglobalStockPortFolio->buy_value
+        ];
+
+        $symbolArray = [];
+        foreach ($portfolioTopGainers as $val) {
+           array_push($symbolArray , $val['stock_name'].".NS");
+        }
+
+        $symbolArray2 = [];
+        foreach ($portfolioTopLosers as $val) {
+           array_push($symbolArray2 , $val['stock_name'].".NS");
+        }    
+
+        $fullUrl = $request->fullUrl();
+        if($request->ajax()){
+            if(!empty($strengthData)){
+                return view($this->activeTemplate . 'user.dashboard-ajax',compact('pageTitle', 'user', 'totalDeposit', 'totalTrx', 'latestTrx', 'totalSignal', 'portfolioTopGainers', 'portfolioTopLosers','stockPortFolio','globalStockPortFolio','foglobalStockPortFolio','metalsPortFolio','totalInvestedAmount','totalCurrentAmount','datesArr','buyArr','currArr','chrtArr','symbolArray','symbolArray2','strengthData','StrengthsymbolArr','atmRange','stock_name','fullUrl'));
+            }
+            return 'NO_DATA';
+        }    
+        return view($this->activeTemplate . 'user.dashboard', compact('pageTitle', 'user', 'totalDeposit', 'totalTrx', 'latestTrx', 'totalSignal', 'portfolioTopGainers', 'portfolioTopLosers','stockPortFolio','globalStockPortFolio','foglobalStockPortFolio','metalsPortFolio','totalInvestedAmount','totalCurrentAmount','datesArr','buyArr','currArr','chrtArr','symbolArray','symbolArray2','strengthData','StrengthsymbolArr','atmRange','stock_name','fullUrl'));
     }
 
     public function depositHistory(Request $request)
