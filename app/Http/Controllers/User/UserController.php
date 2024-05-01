@@ -207,7 +207,7 @@ class UserController extends Controller
         if($request->ajax()){
             if($request->ajax()){
                 if(!empty($strengthData)){
-                    return view($this->activeTemplate . 'user.dashboard-ajax',compact('pageTitle', 'user', 'totalDeposit', 'totalTrx', 'latestTrx', 'totalSignal', 'portfolioTopGainers', 'portfolioTopLosers','stockPortFolio','globalStockPortFolio','foglobalStockPortFolio','metalsPortFolio','totalInvestedAmount','totalCurrentAmount','datesArr','buyArr','currArr','chrtArr','symbolArray','symbolArray2','strengthData','StrengthsymbolArr','atmRange','stock_name','fullUrl'));
+                    return view($this->activeTemplate . 'user.dashboard-ajax',compact('pageTitle', 'user', 'totalDeposit', 'totalTrx', 'latestTrx', 'totalSignal', 'portfolioTopGainers', 'portfolioTopLosers','stockPortFolio','globalStockPortFolio','foglobalStockPortFolio','metalsPortFolio','totalInvestedAmount','totalCurrentAmount','datesArr','buyArr','currArr','chrtArr','symbolArray','symbolArray2','strengthData','StrengthsymbolArr','stock_name','fullUrl'));
                 }
                 return 'NO_DATA';
             }   
@@ -215,7 +215,7 @@ class UserController extends Controller
         }
 
 
-        return view($this->activeTemplate . 'user.dashboard', compact('pageTitle', 'user', 'totalDeposit', 'totalTrx', 'latestTrx', 'totalSignal', 'portfolioTopGainers', 'portfolioTopLosers','stockPortFolio','globalStockPortFolio','foglobalStockPortFolio','metalsPortFolio','totalInvestedAmount','totalCurrentAmount','datesArr','buyArr','currArr','chrtArr','symbolArray','symbolArray2','strengthData','StrengthsymbolArr','atmRange','stock_name','fullUrl'));
+        return view($this->activeTemplate . 'user.dashboard', compact('pageTitle', 'user', 'totalDeposit', 'totalTrx', 'latestTrx', 'totalSignal', 'portfolioTopGainers', 'portfolioTopLosers','stockPortFolio','globalStockPortFolio','foglobalStockPortFolio','metalsPortFolio','totalInvestedAmount','totalCurrentAmount','datesArr','buyArr','currArr','chrtArr','symbolArray','symbolArray2','strengthData','StrengthsymbolArr','stock_name','fullUrl'));
     }
 
     public function homeajax(Request $request)
@@ -240,7 +240,7 @@ class UserController extends Controller
 
             $strengthData = $strengthData->paginate(30);
         }
-        
+
         $totalTrx = Transaction::where('user_id', $user->id)->count();
         $totalSignal = SignalHistory::where('user_id', $user->id)->count();
         $latestTrx = Transaction::where('user_id', $user->id)->orderBy('id', 'DESC')->limit(10)->get();
@@ -379,11 +379,11 @@ class UserController extends Controller
         $fullUrl = $request->fullUrl();
         if($request->ajax()){
             if(!empty($strengthData)){
-                return view($this->activeTemplate . 'user.dashboard-ajax',compact('pageTitle', 'user', 'totalDeposit', 'totalTrx', 'latestTrx', 'totalSignal', 'portfolioTopGainers', 'portfolioTopLosers','stockPortFolio','globalStockPortFolio','foglobalStockPortFolio','metalsPortFolio','totalInvestedAmount','totalCurrentAmount','datesArr','buyArr','currArr','chrtArr','symbolArray','symbolArray2','strengthData','StrengthsymbolArr','atmRange','stock_name','fullUrl'));
+                return view($this->activeTemplate . 'user.dashboard-ajax',compact('pageTitle', 'user', 'totalDeposit', 'totalTrx', 'latestTrx', 'totalSignal', 'portfolioTopGainers', 'portfolioTopLosers','stockPortFolio','globalStockPortFolio','foglobalStockPortFolio','metalsPortFolio','totalInvestedAmount','totalCurrentAmount','datesArr','buyArr','currArr','chrtArr','symbolArray','symbolArray2','strengthData','StrengthsymbolArr','stock_name','fullUrl'));
             }
             return 'NO_DATA';
         }    
-        return view($this->activeTemplate . 'user.dashboard', compact('pageTitle', 'user', 'totalDeposit', 'totalTrx', 'latestTrx', 'totalSignal', 'portfolioTopGainers', 'portfolioTopLosers','stockPortFolio','globalStockPortFolio','foglobalStockPortFolio','metalsPortFolio','totalInvestedAmount','totalCurrentAmount','datesArr','buyArr','currArr','chrtArr','symbolArray','symbolArray2','strengthData','StrengthsymbolArr','atmRange','stock_name','fullUrl'));
+        return view($this->activeTemplate . 'user.dashboard', compact('pageTitle', 'user', 'totalDeposit', 'totalTrx', 'latestTrx', 'totalSignal', 'portfolioTopGainers', 'portfolioTopLosers','stockPortFolio','globalStockPortFolio','foglobalStockPortFolio','metalsPortFolio','totalInvestedAmount','totalCurrentAmount','datesArr','buyArr','currArr','chrtArr','symbolArray','symbolArray2','strengthData','StrengthsymbolArr','stock_name','fullUrl'));
     }
 
     public function depositHistory(Request $request)
