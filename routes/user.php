@@ -47,6 +47,7 @@ Route::middleware('auth')->name('user.')->group(function () {
 
             Route::controller('UserController')->group(function(){
                 Route::get('dashboard', 'home')->name('home');
+                Route::get('dashboard-ajax','homeajax')->name('homeajax');
                 Route::get('option-startegies', 'optionStatergy')->name('optionStatergy');
                 Route::get('stratergies-details/{id}', 'stratergyDetails')->name('stratergyDetails');
                 Route::get('watch-list', 'watchList')->name('watchList');
@@ -86,7 +87,6 @@ Route::middleware('auth')->name('user.')->group(function () {
                 Route::get('metals-portfolio', 'metalsPortfolio')->name('metals.portfolio');
                 Route::get('portfolio-top-gainers', 'portfolioTopGainers')->name('portfolio.top.gainers');
                 Route::get('portfolio-top-gainers-ajx', 'portfolioTopGainersAjx')->name('portfolio.top.gainers-ajx');
-
 
                 Route::get('portfolio-greeks', 'portfolioGreeks');
                 Route::get('portfolio-greeks-graphs','portfolioGreeksGraphs');

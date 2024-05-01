@@ -465,7 +465,7 @@
             <div class="col-lg-12 mt-4" id="pst_hre">
                 <div class="d-flex justify-content-between align-items-center">
                     <h5 class="text-center">@lang('Greeks Market View')</h5>
-                    <form action="" class="transparent-form mb-3" method="GET">
+                    {{-- <form action="" class="transparent-form mb-3" method="GET">
                         <div class="row">
                             <div class="col-lg-3 form-group">
                                 <label for="stock_name">Symbol Name</label>
@@ -492,7 +492,7 @@
                                 <a href="{{url('/user/dashboard')}}" class="btn btn--base w-100"><i class="las la-redo-alt"></i> Refresh</a>
                             </div>
                         </div>
-                    </form>
+                    </form> --}}
                 </div>
                 <div class="custom--card">
                     <div class="card-body p-0">
@@ -501,12 +501,18 @@
                                 <thead>
                                     <tr>
                                         <th class="text-uppercase">@lang('Stock Name')</th>
-                                        <th class="text-uppercase">@lang('iv')</th>
-                                        <th class="text-uppercase">@lang('delta')</th>
-                                        <th class="text-uppercase">@lang('theta')</th>
-                                        <th class="text-uppercase">@lang('vega')</th>
-                                        <th class="text-uppercase">@lang('gamma')</th>
-                                        <th class="text-uppercase">@lang('strength')</th>
+                                        <th class="text-uppercase">@lang('Timestamp')</th>
+                                        <th class="text-uppercase">@lang('ce iv')</th>
+                                        <th class="text-uppercase">@lang('pe iv')</th>
+                                        <th class="text-uppercase">@lang('ce delta')</th>
+                                        <th class="text-uppercase">@lang('pe delta')</th>
+                                        <th class="text-uppercase">@lang('ce theta')</th>
+                                        <th class="text-uppercase">@lang('pe theta')</th>
+                                        <th class="text-uppercase">@lang('ce vega')</th>
+                                        <th class="text-uppercase">@lang('pe vega')</th>
+                                        <th class="text-uppercase">@lang('ce gamma')</th>
+                                        <th class="text-uppercase">@lang('pe gamma')</th>
+                                        <th class="text-uppercase">@lang('market strength')</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -514,11 +520,17 @@
                                         @forelse($strengthData as $data)
                                             <tr>
                                                 <td>{{$data->symbol_name}}</td>
-                                                <td>{{$data->iv}}</td>
-                                                <td>{{$data->delta}}</td>
-                                                <td>{{$data->theta}}</td>
-                                                <td>{{$data->vega}}</td>
-                                                <td>{{$data->gamma}}</td>
+                                                <td>{{$data->timestamp}}</td>
+                                                <td>{{$data->ce_iv}}</td>
+                                                <td>{{$data->pe_iv}}</td>
+                                                <td>{{$data->ce_delta}}</td>
+                                                <td>{{$data->pe_delta}}</td>
+                                                <td>{{$data->ce_theta}}</td>
+                                                <td>{{$data->pe_theta}}</td>
+                                                <td>{{$data->ce_vega}}</td>
+                                                <td>{{$data->pe_vega}}</td>
+                                                <td>{{$data->ce_gamma}}</td>
+                                                <td>{{$data->pe_gamma}}</td>
                                                 <td>{{$data->strength}}</td>
                                             </tr>
                                         @empty

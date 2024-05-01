@@ -12,15 +12,17 @@ class StengthTb extends Model
 
     protected $fillable = [
         'symbol_name',
-        'atm',
-        'timeframe',
-        'iv',
-        'delta',
-        'theta',
-        'vega',
-        'gamma',
+        'ce_iv',
+        'pe_iv',
+        'ce_delta',
+        'pe_delta',
+        'ce_theta',
+        'pe_theta',
+        'ce_vega',
+        'pe_vega',
+        'ce_gamma',
+        'pe_gamma',
         'strength',
-        'ce_symbol',
-        'pe_symbol'
+        'timestamp'
     ];
 }
