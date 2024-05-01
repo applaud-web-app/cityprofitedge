@@ -52,13 +52,7 @@ class UserController extends Controller
 
         $StrengthsymbolArr = ['CRUDEOIL','BANKNIFTY','FINNIFTY','NIFTY','MIDCPNIFTY','NATURALGAS'];
         $strengthData = StengthTb::orderBy('id','DESC')->whereDate('created_at', now()->today());
-        $atmRange = "";
         $stock_name = "";
-        if($request->atm_type != NULL){
-            $atmRange = $request->atm_type;
-            $strengthData =  $strengthData->where('atm',$atmRange);
-        }
-
         if($request->stock_name != NULL){
             $stock_name = $request->stock_name;
             $strengthData =  $strengthData->where('symbol_name',$stock_name);
@@ -66,11 +60,6 @@ class UserController extends Controller
         $strengthData = $strengthData->get();
         if(count($strengthData) <= 0){
             $strengthData = StengthTb::orderBy('id','DESC');
-            if($request->atm_type != NULL){
-                $atmRange = $request->atm_type;
-                $strengthData =  $strengthData->where('atm',$atmRange);
-            }
-    
             if($request->stock_name != NULL){
                 $stock_name = $request->stock_name;
                 $strengthData = $strengthData->where('symbol_name',$stock_name);
@@ -236,13 +225,7 @@ class UserController extends Controller
 
         $StrengthsymbolArr = ['CRUDEOIL','BANKNIFTY','FINNIFTY','NIFTY','MIDCPNIFTY','NATURALGAS'];
         $strengthData = StengthTb::orderBy('id','DESC')->whereDate('created_at', now()->today());
-        $atmRange = "";
         $stock_name = "";
-        if($request->atm_type != NULL){
-            $atmRange = $request->atm_type;
-            $strengthData =  $strengthData->where('atm',$atmRange);
-        }
-
         if($request->stock_name != NULL){
             $stock_name = $request->stock_name;
             $strengthData =  $strengthData->where('symbol_name',$stock_name);
@@ -250,11 +233,6 @@ class UserController extends Controller
         $strengthData = $strengthData->get();
         if(count($strengthData) <= 0){
             $strengthData = StengthTb::orderBy('id','DESC');
-            if($request->atm_type != NULL){
-                $atmRange = $request->atm_type;
-                $strengthData =  $strengthData->where('atm',$atmRange);
-            }
-    
             if($request->stock_name != NULL){
                 $stock_name = $request->stock_name;
                 $strengthData = $strengthData->where('symbol_name',$stock_name);
