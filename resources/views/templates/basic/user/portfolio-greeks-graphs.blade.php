@@ -73,10 +73,10 @@
                 <div class="custom--nav-tabs border-0 mb-3">
                     <ul class="nav d-flex justify-content-end">
                         <li class="nav-item">
-                            <a class="nav-link " href="{{ url('user/portfolio-greeks') }}">Greeks Options</a>
+                            <a class="nav-link " href="{{ url('user/option-analysis') }}">Price&OI</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" href="{{ url('user/portfolio-greeks-graphs') }}">Greeks Graphs</a>
+                            <a class="nav-link active" href="{{ url('user/portfolio-greeks-graphs') }}">Greeks</a>
                         </li>
                     </ul>
                 </div>

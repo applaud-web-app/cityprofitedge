@@ -34,6 +34,18 @@
 </style>
 @endpush
 <section class="pt-100 pb-100">
+    <div class="mb-1">
+        <div class="custom--nav-tabs border-0 mb-3">
+            <ul class="nav d-flex justify-content-end">
+                <li class="nav-item">
+                    <a class="nav-link " href="{{ url('user/option-analysis') }}">Price&OI</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{{ url('user/portfolio-greeks-graphs') }}">Greeks</a>
+                </li>
+            </ul>
+        </div>
+    </div>
     <div class="container-fluid" id="pst_hre">
       <form method="GET" class="d-flex align-items-center flex-wrap ">
         <div class="row">
