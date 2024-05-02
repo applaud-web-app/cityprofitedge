@@ -482,8 +482,9 @@ function allTradeSymbols(){
     //dd($data);
     $arr = [];
     foreach($data as $vl){
-        if($vl->Tables_in_kite_db!='Predictions')
-        $arr[] = $vl->Tables_in_kite_db;
+        // dd($vl);
+        if($vl->Tables_in_kite_server_db!='Predictions')
+        $arr[] = $vl->Tables_in_kite_server_db;
     }
     return $arr;
 }
