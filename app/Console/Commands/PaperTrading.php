@@ -80,7 +80,7 @@ class PaperTrading extends Command
                 }
             }     
 
-            dd($responseData);
+            // dd($responseData);
 
             // Update LTP DATA FOR TOKENS   
             if(count($responseData)){
@@ -88,6 +88,7 @@ class PaperTrading extends Command
                     foreach ($respond as $key => $value) {
                         // GET CE OR PE 
                         $type = substr($value['tradingSymbol'],-2,2);
+                        echo $type;die;
                         if($type == "CE"){
                             $paperTrade = \DB::connection('mysql_rm')->table('Paper Trade')->select('*')->where('ce_exchange_token',$value['symbolToken'])->update(['ce_ltp'=>$value['ltp']]);
                         }else if($type == "PE"){
