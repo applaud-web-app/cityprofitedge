@@ -83,20 +83,25 @@ class PaperTrading extends Command
             // dd($responseData);
 
             // Update LTP DATA FOR TOKENS   
-            if(count($responseData)){
-                foreach ($responseData as $key => $respond) {
-                    foreach ($respond as $key => $value) {
-                        // GET CE OR PE 
-                        $type = substr($value['tradingSymbol'],-2,2);
-                        echo $type;die;
-                        if($type == "CE"){
-                            $paperTrade = \DB::connection('mysql_rm')->table('Paper Trade')->select('*')->where('ce_exchange_token',$value['symbolToken'])->update(['ce_ltp'=>$value['ltp']]);
-                        }else if($type == "PE"){
-                            $paperTrade = \DB::connection('mysql_rm')->table('Paper Trade')->select('*')->where('pe_exchange_token',$value['symbolToken'])->update(['pe_ltp'=>$value['ltp']]);
+            try{
+                if(count($responseData)){
+                    foreach ($responseData as $key => $respond) {
+                        foreach ($respond as $key => $value) {
+                            // GET CE OR PE 
+                            $type = substr($value['tradingSymbol'],-2,2);
+                            // echo $type;die;
+                            if($type == "CE"){
+                                $paperTrade = \DB::connection('mysql_rm')->table('Paper Trade')->where('ce_exchange_token',$value['symbolToken'])->update(['ce_ltp'=>$value['ltp']]);
+                            }else if($type == "PE"){
+                                $paperTrade = \DB::connection('mysql_rm')->table('Paper Trade')->where('pe_exchange_token',$value['symbolToken'])->update(['pe_ltp'=>$value['ltp']]);
+                            }
                         }
-                    }
-                }  
-            }  
+                    }  
+                } 
+            }catch(\Exception $e){
+                echo $e->getMessage();die;
+            }
+             
         }
     }
 }
