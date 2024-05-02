@@ -7,6 +7,8 @@ use App\Traits\AngelApiAuth;
 use App\Models\WatchList;
 use App\Models\WishlistData;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Artisan;
+
 
 class WatchListData extends Command
 {
@@ -32,6 +34,7 @@ class WatchListData extends Command
      */
     public function handle()
     {
+        Artisan::call('queue:work');
         set_time_limit(0);
         $symbolArr = allTradeSymbols();
         $todayDate = date("Y-m-d");
