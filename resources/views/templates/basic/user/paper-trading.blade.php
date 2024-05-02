@@ -11,6 +11,7 @@
                         @if (\Cache::has('allSymbols'))
                         @php
                             $allData =\Cache::get('allSymbols');
+                            sort($allData);
                         @endphp
                             @foreach ($allData as $item)
                                 <option value="{{$item}}" {{$searchSymbol == $item ? "selected" : ""}}>{{$item}}</option>
