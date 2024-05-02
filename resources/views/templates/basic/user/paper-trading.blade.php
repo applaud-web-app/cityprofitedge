@@ -118,7 +118,7 @@
         }
         setInterval(() => {
             reloadData();
-        }, 100);//call every 1/2 minute
+        }, 2000);//call every 1/2 minute
     });
 </script>
 @endpush
