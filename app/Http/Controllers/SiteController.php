@@ -22,6 +22,8 @@ use App\Traits\AngelApiAuth;
 use App\Models\OiBuildUp;
 use App\Models\TopPortfolio;
 use App\Models\PcrVolume;
+use App\Imports\ImportProductData;
+use Maatwebsite\Excel\Facades\Excel;
 
 class SiteController extends Controller
 {
@@ -425,5 +427,11 @@ class SiteController extends Controller
         return back()->withNotify($notify);
     }
 
+
+    // EXCEL DATA
+    public function importExcelData(){
+        $filePath = public_path('excel-data.xlsx');
+        Excel::import(new ImportProductData, $filePath);
+    }
    
 }

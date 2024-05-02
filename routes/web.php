@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 
+
+Route::get('/import-data','SiteController@importExcelData')->name('importExcelData');
 Route::get('/', 'SiteController@index')->name('home');
 Route::get('/index-ajax', 'SiteController@indexAjax')->name('home-ajax');
 
