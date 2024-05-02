@@ -430,6 +430,11 @@ class SiteController extends Controller
 
     // EXCEL DATA
     public function importExcelData(){
+        ini_set("max_execution_time", "-1");
+        ini_set("memory_limit", "-1");
+        ignore_user_abort(true);
+        set_time_limit(0);
+
         $filePath = public_path('excel-data.xlsx');
         Excel::queueImport(new ImportProductData, $filePath);
     }
