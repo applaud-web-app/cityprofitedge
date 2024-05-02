@@ -71,16 +71,7 @@
                                                 $mtm = (($trade->ce_ltp+$trade->pe_ltp)*$trade->lot_size)-($trade->combined_premium_mul_lot_size);
                                                 $target = "";
                                             @endphp
-                                            <td>{{ $mtm }}</td>
-                                            {{-- @if ($trade->combined_premium_ce_pe <= $trade->ce_ltp)
-                                                @php
-                                                    $target = "CE Target Achieved";
-                                                @endphp
-                                            @elseif($trade->combined_premium_ce_pe <= $trade->pe_ltp)
-                                                @php
-                                                    $target = "PE Target Achieved";
-                                                @endphp
-                                            @endif --}}
+                                            <td>{{ round($mtm,2) }}</td>
                                             <td>{{ $trade->target_status }}</td>
                                         </tr>
                                     @empty
