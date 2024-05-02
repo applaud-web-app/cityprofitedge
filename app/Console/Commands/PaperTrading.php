@@ -37,7 +37,7 @@ class PaperTrading extends Command
         set_time_limit(0);
 
         $todayDate = date('Y-m-d');
-        $paperTrade = \DB::connection('mysql_rm')->table('Paper Trade')->select('*')/*->whereDate('expiry', '>',$todayDate)*/->get();
+        $paperTrade = \DB::connection('mysql_rm')->table('Paper Trade')->orderbY('id','DESC')->select('*')/*->whereDate('expiry', '>',$todayDate)*/->get();
        
         if(count($paperTrade)){
             $MCX_TOKEN = [];
@@ -76,9 +76,11 @@ class PaperTrading extends Command
                             array_push($responseData,$respond['data']['fetched']);
                         }
                     }
-                    sleep(1);
+                    sleep(3);
                 }
             }     
+
+            dd($responseData);
 
             // Update LTP DATA FOR TOKENS   
             if(count($responseData)){
