@@ -16,8 +16,8 @@ use App\Models\Category;
 use App\Models\ProductSku;
 use App\Models\Product;
 use App\Models\CategoryProduct;
-use App\Models\Entities\SellerProduct;
-use App\Models\Entities\SellerProductSKU;
+use App\Models\SellerProduct;
+use App\Models\SellerProductSKU;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Events\ImportFailed;
 use App\Jobs\InsertProductData;
@@ -26,7 +26,7 @@ use Maatwebsite\Excel\Concerns\Importable;
 class ImportProductData implements ToCollection, WithChunkReading,WithHeadingRow,WithBatchInserts,ShouldQueue
 {
   	use Importable;
-    
+
     public function __construct(){
       set_time_limit(0);
     }
