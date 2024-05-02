@@ -38,7 +38,7 @@ class PaperTrading extends Command
 
         $todayDate = date('Y-m-d');
         $paperTrade = \DB::connection('mysql_rm')->table('Paper Trade')->select('*')/*->whereDate('expiry', '>',$todayDate)*/->get();
-        dd($paperTrade);
+       
         if(count($paperTrade)){
             $MCX_TOKEN = [];
             $NFO_TOKEN = [];
