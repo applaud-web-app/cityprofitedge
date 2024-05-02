@@ -38,11 +38,12 @@ class PaperTrading extends Command
 
         $todayDate = date('Y-m-d');
         $paperTrade = \DB::connection('mysql_rm')->table('Paper Trade')->orderbY('id','DESC')->select('*')/*->whereDate('expiry', '>',$todayDate)*/->get();
-       
+        $tokenArr = [];
         if(count($paperTrade)){
             $MCX_TOKEN = [];
             $NFO_TOKEN = [];
             foreach ($paperTrade as $key => $trade) {
+                $tokenArr[$trade->ce_exchange_token] = $trade->combined_premium_ce_pe;
                 if($trade->exchange == "MCX"){
                     array_push($MCX_TOKEN,$trade->ce_exchange_token);
                     array_push($MCX_TOKEN,$trade->pe_exchange_token);
@@ -91,9 +92,21 @@ class PaperTrading extends Command
                             $type = substr($value['tradingSymbol'],-2,2);
                             // echo $type;die;
                             if($type == "CE"){
-                                $paperTrade = \DB::connection('mysql_rm')->table('Paper Trade')->where('ce_exchange_token',$value['symbolToken'])->update(['ce_ltp'=>$value['ltp']]);
+                                $update = ['ce_ltp'=>$value['ltp']];
+                                if(isset($tokenArr[$value['symbolToken']])){
+                                    if($tokenArr[$value['symbolToken']] <= $value['ltp']){
+                                        $update['target_status'] = 'CE Target Achieved'; 
+                                    }
+                                }
+                                $paperTrade = \DB::connection('mysql_rm')->table('Paper Trade')->where('ce_exchange_token',$value['symbolToken'])->update($update);
                             }else if($type == "PE"){
-                                $paperTrade = \DB::connection('mysql_rm')->table('Paper Trade')->where('pe_exchange_token',$value['symbolToken'])->update(['pe_ltp'=>$value['ltp']]);
+                                $update = ['pe_ltp'=>$value['ltp']];
+                                if(isset($tokenArr[$value['symbolToken']])){
+                                    if($tokenArr[$value['symbolToken']] <= $value['ltp']){
+                                        $update['target_status'] = 'PE Target Achieved'; 
+                                    }
+                                }
+                                $paperTrade = \DB::connection('mysql_rm')->table('Paper Trade')->where('pe_exchange_token',$value['symbolToken'])->update($update);
                             }
                         }
                     }  

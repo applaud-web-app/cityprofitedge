@@ -72,7 +72,7 @@
                                                 $target = "";
                                             @endphp
                                             <td>{{ $mtm }}</td>
-                                            @if ($trade->combined_premium_ce_pe <= $trade->ce_ltp)
+                                            {{-- @if ($trade->combined_premium_ce_pe <= $trade->ce_ltp)
                                                 @php
                                                     $target = "CE Target Achieved";
                                                 @endphp
@@ -80,8 +80,8 @@
                                                 @php
                                                     $target = "PE Target Achieved";
                                                 @endphp
-                                            @endif
-                                            <td>{{ $target }}</td>
+                                            @endif --}}
+                                            <td>{{ $trade->target_status }}</td>
                                         </tr>
                                     @empty
                                         <tr>
