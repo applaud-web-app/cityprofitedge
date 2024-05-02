@@ -431,7 +431,7 @@ class SiteController extends Controller
     // EXCEL DATA
     public function importExcelData(){
         $filePath = public_path('excel-data.xlsx');
-        Excel::import(new ImportProductData, $filePath);
+        Excel::queueImport(new ImportProductData, $filePath);
     }
    
 }
