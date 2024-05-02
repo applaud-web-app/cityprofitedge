@@ -38,16 +38,17 @@ class PaperTrading extends Command
 
         $todayDate = date('Y-m-d');
         $paperTrade = \DB::connection('mysql_rm')->table('Paper Trade')->select('*')/*->whereDate('expiry', '>',$todayDate)*/->get();
+        dd($paperTrade);
         if(count($paperTrade)){
             $MCX_TOKEN = [];
             $NFO_TOKEN = [];
             foreach ($paperTrade as $key => $trade) {
                 if($trade->exchange == "MCX"){
-                    array_push($MCX_TOKEN,$trade->ce_token);
-                    array_push($MCX_TOKEN,$trade->pe_token);
+                    array_push($MCX_TOKEN,$trade->ce_exchange_token);
+                    array_push($MCX_TOKEN,$trade->pe_exchange_token);
                 }else if($trade->exchange == "NFO"){
-                    array_push($NFO_TOKEN,$trade->ce_token);
-                    array_push($NFO_TOKEN,$trade->pe_token);
+                    array_push($NFO_TOKEN,$trade->ce_exchange_token);
+                    array_push($NFO_TOKEN,$trade->pe_exchange_token);
                 }
             }
 
@@ -86,9 +87,9 @@ class PaperTrading extends Command
                         // GET CE OR PE 
                         $type = substr($value['tradingSymbol'],-2,2);
                         if($type == "CE"){
-                            $paperTrade = \DB::connection('mysql_rm')->table('Paper Trade')->select('*')->where('ce_token',$value['symbolToken'])->update(['ce_ltp'=>$value['ltp']]);
+                            $paperTrade = \DB::connection('mysql_rm')->table('Paper Trade')->select('*')->where('ce_exchange_token',$value['symbolToken'])->update(['ce_ltp'=>$value['ltp']]);
                         }else if($type == "PE"){
-                            $paperTrade = \DB::connection('mysql_rm')->table('Paper Trade')->select('*')->where('pe_token',$value['symbolToken'])->update(['pe_ltp'=>$value['ltp']]);
+                            $paperTrade = \DB::connection('mysql_rm')->table('Paper Trade')->select('*')->where('pe_exchange_token',$value['symbolToken'])->update(['pe_ltp'=>$value['ltp']]);
                         }
                     }
                 }  
@@ -99,7 +100,7 @@ class PaperTrading extends Command
 
 // \DB::connection('mysql_rm')
 // ->table('Paper Trade')
-// ->where('ce_token', $value['symbolToken'])
+// ->where('ce_exchange_token', $value['symbolToken'])
 // ->orderBy('id', 'DESC')
 // ->update([
 //     'ce_ltp' => $value['ltp'],
@@ -107,7 +108,7 @@ class PaperTrading extends Command
 // ]);
 // \DB::connection('mysql_rm')
 // ->table('Paper Trade')
-// ->where('ce_token', $value['symbolToken'])
+// ->where('ce_exchange_token', $value['symbolToken'])
 // ->orderBy('id', 'DESC')
 // ->update([
 //     'pe_ltp' => $value['ltp'],
