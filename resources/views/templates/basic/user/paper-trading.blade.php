@@ -2,17 +2,30 @@
 @section('content')
 <section class="pt-100 pb-100">
     <div class="container content-container">
-        {{-- <form action="#" class="transparent-form mb-3">
+        <form action="" class="transparent-form mb-3">
             <div class="row">
                 <div class="col-lg-3 form-group">
                     <label>@lang('Stock Name')</label>
-                    <input type="text" name="search" value="" class="form--control" placeholder="@lang('Stock Name')">
+                    <select name="symbols" class="form--control" id="symbols">
+                        <option value="">Select Symbols</option>
+                        @if (\Cache::has('allSymbols'))
+                        @php
+                            $allData =\Cache::get('allSymbols');
+                        @endphp
+                            @foreach ($allData as $item)
+                                <option value="{{$item}}" {{$searchSymbol == $item ? "selected" : ""}}>{{$item}}</option>
+                            @endforeach
+                        @endif
+                    </select>
                 </div>
                 <div class="col-lg-3 form-group mt-auto">
                     <button class="btn btn--base w-100" type="submit"><i class="las la-filter"></i> @lang('Filter')</button>
                 </div>
+                <div class="col-lg-3 col-md-3 col-6 form-group mt-auto">
+                    <a href="{{url('/user/paper-trading')}}" class="btn btn--base w-100"><i class="las la-redo-alt"></i> Refresh</a>
+                </div>
             </div>
-        </form> --}}
+        </form>
         <div class="row" >
             <div class="col-lg-12">
                 <div class="custom--card" id="pst_hre">
@@ -97,13 +110,15 @@
 <script>
     $(document).ready(function(){
         function reloadData(){
-            $.get('{!!url("/user/paper-trading-ajax")!!}',function(data){
+            
+            $.get('{!!url("user/paper-trading-ajax?".(isset($_SERVER["QUERY_STRING"]) ? $_SERVER["QUERY_STRING"] : ''))!!}',function(data){
+                // console.log(data);
                 $("#pst_hre").html(data);
             });
         }
         setInterval(() => {
             reloadData();
-        }, 10000);//call every 1/2 minute
+        }, 100);//call every 1/2 minute
     });
 </script>
 @endpush

@@ -40,6 +40,7 @@ use App\Traits\AngelApiAuth;
 use App\Models\WishlistData;
 use App\Models\StengthTb;
 use Illuminate\Support\Facades\DB;
+use \Cache;
 
 class UserController extends Controller
 {
@@ -2940,24 +2941,58 @@ class UserController extends Controller
     public function paperTrading(Request $request){
         $pageTitle = "Paper Trading";
         $todayDate = date("Y-m-d");
-        $paperTrade = \DB::connection('mysql_rm')->table('Paper Trade')->select('*')->orderBy('id','DESC')->where(['date'=>$todayDate])->paginate(50); 
-        if(!count($paperTrade)){
-            $paperTrade = \DB::connection('mysql_rm')->table('Paper Trade')->select('*')->orderBy('id','DESC')->paginate(50); 
+        $searchSymbol = "";
+
+        // FOR DAILY DATA
+        $paperTrade = \DB::connection('mysql_rm')->table('Paper Trade')->select('*')->orderBy('id','DESC')->where(['date'=>$todayDate]);
+        if($request->symbols){
+            $searchSymbol = $request->symbols;
+            $paperTrade = $paperTrade->where('symbol',$request->symbols);
         }
-        $fullUrl = $request->fullUrl();
-        if($request->ajax()){
-            return view($this->activeTemplate . 'user.watch-list-order-ajax',compact('pageTitle','wishlistorder','fullUrl'));
+        $paperTrade = $paperTrade->paginate(50); 
+        if(!count($paperTrade)){
+            $paperTrade = \DB::connection('mysql_rm')->table('Paper Trade')->select('*')->orderBy('id','DESC');
+            if($request->symbols){
+                $searchSymbol = $request->symbols;
+                $paperTrade = $paperTrade->where('symbol',$request->symbols);
+            }
+            $paperTrade = $paperTrade->paginate(50);  
         }
 
-        return view($this->activeTemplate . 'user.paper-trading',compact('pageTitle','paperTrade','fullUrl'));
+        // FOR FILTER
+        if(!Cache::has('allSymbols')){
+            $allSymbols = $paperTrade->pluck('symbol')->toArray();
+           \Cache::put('allSymbols',array_unique($allSymbols), now()->addMinutes(1140));
+        }
+
+
+        $fullUrl = $request->fullUrl();
+        // if($request->ajax()){
+        //     dd($fullUrl);
+    
+        //     return view($this->activeTemplate . 'user.watch-list-order-ajax',compact('pageTitle','wishlistorder','fullUrl','searchSymbol'));
+        // }
+
+        return view($this->activeTemplate . 'user.paper-trading',compact('pageTitle','paperTrade','fullUrl','searchSymbol'));
     }
 
     public function paperTradingAjax(Request $request){
         $pageTitle = "Paper Trading";
         $todayDate = date("Y-m-d");
-        $paperTrade = \DB::connection('mysql_rm')->table('Paper Trade')->select('*')->orderBy('id','DESC')->where(['date'=>$todayDate])->paginate(50); 
+        // FOR DAILY DATA
+        $paperTrade = \DB::connection('mysql_rm')->table('Paper Trade')->select('*')->orderBy('id','DESC')->where(['date'=>$todayDate]);
+        if($request->input('symbols')){
+            $searchSymbol = $request->symbols;
+            $paperTrade = $paperTrade->where('symbol',$request->symbols);
+        }
+        $paperTrade = $paperTrade->paginate(50); 
         if(!count($paperTrade)){
-            $paperTrade = \DB::connection('mysql_rm')->table('Paper Trade')->select('*')->orderBy('id','DESC')->paginate(50); 
+            $paperTrade = \DB::connection('mysql_rm')->table('Paper Trade')->select('*')->orderBy('id','DESC');
+            if($request->symbols){
+                $searchSymbol = $request->symbols;
+                $paperTrade = $paperTrade->where('symbol',$request->symbols);
+            }
+            $paperTrade = $paperTrade->paginate(50);  
         }
         $fullUrl = $request->fullUrl();
         return view($this->activeTemplate . 'user.paper-trading-ajax',compact('pageTitle','paperTrade','fullUrl'));
