@@ -34,7 +34,7 @@ class WatchListData extends Command
      */
     public function handle()
     {
-        Artisan::call('queue:work');
+        // Artisan::call('queue:work');
         set_time_limit(0);
         $symbolArr = allTradeSymbols();
         $todayDate = date("Y-m-d");
