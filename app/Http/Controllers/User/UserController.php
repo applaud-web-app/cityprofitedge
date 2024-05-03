@@ -2944,7 +2944,7 @@ class UserController extends Controller
         $searchSymbol = "";
 
         // FOR DAILY DATA
-        $paperTrade = \DB::connection('mysql_rm')->table('Paper Trade')->select('*')->orderBy('id','DESC')->where(['date'=>$todayDate]);
+        $paperTrade = \DB::connection('mysql_rm')->table('Paper Trade')->select('*')->orderBy('id','DESC');
         if($request->symbols){
             $searchSymbol = $request->symbols;
             $paperTrade = $paperTrade->where('symbol',$request->symbols);
@@ -2980,7 +2980,7 @@ class UserController extends Controller
         $pageTitle = "Paper Trading";
         $todayDate = date("Y-m-d");
         // FOR DAILY DATA
-        $paperTrade = \DB::connection('mysql_rm')->table('Paper Trade')->select('*')->orderBy('id','DESC')->where(['date'=>$todayDate]);
+        $paperTrade = \DB::connection('mysql_rm')->table('Paper Trade')->select('*')->orderBy('id','DESC');
         if($request->input('symbols')){
             $searchSymbol = $request->symbols;
             $paperTrade = $paperTrade->where('symbol',$request->symbols);
