@@ -30,12 +30,15 @@ class PaperTrading extends Command
         set_time_limit(0);
         $todayDate = date('Y-m-d');
         $paperTrade = \DB::connection('mysql_rm')->table('Paper Trade')->orderbY('id','DESC')->select('*')/*->whereDate('expiry', '>',$todayDate)*/->get();
+
+        // dd($paperTrade);
         $tokenArr = [];
         if(count($paperTrade)){
             $MCX_TOKEN = [];
             $NFO_TOKEN = [];
             foreach ($paperTrade as $key => $trade) {
                 $tokenArr[$trade->ce_exchange_token] = $trade->combined_premium_ce_pe;
+                $tokenArr[$trade->pe_exchange_token] = $trade->combined_premium_ce_pe;
                 if($trade->exchange == "MCX"){
                     array_push($MCX_TOKEN,$trade->ce_exchange_token);
                     array_push($MCX_TOKEN,$trade->pe_exchange_token);
@@ -51,13 +54,14 @@ class PaperTrading extends Command
             ];
             $chunk['MCX'] = array_chunk($payload['MCX'],50);
             $chunk['NFO'] = array_chunk($payload['NFO'],50);
+            
             $responseData = [];
             $index = 0;
             foreach ($chunk as $key => $value) {
                 if(count($value)){
-                    foreach ($value as $dd => $tokenArr) {
+                    foreach ($value as $dd => $tokenArrs) {
                         $finalpayLoad = [
-                            $key => array_map('json_encode',$tokenArr)
+                            $key => array_map('json_encode',$tokenArrs)
                         ];
                         $payload = json_encode($finalpayLoad,true);
                         $respond = $this->updatePaperTradeData($payload);
