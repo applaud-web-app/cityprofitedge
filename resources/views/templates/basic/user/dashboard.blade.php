@@ -587,7 +587,7 @@
 
 @endsection
 @push('script')
-<script>
+{{-- <script>
     $(document).ready(function(){
         function reloadData(){
             $.get('{!!url("user/dashboard-ajax")!!}',function(data){
@@ -598,7 +598,7 @@
             reloadData();
         }, 1000*60*15);//call every 15 minute
     });
-</script>
+</script> --}}
 
 <script>
     (function ($) {
