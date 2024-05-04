@@ -207,7 +207,7 @@ class UserController extends Controller
         $fullUrl = $request->fullUrl();
 
 
-        return view($this->activeTemplate . 'user.dashboard', compact('pageTitle', 'user', 'totalDeposit', 'totalTrx', 'latestTrx', 'totalSignal', 'portfolioTopGainers', 'portfolioTopLosers','stockPortFolio','globalStockPortFolio','foglobalStockPortFolio','metalsPortFolio','totalInvestedAmount','totalCurrentAmount','datesArr','buyArr','currArr','chrtArr','symbolArray','symbolArray2','StrengthsymbolArr','fullUrl','strengthData','stock_name')); //
+        return view($this->activeTemplate . 'user.dashboard', compact('pageTitle', 'user', 'totalDeposit', 'totalTrx', 'latestTrx', 'totalSignal', 'portfolioTopGainers', 'portfolioTopLosers','stockPortFolio','globalStockPortFolio','foglobalStockPortFolio','metalsPortFolio','totalInvestedAmount','totalCurrentAmount','datesArr','buyArr','currArr','chrtArr','symbolArray','symbolArray2','StrengthsymbolArr','fullUrl','strengthData','stock_name')); 
     }
 
     public function homeajax(Request $request)
@@ -222,16 +222,16 @@ class UserController extends Controller
             $stock_name = $request->stock_name;
             $strengthData =  $strengthData->where('symbol_name',$stock_name);
         }        
-        $strengthData = $strengthData->get();
-        if(count($strengthData) <= 0){
-            $strengthData = StengthTb::orderBy('id','DESC');
-            if($request->stock_name != NULL){
-                $stock_name = $request->stock_name;
-                $strengthData = $strengthData->where('symbol_name',$stock_name);
-            } 
+        $strengthData = $strengthData->paginate(30);
+        // if(count($strengthData) <= 0){
+        //     $strengthData = StengthTb::orderBy('id','DESC');
+        //     if($request->stock_name != NULL){
+        //         $stock_name = $request->stock_name;
+        //         $strengthData = $strengthData->where('symbol_name',$stock_name);
+        //     } 
 
-            $strengthData = $strengthData->paginate(30);
-        }
+        //     $strengthData = $strengthData->paginate(30);
+        // }
 
         $totalTrx = Transaction::where('user_id', $user->id)->count();
         $totalSignal = SignalHistory::where('user_id', $user->id)->count();
