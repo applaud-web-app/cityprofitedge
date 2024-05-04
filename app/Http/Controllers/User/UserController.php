@@ -2516,7 +2516,7 @@ class UserController extends Controller
 
     public function watchList(Request $request){
         $pageTitle = "Watch List";
-        $finalResponse = WishlistData::whereDate('created_at', now()->today())->latest()->get()->unique('symbolToken');
+        $finalResponse = WishlistData::whereDate('created_at', now()->today())->latest()->paginate(50)->unique('symbolToken');
         if(!count($finalResponse)){
             $finalResponse = WishlistData::orderBy('id','DESC')->paginate(50);
         }

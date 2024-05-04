@@ -102,9 +102,13 @@
                 </div>
             </div>
         </div>
-        <div class="mt-4 justify-content-center d-flex">
-            {{ paginateLinks($paperTrade) }}
-        </div>
+        @isset($paperTrade)
+            @if (count($paperTrade))
+                <div class="mt-4 justify-content-center d-flex">
+                    {{ paginateLinks($paperTrade)}}
+                </div>
+            @endif
+        @endisset
     </div>
 </section>
 @endsection
