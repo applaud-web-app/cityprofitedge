@@ -58,7 +58,7 @@ class UserController extends Controller
             $stock_name = $request->stock_name;
             $strengthData =  $strengthData->where('symbol_name',$stock_name);
         }        
-        $strengthData = $strengthData->paginate(30);
+        $strengthData = $strengthData->paginate(20);
         // if(count($strengthData) <= 0){
         //     $strengthData = StengthTb::orderBy('id','DESC');
         //     if($request->stock_name != NULL){
@@ -222,7 +222,7 @@ class UserController extends Controller
             $stock_name = $request->stock_name;
             $strengthData =  $strengthData->where('symbol_name',$stock_name);
         }        
-        $strengthData = $strengthData->paginate(30);
+        $strengthData = $strengthData->paginate(20);
         // if(count($strengthData) <= 0){
         //     $strengthData = StengthTb::orderBy('id','DESC');
         //     if($request->stock_name != NULL){
