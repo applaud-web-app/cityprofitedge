@@ -59,15 +59,15 @@ class UserController extends Controller
             $strengthData =  $strengthData->where('symbol_name',$stock_name);
         }        
         $strengthData = $strengthData->get();
-        if(count($strengthData) <= 0){
-            $strengthData = StengthTb::orderBy('id','DESC');
-            if($request->stock_name != NULL){
-                $stock_name = $request->stock_name;
-                $strengthData = $strengthData->where('symbol_name',$stock_name);
-            } 
+        // if(count($strengthData) <= 0){
+        //     $strengthData = StengthTb::orderBy('id','DESC');
+        //     if($request->stock_name != NULL){
+        //         $stock_name = $request->stock_name;
+        //         $strengthData = $strengthData->where('symbol_name',$stock_name);
+        //     } 
 
-            $strengthData = $strengthData->paginate(30);
-        }
+        //     $strengthData = $strengthData->paginate(30);
+        // }
         
         $totalTrx = Transaction::where('user_id', $user->id)->count();
         $totalSignal = SignalHistory::where('user_id', $user->id)->count();
@@ -205,15 +205,6 @@ class UserController extends Controller
         }     
         
         $fullUrl = $request->fullUrl();
-        // if($request->ajax()){
-        //     if($request->ajax()){
-        //         if(!empty($strengthData)){
-        //             return view($this->activeTemplate . 'user.dashboard-ajax',compact('pageTitle', 'user', 'totalDeposit', 'totalTrx', 'latestTrx', 'totalSignal', 'portfolioTopGainers', 'portfolioTopLosers','stockPortFolio','globalStockPortFolio','foglobalStockPortFolio','metalsPortFolio','totalInvestedAmount','totalCurrentAmount','datesArr','buyArr','currArr','chrtArr','symbolArray','symbolArray2','strengthData','StrengthsymbolArr','stock_name','fullUrl'));
-        //         }
-        //         return 'NO_DATA';
-        //     }   
-        //     return 'NO_DATA';
-        // }
 
 
         return view($this->activeTemplate . 'user.dashboard', compact('pageTitle', 'user', 'totalDeposit', 'totalTrx', 'latestTrx', 'totalSignal', 'portfolioTopGainers', 'portfolioTopLosers','stockPortFolio','globalStockPortFolio','foglobalStockPortFolio','metalsPortFolio','totalInvestedAmount','totalCurrentAmount','datesArr','buyArr','currArr','chrtArr','symbolArray','symbolArray2','strengthData','StrengthsymbolArr','stock_name','fullUrl'));
