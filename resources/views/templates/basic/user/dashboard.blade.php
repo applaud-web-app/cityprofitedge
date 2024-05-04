@@ -544,10 +544,10 @@
                         </div>
                     </div>
                 </div>
+                <div class="mt-4 justify-content-center d-flex">
+                    {{ paginateLinks($strengthData)}}
+                </div>
                 @endisset
-            </div>
-            <div class="mt-4 justify-content-center d-flex">
-                {{ paginateLinks($strengthData)}}
             </div>
         </div>
 

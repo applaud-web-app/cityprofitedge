@@ -66,3 +66,6 @@
         </div>
     </div>
 </div>
+<div class="mt-4 justify-content-center d-flex">
+    {{ paginateLinks($strengthData)}}
+</div>
