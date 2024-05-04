@@ -52,13 +52,13 @@ class UserController extends Controller
         $pageTitle = 'Dashboard';
 
         $StrengthsymbolArr = ['CRUDEOIL','BANKNIFTY','FINNIFTY','NIFTY','MIDCPNIFTY','NATURALGAS'];
-        $strengthData = StengthTb::orderBy('id','DESC')->whereDate('created_at', now()->today());
-        $stock_name = "";
-        if($request->stock_name != NULL){
-            $stock_name = $request->stock_name;
-            $strengthData =  $strengthData->where('symbol_name',$stock_name);
-        }        
-        $strengthData = $strengthData->get();
+        // $strengthData = StengthTb::orderBy('id','DESC')->whereDate('created_at', now()->today());
+        // $stock_name = "";
+        // if($request->stock_name != NULL){
+        //     $stock_name = $request->stock_name;
+        //     $strengthData =  $strengthData->where('symbol_name',$stock_name);
+        // }        
+        // $strengthData = $strengthData->get();
         // if(count($strengthData) <= 0){
         //     $strengthData = StengthTb::orderBy('id','DESC');
         //     if($request->stock_name != NULL){

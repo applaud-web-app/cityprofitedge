@@ -494,6 +494,7 @@
                         </div>
                     </form> --}}
                 </div>
+                @isset($strengthData)
                 <div class="custom--card">
                     <div class="card-body p-0">
                         <div class="table-responsive--md">
@@ -543,6 +544,8 @@
                         </div>
                     </div>
                 </div>
+                    
+                @endisset
             </div>
         </div>
 
