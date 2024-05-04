@@ -205,15 +205,15 @@ class UserController extends Controller
         }     
         
         $fullUrl = $request->fullUrl();
-        if($request->ajax()){
-            if($request->ajax()){
-                if(!empty($strengthData)){
-                    return view($this->activeTemplate . 'user.dashboard-ajax',compact('pageTitle', 'user', 'totalDeposit', 'totalTrx', 'latestTrx', 'totalSignal', 'portfolioTopGainers', 'portfolioTopLosers','stockPortFolio','globalStockPortFolio','foglobalStockPortFolio','metalsPortFolio','totalInvestedAmount','totalCurrentAmount','datesArr','buyArr','currArr','chrtArr','symbolArray','symbolArray2','strengthData','StrengthsymbolArr','stock_name','fullUrl'));
-                }
-                return 'NO_DATA';
-            }   
-            return 'NO_DATA';
-        }
+        // if($request->ajax()){
+        //     if($request->ajax()){
+        //         if(!empty($strengthData)){
+        //             return view($this->activeTemplate . 'user.dashboard-ajax',compact('pageTitle', 'user', 'totalDeposit', 'totalTrx', 'latestTrx', 'totalSignal', 'portfolioTopGainers', 'portfolioTopLosers','stockPortFolio','globalStockPortFolio','foglobalStockPortFolio','metalsPortFolio','totalInvestedAmount','totalCurrentAmount','datesArr','buyArr','currArr','chrtArr','symbolArray','symbolArray2','strengthData','StrengthsymbolArr','stock_name','fullUrl'));
+        //         }
+        //         return 'NO_DATA';
+        //     }   
+        //     return 'NO_DATA';
+        // }
 
 
         return view($this->activeTemplate . 'user.dashboard', compact('pageTitle', 'user', 'totalDeposit', 'totalTrx', 'latestTrx', 'totalSignal', 'portfolioTopGainers', 'portfolioTopLosers','stockPortFolio','globalStockPortFolio','foglobalStockPortFolio','metalsPortFolio','totalInvestedAmount','totalCurrentAmount','datesArr','buyArr','currArr','chrtArr','symbolArray','symbolArray2','strengthData','StrengthsymbolArr','stock_name','fullUrl'));
@@ -378,12 +378,12 @@ class UserController extends Controller
         }    
 
         $fullUrl = $request->fullUrl();
-        if($request->ajax()){
-            if(!empty($strengthData)){
-                return view($this->activeTemplate . 'user.dashboard-ajax',compact('pageTitle', 'user', 'totalDeposit', 'totalTrx', 'latestTrx', 'totalSignal', 'portfolioTopGainers', 'portfolioTopLosers','stockPortFolio','globalStockPortFolio','foglobalStockPortFolio','metalsPortFolio','totalInvestedAmount','totalCurrentAmount','datesArr','buyArr','currArr','chrtArr','symbolArray','symbolArray2','strengthData','StrengthsymbolArr','stock_name','fullUrl'));
-            }
-            return 'NO_DATA';
-        }    
+        // if($request->ajax()){
+        //     if(!empty($strengthData)){
+        //         return view($this->activeTemplate . 'user.dashboard-ajax',compact('pageTitle', 'user', 'totalDeposit', 'totalTrx', 'latestTrx', 'totalSignal', 'portfolioTopGainers', 'portfolioTopLosers','stockPortFolio','globalStockPortFolio','foglobalStockPortFolio','metalsPortFolio','totalInvestedAmount','totalCurrentAmount','datesArr','buyArr','currArr','chrtArr','symbolArray','symbolArray2','strengthData','StrengthsymbolArr','stock_name','fullUrl'));
+        //     }
+        //     return 'NO_DATA';
+        // }    
         return view($this->activeTemplate . 'user.dashboard', compact('pageTitle', 'user', 'totalDeposit', 'totalTrx', 'latestTrx', 'totalSignal', 'portfolioTopGainers', 'portfolioTopLosers','stockPortFolio','globalStockPortFolio','foglobalStockPortFolio','metalsPortFolio','totalInvestedAmount','totalCurrentAmount','datesArr','buyArr','currArr','chrtArr','symbolArray','symbolArray2','strengthData','StrengthsymbolArr','stock_name','fullUrl'));
     }
 
