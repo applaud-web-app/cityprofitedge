@@ -8,12 +8,17 @@
                     <label>@lang('Stock Name')</label>
                     <select name="symbols" class="form--control" id="symbols">
                         <option value="">Select Symbols</option>
-                        @if (\Cache::has('allSymbols'))
+                        {{-- @if (\Cache::has('allSymbols'))
                         @php
                             $allData =\Cache::get('allSymbols');
                             sort($allData);
                         @endphp
                             @foreach ($allData as $item)
+                                <option value="{{$item}}" {{$searchSymbol == $item ? "selected" : ""}}>{{$item}}</option>
+                            @endforeach
+                        @endif --}}
+                        @if (count($allSymbols))
+                            @foreach ($allSymbols as $item)
                                 <option value="{{$item}}" {{$searchSymbol == $item ? "selected" : ""}}>{{$item}}</option>
                             @endforeach
                         @endif

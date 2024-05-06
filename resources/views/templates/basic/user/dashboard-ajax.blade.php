@@ -6,18 +6,20 @@
                 <label for="stock_name">Symbol Name</label>
                 <select name="stock_name" class="form--control" id="stock_name">
                     <option value="">Select Symbol Name</option>  
-                    @foreach ($StrengthsymbolArr as $item)
-                        <option value="{{$item}}" {{$stock_name == $item ? "selected" : ""}}>{{$item}}</option>  
-                    @endforeach
+                    @foreach ($StrengthsymbolArr as $v)
+                        @if(in_array($v,['CRUDEOIL','BANKNIFTY','FINNIFTY','SILVER','NIFTY','MIDCPNIFTY','NATURALGAS','SILVER','GOLD']))
+                            <option value="{{$v}}" {{$v==$stock_name ? 'selected':''}}>{{$v}}</option>
+                        @endif
+                @endforeach
                 </select>
             </div>
             <div class="col-lg-3 form-group">
-                <label for="atm_type">ATM</label>
-                <select name="atm_type" class="form--control" id="atm_type">
-                    <option value="">Select ATM</option>  
-                    <option value="ATM-1" {{$atmRange == "ATM-1" ? "selected" : ""}}>ATM-1</option>
-                    <option value="ATM" {{$atmRange == "ATM" ? "selected" : ""}}>ATM</option>
-                    <option value="ATM+1" {{$atmRange == "ATM+1" ? "selected" : ""}}>ATM+1</option>
+                <label for="atm_type">Timeframe</label>
+                <select name="timeframe" class="form--control" id="timeframe">
+                    <option value="">Select Timeframe</option>  
+                    <option value="5" {{$timeframe == "5" ? "selected" : ""}}>5</option>
+                    <option value="10" {{$timeframe == "10" ? "selected" : ""}}>10</option>
+                    <option value="15" {{$timeframe == "15" ? "selected" : ""}}>15</option>
                 </select>
             </div>
             <div class="col-lg-3 form-group mt-auto">
@@ -29,32 +31,46 @@
         </div>
     </form>
 </div>
+@isset($greekSentiments)
 <div class="custom--card">
     <div class="card-body p-0">
         <div class="table-responsive--md">
             <table class="table custom--table">
                 <thead>
                     <tr>
+                        <th class="text-uppercase">@lang('Date')</th>
+                        <th class="text-uppercase">@lang('Time')</th>
                         <th class="text-uppercase">@lang('Stock Name')</th>
-                        <th class="text-uppercase">@lang('iv')</th>
-                        <th class="text-uppercase">@lang('delta')</th>
-                        <th class="text-uppercase">@lang('theta')</th>
-                        <th class="text-uppercase">@lang('vega')</th>
-                        <th class="text-uppercase">@lang('gamma')</th>
-                        <th class="text-uppercase">@lang('strength')</th>
+                        <th class="text-uppercase">@lang('ce iv avg')</th>
+                        <th class="text-uppercase">@lang('ce iv std')</th>
+                        <th class="text-uppercase">@lang('pe iv avg')</th>
+                        <th class="text-uppercase">@lang('pe iv std')</th>
+                        <th class="text-uppercase">@lang('iv sentiment')</th>
+                        <th class="text-uppercase">@lang('ce theta avg')</th>
+                        <th class="text-uppercase">@lang('ce theta std')</th>
+                        <th class="text-uppercase">@lang('pe theta avg')</th>
+                        <th class="text-uppercase">@lang('pe theta std')</th>
+                        <th class="text-uppercase">@lang('theta sentiment')</th>
+                        {{-- <th class="text-uppercase">@lang('market strength')</th> --}}
                     </tr>
                 </thead>
                 <tbody>
                     <tbody>
-                        @forelse($strengthData as $data)
+                        @forelse($greekSentiments as $data)
                             <tr>
-                                <td>{{$data->symbol_name}}</td>
-                                <td>{{$data->iv}}</td>
-                                <td>{{$data->delta}}</td>
-                                <td>{{$data->theta}}</td>
-                                <td>{{$data->vega}}</td>
-                                <td>{{$data->gamma}}</td>
-                                <td>{{$data->strength}}</td>
+                                <td>{{$data->date}}</td>
+                                <td>{{$data->timestamp}}</td>
+                                <td>{{$data->symbol}}</td>
+                                <td>{{$data->ce_iv_avg}}</td>
+                                <td>{{$data->ce_iv_std}}</td>
+                                <td>{{$data->pe_iv_avg}}</td>
+                                <td>{{$data->pe_iv_std}}</td>
+                                <td>{{$data->iv_sentiment}}</td>
+                                <td>{{$data->ce_theta_avg}}</td>
+                                <td>{{$data->ce_theta_std}}</td>
+                                <td>{{$data->pe_theta_avg}}</td>
+                                <td>{{$data->pe_theta_std}}</td>
+                                <td>{{$data->theta_sentiment}}</td>
                             </tr>
                         @empty
                             <tr>
@@ -67,5 +83,6 @@
     </div>
 </div>
 <div class="mt-4 justify-content-center d-flex">
-    {{ paginateLinks($strengthData)}}
+    {{ paginateLinks($greekSentiments)}}
 </div>
+@endisset

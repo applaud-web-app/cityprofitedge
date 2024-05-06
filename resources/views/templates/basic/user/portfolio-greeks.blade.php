@@ -102,6 +102,10 @@
                                                 <th>PE Vega</th>
                                                 <th>CE Gamma</th>
                                                 <th>PE Gamma</th>
+                                                <th>CE IV Sentiment</th>
+                                                <th>PE IV Sentiment</th>
+                                                <th>CE Theta Sentiment</th>
+                                                <th>PE Theta Sentiment</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -148,7 +152,10 @@
                                                             <td>{{$arrData['PE_Vega'][$k]}}</td>
                                                             <td>{{$arrData['CE_Gamma'][$k]}}</td>
                                                             <td>{{$arrData['PE_Gamma'][$k]}}</td>
-                                                           
+                                                            <td>{{$arrData['CE_IV_Sentiment'][$k]}}</td>
+                                                            <td>{{$arrData['PE_IV_Sentiment'][$k]}}</td>
+                                                            <td>{{$arrData['CE_Theta_Sentiment'][$k]}}</td>
+                                                            <td>{{$arrData['PE_Theta_Sentiment'][$k]}}</td>
                                                         </tr>
                                                         @php
                                                             // $k++;
@@ -199,6 +206,8 @@
                             $todayDate = $dataLast->date;
                         }
                         $data = \DB::connection('mysql_rm')->table($v)->select('*')->where(['date'=>$todayDate,'timeframe'=>$timeFrame])->get(); 
+
+                        // dd($data);
                         // dd($data);
                         // if(count($data)==0){
                         //     $data = \DB::connection('mysql_rm')->table($stockName)->select('*')->where(['timeframe'=>$timeFrame])->get();
@@ -232,6 +241,10 @@
                                                     <th>PE Vega</th>
                                                     <th>CE Gamma</th>
                                                     <th>PE Gamma</th>
+                                                    <th>CE IV Sentiment</th>
+                                                    <th>PE IV Sentiment</th>
+                                                    <th>CE Theta Sentiment</th>
+                                                    <th>PE Theta Sentiment</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -247,7 +260,6 @@
                                                 @forelse($atmData as $val)
                                                         @php
                                                             $arrData = json_decode($val->data,true); 
-                                                            // dd($arrData);
                                                             $CE = array_slice($arrData['CE'],-5);
                                                             $PE = array_slice($arrData['PE'],-5);
                                                             $Date = array_slice($arrData['Date'],-5);
@@ -262,6 +274,10 @@
                                                             $PEVega = array_slice($arrData['PE_Vega'],-5);
                                                             $CEGamma = array_slice($arrData['CE_Gamma'],-5);
                                                             $PEGamma = array_slice($arrData['PE_Gamma'],-5);
+                                                            $CE_IV_Sentiment = array_slice($arrData['CE_IV_Sentiment'],-5);
+                                                            $PE_IV_Sentiment = array_slice($arrData['PE_IV_Sentiment'],-5);
+                                                            $CE_Theta_Sentiment = array_slice($arrData['CE_Theta_Sentiment'],-5);
+                                                            $PE_Theta_Sentiment = array_slice($arrData['PE_Theta_Sentiment'],-5);
                                                             
                                                         @endphp
                                                         @foreach ($CE as $k=>$item)
@@ -281,7 +297,10 @@
                                                                 <td>{{$PEVega[$k]}}</td>
                                                                 <td>{{$CEGamma[$k]}}</td>
                                                                 <td>{{$PEGamma[$k]}}</td>
-
+                                                                <td>{{$CE_IV_Sentiment[$k]}}</td>
+                                                                <td>{{$PE_IV_Sentiment[$k]}}</td>
+                                                                <td>{{$CE_Theta_Sentiment[$k]}}</td>
+                                                                <td>{{$PE_Theta_Sentiment[$k]}}</td>
                                                             </tr>
                                                         @endforeach
                                                 @empty
