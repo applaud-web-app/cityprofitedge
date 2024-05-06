@@ -51,23 +51,8 @@ class UserController extends Controller
         $user = auth()->user();
         $pageTitle = 'Dashboard';
 
-        $StrengthsymbolArr = ['CRUDEOIL','BANKNIFTY','FINNIFTY','NIFTY','MIDCPNIFTY','NATURALGAS'];
-        $strengthData = StengthTb::orderBy('id','DESC')->whereDate('created_at', now()->today());
-        $stock_name = "";
-        if($request->stock_name != NULL){
-            $stock_name = $request->stock_name;
-            $strengthData =  $strengthData->where('symbol_name',$stock_name);
-        }        
-        $strengthData = $strengthData->paginate(20);
-        // if(count($strengthData) <= 0){
-        //     $strengthData = StengthTb::orderBy('id','DESC');
-        //     if($request->stock_name != NULL){
-        //         $stock_name = $request->stock_name;
-        //         $strengthData = $strengthData->where('symbol_name',$stock_name);
-        //     } 
+        // $StrengthsymbolArr = ['CRUDEOIL','BANKNIFTY','FINNIFTY','NIFTY','MIDCPNIFTY','NATURALGAS'];
 
-        //     $strengthData = $strengthData->paginate(30);
-        // }
         
         $totalTrx = Transaction::where('user_id', $user->id)->count();
         $totalSignal = SignalHistory::where('user_id', $user->id)->count();
@@ -206,8 +191,35 @@ class UserController extends Controller
         
         $fullUrl = $request->fullUrl();
 
+        $StrengthsymbolArr = allTradeSymbols(); ;
+        $stock_name = "";
+        $timeframe = "5";
+        $currentDate = date('Y-m-d');
+        $greekSentiments = \DB::connection('mysql_rm')->table('IV Theta Sentiments')->select('*')->where('date',$currentDate)->orderBy('date','DESC')->orderby('timestamp','DESC');
+        if($request->stock_name != NULL){
+            $stock_name = $request->stock_name;
+            $greekSentiments =  $greekSentiments->where('symbol',$stock_name);
+        }
+        if($request->timeframe != NULL){
+            $timeframe = $request->timeframe;
+        } 
+        $greekSentiments =  $greekSentiments->where('timeframe',$timeframe);
+        $greekSentiments =  $greekSentiments->paginate(30);
 
-        return view($this->activeTemplate . 'user.dashboard', compact('pageTitle', 'user', 'totalDeposit', 'totalTrx', 'latestTrx', 'totalSignal', 'portfolioTopGainers', 'portfolioTopLosers','stockPortFolio','globalStockPortFolio','foglobalStockPortFolio','metalsPortFolio','totalInvestedAmount','totalCurrentAmount','datesArr','buyArr','currArr','chrtArr','symbolArray','symbolArray2','StrengthsymbolArr','fullUrl','strengthData','stock_name')); 
+        if($greekSentiments == NULL){
+            $greekSentiments = \DB::connection('mysql_rm')->table('IV Theta Sentiments')->select('*')->orderBy('date','DESC')->orderby('timestamp','DESC');
+            if($request->stock_name != NULL){
+                $stock_name = $request->stock_name;
+            }
+            $greekSentiments =  $greekSentiments->where('symbol',$stock_name);
+            if($request->timeframe != NULL){
+                $timeframe = $request->timeframe;
+            } 
+            $greekSentiments =  $greekSentiments->where('timeframe',$timeframe);
+            $greekSentiments =  $greekSentiments->paginate(30);
+        }
+
+        return view($this->activeTemplate . 'user.dashboard', compact('pageTitle', 'user', 'totalDeposit', 'totalTrx', 'latestTrx', 'totalSignal', 'portfolioTopGainers', 'portfolioTopLosers','stockPortFolio','globalStockPortFolio','foglobalStockPortFolio','metalsPortFolio','totalInvestedAmount','totalCurrentAmount','datesArr','buyArr','currArr','chrtArr','symbolArray','symbolArray2','StrengthsymbolArr','fullUrl','stock_name','greekSentiments','timeframe')); 
     }
 
     public function homeajax(Request $request)
@@ -215,23 +227,33 @@ class UserController extends Controller
         $user = auth()->user();
         $pageTitle = 'Dashboard';
 
-        $StrengthsymbolArr = ['CRUDEOIL','BANKNIFTY','FINNIFTY','NIFTY','MIDCPNIFTY','NATURALGAS'];
-        $strengthData = StengthTb::orderBy('id','DESC')->whereDate('created_at', now()->today());
+        $StrengthsymbolArr = allTradeSymbols(); ;
         $stock_name = "";
+        $timeframe = "5";
+        $currentDate = date('Y-m-d');
+        $greekSentiments = \DB::connection('mysql_rm')->table('IV Theta Sentiments')->select('*')->where('date',$currentDate)->orderBy('date','DESC')->orderby('timestamp','DESC');
         if($request->stock_name != NULL){
             $stock_name = $request->stock_name;
-            $strengthData =  $strengthData->where('symbol_name',$stock_name);
-        }        
-        $strengthData = $strengthData->paginate(20);
-        // if(count($strengthData) <= 0){
-        //     $strengthData = StengthTb::orderBy('id','DESC');
-        //     if($request->stock_name != NULL){
-        //         $stock_name = $request->stock_name;
-        //         $strengthData = $strengthData->where('symbol_name',$stock_name);
-        //     } 
+            $greekSentiments =  $greekSentiments->where('symbol',$stock_name);
+        }
+        if($request->timeframe != NULL){
+            $timeframe = $request->timeframe;
+        } 
+        $greekSentiments =  $greekSentiments->where('timeframe',$timeframe);
+        $greekSentiments =  $greekSentiments->paginate(30);
 
-        //     $strengthData = $strengthData->paginate(30);
-        // }
+        if($greekSentiments == NULL){
+            $greekSentiments = \DB::connection('mysql_rm')->table('IV Theta Sentiments')->select('*')->orderBy('date','DESC')->orderby('timestamp','DESC');
+            if($request->stock_name != NULL){
+                $stock_name = $request->stock_name;
+            }
+            $greekSentiments =  $greekSentiments->where('symbol',$stock_name);
+            if($request->timeframe != NULL){
+                $timeframe = $request->timeframe;
+            } 
+            $greekSentiments =  $greekSentiments->where('timeframe',$timeframe);
+            $greekSentiments =  $greekSentiments->paginate(30);
+        }
 
         $totalTrx = Transaction::where('user_id', $user->id)->count();
         $totalSignal = SignalHistory::where('user_id', $user->id)->count();
@@ -369,13 +391,7 @@ class UserController extends Controller
         }    
 
         $fullUrl = $request->fullUrl();
-        // if($request->ajax()){
-        //     if(!empty($strengthData)){
-        //         return view($this->activeTemplate . 'user.dashboard-ajax',compact('pageTitle', 'user', 'totalDeposit', 'totalTrx', 'latestTrx', 'totalSignal', 'portfolioTopGainers', 'portfolioTopLosers','stockPortFolio','globalStockPortFolio','foglobalStockPortFolio','metalsPortFolio','totalInvestedAmount','totalCurrentAmount','datesArr','buyArr','currArr','chrtArr','symbolArray','symbolArray2','strengthData','StrengthsymbolArr','stock_name','fullUrl'));
-        //     }
-        //     return 'NO_DATA';
-        // }    
-        return view($this->activeTemplate . 'user.dashboard', compact('pageTitle', 'user', 'totalDeposit', 'totalTrx', 'latestTrx', 'totalSignal', 'portfolioTopGainers', 'portfolioTopLosers','stockPortFolio','globalStockPortFolio','foglobalStockPortFolio','metalsPortFolio','totalInvestedAmount','totalCurrentAmount','datesArr','buyArr','currArr','chrtArr','symbolArray','symbolArray2','strengthData','StrengthsymbolArr','stock_name','fullUrl'));
+        return view($this->activeTemplate . 'user.dashboard', compact('pageTitle', 'user', 'totalDeposit', 'totalTrx', 'latestTrx', 'totalSignal', 'portfolioTopGainers', 'portfolioTopLosers','stockPortFolio','globalStockPortFolio','foglobalStockPortFolio','metalsPortFolio','totalInvestedAmount','totalCurrentAmount','datesArr','buyArr','currArr','chrtArr','symbolArray','symbolArray2','StrengthsymbolArr','fullUrl','stock_name','greekSentiments','timeframe'));
     }
 
     public function depositHistory(Request $request)
@@ -2935,14 +2951,14 @@ class UserController extends Controller
         $searchSymbol = "";
 
         // FOR DAILY DATA
-        $paperTrade = \DB::connection('mysql_rm')->table('Paper Trade')->select('*')->orderBy('id','DESC');
+        $paperTrade = \DB::connection('mysql_rm')->table('Paper Trade')->select('*')->orderBy('symbol','ASC');
         if($request->symbols){
             $searchSymbol = $request->symbols;
             $paperTrade = $paperTrade->where('symbol',$request->symbols);
         }
         $paperTrade = $paperTrade->paginate(50); 
         if(!count($paperTrade)){
-            $paperTrade = \DB::connection('mysql_rm')->table('Paper Trade')->select('*')->orderBy('id','DESC');
+            $paperTrade = \DB::connection('mysql_rm')->table('Paper Trade')->select('*')->orderBy('symbol','ASC');
             if($request->symbols){
                 $searchSymbol = $request->symbols;
                 $paperTrade = $paperTrade->where('symbol',$request->symbols);
@@ -2950,12 +2966,14 @@ class UserController extends Controller
             $paperTrade = $paperTrade->paginate(50);  
         }
 
+      
         // FOR FILTER
-        if(!Cache::has('allSymbols')){
-            $allSymbols = $paperTrade->pluck('symbol')->toArray();
-           \Cache::put('allSymbols',array_unique($allSymbols), now()->addMinutes(1140));
-        }
-
+        // if(!Cache::has('allSymbols')){
+        //     $allSymbols = \DB::connection('mysql_rm')->table('Paper Trade')->select('*')->orderBy('symbol','ASC')->groupBy('symbol')->get()->pluck('symbol')->toArray();
+        //    \Cache::put('allSymbols',array_unique($allSymbols), now()->addMinutes(800));
+        // }
+        
+        $allSymbols = \DB::connection('mysql_rm')->table('Paper Trade')->select('*')->orderBy('symbol','ASC')->groupBy('symbol')->get()->pluck('symbol')->toArray();
 
         $fullUrl = $request->fullUrl();
         // if($request->ajax()){
@@ -2964,21 +2982,21 @@ class UserController extends Controller
         //     return view($this->activeTemplate . 'user.watch-list-order-ajax',compact('pageTitle','wishlistorder','fullUrl','searchSymbol'));
         // }
 
-        return view($this->activeTemplate . 'user.paper-trading',compact('pageTitle','paperTrade','fullUrl','searchSymbol'));
+        return view($this->activeTemplate . 'user.paper-trading',compact('pageTitle','paperTrade','fullUrl','searchSymbol','allSymbols'));
     }
 
     public function paperTradingAjax(Request $request){
         $pageTitle = "Paper Trading";
         $todayDate = date("Y-m-d");
         // FOR DAILY DATA
-        $paperTrade = \DB::connection('mysql_rm')->table('Paper Trade')->select('*')->orderBy('id','DESC');
+        $paperTrade = \DB::connection('mysql_rm')->table('Paper Trade')->select('*')->orderBy('symbol','ASC');
         if($request->input('symbols')){
             $searchSymbol = $request->symbols;
             $paperTrade = $paperTrade->where('symbol',$request->symbols);
         }
         $paperTrade = $paperTrade->paginate(50); 
         if(!count($paperTrade)){
-            $paperTrade = \DB::connection('mysql_rm')->table('Paper Trade')->select('*')->orderBy('id','DESC');
+            $paperTrade = \DB::connection('mysql_rm')->table('Paper Trade')->select('*')->orderBy('symbol','ASC');
             if($request->symbols){
                 $searchSymbol = $request->symbols;
                 $paperTrade = $paperTrade->where('symbol',$request->symbols);
