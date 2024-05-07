@@ -195,7 +195,7 @@ class UserController extends Controller
         $stock_name = "";
         $timeframe = "5";
         $currentDate = date('Y-m-d');
-        $greekSentiments = \DB::connection('mysql_rm')->table('IV Theta Sentiments')->select('*')->orderBy('date','DESC')->orderby('timestamp','DESC');
+        $greekSentiments = \DB::connection('mysql_rm')->table('IV Theta Sentiments')->select('*')->orderBy('date','DESC');
         if($request->stock_name != NULL){
             $stock_name = $request->stock_name;
             $greekSentiments =  $greekSentiments->where('symbol',$stock_name);
@@ -207,7 +207,7 @@ class UserController extends Controller
         $greekSentiments =  $greekSentiments->paginate(30);
 
         if($greekSentiments == NULL){
-            $greekSentiments = \DB::connection('mysql_rm')->table('IV Theta Sentiments')->select('*')->orderBy('date','DESC')->orderby('timestamp','DESC');
+            $greekSentiments = \DB::connection('mysql_rm')->table('IV Theta Sentiments')->select('*')->orderBy('date','DESC');
             if($request->stock_name != NULL){
                 $stock_name = $request->stock_name;
             }
@@ -231,7 +231,7 @@ class UserController extends Controller
         $stock_name = "";
         $timeframe = "5";
         $currentDate = date('Y-m-d');
-        $greekSentiments = \DB::connection('mysql_rm')->table('IV Theta Sentiments')->select('*')->where('date',$currentDate)->orderBy('date','DESC')->orderby('timestamp','DESC');
+        $greekSentiments = \DB::connection('mysql_rm')->table('IV Theta Sentiments')->select('*')->where('date',$currentDate)->orderBy('date','DESC');
         if($request->stock_name != NULL){
             $stock_name = $request->stock_name;
             $greekSentiments =  $greekSentiments->where('symbol',$stock_name);
@@ -243,7 +243,7 @@ class UserController extends Controller
         $greekSentiments =  $greekSentiments->paginate(30);
 
         if($greekSentiments == NULL){
-            $greekSentiments = \DB::connection('mysql_rm')->table('IV Theta Sentiments')->select('*')->orderBy('date','DESC')->orderby('timestamp','DESC');
+            $greekSentiments = \DB::connection('mysql_rm')->table('IV Theta Sentiments')->select('*')->orderBy('date','DESC');
             if($request->stock_name != NULL){
                 $stock_name = $request->stock_name;
             }
