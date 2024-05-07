@@ -195,7 +195,7 @@ class UserController extends Controller
         $stock_name = "";
         $timeframe = "5";
         $currentDate = date('Y-m-d');
-        $greekSentiments = \DB::connection('mysql_rm')->table('IV Theta Sentiments')->select('*')->orderBy('date','DESC');
+        $greekSentiments = \DB::connection('mysql_rm')->table('IV Theta Sentiments')->select('*')->orderBy('date','DESC')->orderby('timestamp','DESC');
         if($request->stock_name != NULL){
             $stock_name = $request->stock_name;
             $greekSentiments =  $greekSentiments->where('symbol',$stock_name);
