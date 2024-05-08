@@ -47,7 +47,7 @@ class SiteController extends Controller
         $shortBuildUp = OiBuildUp::orderBy('id','DESC')->where('type','short')->paginate(5);
         $coveringBuildUp = OiBuildUp::orderBy('id','DESC')->where('type','covering')->paginate(5);
         $unWindingBuildUp = OiBuildUp::orderBy('id','DESC')->where('type','unwinding')->paginate(5);
-        $todayDate = date('d-m-Y',strtotime('-1Day'));
+        $todayDate = date('d-m-Y');
         $fdProData = \DB::connection('mysql_rm')->table('FII DII PRO')->select('*')->where('client_type','!=','TOTAL')->where('date',$todayDate)->get(); 
         if(!count($fdProData)){
             $fdProData = \DB::connection('mysql_rm')->table('FII DII PRO')->select('*')->where('client_type','!=','TOTAL')->limit(5)->get(); 
