@@ -496,61 +496,167 @@
                         </div>
                     </form>
                 </div>
-                @isset($greekSentiments)
-                <div class="custom--card">
-                    <div class="card-body p-0">
-                        <div class="table-responsive--md">
-                            <table class="table custom--table">
-                                <thead>
-                                    <tr>
-                                        <th class="text-uppercase">@lang('Date')</th>
-                                        <th class="text-uppercase">@lang('Time')</th>
-                                        <th class="text-uppercase">@lang('Stock Name')</th>
-                                        <th class="text-uppercase">@lang('ce iv avg')</th>
-                                        <th class="text-uppercase">@lang('ce iv std')</th>
-                                        <th class="text-uppercase">@lang('pe iv avg')</th>
-                                        <th class="text-uppercase">@lang('pe iv std')</th>
-                                        <th class="text-uppercase">@lang('iv sentiment')</th>
-                                        <th class="text-uppercase">@lang('ce theta avg')</th>
-                                        <th class="text-uppercase">@lang('ce theta std')</th>
-                                        <th class="text-uppercase">@lang('pe theta avg')</th>
-                                        <th class="text-uppercase">@lang('pe theta std')</th>
-                                        <th class="text-uppercase">@lang('theta sentiment')</th>
-                                        {{-- <th class="text-uppercase">@lang('market strength')</th> --}}
-                                    </tr>
-                                </thead>
-                                <tbody>
+                @if ($stock_name == "")
+                    @isset($greekSentiments)
+                    <div class="custom--card">
+                        <div class="card-body p-0">
+                            <div class="table-responsive--md">
+                                <table class="table custom--table">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-uppercase">@lang('Date')</th>
+                                            <th class="text-uppercase">@lang('Time')</th>
+                                            <th class="text-uppercase">@lang('Stock Name')</th>
+                                            <th class="text-uppercase">@lang('ce iv avg')</th>
+                                            <th class="text-uppercase">@lang('ce iv std')</th>
+                                            <th class="text-uppercase">@lang('pe iv avg')</th>
+                                            <th class="text-uppercase">@lang('pe iv std')</th>
+                                            <th class="text-uppercase">@lang('iv sentiment')</th>
+                                            <th class="text-uppercase">@lang('ce theta avg')</th>
+                                            <th class="text-uppercase">@lang('ce theta std')</th>
+                                            <th class="text-uppercase">@lang('pe theta avg')</th>
+                                            <th class="text-uppercase">@lang('pe theta std')</th>
+                                            <th class="text-uppercase">@lang('theta sentiment')</th>
+                                            {{-- <th class="text-uppercase">@lang('market strength')</th> --}}
+                                        </tr>
+                                    </thead>
                                     <tbody>
-                                        @forelse($greekSentiments as $data)
-                                            <tr>
-                                                <td>{{$data->date}}</td>
-                                                <td>{{$data->timestamp}}</td>
-                                                <td>{{$data->symbol}}</td>
-                                                <td>{{$data->ce_iv_avg}}</td>
-                                                <td>{{$data->ce_iv_std}}</td>
-                                                <td>{{$data->pe_iv_avg}}</td>
-                                                <td>{{$data->pe_iv_std}}</td>
-                                                <td>{{$data->iv_sentiment}}</td>
-                                                <td>{{$data->ce_theta_avg}}</td>
-                                                <td>{{$data->ce_theta_std}}</td>
-                                                <td>{{$data->pe_theta_avg}}</td>
-                                                <td>{{$data->pe_theta_std}}</td>
-                                                <td>{{$data->theta_sentiment}}</td>
-                                            </tr>
-                                        @empty
-                                            <tr>
-                                                <td class="text-muted text-center" colspan="100%">NO DATA FOUND</td>
-                                            </tr>
-                                        @endforelse
-                                    </tbody>
-                            </table>
+                                        <tbody>
+                                            @forelse($greekSentiments as $data)
+                                                <tr>
+                                                    <td>{{$data->date}}</td>
+                                                    <td>{{$data->timestamp}}</td>
+                                                    <td>{{$data->symbol}}</td>
+                                                    <td>{{$data->ce_iv_avg}}</td>
+                                                    <td>{{$data->ce_iv_std}}</td>
+                                                    <td>{{$data->pe_iv_avg}}</td>
+                                                    <td>{{$data->pe_iv_std}}</td>
+                                                    <td>{{$data->iv_sentiment}}</td>
+                                                    <td>{{$data->ce_theta_avg}}</td>
+                                                    <td>{{$data->ce_theta_std}}</td>
+                                                    <td>{{$data->pe_theta_avg}}</td>
+                                                    <td>{{$data->pe_theta_std}}</td>
+                                                    <td>{{$data->theta_sentiment}}</td>
+                                                </tr>
+                                            @empty
+                                                <tr>
+                                                    <td class="text-muted text-center" colspan="100%">NO DATA FOUND</td>
+                                                </tr>
+                                            @endforelse
+                                        </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="mt-4 justify-content-center d-flex">
-                    {{ paginateLinks($greekSentiments)}}
-                </div>
-                @endisset
+                    <div class="mt-4 justify-content-center d-flex">
+                        {{ paginateLinks($greekSentiments)}}
+                    </div>
+                    @endisset
+                @else 
+                    @isset($greekSentiments)
+                        <div class="custom--card">
+                            <div class="card-body p-0">
+                                <div class="table-responsive--md">
+                                    <table class="table custom--table">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-uppercase">@lang('Date')</th>
+                                                <th class="text-uppercase">@lang('Time')</th>
+                                                <th class="text-uppercase">@lang('Stock Name')</th>
+                                                <th class="text-uppercase">@lang('ce iv avg')</th>
+                                                <th class="text-uppercase">@lang('ce iv std')</th>
+                                                <th class="text-uppercase">@lang('pe iv avg')</th>
+                                                <th class="text-uppercase">@lang('pe iv std')</th>
+                                                <th class="text-uppercase">@lang('iv sentiment')</th>
+                                                <th class="text-uppercase">@lang('ce theta avg')</th>
+                                                <th class="text-uppercase">@lang('ce theta std')</th>
+                                                <th class="text-uppercase">@lang('pe theta avg')</th>
+                                                <th class="text-uppercase">@lang('pe theta std')</th>
+                                                <th class="text-uppercase">@lang('theta sentiment')</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tbody>
+                                                @php  
+                                                    $totalItems = 0;
+                                                    $itemsPerPage = 100;
+                                                    $currentPage =  isset($_GET['pages']) ? $_GET['pages'] : 1;
+                                                @endphp
+                                                @forelse($greekSentiments as $sentiment)
+                                                    @php
+                                                        $content = json_decode($sentiment->data,true);
+                                                        $date = $content['date'];
+                                                        $totalItems = count($content['date']);
+                                                        $newArr = array_reverse($content['date'],true);
+                                                        $currentItems = array_slice($newArr, ($currentPage - 1) * $itemsPerPage, $itemsPerPage,true);
+
+                                                        // ALL DATA
+                                                        $timestamp = $content['timestamp'];
+                                                        $symbol = $content['symbol'];
+                                                        $ce_iv_avg = $content['ce_iv_avg'];
+                                                        $ce_iv_std = $content['ce_iv_std'];
+                                                        $pe_iv_avg = $content['pe_iv_avg'];
+                                                        $pe_iv_std = $content['pe_iv_std'];
+                                                        $iv_sentiment = $content['iv_sentiment'];
+                                                        $ce_theta_avg = $content['ce_theta_avg'];
+                                                        $ce_theta_std = $content['ce_theta_std'];
+                                                        $pe_theta_avg = $content['pe_theta_avg'];
+                                                        $pe_theta_std = $content['pe_theta_std'];
+                                                        $theta_sentiment =$content['theta_sentiment'];
+                                                    @endphp
+                                                    @foreach ($currentItems as $k => $item)
+                                                        <tr>
+                                                            <td>{{date("d-m-Y",($item/1000))}}</td>
+                                                            @php
+                                                                $milliseconds = $timestamp[$k];
+                                                                $seconds = $milliseconds / 1000;
+                                                                $dateTime = date("H:i:s", $seconds);
+                                                            @endphp
+                                                            <td >{{$dateTime}}</td>
+                                                            <td>{{$symbol[$k]}}</td>
+                                                            <td>{{$ce_iv_avg[$k]}}</td>
+                                                            <td>{{$ce_iv_std[$k]}}</td>
+                                                            <td>{{$pe_iv_avg[$k]}}</td>
+                                                            <td>{{$pe_iv_std[$k]}}</td>
+                                                            <td>{{$iv_sentiment[$k]}}</td>
+                                                            <td>{{$ce_theta_avg[$k]}}</td>
+                                                            <td>{{$ce_theta_std[$k]}}</td>
+                                                            <td>{{$pe_theta_avg[$k]}}</td>
+                                                            <td>{{$pe_theta_std[$k]}}</td>
+                                                            <td>{{$theta_sentiment[$k]}}</td>
+                                                        </tr>
+                                                    @endforeach
+                                                @empty
+                                                    <tr>
+                                                        <td class="text-muted text-center" colspan="100%">NO DATA FOUND</td>
+                                                    </tr>
+                                                @endforelse
+                                            </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-4 justify-content-center d-flex">
+                            @php
+                                $totalPages = ceil($totalItems / $itemsPerPage);
+                                echo '<nav class="mt-3 justify-content-end d-flex">
+                                        <ul class="pagination mb-0">';
+                            @endphp
+                            @for($i = 1; $i <= $totalPages; $i++)
+                                @if($i == $currentPage)
+                                    <li class="page-item active" aria-current="page"><span class="page-link">{{$i}}</span></li>
+                                @else
+                                <li class="page-item"><a class="page-link" href="{{url('user/dashboard?stock_name='.$stock_name.'&timeframe='.$timeframe.'&pages='.$i.'')}}">{{$i}}</a></li>
+                                @endif
+                            @endfor
+                            @php     
+                                echo '  </ul>
+                                    </nav>';
+                            @endphp
+                        </div>
+                    @endisset
+                @endif
+               
             </div>
         </div>
 
