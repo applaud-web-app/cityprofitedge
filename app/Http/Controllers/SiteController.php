@@ -50,7 +50,7 @@ class SiteController extends Controller
         // $todayDate = date('d-m-Y');
         // $fdProData = \DB::connection('mysql_rm')->table('FII DII PRO')->select('*')->where('client_type','!=','TOTAL')->where('date',$todayDate)->get(); 
         // if(!count($fdProData)){
-            $fdProData = \DB::connection('mysql_rm')->table('FII DII PRO')->select('*')->where('client_type','!=','TOTAL')->orderBy('id','DESC')->limit(5)->get(); 
+            $fdProData = \DB::connection('mysql_rm')->table('FII DII PRO')->select('*')->where('client_type','!=','TOTAL')->orderBy('id','DESC')->limit(4)->get(); 
         // }
         $reference = @$_GET['reference'];
         if ($reference) {
@@ -80,7 +80,7 @@ class SiteController extends Controller
         // $todayDate = date('d-m-Y',strtotime('-1Day'));
         // $fdProData = \DB::connection('mysql_rm')->table('FII DII PRO')->select('*')->where('client_type','!=','TOTAL')->where('date',$todayDate)->get(); 
         // if(!count($fdProData)){
-            $fdProData = \DB::connection('mysql_rm')->table('FII DII PRO')->select('*')->where('client_type','!=','TOTAL')->orderBy('id','DESC')->limit(5)->get(); 
+            $fdProData = \DB::connection('mysql_rm')->table('FII DII PRO')->select('*')->where('client_type','!=','TOTAL')->orderBy('id','DESC')->limit(4)->get(); 
         // }
         $reference = @$_GET['reference'];
         if ($reference) {
