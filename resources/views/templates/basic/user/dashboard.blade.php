@@ -610,7 +610,7 @@
                                                             @php
                                                                 $milliseconds = $timestamp[$k];
                                                                 $seconds = $milliseconds / 1000;
-                                                                $dateTime = date("H:i:s", $seconds);
+                                                                $dateTime = date("H:i:s", $milliseconds);
                                                             @endphp
                                                             <td >{{$dateTime}}</td>
                                                             <td>{{$symbol[$k]}}</td>
