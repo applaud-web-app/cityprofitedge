@@ -87,8 +87,8 @@
                             </div>
                         </div>
                     </div>
-                    @isset($finalResponse)
-                        @if (count($finalResponse))
+                    @isset($pagination)
+                        @if ($pagination)
                             <div class="mt-4 justify-content-center d-flex">
                                 {{ paginateLinks($finalResponse)}}
                             </div>

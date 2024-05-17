@@ -2532,28 +2532,26 @@ class UserController extends Controller
 
     public function watchList(Request $request){
         $pageTitle = "Watch List";
+        $pagination = true;
         $finalResponse = WishlistData::whereDate('created_at', now()->today())->latest()->paginate(50)->unique('symbolToken');
         if(!count($finalResponse)){
-            $finalResponse = WishlistData::orderBy('id','DESC')->paginate(50);
+            $pagination = false;
+            $finalResponse = WishlistData::orderBy('id','DESC')->limit(50)->get();
         }
         $fullUrl = $request->fullUrl();
-        if($request->ajax()){
-            if(!empty($finalResponse)){
-                return view($this->activeTemplate . 'user.watch-list-ajax',compact('pageTitle','fullUrl','finalResponse'));
-            }
-            return 'NO_DATA';
-        }
-        return view($this->activeTemplate . 'user.watch-list',compact('pageTitle','finalResponse','fullUrl'));
+        return view($this->activeTemplate . 'user.watch-list',compact('pageTitle','finalResponse','fullUrl','pagination'));
     }
     public function watchListAjax(Request $request){
         $pageTitle = "Watch List";
+        $pagination = true;
         $finalResponse = WishlistData::whereDate('created_at', now()->today())->latest()->get()->unique('symbolToken');
         if(!count($finalResponse)){
-            $finalResponse = WishlistData::orderBy('id','DESC')->paginate(50);
+            $pagination = false;
+            $finalResponse = WishlistData::orderBy('id','DESC')->limit(50)->get();
         }
         $fullUrl = $request->fullUrl();
         if(!empty($finalResponse)){
-            return view($this->activeTemplate . 'user.watch-list-ajax',compact('pageTitle','fullUrl','finalResponse'));
+            return view($this->activeTemplate . 'user.watch-list-ajax',compact('pageTitle','fullUrl','finalResponse','pagination'));
         }
         return 'NO_DATA';
     }
