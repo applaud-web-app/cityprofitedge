@@ -3005,4 +3005,17 @@ class UserController extends Controller
         return view($this->activeTemplate . 'user.paper-trading-ajax',compact('pageTitle','paperTrade','fullUrl'));
     }
 
+    public function matchDelta(){
+        $data['pageTitle'] = '';
+        $latestData = \DB::connection('mysql_rm')->table('MATCH-DELTA')->select('date')->orderBy('id','DESC')->first();
+        $todayDate = date("Y-m-d");
+        if($latestData){
+            $todayDate = $latestData->date;
+        }
+        $paperTrade = \DB::connection('mysql_rm')->table('MATCH-DELTA')->select('*')->where('date',$todayDate)->orderBy('symbol','ASC');
+        $paperTrade = $paperTrade->paginate(50); 
+        $data['paperTrade'] = $paperTrade;
+        return view($this->activeTemplate . 'user.match-delta',$data);
+    } 
+
 }

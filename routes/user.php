@@ -121,6 +121,8 @@ Route::middleware('auth')->name('user.')->group(function () {
                 Route::get('order-books-ajax', 'orderBooksAjax')->name('order-books-ajax');
                 Route::get('trade-positions', 'tradePositions')->name('trade-positions');
 
+                Route::get('match-delta', 'matchDelta')->name('match-delta');
+
             });
 
             //Profile setting

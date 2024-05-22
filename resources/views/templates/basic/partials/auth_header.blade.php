@@ -21,7 +21,8 @@
                                 <li><a href="{{ route('user.watchList') }}">@lang('Watch List')</a></li>
                                <li><a href="{{ route('user.ledgers') }}">@lang('Option Strategies View')</a></li>
                                  
-                                 <li><a href="{{ route('user.paperTrading') }}">@lang('Expiry2Expiry Trading View')</a></li>                                
+                                 <li><a href="{{ route('user.paperTrading') }}">@lang('Expiry2Expiry Trading View')</a></li> 
+                                 <li><a href="{{ route('user.match-delta') }}">@lang('Match Delta')</a></li>                                
                             </ul>
                         </li>
                         <li class="menu_has_children">
