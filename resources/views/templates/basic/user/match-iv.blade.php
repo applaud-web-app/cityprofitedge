@@ -5,10 +5,10 @@
         <div class="custom--nav-tabs border-0 mb-3">
             <ul class="nav d-flex justify-content-start">
                 <li class="nav-item">
-                    <a class="nav-link active" href="{{ url('/user/match-delta') }}">DELTA</a>
+                    <a class="nav-link" href="{{ url('/user/match-delta') }}">DELTA</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url('/user/match-iv') }}">IV</a>
+                    <a class="nav-link active" href="{{ url('/user/match-iv') }}">IV</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url('/user/match-premium') }}">PREMIUM</a>
@@ -37,8 +37,8 @@
                                         <th>@lang('PE')</th>
                                         <th>@lang('CE ATM')</th>
                                         <th>@lang('PE ATM')</th>
-                                        <th>@lang('CE Delta')</th>
-                                        <th>@lang('PE Delta')</th>
+                                        {{-- <th>@lang('CE Delta')</th>
+                                        <th>@lang('PE Delta')</th> --}}
                                         <th>@lang('CE Entry Price')</th>
                                         <th>@lang('PE Entry Price')</th>
                                         <th>@lang('Difference')</th>
@@ -78,8 +78,8 @@
                                             <td>{{$trade->pe}}</td>
                                             <td>{{$trade->ce_atm}}</td>
                                             <td>{{$trade->pe_atm}}</td>
-                                            <td>{{$trade->ce_delta}}</td>
-                                            <td>{{$trade->pe_delta}}</td>
+                                            {{-- <td>{{$trade->ce_delta}}</td>
+                                            <td>{{$trade->pe_delta}}</td> --}}
                                             <td>{{$trade->ce_entry_price}}</td>
                                             <td>{{$trade->pe_entry_price}}</td>
                                             <td>{{$trade->difference}}</td>
@@ -101,6 +101,13 @@
                 </div>
             </div>
         </div>
+        {{-- @isset($paperTrade)
+            @if (count($paperTrade))
+                <div class="mt-4 justify-content-center d-flex">
+                    {{ paginateLinks($paperTrade)}}
+                </div>
+            @endif
+        @endisset --}}
     </div>
 </section>
 @endsection
@@ -110,7 +117,7 @@
     $(document).ready(function(){
         function reloadData(){
             
-            $.get('{!!url("user/match-delta-ajax?".(isset($_SERVER["QUERY_STRING"]) ? $_SERVER["QUERY_STRING"] : ''))!!}',function(data){
+            $.get('{!!url("user/match-iv-ajax?".(isset($_SERVER["QUERY_STRING"]) ? $_SERVER["QUERY_STRING"] : ''))!!}',function(data){
                 // console.log(data);
                 $("#pst_hre").html(data);
             });

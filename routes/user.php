@@ -122,6 +122,13 @@ Route::middleware('auth')->name('user.')->group(function () {
                 Route::get('trade-positions', 'tradePositions')->name('trade-positions');
 
                 Route::get('match-delta', 'matchDelta')->name('match-delta');
+                Route::get('match-delta-ajax', 'ajaxmatchDelta')->name('match-delta-ajax');
+                Route::get('match-theta', 'matchTheta')->name('match-theta');
+                Route::get('match-theta-ajax', 'ajaxmatchTheta')->name('match-theta-ajax');
+                Route::get('match-premium', 'matchPremium')->name('match-premium');
+                Route::get('match-premium-ajax', 'ajaxmatchPremium')->name('match-premium-ajax');
+                Route::get('match-iv', 'matchIv')->name('match-iv');
+                Route::get('match-iv-ajax', 'ajaxmatchIv')->name('match-iv-ajax');
 
             });
 

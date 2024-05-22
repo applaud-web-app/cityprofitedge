@@ -3005,8 +3005,8 @@ class UserController extends Controller
         return view($this->activeTemplate . 'user.paper-trading-ajax',compact('pageTitle','paperTrade','fullUrl'));
     }
 
-    public function matchDelta(){
-        $data['pageTitle'] = '';
+    public function matchDelta(Request $request){
+        $pageTitle = 'DELTA';
         $latestData = \DB::connection('mysql_rm')->table('MATCH-DELTA')->select('date')->orderBy('id','DESC')->first();
         $todayDate = date("Y-m-d");
         if($latestData){
@@ -3015,7 +3015,107 @@ class UserController extends Controller
         $paperTrade = \DB::connection('mysql_rm')->table('MATCH-DELTA')->select('*')->where('date',$todayDate)->orderBy('symbol','ASC');
         $paperTrade = $paperTrade->paginate(50); 
         $data['paperTrade'] = $paperTrade;
-        return view($this->activeTemplate . 'user.match-delta',$data);
+        $fullUrl = $request->fullUrl();
+        // dd($data);
+        return view($this->activeTemplate . 'user.match-delta',compact('data','fullUrl','pageTitle'));
+    } 
+
+    public function ajaxmatchDelta(Request $request){
+        $pageTitle = 'DELTA';
+        $latestData = \DB::connection('mysql_rm')->table('MATCH-DELTA')->select('date')->orderBy('id','DESC')->first();
+        $todayDate = date("Y-m-d");
+        if($latestData){
+            $todayDate = $latestData->date;
+        }
+        $paperTrade = \DB::connection('mysql_rm')->table('MATCH-DELTA')->select('*')->where('date',$todayDate)->orderBy('symbol','ASC');
+        $paperTrade = $paperTrade->paginate(50); 
+        $data['paperTrade'] = $paperTrade;
+        $fullUrl = $request->fullUrl();
+        return view($this->activeTemplate . 'user.match-delta-ajax',compact('data','fullUrl','pageTitle'));
+    } 
+
+    public function matchTheta(Request $request){
+        $pageTitle = 'THETA';
+        $latestData = \DB::connection('mysql_rm')->table('MATCH-THETA')->select('date')->orderBy('id','DESC')->first();
+        $todayDate = date("Y-m-d");
+        if($latestData){
+            $todayDate = $latestData->date;
+        }
+        $paperTrade = \DB::connection('mysql_rm')->table('MATCH-THETA')->select('*')->where('date',$todayDate)->orderBy('symbol','ASC');
+        $paperTrade = $paperTrade->paginate(50); 
+        $data['paperTrade'] = $paperTrade;
+        $fullUrl = $request->fullUrl();
+        return view($this->activeTemplate . 'user.match-theta',compact('data','fullUrl','pageTitle'));
+    } 
+
+    public function ajaxmatchTheta(Request $request){
+        $pageTitle = 'THETA';
+        $latestData = \DB::connection('mysql_rm')->table('MATCH-THETA')->select('date')->orderBy('id','DESC')->first();
+        $todayDate = date("Y-m-d");
+        if($latestData){
+            $todayDate = $latestData->date;
+        }
+        $paperTrade = \DB::connection('mysql_rm')->table('MATCH-THETA')->select('*')->where('date',$todayDate)->orderBy('symbol','ASC');
+        $paperTrade = $paperTrade->paginate(50); 
+        $data['paperTrade'] = $paperTrade;
+        $fullUrl = $request->fullUrl();
+        return view($this->activeTemplate . 'user.match-theta-ajax',compact('data','fullUrl','pageTitle'));
+    } 
+
+    public function matchPremium(Request $request){
+        $pageTitle = 'PREMIUM';
+        $latestData = \DB::connection('mysql_rm')->table('MATCH-PREMIUM')->select('date')->orderBy('id','DESC')->first();
+        $todayDate = date("Y-m-d");
+        if($latestData){
+            $todayDate = $latestData->date;
+        }
+        $paperTrade = \DB::connection('mysql_rm')->table('MATCH-PREMIUM')->select('*')->where('date',$todayDate)->orderBy('symbol','ASC');
+        $paperTrade = $paperTrade->paginate(50); 
+        $data['paperTrade'] = $paperTrade;
+        $fullUrl = $request->fullUrl();
+        return view($this->activeTemplate . 'user.match-premium',compact('data','fullUrl','pageTitle'));
+    } 
+
+    public function ajaxmatchPremium(Request $request){
+        $pageTitle = 'PREMIUM';
+        $latestData = \DB::connection('mysql_rm')->table('MATCH-PREMIUM')->select('date')->orderBy('id','DESC')->first();
+        $todayDate = date("Y-m-d");
+        if($latestData){
+            $todayDate = $latestData->date;
+        }
+        $paperTrade = \DB::connection('mysql_rm')->table('MATCH-PREMIUM')->select('*')->where('date',$todayDate)->orderBy('symbol','ASC');
+        $paperTrade = $paperTrade->paginate(50); 
+        $data['paperTrade'] = $paperTrade;
+        $fullUrl = $request->fullUrl();
+        return view($this->activeTemplate . 'user.match-premium-ajax',compact('data','fullUrl','pageTitle'));
+    } 
+
+    public function matchIv(Request $request){
+        $pageTitle = 'IV';
+        $latestData = \DB::connection('mysql_rm')->table('MATCH-IV')->select('date')->orderBy('id','DESC')->first();
+        $todayDate = date("Y-m-d");
+        if($latestData){
+            $todayDate = $latestData->date;
+        }
+        $paperTrade = \DB::connection('mysql_rm')->table('MATCH-IV')->select('*')->where('date',$todayDate)->orderBy('symbol','ASC');
+        $paperTrade = $paperTrade->paginate(50); 
+        $data['paperTrade'] = $paperTrade;
+        $fullUrl = $request->fullUrl();
+        return view($this->activeTemplate . 'user.match-iv',compact('data','fullUrl','pageTitle'));
+    } 
+
+    public function ajaxmatchIv(Request $request){
+        $pageTitle = 'IV';
+        $latestData = \DB::connection('mysql_rm')->table('MATCH-IV')->select('date')->orderBy('id','DESC')->first();
+        $todayDate = date("Y-m-d");
+        if($latestData){
+            $todayDate = $latestData->date;
+        }
+        $paperTrade = \DB::connection('mysql_rm')->table('MATCH-IV')->select('*')->where('date',$todayDate)->orderBy('symbol','ASC');
+        $paperTrade = $paperTrade->paginate(50); 
+        $data['paperTrade'] = $paperTrade;
+        $fullUrl = $request->fullUrl();
+        return view($this->activeTemplate . 'user.match-iv-ajax',compact('data','fullUrl','pageTitle'));
     } 
 
 }

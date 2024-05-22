@@ -75,6 +75,8 @@ class PaperTrading extends Command
                 }
             }
 
+            // dd($responseData);
+
             // Update LTP DATA FOR TOKENS
             try{
                 if(count($responseData)){
@@ -90,7 +92,23 @@ class PaperTrading extends Command
                                         $update['target_status'] = 'CE Target Achieved';
                                     }
                                 }
+                                $getSymbolName = \DB::connection('mysql_rm')->table('Paper Trade')->where('ce_exchange_token',$value['symbolToken'])->first();
+
+                                // FOR PAPER TRADING CE SYMBOLS
                                 $paperTrade = \DB::connection('mysql_rm')->table('Paper Trade')->where('ce_exchange_token',$value['symbolToken'])->update($update);
+
+                                // FOR MATCH DELTA CE SYMBOLS
+                                $matchDelta = \DB::connection('mysql_rm')->table('MATCH-DELTA')->where('ce',$getSymbolName->ce)->update(['ce_ltp'=>$value['ltp']]);
+
+                                // FOR MATCH THETA CE SYMBOLS
+                                $matchTheta = \DB::connection('mysql_rm')->table('MATCH-THETA')->where('ce',$getSymbolName->ce)->update(['ce_ltp'=>$value['ltp']]);
+
+                                // FOR MATCH PREMIUM CE SYMBOLS
+                                $matchPremium = \DB::connection('mysql_rm')->table('MATCH-PREMIUM')->where('ce',$getSymbolName->ce)->update(['ce_ltp'=>$value['ltp']]);
+
+                                // FOR MATCH IV CE SYMBOLS
+                                $matchPremium = \DB::connection('mysql_rm')->table('MATCH-IV')->where('ce',$getSymbolName->ce)->update(['ce_ltp'=>$value['ltp']]);
+                                
                             }else if($type == "PE"){
                                 $update = ['pe_ltp'=>$value['ltp']];
                                 if(isset($tokenArr[$value['symbolToken']])){
@@ -98,7 +116,23 @@ class PaperTrading extends Command
                                         $update['target_status'] = 'PE Target Achieved';
                                     }
                                 }
+                                
+                                $getSymbolName = \DB::connection('mysql_rm')->table('Paper Trade')->where('pe_exchange_token',$value['symbolToken'])->first();
+
+                                // FOR PAPER TRADING PE SYMBOLS
                                 $paperTrade = \DB::connection('mysql_rm')->table('Paper Trade')->where('pe_exchange_token',$value['symbolToken'])->update($update);
+
+                                // FOR MATCH DELTA PE SYMBOLS
+                                $matchDelta = \DB::connection('mysql_rm')->table('MATCH-DELTA')->where('pe',$getSymbolName->pe)->update(['pe_ltp'=>$value['ltp']]);
+
+                                // FOR MATCH THETA CE SYMBOLS
+                                $matchTheta = \DB::connection('mysql_rm')->table('MATCH-THETA')->where('pe',$getSymbolName->pe)->update(['pe_ltp'=>$value['ltp']]);
+
+                                // FOR MATCH PREMIUM CE SYMBOLS
+                                $matchPremium = \DB::connection('mysql_rm')->table('MATCH-PREMIUM')->where('pe',$getSymbolName->pe)->update(['pe_ltp'=>$value['ltp']]);
+
+                                // FOR MATCH IV CE SYMBOLS
+                                $matchPremium = \DB::connection('mysql_rm')->table('MATCH-IV')->where('pe',$getSymbolName->pe)->update(['pe_ltp'=>$value['ltp']]);
                             }
                         }
                     }
