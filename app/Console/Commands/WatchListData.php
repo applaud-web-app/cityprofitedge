@@ -44,13 +44,14 @@ class WatchListData extends Command
 
         foreach ($symbolArr as $key => $v) {
 
-            $extraTable = ['FII DII PRO','LTP','IV Theta Sentiments','MATCH-DELTA','MATCH-THETA','MATCH-PREMIUM','MATCH-IV','Paper Trade'];
+            $extraTable = ['FII DII PRO','LTP','IV Theta Sentiments','MATCH-DELTA','MATCH-THETA','MATCH-PREMIUM','MATCH-IV','Paper Trade','Predictions'];
 
             if(in_array($v,$extraTable)){
                 continue;
             }
 
             $data = \DB::connection('mysql_rm')->table($v)->select('ce as symbol_ce','pe as symbol_pe','ce_token as token_ce','pe_token as token_pe','exchange')->orderBy('id','DESC')->get(); 
+
             foreach ($data as $key => $value) {
                 if($value->exchange == "MCX"){
                     array_push($MCXpayload,$value->token_ce);
