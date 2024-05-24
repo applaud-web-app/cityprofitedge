@@ -2545,7 +2545,7 @@ class UserController extends Controller
         if(!empty($symbolName)){
             $finalResponse->where('symbol',$symbolName);
         }
-        $finalResponse = $finalResponse->latest()->orderBy('symbol_name','ASC')->groupBy('symbol_name')->paginate(50);
+        $finalResponse = $finalResponse->orderBy('symbol_name','ASC')->groupBy('symbol_name')->paginate(50);
         // dd($finalResponse);
         // if(!count($finalResponse)){
         //     $pagination = false;
@@ -2568,7 +2568,7 @@ class UserController extends Controller
         if(!empty($symbolName)){
             $finalResponse->where('symbol',$symbolName);
         }
-        $finalResponse = $finalResponse->latest()->orderBy('symbol_name','ASC')->groupBy('symbol_name')->paginate(50);
+        $finalResponse = $finalResponse->orderBy('symbol_name','ASC')->groupBy('symbol_name')->paginate(50);
         // if(!count($finalResponse)){
         //     $pagination = false;
         //     $finalResponse = WishlistData::orderBy('id','DESC')->limit(50)->get();

@@ -74,32 +74,36 @@ class WatchListData extends Command
                             $responseData = $respond['data']['fetched'];
                              if(count($responseData)){
                                 foreach ($responseData as $key => $value) {
-                                        $wishlist = new WishlistData;
-                                        $wishlist->symbol_name = $value['tradingSymbol'];
-                                        $wishlist->symbolToken = $value['symbolToken'];
-                                        $wishlist->symbol = $v;
-                                        $wishlist->exchange = $value['exchange'];
-                                        $wishlist->ltp = $value['ltp'];
-                                        $wishlist->open = $value['open'];
-                                        $wishlist->high = $value['high'];
-                                        $wishlist->low = $value['low'];
-                                        $wishlist->close = $value['close'];
-                                        $wishlist->lastTradeQty = $value['lastTradeQty'];
-                                        $wishlist->exchFeedTime = $value['exchFeedTime'];
-                                        $wishlist->exchTradeTime = $value['exchTradeTime'];
-                                        $wishlist->netChange = $value['netChange'];
-                                        $wishlist->percentChange = $value['percentChange'];
-                                        $wishlist->avgPrice = $value['avgPrice'];
-                                        $wishlist->tradeVolume = $value['tradeVolume'];
-                                        $wishlist->opnInterest = $value['opnInterest'];
-                                        $wishlist->lowerCircuit = $value['lowerCircuit'];
-                                        $wishlist->upperCircuit = $value['upperCircuit'];
-                                        $wishlist->totBuyQuan = $value['totBuyQuan'];
-                                        $wishlist->totSellQuan = $value['totSellQuan'];
-                                        $wishlist->WeekLow52 = $value['52WeekLow'];
-                                        $wishlist->WeekHigh52 = $value['52WeekHigh'];
-                                        $wishlist->save();
-    
+
+                                        WishlistData::updateOrCreate(
+                                            ['symbol_name'=>$value['tradingSymbol'],'ins_date'=>$todayDate],[
+                                                'symbol_name' => $value['tradingSymbol'],
+                                                'symbolToken' => $value['symbolToken'],
+                                                'symbol' => $v,
+                                                'ins_date' => $todayDate,
+                                                'exchange' => $value['exchange'],
+                                                'ltp' => $value['ltp'],
+                                                'open' => $value['open'],
+                                                'high' => $value['high'],
+                                                'low' => $value['low'],
+                                                'close' => $value['close'],
+                                                'lastTradeQty' => $value['lastTradeQty'],
+                                                'exchFeedTime' => $value['exchFeedTime'],
+                                                'exchTradeTime' => $value['exchTradeTime'],
+                                                'netChange' => $value['netChange'],
+                                                'percentChange' => $value['percentChange'],
+                                                'avgPrice' => $value['avgPrice'],
+                                                'tradeVolume' => $value['tradeVolume'],
+                                                'opnInterest' => $value['opnInterest'],
+                                                'lowerCircuit' => $value['lowerCircuit'],
+                                                'upperCircuit' => $value['upperCircuit'],
+                                                'totBuyQuan' => $value['totBuyQuan'],
+                                                'totSellQuan' => $value['totSellQuan'],
+                                                'WeekLow52' => $value['52WeekLow'],
+                                                'WeekHigh52' => $value['52WeekHigh'],
+                                            ]
+                                        );
+                                        
                                         $type = substr($value['tradingSymbol'],-2,2);
                                         if($type == "CE"){
     
@@ -152,32 +156,34 @@ class WatchListData extends Command
                             $responseData = $respond['data']['fetched'];
                              if(count($responseData)){
                                 foreach ($responseData as $key => $value) {
-                                        $wishlist = new WishlistData;
-                                        $wishlist->symbol_name = $value['tradingSymbol'];
-                                        $wishlist->symbolToken = $value['symbolToken'];
-                                        $wishlist->symbol = $v;
-                                        $wishlist->exchange = $value['exchange'];
-                                        $wishlist->ltp = $value['ltp'];
-                                        $wishlist->open = $value['open'];
-                                        $wishlist->high = $value['high'];
-                                        $wishlist->low = $value['low'];
-                                        $wishlist->close = $value['close'];
-                                        $wishlist->lastTradeQty = $value['lastTradeQty'];
-                                        $wishlist->exchFeedTime = $value['exchFeedTime'];
-                                        $wishlist->exchTradeTime = $value['exchTradeTime'];
-                                        $wishlist->netChange = $value['netChange'];
-                                        $wishlist->percentChange = $value['percentChange'];
-                                        $wishlist->avgPrice = $value['avgPrice'];
-                                        $wishlist->tradeVolume = $value['tradeVolume'];
-                                        $wishlist->opnInterest = $value['opnInterest'];
-                                        $wishlist->lowerCircuit = $value['lowerCircuit'];
-                                        $wishlist->upperCircuit = $value['upperCircuit'];
-                                        $wishlist->totBuyQuan = $value['totBuyQuan'];
-                                        $wishlist->totSellQuan = $value['totSellQuan'];
-                                        $wishlist->WeekLow52 = $value['52WeekLow'];
-                                        $wishlist->WeekHigh52 = $value['52WeekHigh'];
-                                        $wishlist->save();
-    
+                                        WishlistData::updateOrCreate(
+                                            ['symbol_name'=>$value['tradingSymbol'],'ins_date'=>$todayDate],[
+                                                'symbol_name' => $value['tradingSymbol'],
+                                                'symbolToken' => $value['symbolToken'],
+                                                'symbol' => $v,
+                                                'ins_date' => $todayDate,
+                                                'exchange' => $value['exchange'],
+                                                'ltp' => $value['ltp'],
+                                                'open' => $value['open'],
+                                                'high' => $value['high'],
+                                                'low' => $value['low'],
+                                                'close' => $value['close'],
+                                                'lastTradeQty' => $value['lastTradeQty'],
+                                                'exchFeedTime' => $value['exchFeedTime'],
+                                                'exchTradeTime' => $value['exchTradeTime'],
+                                                'netChange' => $value['netChange'],
+                                                'percentChange' => $value['percentChange'],
+                                                'avgPrice' => $value['avgPrice'],
+                                                'tradeVolume' => $value['tradeVolume'],
+                                                'opnInterest' => $value['opnInterest'],
+                                                'lowerCircuit' => $value['lowerCircuit'],
+                                                'upperCircuit' => $value['upperCircuit'],
+                                                'totBuyQuan' => $value['totBuyQuan'],
+                                                'totSellQuan' => $value['totSellQuan'],
+                                                'WeekLow52' => $value['52WeekLow'],
+                                                'WeekHigh52' => $value['52WeekHigh'],
+                                            ]
+                                        );
                                         $type = substr($value['tradingSymbol'],-2,2);
                                         if($type == "CE"){
     
@@ -192,6 +198,7 @@ class WatchListData extends Command
     
                                             // FOR MATCH IV CE SYMBOLS
                                             $matchPremium = \DB::connection('mysql_rm')->table('MATCH-IV')->where('ce',$value['tradingSymbol'])->update(['ce_ltp'=>$value['ltp']]);
+
     
                                         }else if($type == "PE"){
                                             // FOR MATCH DELTA PE SYMBOLS
