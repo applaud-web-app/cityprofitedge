@@ -87,13 +87,13 @@
                             </div>
                         </div>
                     </div>
-                    {{-- @isset($pagination)
+                    @isset($pagination)
                         @if ($pagination)
                             <div class="mt-4 justify-content-center d-flex">
                                 {{ paginateLinks($finalResponse)}}
                             </div>
                         @endif
-                    @endisset --}}
+                    @endisset
                 </div>
             </div>
         </div>

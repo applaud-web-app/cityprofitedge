@@ -2534,11 +2534,13 @@ class UserController extends Controller
         $pageTitle = "Watch List";
         $pagination = true;
         $todayDate  = date("Y-m-d");
-        $lastDateData = WishlistData::select('created_at')->first();
+        $lastDateData = WishlistData::select('created_at')->orderBy('id','DESC')->first();
         if($lastDateData){
             $todayDate = date("Y-m-d",strtotime($lastDateData->created_at));
         }
+        // echo $todayDate;die;
         $finalResponse = WishlistData::whereDate('created_at', $todayDate)->latest()->paginate(50)->unique('symbolToken');
+        // dd($finalResponse);
         // if(!count($finalResponse)){
         //     $pagination = false;
         //     $finalResponse = WishlistData::orderBy('id','DESC')->limit(50)->get();
@@ -2550,7 +2552,7 @@ class UserController extends Controller
         $pageTitle = "Watch List";
         $pagination = true;
         $todayDate  = date("Y-m-d");
-        $lastDateData = WishlistData::select('created_at')->first();
+        $lastDateData = WishlistData::select('created_at')->orderBy('id','DESC')->first();
         if($lastDateData){
             $todayDate = date("Y-m-d",strtotime($lastDateData->created_at));
         }
