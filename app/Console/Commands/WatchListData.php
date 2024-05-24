@@ -77,6 +77,7 @@ class WatchListData extends Command
                                         $wishlist = new WishlistData;
                                         $wishlist->symbol_name = $value['tradingSymbol'];
                                         $wishlist->symbolToken = $value['symbolToken'];
+                                        $wishlist->symbol = $v;
                                         $wishlist->exchange = $value['exchange'];
                                         $wishlist->ltp = $value['ltp'];
                                         $wishlist->open = $value['open'];
@@ -154,6 +155,7 @@ class WatchListData extends Command
                                         $wishlist = new WishlistData;
                                         $wishlist->symbol_name = $value['tradingSymbol'];
                                         $wishlist->symbolToken = $value['symbolToken'];
+                                        $wishlist->symbol = $v;
                                         $wishlist->exchange = $value['exchange'];
                                         $wishlist->ltp = $value['ltp'];
                                         $wishlist->open = $value['open'];
