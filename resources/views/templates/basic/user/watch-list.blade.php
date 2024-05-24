@@ -29,6 +29,31 @@
                             </li>
                         </ul>
                     </div>
+
+                    <form action="" class="transparent-form mb-3">
+                        <div class="row">
+                            <div class="col-lg-3 form-group">
+                                <label>@lang('Symbol Name')</label>
+                                <select name="symbol_name" class="form--control" id="">
+                                    <option value="">Select Symbol  Name</option>
+                                    @foreach ($symbolArr as $v)
+                                        @if(!in_array($v,['FII DII PRO','LTP','IV Theta Sentiments','MATCH-DELTA','MATCH-THETA','MATCH-PREMIUM','MATCH-IV','Paper Trade','Predictions']))
+                                            <option value="{{$v}}" {{$symbolName==$v ? 'selected':''}}>{{$v}}</option>
+                                         @endif
+                                    @endforeach
+                                </select>
+                                {{-- <input type="text" name="search" value="" class="form--control" placeholder="@lang('Stock Name')"> --}}
+                            </div>
+                            <div class="col-lg-3 form-group mt-auto">
+                                <button class="btn btn--base w-100" type="submit"><i class="las la-filter"></i> @lang('Filter')</button>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-6 form-group mt-auto">
+                                <a href="{{url('/user/watch-list')}}" class="btn btn--base w-100"><i class="las la-redo-alt"></i> @lang('Refresh')</a>
+                            </div>
+                        </div>
+                    </form>
+
+
                     <div class="custom--card card" id="pst_hre">
                         <div class="card-body p-0">
                             <div class="table-responsive--md table-responsive">
@@ -170,7 +195,7 @@
     <script>
         $(document).ready(function(){
             function reloadData(){
-                $.get('{!!url("user/watch-list-ajax")!!}',function(data){
+                $.get('{!!url("user/watch-list-ajax?".(isset($_SERVER["QUERY_STRING"]) ? $_SERVER["QUERY_STRING"] : ''))!!}',function(data){
                     if(data=='NO_DATA'){
                         reloadData();
                         return;
