@@ -2533,22 +2533,32 @@ class UserController extends Controller
     public function watchList(Request $request){
         $pageTitle = "Watch List";
         $pagination = true;
-        $finalResponse = WishlistData::whereDate('created_at', now()->today())->latest()->paginate(50)->unique('symbolToken');
-        if(!count($finalResponse)){
-            $pagination = false;
-            $finalResponse = WishlistData::orderBy('id','DESC')->limit(50)->get();
+        $todayDate  = date("Y-m-d");
+        $lastDateData = WishlistData::select('created_at')->first();
+        if($lastDateData){
+            $todayDate = date("Y-m-d",strtotime($lastDateData->created_at));
         }
+        $finalResponse = WishlistData::whereDate('created_at', $todayDate)->latest()->paginate(50)->unique('symbolToken');
+        // if(!count($finalResponse)){
+        //     $pagination = false;
+        //     $finalResponse = WishlistData::orderBy('id','DESC')->limit(50)->get();
+        // }
         $fullUrl = $request->fullUrl();
         return view($this->activeTemplate . 'user.watch-list',compact('pageTitle','finalResponse','fullUrl','pagination'));
     }
     public function watchListAjax(Request $request){
         $pageTitle = "Watch List";
         $pagination = true;
-        $finalResponse = WishlistData::whereDate('created_at', now()->today())->latest()->get()->unique('symbolToken');
-        if(!count($finalResponse)){
-            $pagination = false;
-            $finalResponse = WishlistData::orderBy('id','DESC')->limit(50)->get();
+        $todayDate  = date("Y-m-d");
+        $lastDateData = WishlistData::select('created_at')->first();
+        if($lastDateData){
+            $todayDate = date("Y-m-d",strtotime($lastDateData->created_at));
         }
+        $finalResponse = WishlistData::whereDate('created_at', $todayDate)->latest()->get()->unique('symbolToken');
+        // if(!count($finalResponse)){
+        //     $pagination = false;
+        //     $finalResponse = WishlistData::orderBy('id','DESC')->limit(50)->get();
+        // }
         $fullUrl = $request->fullUrl();
         if(!empty($finalResponse)){
             return view($this->activeTemplate . 'user.watch-list-ajax',compact('pageTitle','fullUrl','finalResponse','pagination'));
