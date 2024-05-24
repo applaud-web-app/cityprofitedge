@@ -9,4 +9,7 @@ class WishlistData extends Model
 {
     use HasFactory;
     protected $table = "watchlist_data";
+
+    protected $guarded = [];
+
 }
