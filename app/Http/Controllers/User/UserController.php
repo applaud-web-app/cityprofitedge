@@ -2539,7 +2539,7 @@ class UserController extends Controller
             $todayDate = date("Y-m-d",strtotime($lastDateData->created_at));
         }
         // echo $todayDate;die;
-        $finalResponse = WishlistData::whereDate('created_at', $todayDate)->latest()->paginate(50)->unique('symbolToken');
+        $finalResponse = WishlistData::whereDate('created_at', $todayDate)->latest()->distinct('symbolToken')->paginate(50);
         // dd($finalResponse);
         // if(!count($finalResponse)){
         //     $pagination = false;
@@ -2556,7 +2556,7 @@ class UserController extends Controller
         if($lastDateData){
             $todayDate = date("Y-m-d",strtotime($lastDateData->created_at));
         }
-        $finalResponse = WishlistData::whereDate('created_at', $todayDate)->paginate(50)->unique('symbolToken');
+        $finalResponse = WishlistData::whereDate('created_at', $todayDate)->latest()->distinct('symbolToken')->paginate(50);
         // if(!count($finalResponse)){
         //     $pagination = false;
         //     $finalResponse = WishlistData::orderBy('id','DESC')->limit(50)->get();
