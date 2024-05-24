@@ -2556,7 +2556,7 @@ class UserController extends Controller
         if($lastDateData){
             $todayDate = date("Y-m-d",strtotime($lastDateData->created_at));
         }
-        $finalResponse = WishlistData::whereDate('created_at', $todayDate)->paginate(50)->get()->unique('symbolToken');
+        $finalResponse = WishlistData::whereDate('created_at', $todayDate)->paginate(50)->unique('symbolToken');
         // if(!count($finalResponse)){
         //     $pagination = false;
         //     $finalResponse = WishlistData::orderBy('id','DESC')->limit(50)->get();
