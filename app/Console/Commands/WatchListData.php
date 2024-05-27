@@ -167,7 +167,7 @@ class WatchListData extends Command
                             $matchPremium = \DB::connection('mysql_rm')->table('MATCH-IV')->where('pe',$value['tradingSymbol'])->update(['pe_ltp'=>$value['ltp']]);
                         }
                     }catch(\Exception $e){
-                        \DB::table('test')->insert(['name'=>$e->getMessage()]);
+                        // \DB::table('test')->insert(['name'=>$e->getMessage()]);
                     }
                     
 
