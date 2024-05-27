@@ -35,6 +35,7 @@ class WatchListData extends Command
         $responseData = [];
         $error = [];
         // dd($symbolArr);
+        $arr = [];
         foreach ($symbolArr as $key => $v) {
             $MCXpayload = [];
             $NFOpayload = [];
@@ -59,11 +60,13 @@ class WatchListData extends Command
             ];
             $chunk['MCX'] = array_chunk($payload['MCX'],50,true);
             $chunk['NFO'] = array_chunk($payload['NFO'],50,true);
+            
             foreach ($chunk as $key => $value) {
                 foreach ($value as $tokens) {
                     $finalpayLoad = [ $key=>array_map('json_encode',$tokens)];
                     $payload = json_encode($finalpayLoad,true);
                     $respond = $this->getWatchListRecords($payload);
+                    // $arr[] = $respond;
                     if(isset($respond)){
                         if($respond['status'] == true){
                             array_push($responseData,$respond['data']['fetched']);
@@ -74,6 +77,9 @@ class WatchListData extends Command
                 }
             }
         }
+       
+
+        // dd($arr);
         // dd($responseData,$error,$error2);
         // $payload = [
         //     'MCX'=>$MCXpayload,
@@ -101,6 +107,7 @@ class WatchListData extends Command
         // }
         // dd($responseData,$error,$error2);
         // Insert Data To Watchlist
+        // dd($responseData);
         if(count($responseData)){
             foreach ($responseData as $key => $respond) {
                 foreach ($respond as $key => $value) {
