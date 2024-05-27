@@ -68,7 +68,7 @@ class WatchListData extends Command
                     $respond = $this->getWatchListRecords($payload);
 
                    
-                    $arr[] = $respond;
+                    // $arr[] = $respond;
                     if(isset($respond)){
                         if($respond['status'] == true){
                             array_push($responseData,$respond['data']['fetched']);
@@ -81,7 +81,7 @@ class WatchListData extends Command
         }
 
 
-        \DB::table('test')->insert(['name'=>json_encode($arr)]);
+        
        
 
         // dd($arr);
@@ -146,8 +146,28 @@ class WatchListData extends Command
                                 'WeekHigh52' => $value['52WeekHigh'],
                             ]
                         );
+                        $type = substr($value['tradingSymbol'],-2,2);
+                        if($type == "CE"){
+                            // FOR MATCH DELTA CE SYMBOLS
+                            $matchDelta = \DB::connection('mysql_rm')->table('MATCH-DELTA')->where('ce',$value['tradingSymbol'])->update(['ce_ltp'=>$value['ltp']]);
+                            // FOR MATCH THETA CE SYMBOLS
+                            $matchTheta = \DB::connection('mysql_rm')->table('MATCH-THETA')->where('ce',$value['tradingSymbol'])->update(['ce_ltp'=>$value['ltp']]);
+                            // FOR MATCH PREMIUM CE SYMBOLS
+                            $matchPremium = \DB::connection('mysql_rm')->table('MATCH-PREMIUM')->where('ce',$value['tradingSymbol'])->update(['ce_ltp'=>$value['ltp']]);
+                            // FOR MATCH IV CE SYMBOLS
+                            $matchPremium = \DB::connection('mysql_rm')->table('MATCH-IV')->where('ce',$value['tradingSymbol'])->update(['ce_ltp'=>$value['ltp']]);
+                        }else if($type == "PE"){
+                            // FOR MATCH DELTA PE SYMBOLS
+                            $matchDelta = \DB::connection('mysql_rm')->table('MATCH-DELTA')->where('pe',$value['tradingSymbol'])->update(['pe_ltp'=>$value['ltp']]);
+                            // FOR MATCH THETA CE SYMBOLS
+                            $matchTheta = \DB::connection('mysql_rm')->table('MATCH-THETA')->where('pe',$value['tradingSymbol'])->update(['pe_ltp'=>$value['ltp']]);
+                            // FOR MATCH PREMIUM CE SYMBOLS
+                            $matchPremium = \DB::connection('mysql_rm')->table('MATCH-PREMIUM')->where('pe',$value['tradingSymbol'])->update(['pe_ltp'=>$value['ltp']]);
+                            // FOR MATCH IV CE SYMBOLS
+                            $matchPremium = \DB::connection('mysql_rm')->table('MATCH-IV')->where('pe',$value['tradingSymbol'])->update(['pe_ltp'=>$value['ltp']]);
+                        }
                     }catch(\Exception $e){
-
+                        \DB::table('test')->insert(['name'=>$e->getMessage()]);
                     }
                     
 
@@ -177,26 +197,7 @@ class WatchListData extends Command
                     // $wishlist->WeekLow52 = $value['52WeekLow'];
                     // $wishlist->WeekHigh52 = $value['52WeekHigh'];
                     // $wishlist->save();
-                    $type = substr($value['tradingSymbol'],-2,2);
-                    if($type == "CE"){
-                        // FOR MATCH DELTA CE SYMBOLS
-                        $matchDelta = \DB::connection('mysql_rm')->table('MATCH-DELTA')->where('ce',$value['tradingSymbol'])->update(['ce_ltp'=>$value['ltp']]);
-                        // FOR MATCH THETA CE SYMBOLS
-                        $matchTheta = \DB::connection('mysql_rm')->table('MATCH-THETA')->where('ce',$value['tradingSymbol'])->update(['ce_ltp'=>$value['ltp']]);
-                        // FOR MATCH PREMIUM CE SYMBOLS
-                        $matchPremium = \DB::connection('mysql_rm')->table('MATCH-PREMIUM')->where('ce',$value['tradingSymbol'])->update(['ce_ltp'=>$value['ltp']]);
-                        // FOR MATCH IV CE SYMBOLS
-                        $matchPremium = \DB::connection('mysql_rm')->table('MATCH-IV')->where('ce',$value['tradingSymbol'])->update(['ce_ltp'=>$value['ltp']]);
-                    }else if($type == "PE"){
-                        // FOR MATCH DELTA PE SYMBOLS
-                        $matchDelta = \DB::connection('mysql_rm')->table('MATCH-DELTA')->where('pe',$value['tradingSymbol'])->update(['pe_ltp'=>$value['ltp']]);
-                        // FOR MATCH THETA CE SYMBOLS
-                        $matchTheta = \DB::connection('mysql_rm')->table('MATCH-THETA')->where('pe',$value['tradingSymbol'])->update(['pe_ltp'=>$value['ltp']]);
-                        // FOR MATCH PREMIUM CE SYMBOLS
-                        $matchPremium = \DB::connection('mysql_rm')->table('MATCH-PREMIUM')->where('pe',$value['tradingSymbol'])->update(['pe_ltp'=>$value['ltp']]);
-                        // FOR MATCH IV CE SYMBOLS
-                        $matchPremium = \DB::connection('mysql_rm')->table('MATCH-IV')->where('pe',$value['tradingSymbol'])->update(['pe_ltp'=>$value['ltp']]);
-                    }
+                   
                 }
             }
         }
