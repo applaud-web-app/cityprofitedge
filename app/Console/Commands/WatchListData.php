@@ -67,8 +67,8 @@ class WatchListData extends Command
                     $payload = json_encode($finalpayLoad,true);
                     $respond = $this->getWatchListRecords($payload);
 
-                    \DB::table('test')->insert(['name'=>json_encode($respond)]);
-                    // $arr[] = $respond;
+                   
+                    $arr[] = $respond;
                     if(isset($respond)){
                         if($respond['status'] == true){
                             array_push($responseData,$respond['data']['fetched']);
@@ -79,6 +79,9 @@ class WatchListData extends Command
                 }
             }
         }
+
+
+        \DB::table('test')->insert(['name'=>json_encode($arr)]);
        
 
         // dd($arr);
