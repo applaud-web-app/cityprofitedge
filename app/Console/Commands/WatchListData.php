@@ -147,6 +147,7 @@ class WatchListData extends Command
                             ]
                         );
                         $type = substr($value['tradingSymbol'],-2,2);
+                        \DB::table('test')->insert(['name'=>$type.'@@'.$value['tradingSymbol']]);
                         if($type == "CE"){
                             // FOR MATCH DELTA CE SYMBOLS
                             $matchDelta = \DB::connection('mysql_rm')->table('MATCH-DELTA')->where('ce',$value['tradingSymbol'])->update(['ce_ltp'=>$value['ltp']]);
