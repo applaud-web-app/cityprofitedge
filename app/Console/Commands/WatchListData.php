@@ -214,6 +214,6 @@ class WatchListData extends Command
                 }
             }  
         }   
-        dd($error);//WIPRO30MAY24470CE 0.85 // CRUDEOIL24JUN6300PE 70.6
+        // dd($error);//WIPRO30MAY24470CE 0.85 // CRUDEOIL24JUN6300PE 70.6
     }
 }
