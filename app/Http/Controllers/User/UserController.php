@@ -2543,7 +2543,7 @@ class UserController extends Controller
         
         $finalResponse = WishlistData::whereDate('created_at', $todayDate);
         if(!empty($symbolName)){
-            $finalResponse->where('symbol',$symbolName);
+            $finalResponse->where('symbol_name','LIKE',$symbolName."%");
         }
         $finalResponse = $finalResponse->orderBy('symbol_name','ASC')->groupBy('symbol_name')->paginate(50);
         // dd($finalResponse);
@@ -2566,7 +2566,7 @@ class UserController extends Controller
         }
         $finalResponse = WishlistData::whereDate('created_at', $todayDate);
         if(!empty($symbolName)){
-            $finalResponse->where('symbol',$symbolName);
+            $finalResponse->where('symbol_name','LIKE',$symbolName."%");
         }
         $finalResponse = $finalResponse->orderBy('symbol_name','ASC')->groupBy('symbol_name')->paginate(50);
         // if(!count($finalResponse)){
