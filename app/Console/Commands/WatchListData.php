@@ -155,7 +155,6 @@ class WatchListData extends Command
                             ['symbol_name'=>$value['tradingSymbol'],'ins_date'=>$todayDate],[
                                 'symbol_name' => $value['tradingSymbol'],
                                 'symbolToken' => $value['symbolToken'],
-                                'symbol' => $v,
                                 'ins_date' => $todayDate,
                                 'exchange' => $value['exchange'],
                                 'ltp' => $value['ltp'],
