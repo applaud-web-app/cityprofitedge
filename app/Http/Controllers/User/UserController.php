@@ -736,8 +736,8 @@ class UserController extends Controller
         
         $symbolArray = [];
         foreach ($globalStockPortfolios as $val) {
-        //    array_push($symbolArray , $val['stock_name'].".NS");
-        array_push($symbolArray , $val['stock_name']);
+           array_push($symbolArray , $val['stock_name'].".NS");
+        // array_push($symbolArray , $val['stock_name']);
         }
         // $getToken = AngelApiInstrument::select('token')->WhereIn(['symbol',$symbolArray])->get();
 

@@ -90,7 +90,7 @@
 
     setInterval(() => {
         reloadData();
-    }, 30000);//call every 1/2 minute
+    }, 10000);//call every 1/2 minute
 </script>
 @endpush
 @endsection

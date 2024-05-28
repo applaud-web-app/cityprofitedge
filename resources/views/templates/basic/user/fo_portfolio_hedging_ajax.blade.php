@@ -19,7 +19,7 @@
                             </tr>
                         </thead>
                         @php
-                        $date = \DB::connection('mysql_pr')->table('LTP')->WHEREIN('symbol',$symbolArray)->pluck('ltp','symbol')->toArray();  
+                            $date = \DB::connection('mysql_pr')->table('LTP')->WHEREIN('symbol',$symbolArray)->pluck('ltp','symbol')->toArray();  
                         @endphp
                         <tbody>
                             @forelse($foPortFolioHedgings as $foPortFolioHedging)
