@@ -38,13 +38,13 @@
                                             <th>@lang('Sector')</th>
                                         </tr>
                                     </thead>
-                                    @php
+                                    {{-- @php
                                     $date = \DB::connection('mysql_pr')->table('LTP')->WHEREIN('symbol',$symbolArray)->pluck('ltp','symbol')->toArray();  
-                                    @endphp
+                                    @endphp --}}
                                     <tbody>
                                         @forelse($thematicPortfolios as $thematicPortfolio)
-                                        @php  $key = isset($date[$thematicPortfolio->stock_name.'.NS']) ? $date[$thematicPortfolio->stock_name.'.NS'] : 0;
-                                        @endphp
+                                        {{-- @php  $key = isset($date[$thematicPortfolio->stock_name.'.NS']) ? $date[$thematicPortfolio->stock_name.'.NS'] : 0;
+                                        @endphp --}}
                                         <tr>
                                             <td>
                                                 {{ $thematicPortfolio->stock_name }}
@@ -55,9 +55,9 @@
                                             <td>
                                                {{ showAmount($thematicPortfolio->buy_price) }}
                                             </td>
-                                            <td>{{showAmount($key)}}</td>
+                                            <td>{{showAmount($thematicPortfolio->cmp)}}</td>
                                             <td>
-                                              <span class="{{$key-$thematicPortfolio->buy_price > 0 ? "text-success" : "text-danger"}}">{{ showAmount($key-$thematicPortfolio->buy_price) }}</span>  
+                                              <span class="{{$thematicPortfolio->cmp-$thematicPortfolio->buy_price > 0 ? "text-success" : "text-danger"}}">{{ showAmount($thematicPortfolio->cmp-$thematicPortfolio->buy_price) }}</span>  
                                             </td>
                                             <td>{{ $thematicPortfolio->sector }}</td>
                                         </tr>

@@ -46,13 +46,13 @@
                                             <th>@lang('Pooling Broker Name')</th>
                                         </tr>
                                     </thead>
-                                    @php
+                                    {{-- @php
                                     $date = \DB::connection('mysql_pr')->table('LTP')->WHEREIN('symbol',$symbolArray)->pluck('ltp','symbol')->toArray();  
-                                    @endphp
+                                    @endphp --}}
                                     <tbody>
                                         @forelse($metalsPortfolios as $metalsPortfolio)
-                                        @php $key = isset($date[$metalsPortfolio->stock_name.'.NS']) ? $date[$metalsPortfolio->stock_name.'.NS'] : 0;
-                                        @endphp
+                                        {{-- @php $key = isset($date[$metalsPortfolio->stock_name.'.NS']) ? $date[$metalsPortfolio->stock_name.'.NS'] : 0;
+                                        @endphp --}}
                                         <tr>
                                             <td>
                                                 {{ $metalsPortfolio->broker_name }}
@@ -69,13 +69,13 @@
                                             <td>
                                                 {{ showAmount($metalsPortfolio->buy_price) }}
                                             </td>
-                                            <td>{{showAmount($key)}}</td>
+                                            <td>{{showAmount($metalsPortfolio->cmp)}}</td>
                                             <td>
-                                                {{ showAmount($metalsPortfolio->quantity*$key) }}
+                                                {{ showAmount($metalsPortfolio->quantity*$metalsPortfolio->cmp) }}
                                             </td>
                                             <td>
-                                                @php $vals = $metalsPortfolio->quantity*($key - $metalsPortfolio->buy_price);  @endphp
-                                                <span class="{{ $vals > 0 ? "text-success" : "text-danger"}}"> {{showAmount($metalsPortfolio->quantity*($key - $metalsPortfolio->buy_price))}}</span>
+                                                @php $vals = $metalsPortfolio->quantity*($metalsPortfolio->cmp - $metalsPortfolio->buy_price);  @endphp
+                                                <span class="{{ $vals > 0 ? "text-success" : "text-danger"}}"> {{showAmount($metalsPortfolio->quantity*($metalsPortfolio->cmp - $metalsPortfolio->buy_price))}}</span>
                                                 </td>
                                             <td>{{ $metalsPortfolio->sector }}</td>
                                             <td>{{ $metalsPortfolio->poolingAccountPortfolio->broker_name }}</td>

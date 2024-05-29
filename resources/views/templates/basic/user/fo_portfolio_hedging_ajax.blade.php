@@ -18,13 +18,13 @@
                                 <th>@lang('Pooling Broker Name')</th>
                             </tr>
                         </thead>
-                        @php
+                        {{-- @php
                             $date = \DB::connection('mysql_pr')->table('LTP')->WHEREIN('symbol',$symbolArray)->pluck('ltp','symbol')->toArray();  
-                        @endphp
+                        @endphp --}}
                         <tbody>
                             @forelse($foPortFolioHedgings as $foPortFolioHedging)
-                                @php  $key = isset($date[$foPortFolioHedging->stock_name.'.NS']) ? $date[$foPortFolioHedging->stock_name.'.NS'] : 0;
-                                @endphp
+                                {{-- @php  $key = isset($date[$foPortFolioHedging->stock_name.'.NS']) ? $date[$foPortFolioHedging->stock_name.'.NS'] : 0;
+                                @endphp --}}
                                 <tr>
                                     <td>
                                         {{ $foPortFolioHedging->broker_name }}
@@ -41,14 +41,14 @@
                                     <td>
                                         {{ showAmount($foPortFolioHedging->buy_price) }}
                                     </td>
-                                    <td>{{showAmount($key)}}</td>
+                                    <td>{{showAmount($oPortFolioHedging->cmp)}}</td>
                                     <td>
-                                        {{ showAmount($foPortFolioHedging->quantity*$key) }}
+                                        {{ showAmount($foPortFolioHedging->quantity*$oPortFolioHedging->cmp) }}
                                     </td>
                                     <td> 
-                                        @php $vals = $foPortFolioHedging->quantity*($key - $foPortFolioHedging->buy_price);
+                                        @php $vals = $foPortFolioHedging->quantity*($oPortFolioHedging->cmp - $foPortFolioHedging->buy_price);
                                         @endphp
-                                        <span class="{{$vals > 0 ? "text-success" : "text-danger"}}">{{showAmount($foPortFolioHedging->quantity*($key - $foPortFolioHedging->buy_price))}}</span>
+                                        <span class="{{$vals > 0 ? "text-success" : "text-danger"}}">{{showAmount($foPortFolioHedging->quantity*($oPortFolioHedging->cmp - $foPortFolioHedging->buy_price))}}</span>
                                          </td>
                                     <td>{{ $foPortFolioHedging->sector }}</td>
                                     <td>{{ $foPortFolioHedging->poolingAccountPortfolio->broker_name }}</td>
