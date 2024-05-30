@@ -12,7 +12,7 @@
         <div class="row justify-content-center">
         <div class="col-lg-6">
             <div class="registration-wrapper section--bg">
-            <form class="transparent-form verify-gcaptcha" method="POST" action="{{ route('user.password.email') }}">
+            <form class="transparent-form " method="POST" action="{{ route('user.password.email') }}">
                 @csrf
                 <div class="row">
                     <div class="col-lg-12 form-group">
@@ -28,9 +28,9 @@
                             </span>
                         @enderror
                     </div>
-                    <div class="form-group mt-4">
+                    {{-- <div class="form-group mt-4">
                         <x-captcha />
-                    </div>
+                    </div> --}}
                     <div class="col-lg-12 form-group mt-4">
                         <button type="submit" class="btn btn--base w-100">@lang('Submit')</button>
                     </div>

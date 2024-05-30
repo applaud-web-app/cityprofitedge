@@ -28,10 +28,10 @@ class ForgotPasswordController extends Controller
             'value'=>'required'
         ]);
 
-        if(!verifyCaptcha()){
-            $notify[] = ['error','Invalid captcha provided'];
-            return back()->withNotify($notify);
-        }
+        // if(!verifyCaptcha()){
+        //     $notify[] = ['error','Invalid captcha provided'];
+        //     return back()->withNotify($notify);
+        // }
 
         $fieldType = $this->findFieldType();
         $user = User::where($fieldType, $request->value)->first();

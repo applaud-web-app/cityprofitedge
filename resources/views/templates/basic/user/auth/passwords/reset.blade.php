@@ -60,8 +60,8 @@
 </section>
 @endsection
 
-@if($general->secure_password)
+{{-- @if($general->secure_password)
     @push('script-lib')
         <script src="{{ asset('assets/global/js/secure_password.js') }}"></script>
     @endpush
-@endif
+@endif --}}
