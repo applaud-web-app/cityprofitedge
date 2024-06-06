@@ -1830,7 +1830,7 @@ class UserController extends Controller
         $omsObj->txn_type = $txnType;
         $omsObj->ce_quantity = $request->ce_quantity;
         $omsObj->pe_quantity = $request->pe_quantity;
-        $omsObj->pyramid_freq = $request->pyramid_freq;
+        $omsObj->pyramid_freq = $request->pyramid_freq ?? 0;
         $omsObj->exit_1_qty = $request->exit_1_qty;
         $omsObj->exit_1_target = $request->exit_1_target;
         $omsObj->exit_2_qty = $request->exit_2_qty;
