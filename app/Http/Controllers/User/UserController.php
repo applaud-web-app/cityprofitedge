@@ -1837,7 +1837,7 @@ class UserController extends Controller
         $omsObj->exit_2_target = $request->exit_2_target;
         $omsObj->user_id = auth()->user()->id;
         $omsObj->status = $request->status;
-        $omsObj->cron_run_at = date("Y-m-d H:i:s",strtotime('-'.$request->pyramid_freq.' minutes'));
+        $omsObj->cron_run_at = $request->pyramid_freq > 0 ? date("Y-m-d H:i:s",strtotime('-'.$request->pyramid_freq.' minutes')) : date("Y-m-d H:i:s");
         $omsObj->save();
         $notify[] = ['success', 'Data added Successfully...'];
         return redirect()->back()->withNotify($notify);
