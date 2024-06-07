@@ -2379,7 +2379,7 @@ class UserController extends Controller
         $omsObj->status = $request->status;
         // $omsObj->is_api_pushed = 0;
         // $omsObj->last_time = null;
-        $omsObj->cron_run_at = date("Y-m-d H:i:s",strtotime('-'.$request->pyramid_freq_up.' minutes'));
+        $omsObj->cron_run_at = $request->pyramid_freq_up > 0 ? date("Y-m-d H:i:s",strtotime('-'.$request->pyramid_freq_up.' minutes')) : date("Y-m-d H:i:s");
         $omsObj->save();
         $notify[] = ['success', 'Data updated Successfully...'];
         return redirect()->back()->withNotify($notify);
