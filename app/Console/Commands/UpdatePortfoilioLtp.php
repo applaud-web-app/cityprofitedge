@@ -50,9 +50,9 @@ class UpdatePortfoilioLtp extends Command
             $responseData = array_merge($responseData, $data);
         }
 
-        dd($responseData);
+      
         $newArray = array_unique($responseData);
-        // dd($newArray);
+    
         if (count($newArray)) {
            $fetchData =  array_chunk($newArray,50);
             foreach ($fetchData as $symbolNames) {
@@ -78,7 +78,7 @@ class UpdatePortfoilioLtp extends Command
             }
         }
 
-        dd($apiResponse);
+        dd($apiResponse,$newArray);
         // UPDATE LTP FROM THE RESPONE DATA
         if(count($apiResponse)){
             foreach ($apiResponse as $k => $respond) {
