@@ -39,7 +39,7 @@ class UpdatePortfoilioLtp extends Command
     public function handle()
     {
         set_time_limit(0);
-        $portfolioTables = ['f_o_portfolios','global_stock_portfolios','metals_portfolios','stock_portfolios','thematic_portfolios'];
+        $portfolioTables = ['thematic_portfolios','stock_portfolios','f_o_portfolios','global_stock_portfolios','metals_portfolios'];
         $todayDate = date("Y-m-d");
 
         $responseData = [];
@@ -49,6 +49,8 @@ class UpdatePortfoilioLtp extends Command
             $data = \DB::table($v)->orderBy('id','DESC')->distinct('stock_name')->pluck('stock_name')->toArray();
             $responseData = array_merge($responseData, $data);
         }
+
+        dd($portfolioTables);
         $newArray = array_unique($responseData);
         // dd($newArray);
         if (count($newArray)) {
@@ -76,6 +78,7 @@ class UpdatePortfoilioLtp extends Command
             }
         }
 
+        dd($apiResponse);
         // UPDATE LTP FROM THE RESPONE DATA
         if(count($apiResponse)){
             foreach ($apiResponse as $k => $respond) {
