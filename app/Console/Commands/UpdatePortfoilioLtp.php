@@ -50,7 +50,7 @@ class UpdatePortfoilioLtp extends Command
             $responseData = array_merge($responseData, $data);
         }
 
-        dd($portfolioTables);
+        dd($responseData);
         $newArray = array_unique($responseData);
         // dd($newArray);
         if (count($newArray)) {
