@@ -74,8 +74,11 @@ class UpdatePortfoilioLtp extends Command
                     }
                 } 
                 array_push($error,$respond);
+
+                dd($alldata,$respond);
                 sleep(1);
             }
+
         }
 
         dd($apiResponse,$newArray);
