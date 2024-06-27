@@ -44,5 +44,9 @@ class AngelInstrument extends Command
                 'tick_size'=>$d['tick_size']
            ]);
         });
+
+        //  DB::table('angel_api_instruments')
+        // ->whereDate('created_at', '!=', Carbon::today())
+        // ->delete();
     }
 }
