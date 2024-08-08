@@ -3142,4 +3142,16 @@ class UserController extends Controller
         return view($this->activeTemplate . 'user.match-iv-ajax',compact('data','fullUrl','pageTitle'));
     } 
 
+
+
+    public function paperXFactor(Request $request){
+        $pageTitle = 'Paper X Factor';
+        $paperFactor = \DB::connection('mysql_rm')->table('PaperXFactor')->get();
+        
+        $data['paperFactor'] = $paperFactor;
+       
+        return view($this->activeTemplate . 'user.paper-x-factor',compact('data','pageTitle'));
+    } 
+
+
 }

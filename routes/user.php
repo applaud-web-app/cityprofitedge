@@ -130,6 +130,8 @@ Route::middleware('auth')->name('user.')->group(function () {
                 Route::get('match-iv', 'matchIv')->name('match-iv');
                 Route::get('match-iv-ajax', 'ajaxmatchIv')->name('match-iv-ajax');
 
+                Route::get('paper-x-factor', 'paperXFactor')->name('paper-x-factor');
+
             });
 
             //Profile setting
