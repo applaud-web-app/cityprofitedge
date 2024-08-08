@@ -1,6 +1,6 @@
 @extends($activeTemplate.'layouts.master')
 @section('content')
-<section class="pt-100 pb-100">
+<section class="pt-50 pb-50">
 
     <div class="container-fluid" id="pst_hre">
         <div class="row" >
