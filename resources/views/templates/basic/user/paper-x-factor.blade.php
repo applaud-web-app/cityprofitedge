@@ -7,7 +7,8 @@
             <div class="row">
                 <div class="col-lg-3 form-group">
                     <label for="factor_date">Choose Date</label>
-                    <input type="date" name="factor_date" class="form--control" id="factor_date" value="{{ request('factor_date') }}" />
+                    <input type="date" name="factor_date" class="form--control" id="factor_date" 
+                           value="{{ request('factor_date') }}" max="{{ date('Y-m-d') }}" />
                 </div>
                 <div class="col-lg-2 form-group mt-auto">
                     <button class="btn btn--base w-100" type="submit"><i class="las la-filter"></i> Filter</button>
