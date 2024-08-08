@@ -3144,14 +3144,32 @@ class UserController extends Controller
 
 
 
-    public function paperXFactor(Request $request){
-        $pageTitle = 'Paper X Factor';
-        $paperFactor = \DB::connection('mysql_rm')->table('PaperXFactor')->get();
-        
-        $data['paperFactor'] = $paperFactor;
-       
-        return view($this->activeTemplate . 'user.paper-x-factor',compact('data','pageTitle'));
-    } 
+    public function paperXFactor(Request $request)
+{
+    $pageTitle = 'Paper X Factor';
+
+    // Retrieve data from the PaperXFactor table without any specific order
+    $paperFactorQuery = \DB::connection('mysql_rm')
+        ->table('PaperXFactor')
+        ->select('*');
+
+    // Apply the date filter if a date is selected
+    if ($request->has('factor_date') && $request->factor_date != '') {
+        $paperFactorQuery->whereDate('date', $request->factor_date);
+    }
+
+    // Execute the query and get the results
+    $paperFactor = $paperFactorQuery->get();
+
+    // Prepare the data array
+    $data['paperFactor'] = $paperFactor;
+
+    // Return the view with the data and page title
+    return view($this->activeTemplate . 'user.paper-x-factor', compact('data', 'pageTitle'));
+}
+
+    
+
 
 
 }
