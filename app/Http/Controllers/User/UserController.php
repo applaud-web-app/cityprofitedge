@@ -3149,7 +3149,7 @@ class UserController extends Controller
     $pageTitle = 'Paper X Factor';
     
     $checkTodayD = \DB::connection('mysql_rm')->table('PaperXFactor')->select('date')->get();
-    $today = date("Y-m-d",strtotime($checkTodayD->date);
+    $today = date("Y-m-d",strtotime($checkTodayD->date));
     $paperFactorQuery = \DB::connection('mysql_rm') ->table('PaperXFactor')->select('symbol','date','data');
     if ($request->has('factor_date') && $request->factor_date != '') {
         $paperFactorQuery->whereDate('date', $request->factor_date);
