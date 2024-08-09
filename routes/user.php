@@ -131,6 +131,7 @@ Route::middleware('auth')->name('user.')->group(function () {
                 Route::get('match-iv-ajax', 'ajaxmatchIv')->name('match-iv-ajax');
 
                 Route::get('paper-x-factor', 'paperXFactor')->name('paper-x-factor');
+                Route::get('paper-x-factor-ajax', 'paperxFactorAjax')->name('paper-x-factor-ajax');
 
             });
 
