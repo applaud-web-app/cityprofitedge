@@ -3147,27 +3147,26 @@ class UserController extends Controller
     public function paperXFactor(Request $request)
 {
     $pageTitle = 'Paper X Factor';
-    $today = date("Y-m-d");
-    $checkTodayD = \DB::connection('mysql_rm')->table('PaperXFactor')->select('*')->get();
-    dd($checkTodayD);
-    // Retrieve data from the PaperXFactor table without any specific order
-    $paperFactorQuery = \DB::connection('mysql_rm')
-        ->table('PaperXFactor')
-        ->select('*');
-
-    // Apply the date filter if a date is selected
+    
+    $checkTodayD = \DB::connection('mysql_rm')->table('PaperXFactor')->select('date')->get();
+    $today = date("Y-m-d",strtotime($checkTodayD->date);
+    $paperFactorQuery = \DB::connection('mysql_rm') ->table('PaperXFactor')->select('symbol','date','data');
     if ($request->has('factor_date') && $request->factor_date != '') {
         $paperFactorQuery->whereDate('date', $request->factor_date);
+    }else{
+        $paperFactorQuery->whereDate('date', $today);
     }
-
-    // Execute the query and get the results
+    if ($request->has('factor_symbol') && $request->factor_symbol != '') {
+        $paperFactorQuery->whereDate('symbol', $request->factor_symbol);
+    }
     $paperFactor = $paperFactorQuery->get();
 
     // Prepare the data array
     $data['paperFactor'] = $paperFactor;
+    $data['pageTitle'] = $pageTitle;
 
     // Return the view with the data and page title
-    return view($this->activeTemplate . 'user.paper-x-factor', compact('data', 'pageTitle'));
+    return view($this->activeTemplate . 'user.paper-x-factor', $data);
 }
 
     
