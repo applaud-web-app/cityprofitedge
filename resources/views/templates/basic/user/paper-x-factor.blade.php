@@ -6,11 +6,11 @@
         <form action="{{ url()->current() }}" method="GET" class="transparent-form mb-3">
             <div class="row">
                 <div class="col-lg-3 form-group">
-                    <label for="stock_name">Symbol Name</label>
-                    <select name="stock_name" class="form--control" id="stock_name">
+                    <label for="factor_symbol">Symbol Name</label>
+                    <select name="factor_symbol" class="form--control" id="stock_name">
                         <option value="">Select Symbol  Name</option>     
                         @foreach($paperFactor as $val)
-                         <option value="{{$val->symbol}}">{{$val->symbol}}</option>
+                         <option value="{{$val->symbol}}" {{request('factor_symbol')==$val->symbol ? 'selected':''}}>{{$val->symbol}}</option>
                         @endforeach
                     </select>
                 </div>
