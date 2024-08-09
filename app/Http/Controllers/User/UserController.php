@@ -3167,7 +3167,7 @@ class UserController extends Controller
     $data['paperFactor'] = $paperFactor;
     $data['symbolArr'] = $allSymbols;
     $data['pageTitle'] = $pageTitle;
-    $data['symbolFiltered'] = $isFiltered;
+    $data['isFiltered'] = $isFiltered;
 
     // Return the view with the data and page title
     return view($this->activeTemplate . 'user.paper-x-factor', $data);
