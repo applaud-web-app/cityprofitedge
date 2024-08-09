@@ -28,11 +28,12 @@
             </div>
         </form>
 
+        <div id="pst_hre">
         @forelse($paperFactor as $value)
             <div class="row mb-3">
                 <div class="col-lg-12">
                     
-                    <div class="custom--card" id="pst_hre">
+                    <div class="custom--card">
                         <div class="card-header">{{$value->symbol}}</div>
                         <div class="card-body p-0">
                             <div class="table-responsive--md table-responsive">
@@ -122,7 +123,7 @@
         @empty
             <div class="row mb-3">
                 <div class="col-lg-12">
-                    <div class="custom--card" id="pst_hre">
+                    <div class="custom--card">
                        
                         <div class="card-body p-0">
                             <h3 class="text-center text-danger">NO DATA</h3>
@@ -131,6 +132,7 @@
                 </div>
             </div>
         @endforelse
+    </div>
         
     </div>
 </section>
@@ -138,7 +140,7 @@
 @push('script')
 <script>
     function reloadData(){
-        $.get('{!!$fullUrl!!}',function(data){
+        $.get('{!!url("user/paper-x-factor-ajax?".(isset($_SERVER["QUERY_STRING"]) ? $_SERVER["QUERY_STRING"] : ''))!!}',function(data){
             $("#pst_hre").html(data);
         });
     }
