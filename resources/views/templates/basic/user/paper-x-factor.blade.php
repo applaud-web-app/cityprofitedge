@@ -109,7 +109,7 @@
                                 @if($i == $currentPage)
                                     <li class="page-item active" aria-current="page"><span class="page-link">{{$i}}</span></li>
                                 @else
-                                <li class="page-item"><a class="page-link" href="{{url('user/portfolio-top-gainers?factor_symbol='.request('factor_symbol').'&factor_date='.request('factor_date').'&page='.$i.'')}}">{{$i}}</a></li>
+                                <li class="page-item"><a class="page-link" href="{{url('user/paper-x-factor?factor_symbol='.request('factor_symbol').'&factor_date='.request('factor_date').'&page='.$i.'')}}">{{$i}}</a></li>
                                 @endif
                             @endfor
                             @php     
