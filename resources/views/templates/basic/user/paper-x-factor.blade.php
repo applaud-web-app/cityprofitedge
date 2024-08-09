@@ -134,4 +134,20 @@
         
     </div>
 </section>
+
+@push('script')
+<script>
+    function reloadData(){
+        $.get('{!!$fullUrl!!}',function(data){
+            $("#pst_hre").html(data);
+        });
+    }
+
+    setInterval(() => {
+        reloadData();
+    }, 60000);//call every 1/2 minute
+    
+</script>
+@endpush
+                                
 @endsection
