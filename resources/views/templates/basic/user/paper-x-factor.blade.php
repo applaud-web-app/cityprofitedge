@@ -98,7 +98,7 @@
             <div class="row mb-3">
                 <div class="col-lg-12">
                     <div class="custom--card" id="pst_hre">
-                        <div class="card-header">{{$value->symbol}}</div>
+                       
                         <div class="card-body p-0">
                             <h3 class="text-center text-danger">NO DATA</h3>
                         </div>
