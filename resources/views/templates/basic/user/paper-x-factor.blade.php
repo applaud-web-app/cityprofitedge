@@ -61,19 +61,19 @@
                                             <td>{{$val['CE_symbol']}}</td>
                                             <td>{{$val['CE_Close']}}</td>
                                             <td>{{$val['FINAL_CE']}}</td>
-                                            <td>-</td>
+                                            <td>{{$val['CE_quantity']}}</td>
                                             <td>{{$val['CE_Open']}}</td>
-                                            <td>Exit</td>
+                                            <td>{{$val['CE_Exit_price']}}</td>
                                             <td>{{$val['CE_Profit']}}</td>
                                             <td>{{$val['PE_symbol']}}</td>
                                             <td>{{$val['PE_Close']}}</td>
                                             <td>{{$val['FINAL_PE']}}</td>
-                                            <td>QL</td>
+                                            <td>{{$val['PE_quantity']}}</td>
                                             <td>{{$val['PE_Open']}}</td>
-                                            <td>PExit</td>
+                                            <td>{{$val['PE_Exit_price']}}</td>
                                             <td>{{$val['PE_Profit']}}</td>
                                             <td>{{$val['Strategy_Profit']}}</td>
-                                            <td>st</td>
+                                            <td>{{$val['Trade_Status']}}</td>
                                         </tr>
                                         @endforeach
                                     </tbody>
