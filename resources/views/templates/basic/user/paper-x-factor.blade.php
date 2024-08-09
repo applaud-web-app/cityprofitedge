@@ -10,7 +10,7 @@
                     <select name="stock_name" class="form--control" id="stock_name">
                         <option value="">Select Symbol  Name</option>     
                         @foreach($paperFactor as $val)
-                         <option value="{{$val}}">{{$val}}</option>
+                         <option value="{{$val->symbol}}">{{$val->symbol}}</option>
                         @endforeach
                     </select>
                 </div>
