@@ -26,22 +26,37 @@
                             <table class="table custom--table text-nowrap">
                                 <thead>
                                     <tr>
-                                        <th>@lang('Date')</th>
+                                        {{-- <th>@lang('Date')</th>
                                         <th>@lang('Timestamp')</th>
                                         <th>@lang('Symbol')</th>
                                         <th>@lang('CE')</th>
                                         <th>@lang('PE')</th>
-                                       
-                                       
                                         <th>@lang('CE Signal')</th>
                                         <th>@lang('PE Signal')</th>
                                         <th>@lang('CE Profit')</th>
                                         <th>@lang('PE Profit')</th>
-                                        <th>@lang('Strategy Profit')</th>
+                                        <th>@lang('Strategy Profit')</th> --}}
+                                        <th>@lang('TIME')</th>
+                                        <th>@lang('CE_SYMBOL')</th>
+                                        <th>@lang('CE_CLOSE')</th>
+                                        <th>@lang('FINAL_CE')</th>
+                                        <th>@lang('CE_QTY_LOTS')</th>
+                                        <th>@lang('CE_ENTRY_PRICE')</th>
+                                        <th>@lang('CE_EXIT_PRICE')</th>
+                                        <th>@lang('CE_PROFIT')</th>
+                                        <th>@lang('PE_SYMBOL')</th>
+                                        <th>@lang('PE_CLOSE')</th>
+                                        <th>@lang('FINAL_PE')</th>
+                                        <th>@lang('PE_QTY_LOTS')</th>
+                                        <th>@lang('PE_ENTRY_PRICE')</th>
+                                        <th>@lang('PE_EXIT_PRICE')</th>
+                                        <th>@lang('PE_PROFIT')</th>
+                                        <th>@lang('STRATEGY_PROFIT')</th>
+                                        <th>@lang('TRADE_STATUS')</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @forelse($data['paperFactor'] as $factor)
+                                    {{-- @forelse($data['paperFactor'] as $factor)
                                         <tr>
                                             <td><strong>{{ showDate($factor->date) }}</strong></td>
                                             <td>{{ $factor->timestamp }}</td>
@@ -60,7 +75,46 @@
                                         <tr>
                                             <td class="text-muted text-center" colspan="100%">NO DATA</td>
                                         </tr>
-                                    @endforelse
+                                    @endforelse --}}
+
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
