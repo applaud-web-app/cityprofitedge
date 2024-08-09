@@ -3147,7 +3147,7 @@ class UserController extends Controller
     public function paperXFactor(Request $request)
 {
     $pageTitle = 'Paper X Factor';
-    
+    $isFiltered = 0;
     $checkTodayD = \DB::connection('mysql_rm')->table('PaperXFactor')->select('date')->orderBy('id','DESC')->first();
     $today = $checkTodayD ? date("Y-m-d",strtotime($checkTodayD->date)) : date("Y-m-d");
     
@@ -3159,12 +3159,15 @@ class UserController extends Controller
     }
     if ($request->has('factor_symbol') && $request->factor_symbol != '') {
         $paperFactorQuery->whereDate('symbol', $request->factor_symbol);
+        $isFiltered = 1;
     }
     $paperFactor = $paperFactorQuery->get();
-
+    $allSymbols = \DB::connection('mysql_rm')->table('PaperXFactor')->select('symbol')->orderBy('symbol','ASC')->groupBy('symbol')->get();
     // Prepare the data array
     $data['paperFactor'] = $paperFactor;
+    $data['symbolArr'] = $allSymbols;
     $data['pageTitle'] = $pageTitle;
+    $data['symbolFiltered'] = $isFiltered;
 
     // Return the view with the data and page title
     return view($this->activeTemplate . 'user.paper-x-factor', $data);
