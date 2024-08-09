@@ -18,110 +18,48 @@
                 </div>
             </div>
         </form>
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="custom--card" id="pst_hre">
-                    <div class="card-body p-0">
-                        <div class="table-responsive--md table-responsive">
-                            <table class="table custom--table text-nowrap">
-                                <thead>
-                                    <tr>
-                                        {{-- <th>@lang('Date')</th>
-                                        <th>@lang('Timestamp')</th>
-                                        <th>@lang('Symbol')</th>
-                                        <th>@lang('CE')</th>
-                                        <th>@lang('PE')</th>
-                                        <th>@lang('CE Signal')</th>
-                                        <th>@lang('PE Signal')</th>
-                                        <th>@lang('CE Profit')</th>
-                                        <th>@lang('PE Profit')</th>
-                                        <th>@lang('Strategy Profit')</th> --}}
-                                        <th>@lang('TIME')</th>
-                                        <th>@lang('CE SYMBOL')</th>
-                                        <th>@lang('CE CLOSE')</th>
-                                        <th>@lang('FINAL CE')</th>
-                                        <th>@lang('CE QTY LOTS')</th>
-                                        <th>@lang('CE ENTRY PRICE')</th>
-                                        <th>@lang('CE EXIT PRICE')</th>
-                                        <th>@lang('CE PROFIT')</th>
-                                        <th>@lang('PE SYMBOL')</th>
-                                        <th>@lang('PE CLOSE')</th>
-                                        <th>@lang('FINAL PE')</th>
-                                        <th>@lang('PE QTY LOTS')</th>
-                                        <th>@lang('PE ENTRY PRICE')</th>
-                                        <th>@lang('PE EXIT PRICE')</th>
-                                        <th>@lang('PE PROFIT')</th>
-                                        <th>@lang('STRATEGY PROFIT')</th>
-                                        <th>@lang('TRADE STATUS')</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {{-- @forelse($data['paperFactor'] as $factor)
-                                        <tr>
-                                            <td><strong>{{ showDate($factor->date) }}</strong></td>
-                                            <td>{{ $factor->timestamp }}</td>
-                                            <td>{{ $factor->symbol }}</td>
-                                            <td>{{ $factor->ce }}</td>
-                                            <td>{{ $factor->pe }}</td>
-                                           
-                                           
-                                            <td>{{ $factor->ce_signal }}</td>
-                                            <td>{{ $factor->pe_signal }}</td>
-                                            <td>{{ $factor->ce_profit }}</td>
-                                            <td>{{ $factor->pe_profit }}</td>
-                                            <td>{{ $factor->strategy_profit }}</td>
-                                        </tr>
-                                    @empty
-                                        <tr>
-                                            <td class="text-muted text-center" colspan="100%">NO DATA</td>
-                                        </tr>
-                                    @endforelse --}}
 
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                </tbody>
-                            </table>
+        @forelse($paperFactor as $factor)
+            <div class="row mb-3">
+                <div class="col-lg-12">
+                    <div>{{$factor->symbol}}</div>
+                    <div class="custom--card" id="pst_hre">
+                        <div class="card-body p-0">
+                            <div class="table-responsive--md table-responsive">
+                                <table class="table custom--table text-nowrap">
+                                    <thead>
+                                        <tr>
+                                            <th>@lang('TIME')</th>
+                                            <th>@lang('CE SYMBOL')</th>
+                                            <th>@lang('CE CLOSE')</th>
+                                            <th>@lang('FINAL CE')</th>
+                                            <th>@lang('CE QTY LOTS')</th>
+                                            <th>@lang('CE ENTRY PRICE')</th>
+                                            <th>@lang('CE EXIT PRICE')</th>
+                                            <th>@lang('CE PROFIT')</th>
+                                            <th>@lang('PE SYMBOL')</th>
+                                            <th>@lang('PE CLOSE')</th>
+                                            <th>@lang('FINAL PE')</th>
+                                            <th>@lang('PE QTY LOTS')</th>
+                                            <th>@lang('PE ENTRY PRICE')</th>
+                                            <th>@lang('PE EXIT PRICE')</th>
+                                            <th>@lang('PE PROFIT')</th>
+                                            <th>@lang('STRATEGY PROFIT')</th>
+                                            <th>@lang('TRADE STATUS')</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        @empty
+
+        @endforelse
+        
     </div>
 </section>
 @endsection
