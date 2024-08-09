@@ -9,7 +9,7 @@
                     <label for="factor_symbol">Symbol Name</label>
                     <select name="factor_symbol" class="form--control" id="stock_name">
                         <option value="">Select Symbol  Name</option>     
-                        @foreach($paperFactor as $val)
+                        @foreach($symbolArr as $val)
                          <option value="{{$val->symbol}}" {{request('factor_symbol')==$val->symbol ? 'selected':''}}>{{$val->symbol}}</option>
                         @endforeach
                     </select>
@@ -63,7 +63,8 @@
                                             //dd($value);
                                             $data = json_decode($value->data,true);
                                             $revArr = array_reverse($data);
-                                            $fData = array_slice($revArr,0,5);
+                                            
+                                            $fData = $isFiltered == 0 ? array_slice($revArr,0,5) : $revArr;
                                         @endphp
                                         @foreach($fData as $val)
                                         <tr>
@@ -94,7 +95,16 @@
                 </div>
             </div>
         @empty
-
+            <div class="row mb-3">
+                <div class="col-lg-12">
+                    <div class="custom--card" id="pst_hre">
+                        <div class="card-header">{{$value->symbol}}</div>
+                        <div class="card-body p-0">
+                            <h3 class="text-center text-danger">NO DATA</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
         @endforelse
         
     </div>
