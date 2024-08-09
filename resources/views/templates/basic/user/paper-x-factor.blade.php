@@ -19,10 +19,10 @@
             </div>
         </form>
 
-        @forelse($paperFactor as $factor)
+        @forelse($paperFactor as $value)
             <div class="row mb-3">
                 <div class="col-lg-12">
-                    <div>{{$factor->symbol}}</div>
+                    <div>{{$value>symbol}}</div>
                     <div class="custom--card" id="pst_hre">
                         <div class="card-body p-0">
                             <div class="table-responsive--md table-responsive">
@@ -49,6 +49,10 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @php
+                                            $data = json_decode($value->data,true);
+                                            dd($data);
+                                        @endphp
                                     </tbody>
                                 </table>
                             </div>
