@@ -60,13 +60,20 @@
                                     </thead>
                                     <tbody>
                                         @php
-                                            //dd($value);
                                             $data = json_decode($value->data,true);
                                             $revArr = array_reverse($data);
                                             
                                             $fData = $isFiltered == 0 ? array_slice($revArr,0,5) : $revArr;
+                                            $totalItems = 0;
+                                            $itemsPerPage = 100;
+                                            $currentPage =  isset($_GET['page']) ? $_GET['page'] : 1;
+
+                                            $arrData = $fData;  
+                                            $totalItems = count($arrData['CE_symbol']);
+                                            $currentItems = array_slice($arrData['CE_symbol'], ($currentPage - 1) * $itemsPerPage, $itemsPerPage);
+                                        
                                         @endphp
-                                        @foreach($fData as $val)
+                                        @foreach($arrData as $val)
                                         <tr>
                                             <td>{{isset($val['time']) ? $val['time']: '-'}}</td>
                                             <td>{{$val['CE_symbol']}}</td>
