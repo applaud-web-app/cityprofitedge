@@ -6,6 +6,15 @@
         <form action="{{ url()->current() }}" method="GET" class="transparent-form mb-3">
             <div class="row">
                 <div class="col-lg-3 form-group">
+                    <label for="stock_name">Symbol Name</label>
+                    <select name="stock_name" class="form--control" id="stock_name">
+                        <option value="">Select Symbol  Name</option>     
+                        @foreach($paperFactor as $val)
+                         <option value="{{$val}}">{{$val}}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-lg-3 form-group">
                     <label for="factor_date">Choose Date</label>
                     <input type="date" name="factor_date" class="form--control" id="factor_date" 
                            value="{{ request('factor_date') }}" max="{{ date('Y-m-d') }}" />
