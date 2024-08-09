@@ -3147,7 +3147,9 @@ class UserController extends Controller
     public function paperXFactor(Request $request)
 {
     $pageTitle = 'Paper X Factor';
-
+    $today = date("Y-m-d");
+    $checkTodayD = \DB::connection('mysql_rm')->table('PaperXFactor')->select('*')->get();
+    dd($checkTodayD);
     // Retrieve data from the PaperXFactor table without any specific order
     $paperFactorQuery = \DB::connection('mysql_rm')
         ->table('PaperXFactor')
