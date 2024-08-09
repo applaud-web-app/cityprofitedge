@@ -90,7 +90,7 @@
                                             <td>{{$val['PE_Open']}}</td>
                                             <td>{{$val['PE_Exit_price']}}</td>
                                             <td>{{$val['PE_Profit']}}</td>
-                                            <td>{{$val['Strategy_Profit']}}</td>
+                                            <td><span class="{{$val['Strategy_Profit'] > 0? 'text-success':'text-danger'}}">{{$val['Strategy_Profit']}}</span></td>
                                             <td>{{$val['Trade_Status']}}</td>
                                         </tr>
                                         @endforeach
