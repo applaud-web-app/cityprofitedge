@@ -69,11 +69,11 @@
                                             $currentPage =  isset($_GET['page']) ? $_GET['page'] : 1;
 
                                             $arrData = $fData;  
-                                            $totalItems = count($arrData['CE_symbol']);
-                                            $currentItems = array_slice($arrData['CE_symbol'], ($currentPage - 1) * $itemsPerPage, $itemsPerPage);
+                                            $totalItems = count($arrData);
+                                            $currentItems = array_slice($arrData, ($currentPage - 1) * $itemsPerPage, $itemsPerPage);
                                         
                                         @endphp
-                                        @foreach($arrData as $val)
+                                        @foreach($currentItems as $val)
                                         <tr>
                                             <td>{{isset($val['time']) ? $val['time']: '-'}}</td>
                                             <td>{{$val['CE_symbol']}}</td>
