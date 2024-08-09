@@ -3148,8 +3148,8 @@ class UserController extends Controller
 {
     $pageTitle = 'Paper X Factor';
     
-    $checkTodayD = \DB::connection('mysql_rm')->table('PaperXFactor')->select('date')->get();
-    $today = date("Y-m-d",strtotime($checkTodayD->date));
+    $checkTodayD = \DB::connection('mysql_rm')->table('PaperXFactor')->select('date')->first();
+    $today = $checkTodayD ? date("Y-m-d",strtotime($checkTodayD->date)) : date("Y-m-d");
     
     $paperFactorQuery = \DB::connection('mysql_rm') ->table('PaperXFactor')->select('symbol','date','data');
     if ($request->has('factor_date') && $request->factor_date != '') {
