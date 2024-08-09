@@ -57,22 +57,22 @@
                                         @foreach($fData as $val)
                                         <tr>
                                             <td>{{isset($val['time']) ? $val['time']: '-'}}</td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
+                                            <td>{{$val['CE_symbol']}}</td>
+                                            <td>{{$val['CE_Close']}}</td>
+                                            <td>{{$val['FINAL_CE']}}</td>
+                                            <td>-</td>
+                                            <td>{{$val['CE_Open']}}</td>
+                                            <td>Exit</td>
+                                            <td>{{$val['CE_Profit']}}</td>
+                                            <td>{{$val['PE_symbol']}}</td>
+                                            <td>{{$val['PE_Close']}}</td>
+                                            <td>{{$val['FINAL_PE']}}</td>
+                                            <td>QL</td>
+                                            <td>{{$val['PE_Open']}}</td>
+                                            <td>PExit</td>
+                                            <td>{{$val['PE_Profit']}}</td>
+                                            <td>{{$val['Strategy_Profit']}}</td>
+                                            <td>st</td>
                                         </tr>
                                         @endforeach
                                     </tbody>
