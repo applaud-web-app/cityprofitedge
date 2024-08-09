@@ -51,8 +51,30 @@
                                     <tbody>
                                         @php
                                             $data = json_decode($value->data,true);
-                                            dd($data);
+                                            $revArr = array_reverse($data);
+                                            $fData = array_slice($revArr,0,5);
                                         @endphp
+                                        @foreach($fData as $val)
+                                        <tr>
+                                            <td>{{isset($val['time']) ? $val['time']: '-'}}</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
