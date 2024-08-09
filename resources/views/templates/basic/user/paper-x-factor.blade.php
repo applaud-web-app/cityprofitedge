@@ -22,8 +22,9 @@
         @forelse($paperFactor as $value)
             <div class="row mb-3">
                 <div class="col-lg-12">
-                    <div>{{$value->symbol}}</div>
+                    
                     <div class="custom--card" id="pst_hre">
+                        <div class="card-header">{{$value->symbol}}</div>
                         <div class="card-body p-0">
                             <div class="table-responsive--md table-responsive">
                                 <table class="table custom--table text-nowrap">
