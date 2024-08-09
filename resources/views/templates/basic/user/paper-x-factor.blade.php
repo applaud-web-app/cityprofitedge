@@ -37,22 +37,22 @@
                                         <th>@lang('PE Profit')</th>
                                         <th>@lang('Strategy Profit')</th> --}}
                                         <th>@lang('TIME')</th>
-                                        <th>@lang('CE_SYMBOL')</th>
-                                        <th>@lang('CE_CLOSE')</th>
-                                        <th>@lang('FINAL_CE')</th>
-                                        <th>@lang('CE_QTY_LOTS')</th>
-                                        <th>@lang('CE_ENTRY_PRICE')</th>
-                                        <th>@lang('CE_EXIT_PRICE')</th>
-                                        <th>@lang('CE_PROFIT')</th>
-                                        <th>@lang('PE_SYMBOL')</th>
-                                        <th>@lang('PE_CLOSE')</th>
-                                        <th>@lang('FINAL_PE')</th>
-                                        <th>@lang('PE_QTY_LOTS')</th>
-                                        <th>@lang('PE_ENTRY_PRICE')</th>
-                                        <th>@lang('PE_EXIT_PRICE')</th>
-                                        <th>@lang('PE_PROFIT')</th>
-                                        <th>@lang('STRATEGY_PROFIT')</th>
-                                        <th>@lang('TRADE_STATUS')</th>
+                                        <th>@lang('CE SYMBOL')</th>
+                                        <th>@lang('CE CLOSE')</th>
+                                        <th>@lang('FINAL CE')</th>
+                                        <th>@lang('CE QTY LOTS')</th>
+                                        <th>@lang('CE ENTRY PRICE')</th>
+                                        <th>@lang('CE EXIT PRICE')</th>
+                                        <th>@lang('CE PROFIT')</th>
+                                        <th>@lang('PE SYMBOL')</th>
+                                        <th>@lang('PE CLOSE')</th>
+                                        <th>@lang('FINAL PE')</th>
+                                        <th>@lang('PE QTY LOTS')</th>
+                                        <th>@lang('PE ENTRY PRICE')</th>
+                                        <th>@lang('PE EXIT PRICE')</th>
+                                        <th>@lang('PE PROFIT')</th>
+                                        <th>@lang('STRATEGY PROFIT')</th>
+                                        <th>@lang('TRADE STATUS')</th>
                                     </tr>
                                 </thead>
                                 <tbody>
