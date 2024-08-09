@@ -71,6 +71,7 @@
                     </div>
                     <div>
                             @php
+                        if($isFiltered==1):
                                 $totalPages = ceil($totalItems / $itemsPerPage);
                                 echo '<nav class="mt-3 justify-content-end d-flex">
                                         <ul class="pagination mb-0">';
@@ -85,6 +86,7 @@
                             @php     
                                 echo '  </ul>
                                     </nav>';
+                                endif;
                             @endphp
                         </div>
                 </div>
