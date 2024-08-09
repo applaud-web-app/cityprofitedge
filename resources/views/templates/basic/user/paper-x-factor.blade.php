@@ -50,6 +50,7 @@
                                     </thead>
                                     <tbody>
                                         @php
+                                            dd($data);
                                             $data = json_decode($value->data,true);
                                             $revArr = array_reverse($data);
                                             $fData = array_slice($revArr,0,5);
