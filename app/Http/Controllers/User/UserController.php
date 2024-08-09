@@ -3158,7 +3158,7 @@ class UserController extends Controller
         $paperFactorQuery->whereDate('date', $today);
     }
     if ($request->has('factor_symbol') && $request->factor_symbol != '') {
-        $paperFactorQuery->whereDate('symbol', $request->factor_symbol);
+        $paperFactorQuery->where('symbol', $request->factor_symbol);
         $isFiltered = 1;
     }
     $paperFactor = $paperFactorQuery->get();
