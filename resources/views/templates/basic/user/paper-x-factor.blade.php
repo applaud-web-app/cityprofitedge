@@ -1,7 +1,7 @@
 @extends($activeTemplate.'layouts.master')
 @section('content')
 <section class="pt-50 pb-50">
-    <div class="container content-container" id="pst_hre">
+    <div class="container content-container">
         <!-- Form to filter by date -->
         <form action="{{ url()->current() }}" method="GET" class="transparent-form mb-3">
             <div class="row">
