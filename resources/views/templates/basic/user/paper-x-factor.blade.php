@@ -81,14 +81,14 @@
                                             <td>{{$val['CE_Close']}}</td>
                                             <td>{{$val['FINAL_CE']}}</td>
                                             <td>{{$val['CE_quantity']}}</td>
-                                            <td>{{$val['CE_Open']}}</td>
+                                            <td>{{$val['CE_Entry_price']}}</td>
                                             <td>{{$val['CE_Exit_price']}}</td>
                                             <td><span class="{{$val['CE_Profit'] > 0? 'text-success':'text-danger'}}">{{$val['CE_Profit']}}</span></td>
                                             <td>{{$val['PE_symbol']}}</td>
                                             <td>{{$val['PE_Close']}}</td>
                                             <td>{{$val['FINAL_PE']}}</td>
                                             <td>{{$val['PE_quantity']}}</td>
-                                            <td>{{$val['PE_Open']}}</td>
+                                            <td>{{$val['PE_Entry_price']}}</td>
                                             <td>{{$val['PE_Exit_price']}}</td>
                                             <td><span class="{{$val['PE_Profit'] > 0? 'text-success':'text-danger'}}">{{$val['PE_Profit']}}</span></td>
                                             <td><span class="{{$val['Strategy_Profit'] > 0? 'text-success':'text-danger'}}">{{$val['Strategy_Profit']}}</span></td>
