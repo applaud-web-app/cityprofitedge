@@ -194,7 +194,7 @@
                 
                 @foreach($symbolArr as $v)
                     @php 
-                    if(in_array($v,['CRUDEOIL','BANKNIFTY','FINNIFTY','SILVER','NIFTY','MIDCPNIFTY','NATURALGAS','SILVER','GOLD','FII DII PRO','Paper Trade','LTP','IV Theta Sentiments','MATCH-DELTA','MATCH-IV','MATCH-PREMIUM','MATCH-THETA','IV Theta Sentiments'])){
+                    if(in_array($v,['CRUDEOIL','BANKNIFTY','FINNIFTY','SILVER','NIFTY','MIDCPNIFTY','NATURALGAS','SILVER','GOLD','FII DII PRO','Paper Trade','LTP','IV Theta Sentiments','MATCH-DELTA','MATCH-IV','MATCH-PREMIUM','MATCH-THETA','IV Theta Sentiments','PaperOrderPlacement'])){
                         continue;
                     }
                     if($v == "LTP"){
