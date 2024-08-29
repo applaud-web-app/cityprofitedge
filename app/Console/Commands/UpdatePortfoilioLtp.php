@@ -52,7 +52,6 @@ class UpdatePortfoilioLtp extends Command
 
       
         $newArray = array_unique($responseData);
-        dd($newArray);
     
         if (count($newArray)) {
            $fetchData =  array_chunk($newArray,50);
