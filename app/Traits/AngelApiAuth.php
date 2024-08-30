@@ -99,7 +99,7 @@ trait AngelApiAuth
                     return null;
                 }
                 $dataArr = json_decode($response);
-                dd($dataArr);
+                // dd($dataArr);
                 return $dataArr->data->jwtToken;
             });
             return $data;
