@@ -52,12 +52,22 @@ trait AngelApiAuth
     // private $clientPublicIp = '122.161.67.85';
     // private $macAddress = '14-85-7F-92-D0-B0';
 
-    private $accountUserName = 'S812602';
-    private $accountPassword = 'Awesome@123';
-    private $totp_secret = 'MT6FFHP6GBXDNG7TIOIRQQL7RY';
-    private $apiKey = 'vmqLJyfh';
-    private $pin = '1979';
-    private $apiSecret = 'f93763da-b20d-4b60-b617-faedb0c50be9';
+    // private $accountUserName = 'S812602';
+    // private $accountPassword = 'Awesome@123';
+    // private $totp_secret = 'MT6FFHP6GBXDNG7TIOIRQQL7RY';
+    // private $apiKey = 'vmqLJyfh';
+    // private $pin = '1979';
+    // private $apiSecret = 'f93763da-b20d-4b60-b617-faedb0c50be9';
+    // private $clientLocalIp = '192.168.1.31';
+    // private $clientPublicIp = '122.161.67.85';
+    // private $macAddress = '14-85-7F-92-D0-B0';
+
+    private $accountUserName = 'R54527283';
+    private $accountPassword = 'city@123';
+    private $totp_secret = 'MXMYDO2OVRYYH6UBWYY6KZ6N3M';
+    private $apiKey = 'YN7OgXPo';
+    private $pin = '1998';
+    private $apiSecret = 'e5e90834-3232-462a-9d30-f4f696565454';
     private $clientLocalIp = '192.168.1.31';
     private $clientPublicIp = '122.161.67.85';
     private $macAddress = '14-85-7F-92-D0-B0';
@@ -109,7 +119,6 @@ trait AngelApiAuth
                     return null;
                 }
                 $dataArr = json_decode($response);
-                // dd($dataArr);
                 return $dataArr->data->jwtToken;
             });
             return $data;
@@ -121,6 +130,7 @@ trait AngelApiAuth
 
     public function getMarketDataResp(){
         $jwtToken =  $this->generate_access_token();
+        // dd($jwtToken);
         $errData = [];
         if($jwtToken!=null){
             $curl = curl_init();
@@ -152,7 +162,6 @@ trait AngelApiAuth
             ));
 
             $response = curl_exec($curl);
-            // dd($response);
             $err = curl_error($curl);
             curl_close($curl);
             if ($err) {
