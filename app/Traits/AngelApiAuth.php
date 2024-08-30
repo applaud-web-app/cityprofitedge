@@ -54,7 +54,7 @@ trait AngelApiAuth
 
     private $accountUserName = 'S812602';
     private $accountPassword = 'Awesome@123';
-    private $totp_secret = 'M46VHZKUIVRYBWO3CBF4B4BGLM';
+    private $totp_secret = 'MT6FFHP6GBXDNG7TIOIRQQL7RY';
     private $apiKey = 'vmqLJyfh';
     private $pin = '1979';
     private $apiSecret = 'f93763da-b20d-4b60-b617-faedb0c50be9';
