@@ -32,8 +32,18 @@ trait AngelApiAuth
     // private $clientPublicIp = '122.161.67.85';
     // private $macAddress = '14-85-7F-92-D0-B0';
 
+    // private $accountUserName =  "S812602";
+    // private $accountPassword = "Awesome@123";
+    // private $apiSecret = "f93763da-b20d-4b60-b617-faedb0c50be9";
+    // private $apiKey = "vmqLJyfh";
+    // private $pin = "1979";
+    // private $totp_secret = "MT6FFHP6GBXDNG7TIOIRQQL7RY";
+    // private $clientLocalIp = '192.168.1.31';
+    // private $clientPublicIp = '122.161.67.85';
+    // private $macAddress = '14-85-7F-92-D0-B0';
+
     private $accountUserName =  "S812602";
-    private $accountPassword = "Awesome@123";
+    private $accountPassword = "Awesome@999";
     private $apiSecret = "f93763da-b20d-4b60-b617-faedb0c50be9";
     private $apiKey = "vmqLJyfh";
     private $pin = "1979";
