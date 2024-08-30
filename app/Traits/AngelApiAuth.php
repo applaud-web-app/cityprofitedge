@@ -119,6 +119,7 @@ trait AngelApiAuth
                     return null;
                 }
                 $dataArr = json_decode($response);
+                // dd($dataArr);
                 return $dataArr->data->jwtToken;
             });
             return $data;
@@ -130,7 +131,6 @@ trait AngelApiAuth
 
     public function getMarketDataResp(){
         $jwtToken =  $this->generate_access_token();
-        // dd($jwtToken);
         $errData = [];
         if($jwtToken!=null){
             $curl = curl_init();
@@ -162,12 +162,14 @@ trait AngelApiAuth
             ));
 
             $response = curl_exec($curl);
+            dd($response);
             $err = curl_error($curl);
             curl_close($curl);
             if ($err) {
                 return $errData;
             }
             $dataArr = json_decode($response,true);
+            dd($dataArr);
             if($dataArr['status']===true){
                 $dtt = $dataArr['data'];
                 if(isset($dtt['fetched'])){

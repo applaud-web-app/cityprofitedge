@@ -39,7 +39,7 @@ class SiteController extends Controller
     // }
 
     public function index(Request $request){
-        
+        // dd($this->getMarketData());
         $getPcrData = PcrVolume::orderBy('id','DESC')->paginate(5);
         $topGainer = TopPortfolio::orderBy('id','DESC')->where('type','gainer')->paginate(5);
         $topLoser = TopPortfolio::orderBy('id','DESC')->where('type','loser')->paginate(5);
