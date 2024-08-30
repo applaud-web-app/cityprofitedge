@@ -33,7 +33,7 @@ trait AngelApiAuth
     // private $macAddress = '14-85-7F-92-D0-B0';
 
     private $accountUserName =  "S812602";
-    private $accountPassword = "Awesome@123";
+    private $accountPassword = "Awesome@999";
     private $apiSecret = "f93763da-b20d-4b60-b617-faedb0c50be9";
     private $apiKey = "vmqLJyfh";
     private $pin = "1979";
@@ -142,7 +142,7 @@ trait AngelApiAuth
             ));
 
             $response = curl_exec($curl);
-            // dd($response);
+            dd($response);
             $err = curl_error($curl);
             curl_close($curl);
             if ($err) {
