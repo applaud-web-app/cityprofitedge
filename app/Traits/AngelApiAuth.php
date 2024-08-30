@@ -152,7 +152,7 @@ trait AngelApiAuth
             ));
 
             $response = curl_exec($curl);
-            dd($response);
+            // dd($response);
             $err = curl_error($curl);
             curl_close($curl);
             if ($err) {
