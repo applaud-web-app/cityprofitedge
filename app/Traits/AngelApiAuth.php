@@ -162,14 +162,14 @@ trait AngelApiAuth
             ));
 
             $response = curl_exec($curl);
-            dd($response);
+            // dd($response);
             $err = curl_error($curl);
             curl_close($curl);
             if ($err) {
                 return $errData;
             }
             $dataArr = json_decode($response,true);
-            dd($dataArr);
+            // dd($dataArr);
             if($dataArr['status']===true){
                 $dtt = $dataArr['data'];
                 if(isset($dtt['fetched'])){
