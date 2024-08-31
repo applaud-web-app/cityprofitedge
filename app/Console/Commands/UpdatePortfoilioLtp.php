@@ -68,7 +68,7 @@ class UpdatePortfoilioLtp extends Command
         
                 $payload = json_encode($payloadData,true);
                 $respond = $this->updatePortfolioLtpData($payload);
-                dd($respond);
+                dd($respond,$payload,count($newArray));
                 if(isset($respond)){
                     if($respond['status'] == true){
                         array_push($apiResponse,$respond['data']['fetched']);
