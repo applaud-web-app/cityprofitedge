@@ -79,6 +79,8 @@ class UpdatePortfoilioLtp extends Command
 
         }
 
+        dd($apiResponse);
+
 
         // UPDATE LTP FROM THE RESPONE DATA
         if(count($apiResponse)){
