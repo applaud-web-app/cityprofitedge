@@ -68,7 +68,7 @@ class UpdatePortfoilioLtp extends Command
         
                 $payload = json_encode($payloadData,true);
                 $respond = $this->updatePortfolioLtpData($payload);
-                // dd($respond,$payload,count($newArray));
+                $respond = json_decode($respond,true);
                 if(isset($respond)){
                     if($respond['status'] == true){
                         array_push($apiResponse,$respond['data']['fetched']);
@@ -93,7 +93,7 @@ class UpdatePortfoilioLtp extends Command
                     if ($index !== false) {
                         $name = $alldata[$index]['name'];
                         foreach ($portfolioTables as $key => $v) {
-                            $data = \DB::table($v)->where('stock_name',$name)->update(['CMP' => $value['ltp']]);
+                            $data = \DB::table($v)->where('stock_name',$name)->update(['cmp' => $value['ltp']]);
                         }
                     }
                 }
