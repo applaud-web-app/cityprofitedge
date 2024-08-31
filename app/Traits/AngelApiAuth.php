@@ -169,7 +169,6 @@ trait AngelApiAuth
                 return $errData;
             }
             $dataArr = json_decode($response,true);
-            // dd($dataArr);
             if($dataArr['status']===true){
                 $dtt = $dataArr['data'];
                 if(isset($dtt['fetched'])){

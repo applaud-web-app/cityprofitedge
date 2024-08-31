@@ -47,7 +47,7 @@ class WatchListData extends Command
         foreach ($symbolArr as $key => $v) {
             $MCXpayload = [];
             $NFOpayload = [];
-            $extraTable = ['FII DII PRO','LTP','IV Theta Sentiments','MATCH-DELTA','MATCH-THETA','MATCH-PREMIUM','MATCH-IV','Paper Trade','Predictions'];
+            $extraTable = ['FII DII PRO','LTP','IV Theta Sentiments','MATCH-DELTA','MATCH-THETA','MATCH-PREMIUM','MATCH-IV','Paper Trade','Predictions','PaperOrderPlacement'];
             if(in_array($v,$extraTable)){
                 continue;
             }
