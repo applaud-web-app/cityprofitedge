@@ -39,7 +39,8 @@ class UpdatePortfoilioLtp extends Command
     public function handle()
     {
         set_time_limit(0);
-        $portfolioTables = ['thematic_portfolios','stock_portfolios','f_o_portfolios','global_stock_portfolios','metals_portfolios'];
+        $portfolioTables = ['stock_portfolios'];
+        // $portfolioTables = ['thematic_portfolios','stock_portfolios','f_o_portfolios','global_stock_portfolios','metals_portfolios'];
         $todayDate = date("Y-m-d");
 
         $responseData = [];
