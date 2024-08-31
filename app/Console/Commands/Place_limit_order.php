@@ -66,7 +66,7 @@ class Place_limit_order extends Command
                 if($respond == NULL){
                     $respond = $this->getWatchListRecords($payload);
                 }
-                dd($respond);
+
                 if($respond['data']['fetched'] != NULL){
                     $RespondData = $respond['data']['fetched'];
                     foreach ($RespondData as $key => $item) {
