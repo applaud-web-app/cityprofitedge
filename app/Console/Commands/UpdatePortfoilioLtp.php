@@ -39,8 +39,8 @@ class UpdatePortfoilioLtp extends Command
     public function handle()
     {
         set_time_limit(0);
-        // $portfolioTables = ['stock_portfolios'];
-        $portfolioTables = ['thematic_portfolios','stock_portfolios','f_o_portfolios','global_stock_portfolios','metals_portfolios'];
+        $portfolioTables = ['stock_portfolios'];
+        // $portfolioTables = ['thematic_portfolios','stock_portfolios','f_o_portfolios','global_stock_portfolios','metals_portfolios'];
         $todayDate = date("Y-m-d");
 
         $responseData = [];
@@ -57,19 +57,40 @@ class UpdatePortfoilioLtp extends Command
         if (count($newArray)) {
            $fetchData =  array_chunk($newArray,50);
             foreach ($fetchData as $symbolNames) {
-                $angelApiData = AngelApiInstrument::select('angel_api_instruments.exch_seg','angel_api_instruments.token','angel_api_instruments.name','angel_api_instruments.id')
-                ->whereIn('name', $symbolNames)
-                ->join(DB::raw('(SELECT MAX(id) as id FROM angel_api_instruments GROUP BY name) as latest_records'), 'angel_api_instruments.id', '=', 'latest_records.id')
-                ->orderBy('id', 'DESC')->get();
+                // $angelApiData = AngelApiInstrument::select('angel_api_instruments.exch_seg','angel_api_instruments.token','angel_api_instruments.name','angel_api_instruments.id')
+                // ->whereIn('name', $symbolNames)
+                // ->join(DB::raw('(SELECT MAX(id) as id FROM angel_api_instruments GROUP BY name) as latest_records'), 'angel_api_instruments.id', '=', 'latest_records.id')
+                // ->orderBy('id', 'DESC')->get();
 
-                $alldata = $angelApiData->toArray();
-                $payloadData = $angelApiData->groupBy('exch_seg')->map(function($items) {
-                    return $items->pluck('token')->toArray();
-                })->toArray();
+                // $alldata = $angelApiData->toArray();
+                // $payloadData = $angelApiData->groupBy('exch_seg')->map(function($items) {
+                //     return $items->pluck('token')->toArray();
+                // })->toArray();
+
+                $angelApiData = AngelApiInstrument::select('angel_api_instruments.exch_seg', 'angel_api_instruments.token', 'angel_api_instruments.name', 'angel_api_instruments.id')
+                ->whereIn('symbol_name', $symbolNames) // Filter by symbol names
+                ->where('exch_seg', 'NSE')      // Filter by exchange segment "NSE"
+                ->join(DB::raw('(SELECT MAX(id) as id FROM angel_api_instruments GROUP BY symbol_name) as latest_records'), 'angel_api_instruments.id', '=', 'latest_records.id')
+                ->orderBy('id', 'DESC')
+                ->get();
+            
+            $alldata = $angelApiData->toArray();
+
+            // Hardcoded value for NSA
+            $hardcodedNSA = 'NSE';
+
+            $payloadData = $angelApiData->groupBy(function () use ($hardcodedNSA) {
+                return $hardcodedNSA;  // Group by hardcoded NSA value
+            })->map(function($items) {
+                return $items->pluck('token')->toArray();
+            })->toArray();
         
+                // dd($payloadData);
                 $payload = json_encode($payloadData,true);
                 $respond = $this->updatePortfolioLtpData($payload);
+                // dd($respond);
                 $respond = json_decode($respond,true);
+                // dd($respond,$alldata);
                 if(isset($respond)){
                     if($respond['status'] == true){
                         array_push($apiResponse,$respond['data']['fetched']);
@@ -81,8 +102,6 @@ class UpdatePortfoilioLtp extends Command
 
         }
 
-        // dd($apiResponse);
-
 
         // UPDATE LTP FROM THE RESPONE DATA
         if(count($apiResponse)){
@@ -92,7 +111,7 @@ class UpdatePortfoilioLtp extends Command
                     $tokens = array_column($alldata, 'token');
                     $index = array_search($searchToken, $tokens);
                     if ($index !== false) {
-                        $name = $alldata[$index]['name'];
+                        $name = $alldata[$index]['name']."-EQ";
                         foreach ($portfolioTables as $key => $v) {
                             $data = \DB::table($v)->where('stock_name',$name)->update(['cmp' => $value['ltp']]);
                         }
