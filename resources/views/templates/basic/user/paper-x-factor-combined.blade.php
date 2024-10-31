@@ -32,7 +32,11 @@
         @forelse($paperFactor as $value)
             @php  
             $revArr = json_decode($value->json_data,true);
-            
+            if(!empty(request('factor_symbol'))){
+                $revArr = array_filter($revArr, function ($val) {
+                    return $val['config_symbol'] == request('factor_symbol');
+                });
+            }
             @endphp
             <div class="row mb-3">
                 <div class="col-lg-12">
