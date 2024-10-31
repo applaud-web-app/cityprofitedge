@@ -5,15 +5,15 @@
         <!-- Form to filter by date -->
         <form action="{{ url()->current() }}" method="GET" class="transparent-form mb-3">
             <div class="row">
-      {{--      <div class="col-lg-3 form-group">
+              <div class="col-lg-3 form-group">
                     <label for="factor_symbol">Symbol Name</label>
                     <select name="factor_symbol" class="form--control" id="stock_name">
                         <option value="">Select Symbol  Name</option>     
-                        @foreach($symbolArr as $val)
-                         <option value="{{$val->symbol}}" {{request('factor_symbol')==$val->symbol ? 'selected':''}}>{{$val->symbol}}</option>
+                        @foreach($symbolArr as $symbol)
+                         <option value="{{$symbol}}" {{request('factor_symbol')==$symbol ? 'selected':''}}>{{$symbol}}</option>
                         @endforeach
                     </select>
-                </div> --}}
+                </div>
                 <div class="col-lg-3 form-group">
                     <label for="factor_date">Choose Date</label>
                     <input type="date" name="factor_date" class="form--control" id="factor_date" 
@@ -32,6 +32,7 @@
         @forelse($paperFactor as $value)
             @php  
             $revArr = json_decode($value->json_data,true);
+            
             @endphp
             <div class="row mb-3">
                 <div class="col-lg-12">
