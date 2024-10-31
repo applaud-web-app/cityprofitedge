@@ -3208,23 +3208,24 @@ public function paperXFactorCombined(Request $request)
     $checkTodayD = \DB::connection('mysql_rm')->table('PaperXFactor_Combined')->select('date')->orderBy('id','DESC')->first();
     $today = $checkTodayD ? date("Y-m-d",strtotime($checkTodayD->date)) : date("Y-m-d");
 
-  
-    
-    $paperFactorQuery = \DB::connection('mysql_rm') ->table('PaperXFactor_Combined')->select('total_investment','total_profit','date','json_data','updated_at');
+    $paperFactorQuery = \DB::connection('mysql_rm') ->table('PaperXFactor_Combined')->select('total_investment','total_profit','date','json_data','updated_at','config_symbol');
     if ($request->has('factor_date') && $request->factor_date != '') {
         $paperFactorQuery->whereDate('date', $request->factor_date);
         $today = $request->factor_date;
     }else{
         $paperFactorQuery->whereDate('date', $today);
     }
+    $paperFactor = $paperFactorQuery->get();
 
-      $pageTitle = 'XFactor Model Portfolio '.date("d-M-Y",strtotime($today));
+    dd($paperFactor);
+     
+    $pageTitle = 'XFactor Model Portfolio '.date("d-M-Y",strtotime($today));
     
     // if ($request->has('factor_symbol') && $request->factor_symbol != '') {
     //     $paperFactorQuery->where('symbol', $request->factor_symbol);
     //     $isFiltered = 1;
     // }
-    $paperFactor = $paperFactorQuery->get();
+    
     $allSymbols = [];
     // Prepare the data array
     $data['paperFactor'] = $paperFactor;
