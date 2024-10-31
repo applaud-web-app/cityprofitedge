@@ -53,7 +53,6 @@
                                         @php
                                             $data = json_decode($value->json_data,true);
                                             $revArr = array_reverse($data);
-                                            dd($revArr);
                                             $fData = $isFiltered == 0 ? array_slice($revArr,0,5) : $revArr;
                                             $totalItems = 0;
                                             $itemsPerPage = 100;
