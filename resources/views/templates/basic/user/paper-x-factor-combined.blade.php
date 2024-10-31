@@ -41,15 +41,15 @@
                                          <tr style="background:#0d222b;">
                                              <th style="font-size:12px;">Last Updated: {{date("d M Y H:i:s",strtotime($value->updated_at))}}</th>
                                             <th colspan="6" style="font-size:16px;" class="text-white text-end">Investment Amount</th>
-                                            <th class="text-success" style="font-size:16px;">
-                                                {{ $value->total_investment }}
+                                            <th class="text-success fw-bolder" style="font-size:16px;">
+                                                ₹{{ $value->total_investment }}
                                             </th>
                                             <th class="text-white" style="font-size:16px;">Profit&Loss</th>
                                             <th class="fw-bolder {{$value->total_profit > 0 ? 'text-success':'text-danger'}}" style="font-size:16px;">
                                                 @php
                                                     $percent = ($value->total_profit / $value->total_investment) * 100
                                                 @endphp
-                                                {{ $value->total_profit }} ( {{ round($percent, 2) }}%)
+                                                ₹{{ $value->total_profit }} ( {{ round($percent, 2) }}%)
                                             </th>
                                         </tr>
                                         <tr>
