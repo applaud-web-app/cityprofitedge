@@ -3216,8 +3216,10 @@ public function paperXFactorCombined(Request $request)
         $paperFactorQuery->whereDate('date', $today);
     }
     $paperFactor = $paperFactorQuery->get();
-
-    dd($paperFactor);
+    $allSymbols = [];
+    if (!$paperFactor->isEmpty()) {
+           $allSymbols = array_unique(array_column(json_decode($paperFactor[0]->json_data, true), 'config_symbol')); 
+    }
      
     $pageTitle = 'XFactor Model Portfolio '.date("d-M-Y",strtotime($today));
     
@@ -3226,7 +3228,7 @@ public function paperXFactorCombined(Request $request)
     //     $isFiltered = 1;
     // }
     
-    $allSymbols = [];
+  
     // Prepare the data array
     $data['paperFactor'] = $paperFactor;
     $data['symbolArr'] = $allSymbols;
