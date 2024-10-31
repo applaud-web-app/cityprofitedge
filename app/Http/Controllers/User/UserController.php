@@ -3203,10 +3203,12 @@ public function paperxFactorAjax(Request $request){
 
 public function paperXFactorCombined(Request $request)
 {
-    $pageTitle = 'XFactor Model Portfolio';
+    
     $isFiltered = 0;
     $checkTodayD = \DB::connection('mysql_rm')->table('PaperXFactor_Combined')->select('date')->orderBy('id','DESC')->first();
     $today = $checkTodayD ? date("Y-m-d",strtotime($checkTodayD->date)) : date("Y-m-d");
+
+    $pageTitle = 'XFactor Model Portfolio '.date("d-M-Y");
     
     $paperFactorQuery = \DB::connection('mysql_rm') ->table('PaperXFactor_Combined')->select('total_investment','total_profit','date','json_data');
     if ($request->has('factor_date') && $request->factor_date != '') {
