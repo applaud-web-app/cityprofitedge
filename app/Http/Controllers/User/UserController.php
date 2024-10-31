@@ -3218,7 +3218,7 @@ public function paperXFactorCombined(Request $request)
         $paperFactorQuery->whereDate('date', $today);
     }
 
-      $pageTitle = 'XFactor Model Portfolio '.date("d-M-Y");
+      $pageTitle = 'XFactor Model Portfolio '.date("d-M-Y",strtotime($today));
     
     // if ($request->has('factor_symbol') && $request->factor_symbol != '') {
     //     $paperFactorQuery->where('symbol', $request->factor_symbol);
