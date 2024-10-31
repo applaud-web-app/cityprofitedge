@@ -41,7 +41,7 @@
                                     <thead>
                                         <tr>
                                             <th colspan="7">Portfolio Profit&Loss</th>
-                                            <th>
+                                            <th class="text-end" style="background:#fff;color:#000;">
                                                 {{ $value->total_investment }}
                                             </th>
                                             <th>% of Profit</th>
