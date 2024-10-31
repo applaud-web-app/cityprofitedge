@@ -67,22 +67,15 @@
                                         @foreach($currentItems as $val)
                                         <tr>
                                             <td>{{isset($val['time']) ? $val['time']: '-'}}</td>
-                                            <td>{{$val['CE_symbol']}}</td>
-                                            <td>{{$val['CE_Close']}}</td>
-                                            <td>{{$val['FINAL_CE']}}</td>
-                                            <td>{{$val['CE_quantity']}}</td>
-                                            <td>{{$val['CE_Entry_price']}}</td>
-                                            <td>{{$val['CE_Exit_price']}}</td>
-                                            <td><span class="{{$val['CE_Profit'] > 0? 'text-success':'text-danger'}}">{{$val['CE_Profit']}}</span></td>
-                                            <td>{{$val['PE_symbol']}}</td>
-                                            <td>{{$val['PE_Close']}}</td>
-                                            <td>{{$val['FINAL_PE']}}</td>
-                                            <td>{{$val['PE_quantity']}}</td>
-                                            <td>{{$val['PE_Entry_price']}}</td>
-                                            <td>{{$val['PE_Exit_price']}}</td>
-                                            <td><span class="{{$val['PE_Profit'] > 0? 'text-success':'text-danger'}}">{{$val['PE_Profit']}}</span></td>
-                                            <td><span class="{{$val['Strategy_Profit'] > 0? 'text-success':'text-danger'}}">{{$val['Strategy_Profit']}}</span></td>
-                                            <td>{{$val['Trade_Status']}}</td>
+                                            <td>{{$val['txn']}}</td>
+                                            <td>{{$val['symbol']}}</td>
+                                            <td>{{$val['lotsize']}}</td>
+                                            <td>{{$val['quantity']}}</td>
+                                            <td>{{$val['investment']}}</td>
+                                            <td>{{$val['close_price']}}</td>
+                                            <td>{{$val['entry_price']}}</td>
+                                            <td>{{$val['current_value']}}</td>
+                                            <td>{{$val['profit']}}</td>
                                         </tr>
                                         @endforeach
                                     </tbody>
