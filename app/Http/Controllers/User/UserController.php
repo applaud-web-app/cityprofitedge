@@ -3201,7 +3201,7 @@ public function paperxFactorAjax(Request $request){
     return view($this->activeTemplate . 'user.paper-x-factor-ajax', $data);
 }
 
-public function paperXFactorCombined()
+public function paperXFactorCombined(Request $request)
 {
     $pageTitle = 'XFactor Model Portfolio';
     $isFiltered = 0;
@@ -3225,6 +3225,7 @@ public function paperXFactorCombined()
     $data['symbolArr'] = $allSymbols;
     $data['pageTitle'] = $pageTitle;
     $data['isFiltered'] = 0;
+    $data['today'] = $today;
     return view($this->activeTemplate . 'user.paper-x-factor-combined', $data);
 }
 
