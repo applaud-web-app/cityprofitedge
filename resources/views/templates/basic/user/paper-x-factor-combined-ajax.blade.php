@@ -8,11 +8,11 @@
                                 <table class="table custom--table text-nowrap">
                                     <thead>
                                         <tr style="background:#0d222b;">
-                                            <th colspan="7" class="text-white text-end">Portfolio Profit&Loss</th>
+                                            <th colspan="7" class="text-white text-end">Investment</th>
                                             <th class="text-white">
                                                 {{ $value->total_investment }}
                                             </th>
-                                            <th class="text-white">% of Profit</th>
+                                            <th class="text-white">Profit</th>
                                             <th class="fw-bolder {{$value->total_profit > 0 ? 'text-success':'text-danger'}}">
                                                 {{ $value->total_profit }}
                                             </th>
@@ -70,13 +70,15 @@
                                 echo '<nav class="mt-3 justify-content-end d-flex">
                                         <ul class="pagination mb-0">';
                             @endphp
-                            @for($i = 1; $i <= $totalPages; $i++)
-                                @if($i == $currentPage)
-                                    <li class="page-item active" aria-current="page"><span class="page-link">{{$i}}</span></li>
-                                @else
-                                <li class="page-item"><a class="page-link" href="{{url('user/paper-x-factor?factor_symbol='.request('factor_symbol').'&factor_date='.request('factor_date').'&page='.$i.'')}}">{{$i}}</a></li>
-                                @endif
-                            @endfor
+                            @if($totalPages > 1)                
+                                @for($i = 1; $i <= $totalPages; $i++)
+                                    @if($i == $currentPage)
+                                        <li class="page-item active" aria-current="page"><span class="page-link">{{$i}}</span></li>
+                                    @else
+                                    <li class="page-item"><a class="page-link" href="{{url('user/paper-x-factor?factor_symbol='.request('factor_symbol').'&factor_date='.request('factor_date').'&page='.$i.'')}}">{{$i}}</a></li>
+                                    @endif
+                                @endfor
+                            @endif    
                             @php     
                                 echo '  </ul>
                                     </nav>';
