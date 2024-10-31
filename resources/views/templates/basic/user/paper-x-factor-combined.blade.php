@@ -31,12 +31,21 @@
         <div id="pst_hre">
         @forelse($paperFactor as $value)
             @php  
-            $revArr = json_decode($value->json_data,true);
-            if(!empty(request('factor_symbol'))){
-                $revArr = array_filter($revArr, function ($val) {
-                    return $val['config_symbol'] == request('factor_symbol');
-                });
-            }
+                $revArr = json_decode($value->json_data,true);
+                if(!empty(request('factor_symbol'))){
+                    $revArr = array_filter($revArr, function ($val) {
+                        return $val['config_symbol'] == request('factor_symbol');
+                    });
+                }
+    
+                $Investment = array_reduce($revArr, function ($carry, $val) {
+                    return $carry + $val['investment'];
+                }, 0);
+    
+                $profitLoss = array_reduce($revArr, function ($carry, $val) {
+                    return $carry + $val['profit'];
+                }, 0);
+            
             @endphp
             <div class="row mb-3">
                 <div class="col-lg-12">
@@ -51,14 +60,14 @@
                                              <th style="font-size:16px;">No of Trades: {{count($revArr) }}</th>
                                             <th colspan="5" style="font-size:16px;" class="text-white text-end">Investment Amount</th>
                                             <th class="text-success fw-bolder" style="font-size:16px;">
-                                                ₹ {{ $value->total_investment }}
+                                                ₹ {{ $Investment }}
                                             </th>
                                             <th class="text-white" style="font-size:16px;">Profit&Loss</th>
                                             <th class="fw-bolder {{$value->total_profit > 0 ? 'text-success':'text-danger'}}" style="font-size:16px;">
                                                 @php
-                                                    $percent = ($value->total_profit / $value->total_investment) * 100
+                                                    $percent = ($profitLoss / $Investment) * 100
                                                 @endphp
-                                                ₹ {{ $value->total_profit }} ( {{ round($percent, 2) }}%)
+                                                ₹ {{ $profitLoss }} ( {{ round($percent, 2) }}%)
                                             </th>
                                         </tr>
                                         <tr>
