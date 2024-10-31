@@ -133,7 +133,7 @@
     }
     setInterval(() => {
         reloadData();
-    }, 600000000000);//call every 1/2 minute
+    }, 60000);//call every 1 minute
     
 </script>
 @endpush
