@@ -24,6 +24,7 @@
                                  <li><a href="{{ route('user.paperTrading') }}">@lang('Expiry2Expiry Trading View')</a></li> 
                                  <li><a href="{{ route('user.match-delta') }}">@lang('Match Delta')</a></li>                                
                                  <li><a href="{{ route('user.paper-x-factor') }}">@lang('Paper X Factor')</a></li>                                
+                                 <li><a href="{{ route('user.paper-x-factor-combined') }}">@lang('XFactor Model Portfolio')</a></li>                                
                             </ul>
                         </li>
                         <li class="menu_has_children">
