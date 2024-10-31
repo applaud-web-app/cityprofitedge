@@ -3206,7 +3206,7 @@ public function paperXFactorCombined()
      $pageTitle = 'XFactor Model Portfolio';
     $isFiltered = 0;
     $checkTodayD = \DB::connection('mysql_rm')->table('PaperXFactor_Combined')->select('date')->orderBy('id','DESC')->first();
-    dd($checkedTodayD);
+    dd($checkTodayD);
     $today = $checkTodayD ? date("Y-m-d",strtotime($checkTodayD->date)) : date("Y-m-d");
     
     $paperFactorQuery = \DB::connection('mysql_rm') ->table('PaperXFactor')->select('symbol','date','data');
