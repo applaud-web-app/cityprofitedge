@@ -65,7 +65,7 @@
                                         @php
                                             $data = json_decode($value->json_data,true);
                                             $revArr = array_reverse($data);
-                                            $fData = $isFiltered == 0 ? array_slice($revArr,0,5) : $revArr;
+                                            $fData = $isFiltered == 1 ? array_slice($revArr,0,5) : $revArr;
                                             $totalItems = 0;
                                             $itemsPerPage = 100;
                                             $currentPage =  isset($_GET['page']) ? $_GET['page'] : 1;
@@ -96,7 +96,7 @@
                     </div>
                     <div>
                             @php
-                             if($isFiltered==1):
+                             if($isFiltered != 1):
                                 $totalPages = ceil($totalItems / $itemsPerPage);
                                 echo '<nav class="mt-3 justify-content-end d-flex">
                                         <ul class="pagination mb-0">';
