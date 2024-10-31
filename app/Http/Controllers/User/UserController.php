@@ -3201,6 +3201,34 @@ public function paperxFactorAjax(Request $request){
     return view($this->activeTemplate . 'user.paper-x-factor-ajax', $data);
 }
 
+public function paperXFactorCombined()
+{
+     $pageTitle = 'XFactor Model Portfolio';
+    $isFiltered = 0;
+    $checkTodayD = \DB::connection('mysql_rm')->table('PaperXFactor_Combined')->select('date')->orderBy('id','DESC')->first();
+    dd($checkedTodayD);
+    $today = $checkTodayD ? date("Y-m-d",strtotime($checkTodayD->date)) : date("Y-m-d");
+    
+    $paperFactorQuery = \DB::connection('mysql_rm') ->table('PaperXFactor')->select('symbol','date','data');
+    if ($request->has('factor_date') && $request->factor_date != '') {
+        $paperFactorQuery->whereDate('date', $request->factor_date);
+    }else{
+        $paperFactorQuery->whereDate('date', $today);
+    }
+    if ($request->has('factor_symbol') && $request->factor_symbol != '') {
+        $paperFactorQuery->where('symbol', $request->factor_symbol);
+        $isFiltered = 1;
+    }
+    $paperFactor = $paperFactorQuery->get();
+    $allSymbols = \DB::connection('mysql_rm')->table('PaperXFactor')->select('symbol')->orderBy('symbol','ASC')->groupBy('symbol')->get();
+    // Prepare the data array
+    $data['paperFactor'] = $paperFactor;
+    $data['symbolArr'] = $allSymbols;
+    $data['pageTitle'] = $pageTitle;
+    $data['isFiltered'] = $isFiltered;
+    return view($this->activeTemplate . 'user.paper-x-factor', $data);
+}
+
     
 
 
