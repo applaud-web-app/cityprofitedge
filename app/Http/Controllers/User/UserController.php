@@ -3208,14 +3208,18 @@ public function paperXFactorCombined(Request $request)
     $checkTodayD = \DB::connection('mysql_rm')->table('PaperXFactor_Combined')->select('date')->orderBy('id','DESC')->first();
     $today = $checkTodayD ? date("Y-m-d",strtotime($checkTodayD->date)) : date("Y-m-d");
 
-    $pageTitle = 'XFactor Model Portfolio '.date("d-M-Y");
+  
     
     $paperFactorQuery = \DB::connection('mysql_rm') ->table('PaperXFactor_Combined')->select('total_investment','total_profit','date','json_data');
     if ($request->has('factor_date') && $request->factor_date != '') {
         $paperFactorQuery->whereDate('date', $request->factor_date);
+        $today = $request->factor_date;
     }else{
         $paperFactorQuery->whereDate('date', $today);
     }
+
+      $pageTitle = 'XFactor Model Portfolio '.date("d-M-Y");
+    
     // if ($request->has('factor_symbol') && $request->factor_symbol != '') {
     //     $paperFactorQuery->where('symbol', $request->factor_symbol);
     //     $isFiltered = 1;
@@ -3231,6 +3235,35 @@ public function paperXFactorCombined(Request $request)
     return view($this->activeTemplate . 'user.paper-x-factor-combined', $data);
 }
 
+public function paperXFactorCombinedAjax(Request $request)
+{
+    
+    $isFiltered = 0;
+    $checkTodayD = \DB::connection('mysql_rm')->table('PaperXFactor_Combined')->select('date')->orderBy('id','DESC')->first();
+    $today = $checkTodayD ? date("Y-m-d",strtotime($checkTodayD->date)) : date("Y-m-d");
+    $paperFactorQuery = \DB::connection('mysql_rm') ->table('PaperXFactor_Combined')->select('total_investment','total_profit','date','json_data');
+    if ($request->has('factor_date') && $request->factor_date != '') {
+        $paperFactorQuery->whereDate('date', $request->factor_date);
+        $today = $request->factor_date;
+    }else{
+        $paperFactorQuery->whereDate('date', $today);
+    }
+    
+    // if ($request->has('factor_symbol') && $request->factor_symbol != '') {
+    //     $paperFactorQuery->where('symbol', $request->factor_symbol);
+    //     $isFiltered = 1;
+    // }
+    $paperFactor = $paperFactorQuery->get();
+    $allSymbols = [];
+    // Prepare the data array
+    $data['paperFactor'] = $paperFactor;
+    $data['symbolArr'] = $allSymbols;
+    $data['pageTitle'] = $pageTitle;
+    $data['isFiltered'] = 0;
+    $data['today'] = $today;
+    return view($this->activeTemplate . 'user.paper-x-factor-combined-ajax', $data);
+}
+    
     
 
 
