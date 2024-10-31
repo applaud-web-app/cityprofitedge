@@ -3,7 +3,6 @@
                 <div class="col-lg-12">
                     
                     <div class="custom--card">
-                        <div class="card-header"></div>
                         <div class="card-body p-0">
                             <div class="table-responsive--md table-responsive">
                                 <table class="table custom--table text-nowrap">
