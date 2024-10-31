@@ -63,8 +63,13 @@
                                     </thead>
                                     <tbody>
                                         @php
-                                            $data = json_decode($value->json_data,true);
-                                            $revArr = array_reverse($data);
+                                            $revArr = json_decode($value->json_data,true);
+                                            
+
+                                            usort($revArr, function ($a, $b) {
+                                                return strtotime($a['time']) - strtotime($b['time']);
+                                            });
+                                        
                                             $fData = $isFiltered == 1 ? array_slice($revArr,0,5) : $revArr;
                                             $totalItems = 0;
                                             $itemsPerPage = 100;
