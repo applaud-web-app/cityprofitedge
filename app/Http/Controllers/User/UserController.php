@@ -3258,7 +3258,6 @@ public function paperXFactorCombinedAjax(Request $request)
     // Prepare the data array
     $data['paperFactor'] = $paperFactor;
     $data['symbolArr'] = $allSymbols;
-    $data['pageTitle'] = $pageTitle;
     $data['isFiltered'] = 0;
     $data['today'] = $today;
     return view($this->activeTemplate . 'user.paper-x-factor-combined-ajax', $data);
