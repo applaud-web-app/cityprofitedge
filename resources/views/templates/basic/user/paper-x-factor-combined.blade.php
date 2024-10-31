@@ -39,16 +39,16 @@
                                 <table class="table custom--table text-nowrap">
                                     <thead>
                                          <tr style="background:#0d222b;font-size:24px;">
-                                            <th colspan="7" class="text-white text-end">Investment</th>
-                                            <th class="text-white">
+                                            <th colspan="7" style="font-size:16px;" class="text-white text-end">Investment</th>
+                                            <th class="text-white" style="font-size:16px;">
                                                 {{ $value->total_investment }}
                                             </th>
-                                            <th class="text-white">Profit&Loss</th>
-                                            <th class="fw-bolder {{$value->total_profit > 0 ? 'text-success':'text-danger'}}">
+                                            <th class="text-white" style="font-size:16px;">Profit&Loss</th>
+                                            <th class="fw-bolder {{$value->total_profit > 0 ? 'text-success':'text-danger'}}" style="font-size:16px;">
                                                 @php
                                                     $percent = ($value->total_profit / $value->total_investment) * 100
                                                 @endphp
-                                                {{ $value->total_profit }} ({{ round($percent, 2) }}%)
+                                                {{ $value->total_profit }} ( {{ round($percent, 2) }}%)
                                             </th>
                                         </tr>
                                         <tr>
@@ -94,7 +94,7 @@
                                             <td>{{$val['close_price']}}</td>
                                             <td>{{$val['entry_price']}}</td>
                                             <td>{{$val['current_value']}}</td>
-                                            <td>{{$val['profit']}}</td>
+                                            <td class="{{ $val['profit'] ? 0 'text-success' : 'text-danger' }}">{{$val['profit']}}</td>
                                         </tr>
                                         @endforeach
                                     </tbody>
