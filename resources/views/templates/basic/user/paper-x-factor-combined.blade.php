@@ -67,7 +67,7 @@
                                             
 
                                             usort($revArr, function ($a, $b) {
-                                                return strtotime($a['time']) - strtotime($b['time']);
+                                                return strtotime($b['time']) - strtotime($a['time']);
                                             });
                                         
                                             $fData = $isFiltered == 1 ? array_slice($revArr,0,5) : $revArr;
