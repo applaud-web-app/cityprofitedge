@@ -22,14 +22,14 @@
                                             </th>
                                         </tr>
                                         <tr>
-                                            <th>@lang('TIME')</th>
+                                            <th>@lang('Entry TIME')</th>
                                             <th>@lang('TXN Type')</th>
                                             <th>@lang('Symbol')</th>
                                             <th>@lang('LotSize')</th>
                                             <th>@lang('QTY')</th>
-                                            <th>@lang('Investment')</th>
-                                            <th>@lang('Close Price')</th>
                                             <th>@lang('Entry Price')</th>
+                                            <th>@lang('Close Price')</th>
+                                            <th>@lang('Investment')</th>
                                             <th>@lang('Current Value')</th>
                                             <th>@lang('Profit')</th>
                                         </tr>
@@ -60,9 +60,9 @@
                                             <td>{{$val['symbol']}}</td>
                                             <td>{{$val['lotsize']}}</td>
                                             <td>{{$val['quantity']}}</td>
-                                            <td>{{$val['investment']}}</td>
-                                            <td>{{$val['close_price']}}</td>
                                             <td>{{$val['entry_price']}}</td>
+                                             <td>{{$val['close_price']}}</td>
+                                            <td>{{$val['investment']}}</td>                                            
                                             <td>{{$val['current_value']}}</td>
                                             <td class="{{ $val['profit'] > 0 ?  'text-success' : 'text-danger' }}">{{$val['profit']}}</td>
                                         </tr>
