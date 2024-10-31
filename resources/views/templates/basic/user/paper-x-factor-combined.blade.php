@@ -39,11 +39,11 @@
                                 <table class="table custom--table text-nowrap">
                                     <thead>
                                          <tr style="background:#0d222b;">
-                                            <th colspan="7" class="text-white text-end">Portfolio Profit&Loss</th>
+                                            <th colspan="7" class="text-white text-end">Investment</th>
                                             <th class="text-white">
                                                 {{ $value->total_investment }}
                                             </th>
-                                            <th class="text-white">% of Profit</th>
+                                            <th class="text-white">Profit</th>
                                             <th class="fw-bolder {{$value->total_profit > 0 ? 'text-success':'text-danger'}}">
                                                 {{ $value->total_profit }}
                                             </th>
