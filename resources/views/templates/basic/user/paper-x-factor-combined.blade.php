@@ -39,7 +39,7 @@
                                 <table class="table custom--table text-nowrap">
                                     <thead>
                                          <tr style="background:#0d222b;font-size:24px;">
-                                             <th>Last Updated: {{date("d M Y H:i:s",strtotime($value[0]->updated_at))}}</th>
+                                             <th>Last Updated: {{date("d M Y H:i:s",strtotime($value->updated_at))}}</th>
                                             <th colspan="6" style="font-size:16px;" class="text-white text-end">Investment Amount</th>
                                             <th class="text-success" style="font-size:16px;">
                                                 {{ $value->total_investment }}
