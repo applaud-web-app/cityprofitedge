@@ -9,6 +9,16 @@
                                 <table class="table custom--table text-nowrap">
                                     <thead>
                                         <tr>
+                                            <th colspan="7">Portfolio Profit&Loss</th>
+                                            <th class="text-end" style="background:#fff;color:#000;">
+                                                {{ $value->total_investment }}
+                                            </th>
+                                            <th>% of Profit</th>
+                                            <th>
+                                                {{ $value->total_profit }}
+                                            </th>
+                                        </tr>
+                                        <tr>
                                             <th>@lang('TIME')</th>
                                             <th>@lang('TXN Type')</th>
                                             <th>@lang('Symbol')</th>
