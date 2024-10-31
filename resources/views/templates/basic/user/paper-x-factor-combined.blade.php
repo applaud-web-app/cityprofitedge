@@ -43,9 +43,12 @@
                                             <th class="text-white">
                                                 {{ $value->total_investment }}
                                             </th>
-                                            <th class="text-white">Profit</th>
+                                            <th class="text-white">Profit&Loss</th>
                                             <th class="fw-bolder {{$value->total_profit > 0 ? 'text-success':'text-danger'}}">
-                                                {{ $value->total_profit }}
+                                                @php
+                                                    $percent = ($value->total_profit / $value->total_investment) * 100
+                                                @endphp
+                                                {{ $value->total_profit }} ({{ round($percent, 2) }}%)
                                             </th>
                                         </tr>
                                         <tr>
