@@ -38,7 +38,7 @@
                             <div class="table-responsive--md table-responsive">
                                 <table class="table custom--table text-nowrap">
                                     <thead>
-                                         <tr style="background:#0d222b;">
+                                         <tr style="background:#0d222b;font-size:24px;">
                                             <th colspan="7" class="text-white text-end">Investment</th>
                                             <th class="text-white">
                                                 {{ $value->total_investment }}
