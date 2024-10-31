@@ -3210,7 +3210,7 @@ public function paperXFactorCombined(Request $request)
 
   
     
-    $paperFactorQuery = \DB::connection('mysql_rm') ->table('PaperXFactor_Combined')->select('total_investment','total_profit','date','json_data');
+    $paperFactorQuery = \DB::connection('mysql_rm') ->table('PaperXFactor_Combined')->select('total_investment','total_profit','date','json_data','updated_at');
     if ($request->has('factor_date') && $request->factor_date != '') {
         $paperFactorQuery->whereDate('date', $request->factor_date);
         $today = $request->factor_date;
@@ -3241,7 +3241,7 @@ public function paperXFactorCombinedAjax(Request $request)
     $isFiltered = 0;
     $checkTodayD = \DB::connection('mysql_rm')->table('PaperXFactor_Combined')->select('date')->orderBy('id','DESC')->first();
     $today = $checkTodayD ? date("Y-m-d",strtotime($checkTodayD->date)) : date("Y-m-d");
-    $paperFactorQuery = \DB::connection('mysql_rm') ->table('PaperXFactor_Combined')->select('total_investment','total_profit','date','json_data');
+    $paperFactorQuery = \DB::connection('mysql_rm') ->table('PaperXFactor_Combined')->select('total_investment','total_profit','date','json_data','updated_at');
     if ($request->has('factor_date') && $request->factor_date != '') {
         $paperFactorQuery->whereDate('date', $request->factor_date);
         $today = $request->factor_date;
