@@ -8,13 +8,13 @@
                             <div class="table-responsive--md table-responsive">
                                 <table class="table custom--table text-nowrap">
                                     <thead>
-                                        <tr style="background:#fff;color:#000;">
-                                            <th colspan="7">Portfolio Profit&Loss</th>
-                                            <th class="text-end">
+                                        <tr style="background:#fff;">
+                                            <th colspan="7" class="text-dark">Portfolio Profit&Loss</th>
+                                            <th class="text-end text-dark">
                                                 {{ $value->total_investment }}
                                             </th>
-                                            <th>% of Profit</th>
-                                            <th>
+                                            <th class="text-dark">% of Profit</th>
+                                            <th class="text-dark">
                                                 {{ $value->total_profit }}
                                             </th>
                                         </tr>
