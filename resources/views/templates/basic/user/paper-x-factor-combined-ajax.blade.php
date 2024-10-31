@@ -13,7 +13,7 @@
                                          <tr style="background:#0d222b;">
                                              <th style="font-size:12px;">Last Updated: {{date("d M Y H:i:s",strtotime($value->updated_at))}}</th>
                                              <th style="font-size:16px;">No of Trades: {{count($revArr) }}</th>
-                                            <th colspan="6" style="font-size:16px;" class="text-white text-end">Investment Amount</th>
+                                            <th colspan="5" style="font-size:16px;" class="text-white text-end">Investment Amount</th>
                                             <th class="text-success fw-bolder" style="font-size:16px;">
                                                 ₹ {{ $value->total_investment }}
                                             </th>
