@@ -63,7 +63,7 @@
                                             <td>{{$val['close_price']}}</td>
                                             <td>{{$val['entry_price']}}</td>
                                             <td>{{$val['current_value']}}</td>
-                                            <td class="{{ $val['profit'] ? 0 'text-success' : 'text-danger' }}">{{$val['profit']}}</td>
+                                             <td class="{{ $val['profit'] > 0 ?  'text-success' : 'text-danger' }}">{{$val['profit']}}</td>
                                         </tr>
                                         @endforeach
                                     </tbody>
