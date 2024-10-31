@@ -1,4 +1,4 @@
-@forelse($paperFactor as $value)
+ @forelse($paperFactor as $value)
             <div class="row mb-3">
                 <div class="col-lg-12">
                     
@@ -8,8 +8,9 @@
                                 <table class="table custom--table text-nowrap">
                                     <thead>
                                          <tr style="background:#0d222b;font-size:24px;">
-                                            <th colspan="7" style="font-size:16px;" class="text-white text-end">Investment</th>
-                                            <th class="text-white" style="font-size:16px;">
+                                             <th>Last Updated: {{date("d M Y H:i:s",strtotime($value[0]->updated_at))}}</th>
+                                            <th colspan="6" style="font-size:16px;" class="text-white text-end">Investment Amount</th>
+                                            <th class="text-success" style="font-size:16px;">
                                                 {{ $value->total_investment }}
                                             </th>
                                             <th class="text-white" style="font-size:16px;">Profit&Loss</th>
@@ -63,7 +64,7 @@
                                             <td>{{$val['close_price']}}</td>
                                             <td>{{$val['entry_price']}}</td>
                                             <td>{{$val['current_value']}}</td>
-                                             <td class="{{ $val['profit'] > 0 ?  'text-success' : 'text-danger' }}">{{$val['profit']}}</td>
+                                            <td class="{{ $val['profit'] > 0 ?  'text-success' : 'text-danger' }}">{{$val['profit']}}</td>
                                         </tr>
                                         @endforeach
                                     </tbody>
