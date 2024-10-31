@@ -132,7 +132,8 @@ Route::middleware('auth')->name('user.')->group(function () {
 
                 Route::get('paper-x-factor', 'paperXFactor')->name('paper-x-factor');
                 Route::get('paper-x-factor-ajax', 'paperxFactorAjax')->name('paper-x-factor-ajax');
-
+                Route::get('paper-x-factor-combined', 'paperXFactorCombined')->name('paper-x-factor-combined');
+                Route::get('paper-x-factor-combined-ajax', 'paperXFactorCombinedAjax')->name('paper-x-factor-combined-ajax');
             });
 
             //Profile setting
