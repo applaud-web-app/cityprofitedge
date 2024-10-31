@@ -1,4 +1,4 @@
- @forelse($paperFactor as $value)
+@forelse($paperFactor as $value)
             <div class="row mb-3">
                 <div class="col-lg-12">
                     
@@ -7,7 +7,7 @@
                             <div class="table-responsive--md table-responsive">
                                 <table class="table custom--table text-nowrap">
                                     <thead>
-                                        <tr style="background:#0d222b;">
+                                         <tr style="background:#0d222b;">
                                             <th colspan="7" class="text-white text-end">Investment</th>
                                             <th class="text-white">
                                                 {{ $value->total_investment }}
@@ -32,8 +32,13 @@
                                     </thead>
                                     <tbody>
                                         @php
-                                            $data = json_decode($value->json_data,true);
-                                            $revArr = array_reverse($data);
+                                            $revArr = json_decode($value->json_data,true);
+                                            
+
+                                            usort($revArr, function ($a, $b) {
+                                                return strtotime($b['time']) - strtotime($a['time']);
+                                            });
+                                        
                                             $fData = $isFiltered == 1 ? array_slice($revArr,0,5) : $revArr;
                                             $totalItems = 0;
                                             $itemsPerPage = 100;
