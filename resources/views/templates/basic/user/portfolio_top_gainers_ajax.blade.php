@@ -1,7 +1,7 @@
 @if ($stockName != "")
                 @php
                     $data = [];
-                    $lastDate = \DB::connection('mysql_rm')->table($stockName)->select('*')->where(['timeframe'=>$timeFrame])->orderBy('date','DESC')->first();
+                    $lastDate = \DB::connection('mysql_rm')->table($stockName)->select('date')->where(['timeframe'=>$timeFrame])->orderBy('date','DESC')->first();
                     if($lastDate){
                         $data = \DB::connection('mysql_rm')->table($stockName)->select('*')->where(['timeframe'=>$timeFrame,'date'=>$lastDate->date])->get();
                     }
