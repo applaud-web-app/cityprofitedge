@@ -4,7 +4,7 @@
                     if(count($data)==0){
                         $lastTwoDates = \DB::connection('mysql_rm')->table($stockName)->where(['timeframe'=>$timeFrame])->limit(2)->orderBy('date','DESC')->groupBy('date')->pluck('date');
                         if($lastTwoDates){
-                            $data = \DB::connection('mysql_rm')->table($stockName)->select('*')->where(['timeframe'=>$timeFrame])->whereIn('date',$lastTwoDates)->orderBy('date','DESC')->get();
+                            $data = \DB::connection('mysql_rm')->table($stockName)->select('*')->where(['timeframe'=>$timeFrame])->whereIn('date',$lastTwoDates)->get();
                         }
                     }
                 @endphp
