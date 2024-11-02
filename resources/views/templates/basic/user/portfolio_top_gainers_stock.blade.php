@@ -59,10 +59,12 @@
            
             @if ($stockName != "")
                 @php
-                    $data = \DB::connection('mysql_rm')->table($stockName)->select('*')->where(['date'=>$todayDate,'timeframe'=>$timeFrame])->get();
-                    if(count($data)==0){
-                        $data = \DB::connection('mysql_rm')->table($stockName)->select('*')->where(['timeframe'=>$timeFrame])->get();
+                    $data = [];
+                    $lastDate = \DB::connection('mysql_rm')->table($stockName)->select('date')->where(['timeframe'=>$timeFrame])->orderBy('date','DESC')->first();
+                    if($lastDate){
+                        $data = \DB::connection('mysql_rm')->table($stockName)->select('*')->where(['timeframe'=>$timeFrame,'date'=>$lastDate->date])->get();
                     }
+            
                 @endphp
                 <div class="row mb-5">
                     <div class="col-lg-12">
