@@ -60,7 +60,7 @@
                 @php
                     $data = \DB::connection('mysql_rm')->table($stockName)->select('*')->where(['date'=>$todayDate,'timeframe'=>$timeFrame])->get();
                     if(count($data)==0){
-                        $lastTwoDates = \DB::connection('mysql_rm')->table($stockName)->where(['timeframe'=>$timeFrame])->pluck('date')->limit(2)->orderBy('date','DESC')->groupBy('date')->get();
+                        $lastTwoDates = \DB::connection('mysql_rm')->table($stockName)->where(['timeframe'=>$timeFrame])->limit(2)->orderBy('date','DESC')->groupBy('date')->pluck('date')->get();
                         if($lastTwoDates){
                             $data = \DB::connection('mysql_rm')->table($stockName)->select('*')->where(['timeframe'=>$timeFrame])->whereIn('date',$lastTwoDates)->get();
                         }
