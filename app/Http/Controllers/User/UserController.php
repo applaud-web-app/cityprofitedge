@@ -39,6 +39,7 @@ use App\Models\Strategy;
 use App\Traits\AngelApiAuth;
 use App\Models\WishlistData;
 use App\Models\StengthTb;
+use App\Models\OmsConfig;
 use Illuminate\Support\Facades\DB;
 use \Cache;
 
@@ -1295,6 +1296,7 @@ class UserController extends Controller
 
     public function removeBrokerDetails(Request $request,$id){
         BrokerApi::where(['id'=>$id,'user_id'=>auth()->user()->id])->delete();
+        OmsConfig::where(['broker_api_id' => $id])->delete();
         $notify[] = ['success', 'Broker Details Deleted Successfully...'];
         return to_route('user.portfolio.broker-details')->withNotify($notify);
     }
