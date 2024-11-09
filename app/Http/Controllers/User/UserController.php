@@ -1915,7 +1915,6 @@ class UserController extends Controller
 
         // For Chart 1
         $data1 = \DB::connection('mysql_rm')->table($table1)->select('*')->where('timeframe',$timeFrame1)->get();
-           dd($data1);
         // For Chart 2
         $data2 = \DB::connection('mysql_rm')->table($table2)->select('*')->where('timeframe',$timeFrame2)->get();
         // For Chart 3
