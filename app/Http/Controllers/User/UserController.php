@@ -1885,6 +1885,7 @@ class UserController extends Controller
     }
 
     public function OptionAnalysis(Request $request){
+        dd('working');
         $pageTitle = 'Option Analysis';
         $symbolArr = allTradeSymbols();
         // For Chart 1
