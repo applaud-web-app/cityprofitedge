@@ -39,7 +39,6 @@ use App\Models\Strategy;
 use App\Traits\AngelApiAuth;
 use App\Models\WishlistData;
 use App\Models\StengthTb;
-use App\Models\OmsConfig;
 use Illuminate\Support\Facades\DB;
 use \Cache;
 
