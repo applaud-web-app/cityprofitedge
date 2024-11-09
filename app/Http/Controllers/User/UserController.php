@@ -1914,15 +1914,16 @@ class UserController extends Controller
         // $Symdata = \DB::connection('mysql_rm')->table($symbol)->select('*')->where(['date'=>
 
         // For Chart 1
-        $data1 = \DB::connection('mysql_rm')->table($table1)->select('*')->where('timeframe',$timeFrame1)->get();
+        $date = date("Y-m-d",strtotime('-5 days'));
+        $data1 = \DB::connection('mysql_rm')->table($table1)->select('*')->where('timeframe',$timeFrame1)->whereDate('date','>',$date)->get();
         // For Chart 2
-        $data2 = \DB::connection('mysql_rm')->table($table2)->select('*')->where('timeframe',$timeFrame2)->get();
+        $data2 = \DB::connection('mysql_rm')->table($table2)->select('*')->where('timeframe',$timeFrame2)->whereDate('date','>',$date)->get();
         // For Chart 3
-        $data3 = \DB::connection('mysql_rm')->table($table3)->select('*')->where('timeframe',$timeFrame3)->get();
+        $data3 = \DB::connection('mysql_rm')->table($table3)->select('*')->where('timeframe',$timeFrame3)->whereDate('date','>',$date)->get();
         // For Chart 4
-        $data4 = \DB::connection('mysql_rm')->table($table4)->select('*')->where('timeframe',$timeFrame4)->get();
+        $data4 = \DB::connection('mysql_rm')->table($table4)->select('*')->where('timeframe',$timeFrame4)->whereDate('date','>',$date)->get();
         // For Chart 5
-        $data5 = \DB::connection('mysql_rm')->table($table5)->select('*')->where('timeframe',$timeFrame5)->get();
+        $data5 = \DB::connection('mysql_rm')->table($table5)->select('*')->where('timeframe',$timeFrame5)->whereDate('date','>',$date)->get();
      
         $fullUrl =  $request->fullUrl();
         // if($request->ajax()){
